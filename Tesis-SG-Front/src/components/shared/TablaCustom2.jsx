@@ -32,11 +32,11 @@ const TablaCustom2 = ({
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
 
-  console.log("🟢 Datos recibidos por la tabla:", data);
+  //console.log("🟢 Datos recibidos por la tabla:", data);
 
   useEffect(() => {
     setTableData(data || []);
-    console.log("dd", data);
+    //console.log("dd", data);
   }, [data]);
 
   useEffect(() => {
@@ -239,20 +239,22 @@ const TablaCustom2 = ({
                       {mostrarEditar && (
                         <Button
                           size="sm"
-                          className="bg-emerald-500 hover:bg-emerald-600 text-white cursor-pointer"
+                          className="bg-white text-emerald-500 border border-emerald-500 hover:bg-emerald-500 hover:text-white cursor-pointer"
                           onClick={() => onEditarClick && onEditarClick(row)}
                         >
                           <FaEdit className="mr-1" /> Editar
                         </Button>
+
                       )}
                       {mostrarEliminar && (
                         <Button
                           size="sm"
-                          className="bg-red-400 text-white cursor-pointer hover:bg-red-600"
+                          className="bg-white text-red-400 border border-red-400 hover:bg-red-400 hover:text-white cursor-pointer"
                           onClick={() => handleOpenDeleteDialog(row)}
                         >
                           <FaTrash className="mr-1" size={14} /> Eliminar
                         </Button>
+
                       )}
                     </TableCell>
                   )}

@@ -98,8 +98,9 @@ export default function ProspectoDetalle() {
       label: "Estado",
       render: (value) => (
         <span
-          className={`px-2 py-1 text-xs font-semibold rounded-full ${value
-            ? "bg-green-100 text-green-700"
+          className={`px-2 py-1 text-xs font-semibold rounded-full 
+            ${value
+            ? "bg-emerald-100 text-emerald-700"
             : "bg-yellow-200 text-yellow-700"
             }`}
         >
@@ -155,13 +156,13 @@ export default function ProspectoDetalle() {
       {/************ Actividades ***********/}
       <div className="flex items-center justify-between mt-8">
         <h2 className="text-xl font-semibold text-gray-800">Actividades</h2>
-        <Button
+        {/* <Button
           onClick={() => setModalOpen(true)}
           className="bg-blue-600  text-white hover:bg-blue-200 hover:text-gray-700 hover:shadow-xl"
         >
           <PlusCircle className="w-4 h-4 mr-2" />
           Nueva Actividad
-        </Button>
+        </Button> */}
       </div>
       <Card>
         <CardContent className="p-6">
@@ -229,13 +230,13 @@ export default function ProspectoDetalle() {
         <h2 className="text-xl font-semibold text-gray-800">
           Solicitudes de Inversión
         </h2>
-        <Button
+        {/* <Button
           onClick={() => navigate(`/solicitudes/nueva/${id}`)}
           className="bg-green-600 hover:bg-green-700 text-white"
         >
           <PlusCircle className="w-4 h-4 mr-2" />
           Nueva Solicitud de Inversión
-        </Button>
+        </Button> */}
       </div>
 
       <Card>

@@ -193,7 +193,7 @@ export default function ContactoUbicacion({ id }) {
                 setContactoUbicacion({ ...contactoUbicacion, idTipoVia: v })
               }
             >
-              <SelectTrigger>
+              <SelectTrigger className="border border-black">
                 <SelectValue placeholder="Seleccionar tipo de vía" />
               </SelectTrigger>
               <SelectContent>
@@ -272,7 +272,7 @@ export default function ContactoUbicacion({ id }) {
               value={contactoUbicacion.idPaisResidencia}
               onValueChange={handlePaisChange}
             >
-              <SelectTrigger>
+              <SelectTrigger className="border border-black">
                 <SelectValue placeholder="Seleccionar país" />
               </SelectTrigger>
               <SelectContent>
@@ -291,7 +291,7 @@ export default function ContactoUbicacion({ id }) {
               value={contactoUbicacion.idProvinciaResidencia}
               onValueChange={handleProvinciaChange}
             >
-              <SelectTrigger>
+              <SelectTrigger className="border border-black">
                 <SelectValue placeholder="Seleccionar provincia" />
               </SelectTrigger>
               <SelectContent>
@@ -312,7 +312,7 @@ export default function ContactoUbicacion({ id }) {
                 setContactoUbicacion({ ...contactoUbicacion, idCiudadResidencia: v })
               }
             >
-              <SelectTrigger>
+              <SelectTrigger className="border border-black">
                 <SelectValue placeholder="Seleccionar ciudad" />
               </SelectTrigger>
               <SelectContent>
@@ -398,7 +398,7 @@ function FormSwitch({ label, checked, onChange }) {
             items-center
             rounded-full
             border
-            border-gray-400
+            border-gray-700
             transition-colors
             duration-200
             ease-in-out

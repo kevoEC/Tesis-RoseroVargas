@@ -193,7 +193,10 @@ export default function ProyeccionNueva() {
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-gray-800">Nueva Proyección</h2>
-        <Button variant="outline" onClick={() => navigate(`/solicitudes/editar/${id}`)}>
+        <Button 
+        variant="outline" 
+        className="bg-white hover:bg-gray-300"
+        onClick={() => navigate(`/solicitudes/editar/${id}`)}>
           <span className="flex items-center gap-1">
             <FaArrowLeft /> Regresar a solicitud
           </span>
@@ -457,7 +460,7 @@ function FormInput({ label, value, onChange, type = "number", disabled }) {
         value={value}
         onChange={onChange}
         disabled={disabled}
-        className="text-sm border-gray-300 bg-white"
+        className="text-sm border-gray-700 bg-white"
         placeholder={label}
       />
     </div>
@@ -469,7 +472,7 @@ function FormSelect({ label, value, onChange, options, labels = [], disabled }) 
     <div className="space-y-1">
       <Label className="text-sm text-gray-700 font-medium">{label}</Label>
       <Select value={value} onValueChange={onChange} disabled={disabled}>
-        <SelectTrigger className="text-sm border-gray-300 bg-white">
+        <SelectTrigger className="text-sm border-gray-700 bg-white">
           <SelectValue placeholder={label} />
         </SelectTrigger>
         <SelectContent className="bg-white">
