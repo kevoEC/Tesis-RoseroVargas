@@ -24,14 +24,14 @@ export default function TipoSolicitud() {
   }, []);
 
   const handleEditar = (item) => {
-    navigate(`/catalogo/tiposolicitud/editar/${item.idTipoSolicitud}`);
+    navigate(`/catalogo/tiposolicitud/editar/${item.idTipoDeSolicitud}`);
   };
 
   const handleEliminar = async (item) => {
     try {
-      await deleteTipoSolicitud(item.idTipoSolicitud);
+      await deleteTipoSolicitud(item.idTipoDeSolicitud);
       setTipoSolicitud((prev) =>
-        prev.filter((t) => t.idTipoSolicitud !== item.idTipoSolicitud)
+        prev.filter((t) => t.idTipoDeSolicitud !== item.idTipoDeSolicitud)
       );
     } catch (err) {
       console.error("Error al eliminar tipo de solicitud:", err);
@@ -45,8 +45,8 @@ export default function TipoSolicitud() {
       ruta="catalogo/tiposolicitud"
       data={tipoSolicitud}
       columnas={{
-        idTipoSolicitud: "ID",
-        descripcion: "Descripción",
+        idTipoDeSolicitud: "ID",
+        nombreTipoDeSolicitud: "Nombre",
       }}
       onEditar={handleEditar}
       onEliminar={handleEliminar}

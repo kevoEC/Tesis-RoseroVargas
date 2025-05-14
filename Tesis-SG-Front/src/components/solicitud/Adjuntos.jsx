@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { getAdjuntos, deleteAdjunto } from "@/service/Entidades/AdjuntoService";
+import {
+  getAdjuntos,
+  deleteallAdjunto,
+  generateallAdjunto,
+} from "@/service/Entidades/AdjuntoService";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
@@ -10,38 +14,52 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import AdjuntoForm from "./AdjuntoForm";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function Adjuntos({ id }) {
   const [documentos, setDocumentos] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [documentoId, setDocumentoId] = useState(null); // Estado para el idDocumento
+  const [documentoId, setDocumentoId] = useState(null);
+  const [loadingAll, setLoadingAll] = useState(false);
 
-  /*Cargar los datos al montar el componente*/
+  // Extraemos fetchData para poder reutilizarlo
+  const fetchData = async () => {
+    try {
+      const data = await getAdjuntos(id);
+      setDocumentos(data.documentos);
+    } catch (error) {
+      console.error("Error al cargar documentos:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getAdjuntos(id); // Ejecutar función async
-        setDocumentos(data.documentos);
-      } catch (error) {
-        console.error("Error al cargar documentos:", error);
-      }
-    };
-
     fetchData();
-  }, []);
+  }, [id]);
 
   const handleEditar = (item) => {
-    setIsDialogOpen(true);
-    // setDocumentoId(1); // Guarda el idDocumento del item que se está editando
-
-    setDocumentoId(item.idDocumento); // Guarda el idDocumento del item que se está editando
-  };
-
-  const handleAbrirFormulario = () => {
+    setDocumentoId(item.idDocumento);
     setIsDialogOpen(true);
   };
-  const handleCerrarDialog = () => {
-    setIsDialogOpen(false);
+
+  const handleGenerateAll = async () => {
+    setLoadingAll(true);
+    try {
+      // Primero borramos todos
+      await deleteallAdjunto(id);
+      // Luego generamos todos con el body requerido
+      await generateallAdjunto({
+        idMotivo: 32,
+        idSolicitudInversion: Number(id),
+      });
+      toast.success("Adjuntos regenerados correctamente");
+      await fetchData();
+    } catch (err) {
+      console.error("Error en regenerar adjuntos:", err);
+      toast.error("No se pudieron regenerar los adjuntos");
+    } finally {
+      setLoadingAll(false);
+    }
   };
 
   const columnas = [
@@ -52,15 +70,21 @@ export default function Adjuntos({ id }) {
         <div className="text-end font-semibold text-gray-800">{value}</div>
       ),
     },
-
-    { key: "motivoNombre", label: "Nombres" },
+    { key: "tipoDocumentoNombre", label: "Nombres" },
   ];
 
   return (
     <div>
       <Card className="border border-muted rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.12)]">
-        <CardHeader>
+        <CardHeader className="flex items-center justify-between">
           <CardTitle>Lista de Adjuntos</CardTitle>
+          <Button
+            onClick={handleGenerateAll}
+            disabled={loadingAll}
+            className="bg-green-600 hover:bg-green-700 text-white text-sm"
+          >
+            {loadingAll ? "Procesando..." : "Generar Documentos"}
+          </Button>
         </CardHeader>
         <CardContent className="p-6">
           <TablaCustom2
@@ -73,7 +97,7 @@ export default function Adjuntos({ id }) {
           />
         </CardContent>
       </Card>
-      {/* Dialog para el formulario */}
+
       <Dialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
@@ -81,12 +105,15 @@ export default function Adjuntos({ id }) {
       >
         <DialogContent className="min-w-3xl">
           <DialogHeader>
-            <DialogTitle>Agregar Adjuntos</DialogTitle>
+            <DialogTitle>Adjunto</DialogTitle>
             <DialogDescription>
-              Completa la información del nuevo adjunto
+              Completa la información del adjunto
             </DialogDescription>
           </DialogHeader>
-          <AdjuntoForm documentoId={documentoId} onClose={handleCerrarDialog} />
+          <AdjuntoForm
+            documentoId={documentoId}
+            onClose={() => setIsDialogOpen(false)}
+          />
         </DialogContent>
       </Dialog>
     </div>

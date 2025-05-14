@@ -28,7 +28,7 @@ export default function TipoSolicitudForm() {
       (async () => {
         try {
           const data = await getTipoSolicitudById(id);
-          setTipoSolicitud(data.tipoSolicitud);
+          setTipoSolicitud(data.nombreTipoDeSolicitud);
         } catch (err) {
           console.error("Error al cargar tipo de solicitud:", err);
         }
@@ -41,7 +41,7 @@ export default function TipoSolicitudForm() {
     try {
       const payload = {
         idTipoSolicitud: isEdit ? parseInt(id, 10) : 0,
-        tipoSolicitud,
+        nombreTipoDeSolicitud: tipoSolicitud,
         ...(isEdit
           ? { idUsuarioModificacion: idUsuario }
           : { idUsuarioCreacion: idUsuario }),

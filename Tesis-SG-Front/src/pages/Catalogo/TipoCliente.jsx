@@ -46,7 +46,7 @@ export default function TipoCliente() {
       data={tipoClientes}
       columnas={{
         idTipoCliente: "ID",
-        descripcion: "Descripcion",
+        nombreTipoCliente: "Nombre",
       }}
       onEditar={handleEditar}
       onEliminar={handleEliminar}

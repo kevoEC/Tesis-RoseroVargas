@@ -21,7 +21,7 @@ const getAuthHeaders = () => {
 
 // 🟢 GET: Obtener todas las agencias
 export const getTipoSolicitud = async () => {
-  const res = await fetch(`${API_BASE_URL}/getTipoSolicitud`, {
+  const res = await fetch(`${API_BASE_URL}/TipoSolicitud`, {
     headers: getAuthHeaders(),
   });
   return handleResponse(res);
@@ -29,7 +29,7 @@ export const getTipoSolicitud = async () => {
 
 // 🔵 GET: Obtener agencia por ID
 export const getTipoSolicitudById = async (id) => {
-  const res = await fetch(`${API_BASE_URL}/getTipoSolicitud/${id}`, {
+  const res = await fetch(`${API_BASE_URL}/TipoSolicitud/${id}`, {
     headers: getAuthHeaders(),
   });
   return handleResponse(res);
@@ -37,7 +37,7 @@ export const getTipoSolicitudById = async (id) => {
 
 // 🟡 POST: Crear nueva agencia
 export const createTipoSolicitud = async (data) => {
-  const res = await fetch(`${API_BASE_URL}/getTipoSolicitud`, {
+  const res = await fetch(`${API_BASE_URL}/TipoSolicitud`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(data),
@@ -48,19 +48,20 @@ export const createTipoSolicitud = async (data) => {
 // 🟠 PUT: Actualizar agencia
 export const updateTipoSolicitud = async (data) => {
   const res = await fetch(
-    `${API_BASE_URL}/getTipoSolicitud/${data.idTipoSolicitud}`,
+    `${API_BASE_URL}/TipoSolicitud/${data.idTipoSolicitud}`,
     {
       method: "PUT",
       headers: getAuthHeaders(),
       body: JSON.stringify(data),
     }
   );
+  console.log(res);
   return handleResponse(res);
 };
 
 // 🔴 DELETE: Eliminar agencia
 export const deleteTipoSolicitud = async (id) => {
-  const res = await fetch(`${API_BASE_URL}/getTipoSolicitud/${id}`, {
+  const res = await fetch(`${API_BASE_URL}/TipoSolicitud/${id}`, {
     method: "DELETE",
     headers: getAuthHeaders(),
   });

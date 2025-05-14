@@ -28,7 +28,7 @@ export default function TipoClienteForm() {
       (async () => {
         try {
           const data = await getTipoClienteById(id);
-          setTipoCliente(data.tipoCliente);
+          setTipoCliente(data.nombreTipoCliente);
         } catch (err) {
           console.error("Error al cargar tipo de cliente:", err);
         }
@@ -41,7 +41,7 @@ export default function TipoClienteForm() {
     try {
       const payload = {
         idTipoCliente: isEdit ? parseInt(id, 10) : 0,
-        tipoCliente,
+        nombreTipoCliente: tipoCliente,
         ...(isEdit
           ? { idUsuarioModificacion: idUsuario }
           : { idUsuarioCreacion: idUsuario }),
