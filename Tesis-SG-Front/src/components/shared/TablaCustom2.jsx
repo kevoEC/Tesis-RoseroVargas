@@ -152,13 +152,15 @@ const TablaCustom2 = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         {/* Botón Agregar Nuevo (izquierda) */}
         {mostrarAgregarNuevo && (
-          <Button
-            // onClick={() => setModalOpen(true)}
-            onClick={handleAgregarNuevo}
-            className="bg-primary text-gray-100 hover:text-white hover:bg-primary/90 cursor-pointer flex items-center gap-2"
-          >
-            <FaPlus className="text-white" /> Agregar Nuevo
-          </Button>
+<Button
+  onClick={handleAgregarNuevo}
+  className="bg-[#4f46e5] text-white hover:bg-[#4338ca] transition-colors duration-200 flex items-center gap-2 shadow-sm"
+>
+  <FaPlus className="text-white" /> Agregar Nuevo
+</Button>
+
+
+
         )}
         <Input
           placeholder="Buscar..."
@@ -202,7 +204,7 @@ const TablaCustom2 = ({
         </DropdownMenu>
       </div>
 
-      <div className="overflow-x-auto w-full">
+<div className="overflow-x-auto w-full scrollbar-morado">
         <Table className="min-w-full">
           <TableHeader>
             <TableRow>
@@ -221,7 +223,10 @@ const TablaCustom2 = ({
                 </TableHead>
               ))}
               {(mostrarEditar || mostrarEliminar) && (
-                <TableHead>Acciones</TableHead>
+<TableHead className="sticky right-0 bg-white z-20 border-l border-gray-300 font-semibold text-gray-700 shadow-inner min-w-[100px] text-center">
+  Acciones
+</TableHead>
+
               )}
             </TableRow>
           </TableHeader>
@@ -235,28 +240,33 @@ const TablaCustom2 = ({
                     </TableCell>
                   ))}
                   {(mostrarEditar || mostrarEliminar) && (
-                    <TableCell className="flex gap-2">
-                      {mostrarEditar && (
-                        <Button
-                          size="sm"
-                          className="bg-white text-emerald-500 border border-emerald-500 hover:bg-emerald-500 hover:text-white cursor-pointer"
-                          onClick={() => onEditarClick && onEditarClick(row)}
-                        >
-                          <FaEdit className="mr-1" /> Editar
-                        </Button>
+<TableCell className="sticky right-0 bg-white z-10 border-l border-gray-200 px-2 py-2 min-w-[100px]">
+  <div className="grid grid-cols-2 divide-x divide-gray-200">
+    <div className="flex items-center justify-center px-1">
+      <Button
+        size="icon"
+        variant="ghost"
+        className="text-emerald-500 hover:bg-emerald-100"
+        onClick={() => onEditarClick && onEditarClick(row)}
+        title="Editar"
+      >
+        <FaEdit size={16} />
+      </Button>
+    </div>
+    <div className="flex items-center justify-center px-1">
+      <Button
+        size="icon"
+        variant="ghost"
+        className="text-red-500 hover:bg-red-100"
+        onClick={() => handleOpenDeleteDialog(row)}
+        title="Eliminar"
+      >
+        <FaTrash size={16} />
+      </Button>
+    </div>
+  </div>
+</TableCell>
 
-                      )}
-                      {mostrarEliminar && (
-                        <Button
-                          size="sm"
-                          className="bg-white text-red-400 border border-red-400 hover:bg-red-400 hover:text-white cursor-pointer"
-                          onClick={() => handleOpenDeleteDialog(row)}
-                        >
-                          <FaTrash className="mr-1" size={14} /> Eliminar
-                        </Button>
-
-                      )}
-                    </TableCell>
                   )}
                 </TableRow>
               ))
@@ -291,7 +301,7 @@ const TablaCustom2 = ({
           onPageChange={handlePageClick}
           containerClassName="flex gap-1 flex-wrap"
           pageClassName="px-3 py-1 border rounded hover:bg-gray-100"
-          activeClassName="bg-blue-500 text-white"
+          activeClassName="bg-[#4f46e5] text-white"
           previousClassName="px-3 py-1 border rounded bg-gray-200 hover:bg-gray-300"
           nextClassName="px-3 py-1 border rounded bg-gray-200 hover:bg-gray-300"
           breakClassName="px-3 py-1"
