@@ -6,6 +6,8 @@ using Backend_CrmSG.Services.Seguridad;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Backend_CrmSG.DTOs.Seguridad;
+using Backend_CrmSG.Services.Correo;
+using Backend_CrmSG.Services.SMS;
 
 
 
@@ -18,11 +20,15 @@ namespace Backend_CrmSG.Controllers.Seguridad
         private readonly IUsuarioService _usuarioService;
         private readonly StoredProcedureService _storedProcedureService;
         private readonly IJwtService _jwtService;
-        public UsuarioController(IUsuarioService usuarioService, IJwtService jwtService, StoredProcedureService storedProcedureService)
+        private readonly ICorreoService _correoService;
+        private readonly ISmsService _smsService;
+        public UsuarioController(IUsuarioService usuarioService, IJwtService jwtService, StoredProcedureService storedProcedureService, ICorreoService correoService, ISmsService smsService)
         {
             _usuarioService = usuarioService;
             _storedProcedureService = storedProcedureService;
             _jwtService = jwtService;
+            _correoService = correoService;
+            _smsService = smsService;
         }
 
         // POST: api/Usuario/login
@@ -152,33 +158,39 @@ namespace Backend_CrmSG.Controllers.Seguridad
                     });
                 }
 
-                var usuario = new Usuario
+                var resultado = await _storedProcedureService.EjecutarSpRegistrarUsuarioParcial(dto);
+
+                if (resultado == null)
                 {
-                    Email = dto.Email,
-                    Identificacion = dto.Identificacion,
-                    PrimerNombre = dto.PrimerNombre,
-                    SegundoNombre = dto.SegundoNombre,
-                    PrimerApellido = dto.PrimerApellido,
-                    SegundoApellido = dto.SegundoApellido,
-                    Contraseña = dto.Contraseña,
+                    return StatusCode(500, new
+                    {
+                        success = false,
+                        message = "Error al registrar el usuario parcial."
+                    });
+                }
 
-                    EsActivo = false,
-                    ValidacionCorreo = false,
-                    ValidacionTelefono = false,
-                    AceptoTerminosCondiciones = dto.TerminosAceptados,
-                    FechaCreacion = DateTime.UtcNow
-                };
-
-                var idUsuario = await _usuarioService.InsertarUsuarioParcialAsync(usuario);
-
-                // Crear transacción de validación
-                await _usuarioService.RegistrarTransaccionValidacionCorreo(idUsuario, usuario.Email);
+                // Aquí puedes llamar al servicio de envío de correo y manejar errores
+                var correoEnviado = false;
+                try
+                {
+                    correoEnviado = await _correoService.EnviarCorreoValidacion(resultado.Email, resultado.HashValidacion);
+                }
+                catch (Exception ex)
+                {
+                    // Log del error si falla el envío
+                    // Puedes usar un logger para registrar el error
+                    Console.WriteLine($"Error al enviar correo: {ex.Message}");
+                }
 
                 return Ok(new
                 {
                     success = true,
-                    idUsuario,
-                    message = "Usuario creado exitosamente en estado inactivo. Se ha iniciado la validación de correo."
+                    usuarioCreado = true,
+                    correoEnviado,
+                    idUsuario = resultado.IdUsuario,
+                    message = correoEnviado
+                        ? "Usuario registrado y correo de validación enviado."
+                        : "Usuario registrado. No se pudo enviar el correo de validación."
                 });
             }
             catch (Exception ex)
@@ -186,14 +198,92 @@ namespace Backend_CrmSG.Controllers.Seguridad
                 return StatusCode(500, new
                 {
                     success = false,
-                    message = "Ocurrió un error inesperado al registrar el usuario.",
-                    details = ex.Message,
-                    inner = ex.InnerException?.Message,
-                    stackTrace = ex.StackTrace
+                    message = "Ocurrió un error inesperado.",
+                    details = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("validar-correo")]
+        public async Task<IActionResult> ValidarCorreo([FromQuery] string token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Token no proporcionado."
                 });
             }
 
+            var resultado = await _usuarioService.ValidarCorreoPorHashAsync(token);
+
+            if (!resultado.Exitoso)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = resultado.Mensaje
+                });
+            }
+
+            return Ok(new
+            {
+                success = true,
+                yaValidado = resultado.YaValidado,
+                message = resultado.Mensaje
+            });
         }
+
+
+        [HttpPost("enviar-codigo-telefono")]
+        public async Task<IActionResult> EnviarCodigoTelefono([FromBody] SolicitudCodigoTelefonoDTO dto)
+        {
+            var resultado = await _usuarioService.EnviarCodigoSmsValidacion(
+                dto.IdUsuario,
+                dto.Numero,
+                dto.Extension,
+                async (numeroCompleto, mensaje) => await _smsService.EnviarCodigoValidacion(numeroCompleto, mensaje)
+            );
+
+            if (!resultado.Success)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = resultado.Message
+                });
+            }
+
+            return Ok(new
+            {
+                success = true,
+                yaValidado = resultado.YaValidado,
+                message = resultado.Message
+            });
+        }
+
+
+
+        [HttpPost("validar-telefono")]
+        public async Task<IActionResult> ValidarTelefono([FromBody] ValidacionTelefonoDTO dto)
+        {
+            var resultado = await _usuarioService.ValidarCodigoTelefonoAsync(dto.IdUsuario, dto.Codigo);
+
+            if (!resultado.Exitoso)
+            {
+                return BadRequest(new { success = false, message = resultado.Mensaje });
+            }
+
+            return Ok(new
+            {
+                success = true,
+                yaValidado = resultado.YaValidado,
+                message = resultado.Mensaje
+            });
+        }
+
+
 
 
     }

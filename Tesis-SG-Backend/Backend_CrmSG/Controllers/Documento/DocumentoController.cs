@@ -89,5 +89,47 @@ namespace Backend_CrmSG.Controllers.Documento
 
             return Ok(new { success = true, message = "Documentos eliminados correctamente por motivo." });
         }
+
+        [HttpPost("motivo")]
+        public async Task<IActionResult> CrearDocumentosPorMotivo([FromBody] DocumentoMotivoDto dto)
+        {
+            var creado = await _documentoService.CrearDocumentosPorMotivoAsync(
+                dto.IdMotivo,
+                dto.IdTarea,
+                dto.IdSolicitudInversion,
+                dto.IdInversion
+            );
+
+            if (!creado)
+                return BadRequest(new { success = false, message = "No se pudieron crear documentos por motivo." });
+
+            return Ok(new { success = true, message = "Documentos creados correctamente." });
+        }
+
+        [HttpPut("{id}/archivo")]
+        public async Task<IActionResult> ActualizarArchivo(int id, [FromBody] DocumentoActualizarDto dto)
+        {
+            var actualizado = await _documentoService.ActualizarArchivoAsync(id, dto);
+
+            if (!actualizado)
+                return NotFound(new { success = false, message = "Documento no encontrado o no se pudo actualizar." });
+
+            return Ok(new { success = true, message = "Archivo del documento actualizado correctamente." });
+        }
+
+        [HttpGet("{id}/vista")]
+        public async Task<IActionResult> ObtenerDesdeVistaPorId(int id)
+        {
+            var documento = await _documentoService.ObtenerDesdeVistaPorIdAsync(id);
+
+            if (documento == null)
+                return NotFound(new { success = false, message = "Documento no encontrado." });
+
+            return Ok(new { success = true, documento });
+        }
+
+
+
+
     }
 }

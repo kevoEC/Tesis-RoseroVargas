@@ -25,7 +25,9 @@ export default function Header({ user, onToggleSidebar }) {
   };
 
   return (
-    <header className="w-full h-16 bg-white shadow-md flex items-center justify-between px-4 sm:px-6 text-[--color-fg] z-50">
+<header className="w-full h-16 bg-white/60 backdrop-blur-sm border-b border-zinc-200 shadow-sm flex items-center justify-between px-4 sm:px-6 text-[--color-fg] z-50">
+
+
       {/* Toggle para móvil */}
       <div className="flex items-center gap-4">
         <Sheet open={open} onOpenChange={setOpen}>

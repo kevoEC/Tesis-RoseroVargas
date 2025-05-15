@@ -5,6 +5,8 @@ using Backend_CrmSG.Models.Seguridad;
 using Backend_CrmSG.Models.Catalogos.Producto;
 using Backend_CrmSG.Models.Entidades;
 using Backend_CrmSG.Models.Vistas;
+using Backend_CrmSG.Models.Documentos;
+using Backend_CrmSG.DTOs;
 
 namespace Backend_CrmSG.Data
 {
@@ -71,6 +73,9 @@ namespace Backend_CrmSG.Data
         public DbSet<BeneficiarioDetalle> BeneficiariosDetalle { get; set; } // ← esta línea
         public DbSet<AsesorComercialDetalle> AsesoresComercialesDetalle { get; set; }
         public DbSet<ProyeccionDetalle> ProyeccionDetalle { get; set; } // ← esta línea
+        public DbSet<DocumentoDetalle> DocumentosAdjuntos { get; set; } // ← esta línea
+
+        public DbSet<DocumentoBasicoDetalle> DocumentosBasicos { get; set; } // ← esta línea
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -111,6 +116,27 @@ namespace Backend_CrmSG.Data
             modelBuilder.Entity<ProyeccionDetalle>()
                 .HasNoKey()
                 .ToView("vw_ProyeccionesResumen");
+
+            modelBuilder.Entity<DocumentoDetalle>()
+            .HasNoKey()
+            .ToView("vw_DocumentosAdjuntos");
+
+            modelBuilder.Entity<DocumentoBasicoDetalle>()
+                .HasNoKey()
+                .ToView("vw_DocumentosBasicos");
+           
+            modelBuilder.Entity<TransaccionesValidacion>()
+            .HasOne(t => t.TipoTransaccion)
+            .WithMany(tt => tt.Transacciones)
+            .HasForeignKey(t => t.IdTipoTransaccion)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TransaccionesValidacion>()
+                .HasOne(t => t.Usuario)
+                .WithMany()
+                .HasForeignKey(t => t.IdUsuario)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
 
             base.OnModelCreating(modelBuilder);

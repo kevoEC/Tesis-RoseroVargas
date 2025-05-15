@@ -1,5 +1,8 @@
 ﻿using Backend_CrmSG.DTOs;
+using Backend_CrmSG.DTOs.Backend_CrmSG.DTOs.Seguridad;
+using Backend_CrmSG.DTOs.Seguridad;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Data;
@@ -84,4 +87,38 @@ public class StoredProcedureService
 
         return result;
     }
+
+    public async Task<RegistroParcialResponseDTO?> EjecutarSpRegistrarUsuarioParcial(RegistroParcialDTO dto)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand("sp_RegistrarUsuarioParcial", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+
+        command.Parameters.AddWithValue("@Email", dto.Email);
+        command.Parameters.AddWithValue("@Identificacion", dto.Identificacion);
+        command.Parameters.AddWithValue("@PrimerNombre", dto.PrimerNombre);
+        command.Parameters.AddWithValue("@SegundoNombre", (object?)dto.SegundoNombre ?? DBNull.Value);
+        command.Parameters.AddWithValue("@PrimerApellido", dto.PrimerApellido);
+        command.Parameters.AddWithValue("@SegundoApellido", (object?)dto.SegundoApellido ?? DBNull.Value);
+        command.Parameters.AddWithValue("@Contrasena", dto.Contraseña);
+        command.Parameters.AddWithValue("@TerminosAceptados", dto.TerminosAceptados);
+
+        await connection.OpenAsync();
+        using var reader = await command.ExecuteReaderAsync();
+
+        if (await reader.ReadAsync())
+        {
+            return new RegistroParcialResponseDTO
+            {
+                IdUsuario = reader.GetInt32(reader.GetOrdinal("IdUsuario")),
+                HashValidacion = reader.GetString(reader.GetOrdinal("HashValidacion")),
+                Email = reader.GetString(reader.GetOrdinal("Email"))
+            };
+        }
+
+        return null;
+    }
+
 }

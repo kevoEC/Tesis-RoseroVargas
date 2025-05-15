@@ -139,7 +139,7 @@ export default function FinalizacionForm({ id }) {
       <div className="space-y-1.5">
         <Label className="text-sm font-medium text-gray-700">Acción</Label>
         <Select value={decision} onValueChange={setDecision}>
-          <SelectTrigger className="text-sm">
+          <SelectTrigger className="text-sm border border-black">
             <SelectValue placeholder="Seleccione una acción" />
           </SelectTrigger>
           <SelectContent className="bg-white">
@@ -165,11 +165,57 @@ function FormInput({ label, value, onChange, type = "text" }) {
   );
 }
 
+
 function FormSwitch({ label, checked, onChange }) {
   return (
-    <div className="space-y-1.5 flex items-center gap-3">
-      <Switch checked={checked} onCheckedChange={onChange} className="border" />
+    <div className="flex items-center gap-4">
+      <div className="relative">
+        <Switch
+          checked={checked}
+          onCheckedChange={onChange}
+          className={`
+            peer
+            inline-flex
+            h-6 w-11 shrink-0
+            cursor-pointer
+            items-center
+            rounded-full
+            border
+            border-gray-700
+            transition-colors
+            duration-200
+            ease-in-out
+            ${checked ? "bg-primary" : "bg-gray-300"}
+          `}
+        />
+        {/* Círculo deslizante */}
+        <span
+          className={`
+            pointer-events-none
+            absolute
+            left-0.5 top-0.5
+            h-5 w-5
+            transform
+            rounded-full
+            bg-white
+            shadow
+            transition-transform
+            duration-200
+            ease-in-out
+            ${checked ? "translate-x-5" : "translate-x-0"}
+          `}
+        />
+      </div>
       <Label className="text-sm font-medium text-gray-700">{label}</Label>
+    </div>
+  );
+}
+
+function FormGroup({ label, children }) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-sm font-medium text-gray-700">{label}</Label>
+      {children}
     </div>
   );
 }

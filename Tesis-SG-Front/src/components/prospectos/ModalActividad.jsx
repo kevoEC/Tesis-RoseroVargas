@@ -1,26 +1,25 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 // src/components/prospectos/ModalActividad.jsx
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, } from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useState } from "react";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { createActividad } from "@/service/Entidades/ActividadService";
-
+import GlassLoader from "@/components/ui/GlassLoader";
 
 export default function ModalActividad({
   open,
   onClose,
-  onSave,
-  //modo = "crear",
+  onActividadCreada,
   modo,
   actividadEditar = null,
   tiposActividad = [],
   prioridades = [],
   idProspecto
 }) {
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     idTipoActividad: "",
     asunto: "",
@@ -30,8 +29,7 @@ export default function ModalActividad({
     idPrioridad: "",
     estado: "En progreso",
   });
-  console.log("📦 tiposActividad recibidos:", tiposActividad);
-  console.log("📦 prioridades recibidas:", prioridades);
+
   useEffect(() => {
     if (modo === "editar" && actividadEditar) {
       const { idTipoActividad, asunto, descripcion, duracion, vencimiento, idPrioridad, estado } = actividadEditar;
@@ -74,6 +72,7 @@ export default function ModalActividad({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const payload = {
       idTipoActividad: parseInt(form.idTipoActividad),
@@ -83,122 +82,120 @@ export default function ModalActividad({
       vencimiento: form.vencimiento,
       idPrioridad: parseInt(form.idPrioridad),
       estado: form.estado === "Finalizada",
-      idProspecto, // ⬅️ Asegúrate de incluirlo
+      idProspecto,
     };
 
     try {
-      console.warn("Payload a enviar:" + payload)
-      await createActividad(payload); // 🟢 Enviar al backend
-      if (onSave) onSave(payload);   // 📣 Notificar al padre (por si necesita recargar)
-      onClose();                     // 🔒 Cerrar el modal
+      await createActividad(payload);
+      if (onActividadCreada) onActividadCreada(); // 🔁 recarga tabla
+      onClose(); // ✅ cierra modal
     } catch (error) {
       console.error("Error al crear actividad:", error);
       alert("Hubo un error al crear la actividad. Intenta nuevamente.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (tiposActividad.length === 0 || prioridades.length === 0) {
-    return (
+  return (
+    <>
+      <GlassLoader message="Guardando actividad..." visible={loading} />
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className="max-w-md text-center">
-          <p className="text-gray-600">Cargando catálogos...</p>
+        <DialogContent className="min-w-[900px] max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{modo === "editar" ? "Editar Actividad" : "Nueva Actividad"}</DialogTitle>
+            <DialogDescription>Completa la información de la actividad.</DialogDescription>
+          </DialogHeader>
+
+          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-md mt-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormSelect
+                  label="Tipo de Actividad"
+                  value={form.idTipoActividad}
+                  onChange={(val) => handleChange("idTipoActividad", val)}
+                  options={tiposActividad.map((t) => ({ label: t.descripcion, value: t.idTipoActividad }))}
+                />
+                <FormSelect
+                  label="Prioridad"
+                  value={form.idPrioridad}
+                  onChange={(val) => handleChange("idPrioridad", val)}
+                  options={prioridades.map((p) => ({ label: p.categoria, value: p.idPrioridad }))}
+                />
+                <FormInput label="Asunto" value={form.asunto} onChange={(e) => handleChange("asunto", e.target.value)} />
+                <FormInput label="Duración (min)" value={form.duracion} type="number" onChange={(e) => handleChange("duracion", e.target.value)} />
+                <FormInput label="Vencimiento" value={form.vencimiento} type="datetime-local" onChange={(e) => handleChange("vencimiento", e.target.value)} />
+                {modo === "editar" && (
+                  <FormSelect
+                    label="Estado"
+                    value={form.estado}
+                    onChange={(val) => handleChange("estado", val)}
+                    options={[
+                      { label: "En progreso", value: "En progreso" },
+                      { label: "Finalizada", value: "Finalizada" },
+                    ]}
+                  />
+                )}
+                <div className="md:col-span-2">
+                  <Label className="text-sm text-gray-700 font-medium">Descripción</Label>
+                  <Textarea
+                    rows={3}
+                    value={form.descripcion}
+                    onChange={(e) => handleChange("descripcion", e.target.value)}
+                    placeholder="Descripción"
+                    className="text-sm border-gray-300"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-4">
+                <Button type="button" variant="outline" onClick={onClose}>
+                  Cancelar
+                </Button>
+                <Button type="submit">
+                  {modo === "editar" ? "Guardar Cambios" : "Crear Actividad"}
+                </Button>
+              </div>
+            </form>
+          </div>
         </DialogContent>
       </Dialog>
-    );
-  }
+    </>
+  );
+}
 
-
-
+// Subcomponentes reutilizables
+function FormInput({ label, value, onChange, type = "text" }) {
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>
-            {modo === "editar" ? "Editar Actividad" : "Nueva Actividad"}
-          </DialogTitle>
-        </DialogHeader>
+    <div className="space-y-1">
+      <Label className="text-sm text-gray-700 font-medium">{label}</Label>
+      <Input
+        type={type}
+        value={value}
+        onChange={onChange}
+        className="text-sm border-gray-300"
+        placeholder={label}
+      />
+    </div>
+  );
+}
 
-        <form onSubmit={handleSubmit} className="space-y-4 ">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label>Tipo de Actividad</Label>
-              <Select
-                value={form.idTipoActividad}
-                onValueChange={(val) => handleChange("idTipoActividad", val)}
-              >
-                <SelectTrigger><SelectValue placeholder="Seleccionar tipo..." /></SelectTrigger>
-                <SelectContent align="end" className="backdrop-blur-md">
-                  {tiposActividad.map((item) => (
-                    <SelectItem key={item.idTipoActividad} value={item.idTipoActividad.toString()}>
-                      {item.descripcion}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label>Prioridad</Label>
-              <Select
-                value={form.idPrioridad}
-                onValueChange={(val) => handleChange("idPrioridad", val)}
-              >
-                <SelectTrigger><SelectValue placeholder="Seleccionar prioridad..." /></SelectTrigger>
-                <SelectContent align="end" className="backdrop-blur-md">
-                  {prioridades.map((item) => (
-                    <SelectItem key={item.idPrioridad} value={item.idPrioridad.toString()}>
-                      {item.categoria}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div>
-            <Label>Asunto</Label>
-            <Input value={form.asunto} onChange={(e) => handleChange("asunto", e.target.value)} required />
-          </div>
-
-          <div>
-            <Label>Descripción</Label>
-            <Textarea rows={3} value={form.descripcion} onChange={(e) => handleChange("descripcion", e.target.value)} required />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label>Duración (minutos)</Label>
-              <Input type="number" value={form.duracion} onChange={(e) => handleChange("duracion", e.target.value)} required />
-            </div>
-
-            <div>
-              <Label>Vencimiento</Label>
-              <Input type="datetime-local" value={form.vencimiento} onChange={(e) => handleChange("vencimiento", e.target.value)} required />
-            </div>
-          </div>
-
-          {modo === "editar" && (
-            <div>
-              <Label>Estado</Label>
-              <Select
-                value={form.estado}
-                onValueChange={(val) => handleChange("estado", val)}
-              >
-                <SelectTrigger><SelectValue placeholder="Seleccionar estado" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="En progreso">En progreso</SelectItem>
-                  <SelectItem value="Finalizada">Finalizada</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
-          <DialogFooter className="pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>Cancelar</Button>
-            <Button type="submit">{modo === "editar" ? "Guardar Cambios" : "Crear Actividad"}</Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+function FormSelect({ label, value, onChange, options = [] }) {
+  return (
+    <div className="space-y-1">
+      <Label className="text-sm text-gray-700 font-medium">{label}</Label>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="text-sm border-gray-300 bg-white">
+          <SelectValue placeholder={label} />
+        </SelectTrigger>
+        <SelectContent className="bg-white border border-gray-200">
+          {options.map((opt) => (
+            <SelectItem key={opt.value} value={opt.value.toString()}>
+              {opt.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 }

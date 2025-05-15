@@ -49,7 +49,9 @@ export default function DatosGenerales() {
         setSolicitudData(data);
         const dg = data.datosGenerales;
         setDatosGenerales({
-          fechaNacimiento: dg.fechaNacimiento || "",
+          fechaNacimiento: dg.fechaNacimiento
+          ? dg.fechaNacimiento.split("T")[0]
+          : "",
           genero: dg.idGenero?.toString() || "",
           estadoCivil: dg.idEstadoCivil?.toString() || "",
           nivelAcademico: dg.idNivelAcademico?.toString() || "",
@@ -219,7 +221,7 @@ export default function DatosGenerales() {
             <Button
               onClick={handleSaveGeneral}
               disabled={loadingGeneral}
-              className="text-white"
+              className="bg-primary text-gray-200 hover:text-white hover:bg-primary/80 hover:shadow-md"
             >
               {loadingGeneral ? "Guardando..." : "Guardar Datos Generales"}
             </Button>
@@ -245,7 +247,7 @@ export default function DatosGenerales() {
                   setDatosGenerales({ ...datosGenerales, genero: v })
                 }
               >
-                <SelectTrigger className="bg-white border border-gray-300">
+                <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -263,7 +265,7 @@ export default function DatosGenerales() {
                   setDatosGenerales({ ...datosGenerales, estadoCivil: v })
                 }
               >
-                <SelectTrigger className="bg-white border border-gray-300">
+                <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -281,7 +283,7 @@ export default function DatosGenerales() {
                   setDatosGenerales({ ...datosGenerales, nivelAcademico: v })
                 }
               >
-                <SelectTrigger className="bg-white border border-gray-300">
+                <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -299,7 +301,7 @@ export default function DatosGenerales() {
                   setDatosGenerales({ ...datosGenerales, nacionalidad: v })
                 }
               >
-                <SelectTrigger className="bg-white border border-gray-300">
+                <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -320,7 +322,7 @@ export default function DatosGenerales() {
                   setDatosGenerales({ ...datosGenerales, profesion: v })
                 }
               >
-                <SelectTrigger className="bg-white border border-gray-300">
+                <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -341,7 +343,7 @@ export default function DatosGenerales() {
                   setDatosGenerales({ ...datosGenerales, etnia: v })
                 }
               >
-                <SelectTrigger className="bg-white border border-gray-300">
+                <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -425,7 +427,7 @@ export default function DatosGenerales() {
                   })
                 }
               >
-                <SelectTrigger className="bg-white border border-gray-300">
+                <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
