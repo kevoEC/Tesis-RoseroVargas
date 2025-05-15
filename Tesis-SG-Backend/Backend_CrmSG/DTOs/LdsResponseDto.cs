@@ -8,7 +8,7 @@
         public List<LdsResultadoItem>? resultados { get; set; }
         public bool coincidencia { get; set; }
         public int observacion { get; set; }
-        public DateTime fechaResultado { get; set; }
+        public DateTime? fechaResultado { get; set; }
         public string? tipoLista { get; set; }
     }
 
