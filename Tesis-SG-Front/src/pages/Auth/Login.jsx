@@ -119,14 +119,14 @@ export default function Login() {
               Ingresar
             </Button>
 
-            <Button
+            {/* <Button
               type="button"
               variant="outline"
               className="w-full flex items-center justify-center gap-2 btn-microsoft btn-animated text-base py-3 h-12"
             >
               <Icons.microsoft className="h-5 w-5" />
               Ingresar con Microsoft
-            </Button>
+            </Button> */}
           </div>
 
           <Separator />
