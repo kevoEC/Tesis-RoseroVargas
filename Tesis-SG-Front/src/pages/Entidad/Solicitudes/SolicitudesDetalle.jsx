@@ -46,18 +46,18 @@ export default function SimpleStepper() {
       label: "Beneficiarios",
       component: <Beneficiarios id={id} />,
     },
-    {
-      id: "finalizacion",
-      label: "Finalización",
-      component: <Finalizacion id={id} />,
-    },
-
+    
     // --- aquí añades tus dos nuevas pestañas ---
     { id: "adjuntos", label: "Adjuntos", component: <Adjuntos id={id} /> },
     {
       id: "tareas",
       label: "Tareas de solicitudes",
       component: <DatosGenerales id={id} />,
+    },
+    {
+      id: "finalizacion",
+      label: "Finalización",
+      component: <Finalizacion id={id} />,
     },
   ];
 
