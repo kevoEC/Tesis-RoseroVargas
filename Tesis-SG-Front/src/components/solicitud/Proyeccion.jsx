@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import {
   getProyeccionesPorSolicitud,
-  updateSolicitud,
+  actualizarProyeccion,
   getSolicitudById,
 } from "@/service/Entidades/ProyeccionService";
 import {
@@ -103,7 +103,7 @@ export default function Proyeccion() {
           idProyeccionSeleccionada: form.idProyeccionSeleccionada,
         },
       };
-      const res = await updateSolicitud(idSolicitud, payload);
+      const res = await actualizarProyeccion(idSolicitud, payload);
       res.success
         ? toast.success("Proyección guardada correctamente.")
         : toast.error("Error al guardar");

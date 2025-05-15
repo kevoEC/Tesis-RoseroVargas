@@ -68,3 +68,15 @@ export const getConfiguracionByProductoId = async (idProducto) => {
   );
   return handleResponse(res);
 };
+
+
+//Obtener la configuracion de 1 producto
+export const getSolicitudById = async (idProducto) => {
+  const res = await fetch(
+    `${API_BASE_URL}/vista/solicitudinversion/filtrarDTO?por=solicitud&id=${idProducto}`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+  return handleResponse(res);
+};
