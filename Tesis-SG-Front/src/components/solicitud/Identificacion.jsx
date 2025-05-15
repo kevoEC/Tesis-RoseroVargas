@@ -216,7 +216,7 @@ export default function Identificacion({ id }) {
   };
 
   return (
-    <div className="space-y-8 p-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-gray-800">Identificación</h2>
         <div className="flex items-center gap-3">
@@ -251,7 +251,7 @@ export default function Identificacion({ id }) {
 
       <Separator />
 
-      <Card className="shadow-md rounded-2xl bg-white border border-gray-600">
+      <Card className="shadow-md rounded-2xl bg-white border border-gray-200 shadow-md">
         <CardContent className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormSelect
@@ -332,7 +332,7 @@ export default function Identificacion({ id }) {
         <>
           <h2 className="text-2xl font-semibold text-gray-800">Validación</h2>
           <Separator />
-          <Card className="shadow-md rounded-2xl bg-white border border-gray-800">
+          <Card className="shadow-md rounded-2xl bg-white border border-gray-200 shadow-md">
             <CardContent className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormInput

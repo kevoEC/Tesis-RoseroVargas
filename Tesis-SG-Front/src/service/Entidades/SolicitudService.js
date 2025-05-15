@@ -36,7 +36,7 @@ export const getSolicitudById = async (id) => {
 };
 
 export const createSolicitud = async (data) => {
-  const res = await fetch(`${API_BASE_URL}/SolicitudInversion`, {
+  const res = await fetch(`${API_BASE_URL}/SolicitudInversion/estructura`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(data),
@@ -73,16 +73,17 @@ export const getSolicitudesFiltradas = async (filtro) => {
   return handleResponse(res);
 };
 
-export const getSolicitudesByProspectoId = async (idProspecto) => {
+export const getSolicitudesByProspectoId = async (id) => {
   const res = await fetch(
-    `${API_BASE_URL}/SolicitudInversion/prospecto/${idProspecto}`,
+    `${API_BASE_URL}/vista/solicitudinversion/filtrarDTO?por=prospecto&id=${id}`,
     {
       headers: getAuthHeaders(),
     }
   );
-  if (res.status === 404) return [];
-  return handleResponse(res);
+  const result = await handleResponse(res);
+  return result.data ?? [];
 };
+
 
 // 🔍 VALIDACIONES
 

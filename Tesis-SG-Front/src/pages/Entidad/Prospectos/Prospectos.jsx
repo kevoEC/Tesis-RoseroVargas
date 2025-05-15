@@ -13,6 +13,19 @@ export default function Prospectos() {
 
   const [prospectos, setProspectos] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const cargarProspectos = async () => {
+  try {
+    const data = await getProspectos();
+    setProspectos(data);
+  } catch (error) {
+    console.error("Error al cargar prospectos:", error);
+  }
+};
+
+useEffect(() => {
+  cargarProspectos();
+}, []);
+
 
   /*Cargar los datos al montar el componente*/
   useEffect(() => {
@@ -136,9 +149,10 @@ export default function Prospectos() {
             <DialogTitle>Agregar Prospecto</DialogTitle>
             <DialogDescription>Completa la información del nuevo prospecto</DialogDescription>
           </DialogHeader>
-          <ProspectoForm onClose={handleCerrarDialog} />
+          <ProspectoForm onClose={handleCerrarDialog} onSaved={cargarProspectos} />
         </DialogContent>
       </Dialog>
+
 
     </div>
 
