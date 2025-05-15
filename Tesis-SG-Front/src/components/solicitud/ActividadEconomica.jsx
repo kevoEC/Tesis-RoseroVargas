@@ -64,8 +64,10 @@ export default function ActividadEconomica({ id }) {
           cargo: data.actividadEconomica.cargo || "",
           antiguedad: data.actividadEconomica.antiguedad || "",
           telefonoTrabajo: data.actividadEconomica.telefonoTrabajo || "",
-          fechaInicioActividad:
-            data.actividadEconomica.fechaInicioActividad || "",
+          fechaInicioActividad: data.actividadEconomica.fechaInicioActividad
+            ? data.actividadEconomica.fechaInicioActividad.split("T")[0]
+            : "",
+
           direccionTrabajo: data.actividadEconomica.direccionTrabajo || "",
           referenciaDireccionTrabajo:
             data.actividadEconomica.referenciaDireccionTrabajo || "",
@@ -77,21 +79,21 @@ export default function ActividadEconomica({ id }) {
           getActividadEconomicaPrincipal(),
           getActividadEconomicaTrabajo(),
         ]);
-        
+
         // 🔁 Mapeamos los catálogos a formato común { id, nombre }
         const principal = principalRaw.map((item) => ({
           id: String(item.idActividadEconomicaPrincipal),
           nombre: item.nombre,
         }));
-        
+
         const trabajo = trabajoRaw.map((item) => ({
           id: String(item.idActividadEconomicaLugarTrabajo),
           nombre: item.nombre,
         }));
-        
+
         setCatalogoPrincipal(principal);
         setCatalogoTrabajo(trabajo);
-        
+
 
       } catch (error) {
         toast.error("Error al cargar datos: " + error.message);
@@ -302,7 +304,7 @@ function FormSelect({ label, options, value, onChange }) {
     <div className="space-y-1.5">
       <Label className="text-sm font-medium text-gray-700">{label}</Label>
       <Select value={String(value)} onValueChange={onChange}>
-        <SelectTrigger className="bg-white border border-gray-300">
+        <SelectTrigger className="bg-white border border-gray-700">
           <SelectValue placeholder="Seleccione una opción" />
         </SelectTrigger>
         <SelectContent className="bg-white">

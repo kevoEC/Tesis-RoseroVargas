@@ -134,7 +134,7 @@ function FormSelect({ label, options, value, onChange }) {
     <div className="space-y-1.5">
       <Label className="text-sm font-medium text-gray-700">{label}</Label>
       <Select value={String(value)} onValueChange={onChange}>
-        <SelectTrigger className="bg-white border border-gray-300">
+        <SelectTrigger className="bg-white border border-gray-700">
           <SelectValue placeholder="Seleccione una opción" />
         </SelectTrigger>
         <SelectContent className="bg-white">
