@@ -16,7 +16,7 @@ namespace Backend_CrmSG.Services.Validaciones
 
         public async Task<EquifaxResponseDto?> ValidarEquifaxAsync(EquifaxRequestDto dto)
         {
-            var url = "https://sgproyeccion.azurewebsites.net/validacion/equifax";
+            var url = "https://ascrmsg.azurewebsites.net/validacion/equifax";
 
             _http.DefaultRequestHeaders.Clear();
             _http.DefaultRequestHeaders.Add("x-api-key", "NSFPG2H3s6k+D8R0/fNYMU6wJABda67Z");

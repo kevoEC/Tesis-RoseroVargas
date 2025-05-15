@@ -185,3 +185,72 @@
             focus-visible:ring-2 focus-visible:ring-[--color-primary];
   }
 }
+
+/* 🎨 Scroll personalizado */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.scrollbar-light::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar-light::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-light::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.15); /* gris suave */
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.3s ease;
+}
+
+.scrollbar-light::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 100, 100, 0.3); /* un poco más oscuro al pasar el mouse */
+}
+
+
+.bg-dash-pattern {
+  background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
+  background-size: 12px 12px;
+}
+
+
+.scrollbar-morado::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scrollbar-morado::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-morado::-webkit-scrollbar-thumb {
+  background-color: rgba(79, 70, 229, 0.25); /* morado suave */
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.scrollbar-morado::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(79, 70, 229, 0.45);
+}
+
+
