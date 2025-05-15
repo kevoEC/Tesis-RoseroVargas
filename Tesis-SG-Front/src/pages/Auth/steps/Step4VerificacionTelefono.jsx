@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import StepIndicator from "@/components/ui/StepIndicator";
+import GlassLoader from "@/components/ui/GlassLoader";
 import { toast } from "sonner";
-
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -16,7 +16,6 @@ import {
   AlertDialogCancel,
   AlertDialogAction
 } from "@/components/ui/alert-dialog";
-
 import {
   Select,
   SelectTrigger,
@@ -24,6 +23,10 @@ import {
   SelectItem,
   SelectValue
 } from "@/components/ui/select";
+import {
+  enviarCodigoTelefono,
+  validarCodigoTelefono
+} from "@/service/Registro/RegistroService";
 
 const countries = [
   { code: "+593", label: "Ecuador" },
@@ -34,27 +37,80 @@ const countries = [
 ];
 
 export default function Step4VerificacionTelefono({ onNext }) {
+  const idUsuario = localStorage.getItem("idUsuario");
   const [step, setStep] = useState("phone");
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("+593");
   const [token, setToken] = useState("");
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const fullPhone = `${country} ${phone}`;
 
-  const sendToken = () => {
+  useEffect(() => {
+    if (!idUsuario) {
+      toast.error("ID de usuario no encontrado.");
+    }
+  }, []);
+
+  const sendToken = async () => {
     setOpenConfirm(false);
-    toast.success("Código enviado por SMS 📲");
-    setStep("token");
+    setLoading(true);
+
+    try {
+      const response = await enviarCodigoTelefono({
+        idUsuario: parseInt(idUsuario),
+        numero: phone,
+        extension: country
+      });
+
+      if (!response.success) {
+        toast.error(response.message || "No se pudo enviar el SMS.");
+        return;
+      }
+
+      if (response.yaValidado) {
+        toast.success("Número ya validado ✅");
+        onNext();
+        return;
+      }
+
+      toast.success("Código enviado por SMS 📲");
+      setStep("token");
+    } catch (error) {
+      toast.error("Error al contactar con el servidor.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const verifyToken = () => {
-    toast.success("Número verificado correctamente ✅");
-    onNext();
+  const verifyToken = async () => {
+    setLoading(true);
+
+    try {
+      const response = await validarCodigoTelefono({
+        idUsuario: parseInt(idUsuario),
+        codigo: token
+      });
+
+      if (!response.success) {
+        toast.error(response.message || "Código inválido o expirado.");
+        return;
+      }
+
+      toast.success("Número verificado correctamente ✅");
+      onNext();
+    } catch (error) {
+      toast.error("Error al validar el código.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-pattern flex flex-col items-center justify-center px-4 text-[--color-fg]">
+      <GlassLoader visible={loading} message="Procesando solicitud..." />
+
       <img
         src="/png/Logo SG 1 1.png"
         alt="SG Consulting Group"
@@ -74,7 +130,6 @@ export default function Step4VerificacionTelefono({ onNext }) {
                 </p>
               </div>
 
-              {/* Selector de país + teléfono */}
               <div className="space-y-2">
                 <Label className="text-base font-medium">Número de celular</Label>
                 <div className="flex gap-2">
@@ -87,7 +142,7 @@ export default function Step4VerificacionTelefono({ onNext }) {
                         <SelectItem
                           key={c.code}
                           value={c.code}
-                          className="text-sm px-3 py-2 rounded-md cursor-pointer transition-colors data-[state=checked]:bg-indigo-600/80 data-[state=checked]:text-white hover:bg-indigo-600/20"
+                          className="text-sm px-3 py-2"
                         >
                           {c.code} {c.label}
                         </SelectItem>

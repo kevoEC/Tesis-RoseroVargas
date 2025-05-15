@@ -26,96 +26,40 @@ export default function Proyeccion() {
   const [aceptaCliente, setAceptaCliente] = useState(false);
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (idSolicitud) {
-          const res = await getProyeccionesPorSolicitud(idSolicitud);
-          setProyecciones(res.proyecciones || []);
-          
-        }
-
-        const asesoresData = await getAsesoresComerciales();
-        setAsesores(asesoresData || []);
-
-        const justificativosData = await getJustificativoTransaccion();
-        setJustificativos(justificativosData || []);
-      } catch (err) {
-        notify.info("Hubo un error al obtener datos.");
-        console.error(err);
-      } finally {
-        setLoading(false);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      if (idSolicitud) {
+        const res = await getProyeccionesPorSolicitud(idSolicitud);
+        setProyecciones(res.proyecciones || []);
       }
-    };
 
-    fetchData();
-  }, [idSolicitud]);
-const columnas= [
-  {key:"proyeccionNombre", label:"Nombre"},
-  {key:"tasa", label:"Tasa (%)"},
-  {key:"capital", label:"Capital"},
-  {key:"fechaInicial", label:"Fecha Inicial"},
-  {key:"idProducto", label:"ID de Producto"},
-  {key:"idUsuarioCreacion", label:"Usuario Creador"},
+      const asesoresData = await getAsesoresComerciales();
+      setAsesores(asesoresData || []);
 
+      const justificativosData = await getJustificativoTransaccion();
+      setJustificativos(justificativosData || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, [idSolicitud]);
+
+const columnas = [
+  { key: "proyeccionNombre", label: "Nombre" },
+  { key: "tasa", label: "Tasa (%)" },
+  { key: "capital", label: "Capital" },
+  { key: "fechaInicial", label: "Fecha Inicial" },
+  { key: "idUsuarioCreacion", label: "Usuario Creador" },
 ];
+
   return (
     <div className="space-y-6 px-4 sm:px-6 py-6">
       <h2 className="text-xl font-semibold text-gray-800">Proyecciones vinculadas</h2>
-
-      <div className="flex justify-end mb-2">
-        {/* <Button
-          onClick={() => navigate(`/solicitudes/editar/${idSolicitud}/proyeccion/nueva`)}
-          className="bg-primary text-gray-200 hover:text-white hover:bg-primary/80 cursor-pointer flex items-center gap-2"
-        >
-          <FaPlus className="text-white" /> Agregar Proyección
-        </Button> */}
-      </div>
-
-      {/* <Card>
-        <CardContent className="space-y-6 px-4 sm:px-6 py-6">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nombre</TableHead>
-                  <TableHead>Tasa %</TableHead>
-                  <TableHead>Capital</TableHead>
-                  <TableHead>Fecha Inicial</TableHead>
-                  <TableHead>ID Producto</TableHead>
-                  <TableHead>Usuario Creador</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                      Cargando...
-                    </TableCell>
-                  </TableRow>
-                ) : proyecciones.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                      No existen proyecciones para esta solicitud.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  proyecciones.map((p) => (
-                    <TableRow key={p.idProyeccion}>
-                      <TableCell>{p.proyeccionNombre}</TableCell>
-                      <TableCell>{p.tasa.toFixed(2)}%</TableCell>
-                      <TableCell>${p.capital}</TableCell>
-                      <TableCell>{new Date(p.fechaInicial).toLocaleDateString()}</TableCell>
-                      <TableCell>{p.idProducto}</TableCell>
-                      <TableCell>{p.idUsuarioCreacion}</TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card> */}
       <Card>
         <CardContent className="space-y-6 px-4 sm:px-6 py-6">
           <TablaCustom2

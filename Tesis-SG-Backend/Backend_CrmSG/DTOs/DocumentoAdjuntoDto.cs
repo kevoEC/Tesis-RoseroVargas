@@ -6,6 +6,7 @@
         public int IdTipoDocumento { get; set; }
         public string? TipoDocumentoNombre { get; set; }
         public string? CodigoTipoDocumento { get; set; }
+        public byte[]? Archivo { get; set; } // tipo binario directo
         public int? IdMotivo { get; set; }
         public string? MotivoNombre { get; set; }
         public int? IdTarea { get; set; }

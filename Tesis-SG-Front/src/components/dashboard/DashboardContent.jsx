@@ -20,7 +20,7 @@ export default function DashboardContent() {
   const Component = routeComponents[contentRoute];
 
   return (
-    <main className="flex-1 overflow-y-auto bg-[--color-bg] p-6 text-[--color-fg] fade-in-up">
+    <main className="flex-1 overflow-y-auto bg-[--color-bg] p-6 text-[--color-fg] fade-in-up scrollbar-light">
       <div className="max-w-7xl mx-auto space-y-6">
         {Component ? (
           <Suspense fallback={<div className="text-center">Cargando...</div>}>

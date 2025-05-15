@@ -5,19 +5,23 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, CheckCircle, XCircle } from "lucide-react";
 import StepIndicator from "@/components/ui/StepIndicator";
+import GlassLoader from "@/components/ui/GlassLoader";
+import { registroParcial } from "@/service/Registro/RegistroService";
 
-export default function Step2DatosPersonales({ onNext, onBack }) {
+export default function Step2DatosPersonales({ data, setData, onNext, onBack }) {
   const [form, setForm] = useState({
-    nombres: "",
+    nombres: data.nombres || "",
     segundoNombre: "",
     apellidoPaterno: "",
     apellidoMaterno: "",
-    password: "",
+    password: data.contrasena || "",
     confirmPassword: "",
   });
 
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -35,9 +39,54 @@ export default function Step2DatosPersonales({ onNext, onBack }) {
     Object.values(passwordChecks).every(Boolean) &&
     form.password === form.confirmPassword;
 
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError("");
+
+    const payload = {
+      email: data.correo,
+      identificacion: data.identificacion,
+      terminosAceptados:
+        data.aceptaClausula && data.aceptaTerminos && data.aceptaPrivacidad,
+      primerNombre: form.nombres,
+      segundoNombre: form.segundoNombre,
+      primerApellido: form.apellidoPaterno,
+      segundoApellido: form.apellidoMaterno,
+      contraseña: form.password,
+    };
+
+    try {
+      const response = await registroParcial(payload);
+
+      if (response.success) {
+        // Guardar en localStorage
+        localStorage.setItem("idUsuario", response.idUsuario);
+
+        // Actualizar formData global
+        setData((prev) => ({
+          ...prev,
+          nombres: form.nombres,
+          contrasena: form.password,
+          segundoNombre: form.segundoNombre,
+          apellidoPaterno: form.apellidoPaterno,
+          apellidoMaterno: form.apellidoMaterno,
+        }));
+
+        onNext(); // Avanzar al paso 3
+      } else {
+        setError(response.message);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-pattern flex flex-col items-center justify-center px-4 text-[--color-fg]">
-      {/* Logo SG */}
+      <GlassLoader visible={loading} message="Creando cuenta y enviando correo..." />
+
       <img src="/png/Logo SG 1 1.png" alt="SG Consulting Group" className="h-14 mb-8" />
 
       <Card className="w-full max-w-md bg-white text-[--color-fg] shadow-md rounded-xl border border-[--color-border] fade-in-up">
@@ -52,43 +101,19 @@ export default function Step2DatosPersonales({ onNext, onBack }) {
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label>Primer nombre</Label>
-              <Input
-                name="nombres"
-                placeholder="Ej. Juan"
-                value={form.nombres}
-                onChange={handleChange}
-                className="h-11 text-base bg-[--color-bg] border border-[--color-border]"
-              />
+              <Input name="nombres" placeholder="Ej. Juan" value={form.nombres} onChange={handleChange} />
             </div>
             <div className="space-y-1.5">
               <Label>Segundo nombre</Label>
-              <Input
-                name="segundoNombre"
-                placeholder="Ej. Carlos"
-                value={form.segundoNombre}
-                onChange={handleChange}
-                className="h-11 text-base bg-[--color-bg] border border-[--color-border]"
-              />
+              <Input name="segundoNombre" placeholder="Ej. Carlos" value={form.segundoNombre} onChange={handleChange} />
             </div>
             <div className="space-y-1.5">
               <Label>Apellido paterno</Label>
-              <Input
-                name="apellidoPaterno"
-                placeholder="Ej. Pérez"
-                value={form.apellidoPaterno}
-                onChange={handleChange}
-                className="h-11 text-base bg-[--color-bg] border border-[--color-border]"
-              />
+              <Input name="apellidoPaterno" placeholder="Ej. Pérez" value={form.apellidoPaterno} onChange={handleChange} />
             </div>
             <div className="space-y-1.5">
               <Label>Apellido materno</Label>
-              <Input
-                name="apellidoMaterno"
-                placeholder="Ej. Gómez"
-                value={form.apellidoMaterno}
-                onChange={handleChange}
-                className="h-11 text-base bg-[--color-bg] border border-[--color-border]"
-              />
+              <Input name="apellidoMaterno" placeholder="Ej. Gómez" value={form.apellidoMaterno} onChange={handleChange} />
             </div>
           </div>
 
@@ -98,16 +123,11 @@ export default function Step2DatosPersonales({ onNext, onBack }) {
               <Input
                 name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
                 value={form.password}
                 onChange={handleChange}
-                className="h-11 text-base pr-10 bg-[--color-bg] border border-[--color-border]"
+                className="pr-10"
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-3 flex items-center text-[--color-muted]"
-              >
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-3">
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
@@ -119,16 +139,11 @@ export default function Step2DatosPersonales({ onNext, onBack }) {
               <Input
                 name="confirmPassword"
                 type={showConfirm ? "text" : "password"}
-                placeholder="Repite la contraseña"
                 value={form.confirmPassword}
                 onChange={handleChange}
-                className="h-11 text-base pr-10 bg-[--color-bg] border border-[--color-border]"
+                className="pr-10"
               />
-              <button
-                type="button"
-                onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute inset-y-0 right-3 flex items-center text-[--color-muted]"
-              >
+              <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute inset-y-0 right-3">
                 {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
@@ -137,48 +152,36 @@ export default function Step2DatosPersonales({ onNext, onBack }) {
           {form.password.length > 0 && (
             <div className="text-sm space-y-1 pt-2">
               <p className="font-medium">Tu contraseña debe incluir:</p>
-              {[
-                ["length", "Más de 8 caracteres"],
-                ["upper", "Al menos 1 mayúscula"],
-                ["lower", "Al menos 1 minúscula"],
-                ["number", "Al menos 1 número"],
-                ["special", "Al menos 1 caracter especial"],
-              ].map(([key, label]) => (
+              {Object.entries(passwordChecks).map(([key, passed]) => (
                 <div key={key} className="flex items-center gap-2 text-[--color-muted]">
-                  {passwordChecks[key] ? (
-                    <CheckCircle className="text-green-600 w-4 h-4" />
-                  ) : (
-                    <XCircle className="text-gray-300 w-4 h-4" />
-                  )}
-                  <span>{label}</span>
+                  {passed ? <CheckCircle className="text-green-600 w-4 h-4" /> : <XCircle className="text-gray-300 w-4 h-4" />}
+                  <span>
+                    {{
+                      length: "Más de 8 caracteres",
+                      upper: "Al menos 1 mayúscula",
+                      lower: "Al menos 1 minúscula",
+                      number: "Al menos 1 número",
+                      special: "Al menos 1 caracter especial",
+                    }[key]}
+                  </span>
                 </div>
               ))}
             </div>
           )}
 
+          {error && <p className="text-red-500 text-sm pt-2">{error}</p>}
+
           <div className="space-y-2 pt-6">
-            <Button
-              type="button"
-              className="w-full btn-primary btn-animated text-base py-3 h-12"
-              onClick={() => onNext(form)}
-              disabled={!allValid}
-            >
+            <Button className="w-full py-3 h-12" onClick={handleSubmit} disabled={!allValid}>
               Continuar
             </Button>
-
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full btn-microsoft btn-animated text-base py-3 h-12"
-              onClick={onBack}
-            >
+            <Button variant="outline" className="w-full py-3 h-12" onClick={onBack}>
               Volver
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      {/* Footer */}
       <footer className="text-center text-xs text-[--color-muted] mt-8">
         © SG CONSULTING GROUP ·{" "}
         <a href="/legal/privacidad" target="_blank" className="underline hover:text-[--color-primary]">

@@ -1,20 +1,9 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import StepIndicator from "@/components/ui/StepIndicator";
-import { toast } from "sonner";
 
-export default function Step3VerificacionCorreo({ data, onNext }) {
+export default function Step3VerificacionCorreo({ data }) {
   const [email] = useState(data.correo || "usuario@correo.com");
-
-  const reenviarCorreo = () => {
-    toast.success("Correo de verificación enviado nuevamente 📬");
-  };
-
-  const continuar = () => {
-    toast.success("Correo verificado correctamente ✅");
-    onNext(); // avanzamos al paso 4
-  };
 
   return (
     <div className="min-h-screen bg-pattern flex flex-col items-center justify-center px-4 text-[--color-fg]">
@@ -31,35 +20,21 @@ export default function Step3VerificacionCorreo({ data, onNext }) {
           <StepIndicator currentStep={3} />
 
           <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-black">Tu registro ha sido exitoso</h1>
+            <h1 className="text-2xl font-bold text-black">Revisa tu correo electrónico</h1>
             <p className="text-sm text-[--color-muted] leading-relaxed">
-              Te hemos enviado un correo electrónico a: <br />
+              Te hemos enviado un enlace de activación a: <br />
               <strong className="text-black">{email}</strong> <br />
-              Por favor revísalo para activar tu cuenta.
+              Por favor, revisa tu bandeja de entrada (o la carpeta de spam) y sigue las instrucciones para continuar con tu registro.
             </p>
           </div>
 
-          <div className="space-y-3 pt-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={reenviarCorreo}
-              className="w-full btn-microsoft btn-animated text-sm py-3 h-12"
-            >
-              Volver a enviar el correo
-            </Button>
-
-            <Button
-              type="button"
-              onClick={continuar}
-              className="w-full btn-primary btn-animated text-sm py-3 h-12"
-            >
-              Ya verifiqué mi correo
-            </Button>
+          <div className="text-xs text-[--color-muted] pt-2">
+            Este paso se completará automáticamente cuando verifiques tu cuenta desde el enlace enviado.
           </div>
         </CardContent>
       </Card>
 
+      {/* Footer */}
       <footer className="text-center text-xs text-[--color-muted] mt-8">
         © SG CONSULTING GROUP ·{" "}
         <a href="/legal/privacidad" target="_blank" className="underline hover:text-[--color-primary]">
