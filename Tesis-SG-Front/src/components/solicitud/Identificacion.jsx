@@ -74,8 +74,8 @@ export default function Identificacion({ id }) {
       f.tipoSolicitud === "Nueva"
         ? 1
         : f.tipoSolicitud === "Renovación"
-          ? 2
-          : 3,
+        ? 2
+        : 3,
     tipoCliente: f.tipoCliente === "Natural" ? 1 : 2,
     tipoDocumento:
       f.tipoDocumento === "Cédula" ? 1 : f.tipoDocumento === "RUC" ? 2 : 3,
@@ -244,7 +244,6 @@ export default function Identificacion({ id }) {
             >
               Editar datos
             </button>
-
           )}
         </div>
       </div>
