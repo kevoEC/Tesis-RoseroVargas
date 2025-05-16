@@ -94,7 +94,7 @@ export default function Identificacion({ id }) {
         const data = full.identificacion;
         setSolicitudData(full);
         setForm(f => ({
-          ...f,
+           ...f,
           idTipoSolicitud: data.idTipoSolicitud,
           idTipoCliente: data.idTipoCliente,
           idTipoDocumento: data.idTipoDocumento,
