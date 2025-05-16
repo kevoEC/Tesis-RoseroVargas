@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Backend_CrmSG.Models.Vistas;
 using Backend_CrmSG.DTOs.SolicitudDTOs;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 
 namespace Backend_CrmSG.Controllers.Entidad
@@ -15,11 +18,14 @@ namespace Backend_CrmSG.Controllers.Entidad
     {
         private readonly IRepository<SolicitudInversion> _repository;
         private readonly IRepository<SolicitudInversionDetalle> _vistaRepository;
+        private readonly IConfiguration _configuration;
 
-        public SolicitudInversionController(IRepository<SolicitudInversion> repository, IRepository<SolicitudInversionDetalle> vistaRepository)
+
+        public SolicitudInversionController(IRepository<SolicitudInversion> repository, IRepository<SolicitudInversionDetalle> vistaRepository, IConfiguration configuration)
         {
             _repository = repository;
             _vistaRepository = vistaRepository;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -152,6 +158,35 @@ namespace Backend_CrmSG.Controllers.Entidad
                 });
             }
         
+        }
+
+
+        [HttpPost("finalizar")]
+        public async Task<IActionResult> FinalizarSolicitud([FromBody] FinalizarSolicitudDto dto)
+        {
+            try
+            {
+                var connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+                using var connection = new SqlConnection(connectionString);
+                await connection.OpenAsync();
+
+                var parameters = new DynamicParameters();
+                parameters.Add("@IdSolicitudInversion", dto.IdSolicitudInversion);
+
+                await connection.ExecuteAsync("sp_CrearTareasPorSolicitudInversion", parameters, commandType: CommandType.StoredProcedure);
+
+                return Ok(new { success = true, message = "Tareas generadas correctamente." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Error al generar tareas.",
+                    error = ex.Message
+                });
+            }
         }
 
 
