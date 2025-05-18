@@ -1,6 +1,7 @@
 ﻿using Backend_CrmSG.Data;
 using Backend_CrmSG.DTOs;
 using Backend_CrmSG.Models.Entidades;
+using Backend_CrmSG.Models.Vistas;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend_CrmSG.Services.Entidad
@@ -14,37 +15,42 @@ namespace Backend_CrmSG.Services.Entidad
             _context = context;
         }
 
-        public async Task<List<Tarea>> ObtenerTodas()
+        // ✅ Retorna todas las tareas desde la vista enriquecida
+        public async Task<List<TareaDetalle>> ObtenerTodas()
         {
-            return await _context.Tarea.ToListAsync();
+            return await _context.TareasDetalle.ToListAsync();
         }
 
-        public async Task<List<Tarea>> ObtenerPorRol(int idRol)
+        // ✅ Filtra tareas por rol usando la vista enriquecida
+        public async Task<List<TareaDetalle>> ObtenerPorRol(int idRol)
         {
             List<int> tipoTareas = idRol switch
             {
                 1 => await _context.Tarea.Select(t => t.IdTipoTarea).Distinct().ToListAsync(), // Ver todas
-                2 or 9 => new List<int> { 4 },     // Comprobante de abono
-                3 => new List<int> { 2 },          // Revisión legal
-                4 => new List<int> { 6 },          // Revisión por riesgo
-                5 => new List<int> { 1, 3 },       // Documental + Contrato
-                6 => new List<int> { 5, 6 },       // Conciliación + Riesgo
+                2 or 9 => new List<int> { 4 },  // Comprobante de abono
+                3 => new List<int> { 2 },       // Revisión legal
+                4 => new List<int> { 6 },       // Revisión por riesgo
+                5 => new List<int> { 1, 3 },    // Documental + Contrato
+                6 => new List<int> { 5, 6 },    // Conciliación + Riesgo
                 _ => new List<int>()
             };
 
             if (!tipoTareas.Any())
-                return new List<Tarea>();
+                return new List<TareaDetalle>();
 
-            return await _context.Tarea
+            return await _context.TareasDetalle
                 .Where(t => tipoTareas.Contains(t.IdTipoTarea))
                 .ToListAsync();
         }
 
-        public async Task<Tarea?> ObtenerPorId(int idTarea)
+        // ✅ Detalle completo desde la vista enriquecida
+        public async Task<TareaDetalle?> ObtenerDetallePorId(int idTarea)
         {
-            return await _context.Tarea.FindAsync(idTarea);
+            return await _context.TareasDetalle
+                .FirstOrDefaultAsync(t => t.IdTarea == idTarea);
         }
 
+        // ✅ Actualización segura de la tarea real (no desde vista)
         public async Task Actualizar(int idTarea, TareaUpdateDTO dto, int idUsuario)
         {
             var tarea = await _context.Tarea.FindAsync(idTarea);
