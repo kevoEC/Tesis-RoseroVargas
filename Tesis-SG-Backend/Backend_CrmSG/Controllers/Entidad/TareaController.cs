@@ -64,5 +64,13 @@ namespace Backend_CrmSG.Controllers.Entidad
                 return StatusCode(500, new { success = false, message = "Error al actualizar tarea.", error = ex.Message });
             }
         }
+
+        [HttpGet("por-solicitud/{idSolicitud}")]
+        public async Task<IActionResult> ObtenerPorSolicitud(int idSolicitud)
+        {
+            var tareas = await _tareaService.ObtenerPorSolicitudAsync(idSolicitud);
+            return Ok(new { success = true, data = tareas });
+        }
+
     }
 }

@@ -5232,6 +5232,29 @@
         }
       }
     },
+    "/api/Tarea/por-solicitud/{idSolicitud}": {
+      "get": {
+        "tags": [
+          "Tarea"
+        ],
+        "parameters": [
+          {
+            "name": "idSolicitud",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/TipoActividad": {
       "get": {
         "tags": [
