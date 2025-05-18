@@ -1870,6 +1870,36 @@
         }
       }
     },
+    "/api/Documento/por-solicitud-y-motivo": {
+      "get": {
+        "tags": [
+          "Documento"
+        ],
+        "parameters": [
+          {
+            "name": "idSolicitudInversion",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "idMotivo",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/EstadoCivil": {
       "get": {
         "tags": [
@@ -5073,6 +5103,135 @@
         }
       }
     },
+    "/api/SolicitudInversion/finalizar": {
+      "post": {
+        "tags": [
+          "SolicitudInversion"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalizarSolicitudDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalizarSolicitudDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalizarSolicitudDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Tarea": {
+      "get": {
+        "tags": [
+          "Tarea"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Tarea/por-rol/{idRol}": {
+      "get": {
+        "tags": [
+          "Tarea"
+        ],
+        "parameters": [
+          {
+            "name": "idRol",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Tarea/{id}": {
+      "get": {
+        "tags": [
+          "Tarea"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Tarea"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TareaUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TareaUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TareaUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/TipoActividad": {
       "get": {
         "tags": [
@@ -7792,6 +7951,16 @@
         },
         "additionalProperties": false
       },
+      "FinalizarSolicitudDto": {
+        "type": "object",
+        "properties": {
+          "idSolicitudInversion": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "Genero": {
         "type": "object",
         "properties": {
@@ -8612,6 +8781,24 @@
           },
           "adjuntos": {
             "$ref": "#/components/schemas/AdjuntosUpdateDTO"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TareaUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "idResultado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "observación": {
+            "type": "string",
+            "nullable": true
+          },
+          "datosEspecificos": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

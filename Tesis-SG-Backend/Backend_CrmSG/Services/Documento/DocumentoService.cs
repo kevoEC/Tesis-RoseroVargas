@@ -179,6 +179,31 @@ namespace Backend_CrmSG.Services.Documento
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<List<DocumentoAdjuntoDto>> ObtenerPorSolicitudYMotivoAsync(int idSolicitudInversion, int idMotivo)
+        {
+            return await _context.DocumentosAdjuntos
+                .Where(d =>
+                    d.IdSolicitudInversion == idSolicitudInversion &&
+                    d.IdMotivo == idMotivo)
+                .Select(d => new DocumentoAdjuntoDto
+                {
+                    IdDocumento = d.IdDocumento,
+                    IdTipoDocumento = d.IdTipoDocumento,
+                    TipoDocumentoNombre = d.TipoDocumentoNombre,
+                    CodigoTipoDocumento = d.CodigoTipoDocumento,
+                    IdMotivo = d.IdMotivo,
+                    MotivoNombre = d.MotivoNombre,
+                    IdTarea = d.IdTarea,
+                    IdSolicitudInversion = d.IdSolicitudInversion,
+                    IdInversion = d.IdInversion,
+                    FechaCreacion = d.FechaCreacion,
+                    PermitirDuplicados = d.PermitirDuplicados,
+                    CopiarInversion = d.CopiarInversion,
+                    IdTipoArchivo = d.IdTipoArchivo
+                })
+                .ToListAsync();
+        }
+
 
 
 
