@@ -36,9 +36,9 @@ namespace Backend_CrmSG.Controllers.Entidad
 
         // GET: api/tarea/{id}
         [HttpGet("{id}")]
-        public async Task<IActionResult> ObtenerPorId(int id)
+        public async Task<IActionResult> ObtenerDetallePorId(int id)
         {
-            var tarea = await _tareaService.ObtenerPorId(id);
+            var tarea = await _tareaService.ObtenerDetallePorId(id);
             if (tarea == null)
                 return NotFound(new { success = false, message = "Tarea no encontrada" });
 
