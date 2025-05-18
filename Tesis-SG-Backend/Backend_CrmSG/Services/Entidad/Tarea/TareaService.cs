@@ -65,5 +65,13 @@ namespace Backend_CrmSG.Services.Entidad
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<TareaDetalle>> ObtenerPorSolicitudAsync(int idSolicitudInversion)
+        {
+            return await _context.TareasDetalle
+                .Where(t => t.IdSolicitudInversion == idSolicitudInversion)
+                .ToListAsync();
+        }
+
     }
 }

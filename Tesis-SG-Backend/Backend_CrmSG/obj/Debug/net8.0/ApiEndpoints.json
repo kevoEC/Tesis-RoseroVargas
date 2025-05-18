@@ -3154,6 +3154,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.TareaController",
+    "Method": "ObtenerPorSolicitud",
+    "RelativePath": "api/Tarea/por-solicitud/{idSolicitud}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idSolicitud",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Backend_CrmSG.Controllers.Catalogos.TipoActividadController",
     "Method": "Get",
     "RelativePath": "api/TipoActividad",
