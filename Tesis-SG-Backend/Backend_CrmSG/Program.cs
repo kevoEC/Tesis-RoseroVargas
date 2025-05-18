@@ -11,6 +11,7 @@ using Backend_CrmSG.Services.Validaciones;
 using Backend_CrmSG.Services.Documento;
 using Backend_CrmSG.Services.Correo;
 using Backend_CrmSG.Services.SMS;
+using Backend_CrmSG.Services.Entidad;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtKey = builder.Configuration["Jwt:Key"]
@@ -152,6 +153,8 @@ builder.Services.AddHttpClient<IValidacionService, ValidacionService>();
 builder.Services.AddScoped<IDocumentoService, DocumentoService>();
 builder.Services.AddScoped<ICorreoService, CorreoService>();
 builder.Services.AddScoped<ISmsService, TwilioSmsService>();
+builder.Services.AddScoped<ITareaService, TareaService>();
+
 
 
 // Catálogos
