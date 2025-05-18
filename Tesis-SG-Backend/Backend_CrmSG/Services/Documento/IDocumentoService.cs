@@ -14,7 +14,7 @@ namespace Backend_CrmSG.Services.Documento
         Task<bool> DesactivarDocumentoAsync(int idDocumento);
         Task<bool> ActualizarArchivoAsync(int idDocumento, DocumentoActualizarDto dto);
         Task<DocumentoAdjuntoDto?> ObtenerDesdeVistaPorIdAsync(int idDocumento);
-
+        Task<List<DocumentoAdjuntoDto>> ObtenerPorSolicitudYMotivoAsync(int idSolicitudInversion, int idMotivo);
 
     }
 }

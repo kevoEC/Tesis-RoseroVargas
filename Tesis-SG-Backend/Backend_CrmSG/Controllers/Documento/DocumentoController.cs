@@ -128,8 +128,11 @@ namespace Backend_CrmSG.Controllers.Documento
             return Ok(new { success = true, documento });
         }
 
-
-
-
+        [HttpGet("por-solicitud-y-motivo")]
+        public async Task<IActionResult> ObtenerPorSolicitudYMotivo([FromQuery] int idSolicitudInversion, [FromQuery] int idMotivo)
+        {
+            var documentos = await _documentoService.ObtenerPorSolicitudYMotivoAsync(idSolicitudInversion, idMotivo);
+            return Ok(new { success = true, data = documentos });
+        }
     }
 }

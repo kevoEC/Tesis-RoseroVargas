@@ -1113,6 +1113,27 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Backend_CrmSG.Controllers.Documento.DocumentoController",
+    "Method": "ObtenerPorSolicitudYMotivo",
+    "RelativePath": "api/Documento/por-solicitud-y-motivo",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idSolicitudInversion",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "idMotivo",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Backend_CrmSG.Controllers.Catalogo.EstadoCivilController",
     "Method": "Get",
     "RelativePath": "api/EstadoCivil",
@@ -3029,6 +3050,22 @@
   },
   {
     "ContainingType": "Backend_CrmSG.Controllers.Entidad.SolicitudInversionController",
+    "Method": "FinalizarSolicitud",
+    "RelativePath": "api/SolicitudInversion/finalizar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.DTOs.SolicitudDTOs.FinalizarSolicitudDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.SolicitudInversionController",
     "Method": "FiltrarPorId",
     "RelativePath": "api/SolicitudInversion/por-prospecto/{idProspecto}",
     "HttpMethod": "GET",
@@ -3048,6 +3085,69 @@
       {
         "Name": "idProspecto",
         "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.TareaController",
+    "Method": "ObtenerTodas",
+    "RelativePath": "api/Tarea",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.TareaController",
+    "Method": "ObtenerDetallePorId",
+    "RelativePath": "api/Tarea/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.TareaController",
+    "Method": "Actualizar",
+    "RelativePath": "api/Tarea/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.DTOs.TareaUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.TareaController",
+    "Method": "ObtenerPorRol",
+    "RelativePath": "api/Tarea/por-rol/{idRol}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idRol",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

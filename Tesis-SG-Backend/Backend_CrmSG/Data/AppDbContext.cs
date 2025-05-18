@@ -120,7 +120,7 @@ namespace Backend_CrmSG.Data
 
             modelBuilder.Entity<DocumentoDetalle>()
             .HasNoKey()
-            .ToView("vw_DocumentosAdjuntos");
+            .ToView("v_DocumentosPorEntidad");
 
             modelBuilder.Entity<DocumentoBasicoDetalle>()
                 .HasNoKey()
