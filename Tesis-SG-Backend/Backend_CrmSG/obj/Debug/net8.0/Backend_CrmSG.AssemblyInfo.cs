@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Backend_CrmSG")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bb40fadfda7f6163f078403fdb098232173bc972")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+81b91d39a04f8e3c2697662dd57b60fa9c2a87df")]
 [assembly: System.Reflection.AssemblyProductAttribute("Backend_CrmSG")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Backend_CrmSG")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

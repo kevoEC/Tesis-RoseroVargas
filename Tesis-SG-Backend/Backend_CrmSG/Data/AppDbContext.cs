@@ -40,6 +40,7 @@ namespace Backend_CrmSG.Data
         public DbSet<TipoCuenta> TipoCuenta { get; set; }
         public DbSet<TipoReferencia> TipoReferencia { get; set; }
         public DbSet<ContinuarSolicitud> ContinuarSolicitud { get; set; }
+        public DbSet<Tarea> Tarea { get; set; }
 
         // DbSets de tus tablas de entidades principales
         public DbSet<Prospecto> Prospecto { get; set; }
@@ -74,8 +75,8 @@ namespace Backend_CrmSG.Data
         public DbSet<AsesorComercialDetalle> AsesoresComercialesDetalle { get; set; }
         public DbSet<ProyeccionDetalle> ProyeccionDetalle { get; set; } // ← esta línea
         public DbSet<DocumentoDetalle> DocumentosAdjuntos { get; set; } // ← esta línea
-
         public DbSet<DocumentoBasicoDetalle> DocumentosBasicos { get; set; } // ← esta línea
+        public DbSet<TareaDetalle> TareasDetalle { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -124,7 +125,11 @@ namespace Backend_CrmSG.Data
             modelBuilder.Entity<DocumentoBasicoDetalle>()
                 .HasNoKey()
                 .ToView("vw_DocumentosBasicos");
-           
+
+            modelBuilder.Entity<TareaDetalle>()
+            .HasNoKey()
+            .ToView("vw_TareaDetalle");
+
             modelBuilder.Entity<TransaccionesValidacion>()
             .HasOne(t => t.TipoTransaccion)
             .WithMany(tt => tt.Transacciones)
