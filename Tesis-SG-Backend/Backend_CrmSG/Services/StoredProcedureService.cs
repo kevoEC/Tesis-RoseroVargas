@@ -121,4 +121,20 @@ public class StoredProcedureService
         return null;
     }
 
+
+    public async Task EjecutarCrearTareasPorSolicitud(int idSolicitud)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand("sp_CrearTareasPorSolicitudInversion", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+
+        command.Parameters.AddWithValue("@IdSolicitudInversion", idSolicitud);
+
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+    }
+
+
 }
