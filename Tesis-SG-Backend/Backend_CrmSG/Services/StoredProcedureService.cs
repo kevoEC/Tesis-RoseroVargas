@@ -1,4 +1,5 @@
-﻿using Backend_CrmSG.DTOs;
+﻿using Backend_CrmSG.Data;
+using Backend_CrmSG.DTOs;
 using Backend_CrmSG.DTOs.Backend_CrmSG.DTOs.Seguridad;
 using Backend_CrmSG.DTOs.Seguridad;
 using Microsoft.Data.SqlClient;
@@ -12,12 +13,16 @@ public class StoredProcedureService
 {
     private readonly string _connectionString;
     public string ConnectionString => _connectionString;
+    private readonly AppDbContext _context;
+    private readonly GeneradorContratoService _generadorContratoService;
 
 
-    public StoredProcedureService(IConfiguration configuration)
+    public StoredProcedureService(IConfiguration configuration, AppDbContext context, GeneradorContratoService generadorContratoService)
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("La cadena de conexión 'DefaultConnection' no está configurada.");
+        _context = context;
+        _generadorContratoService = generadorContratoService;
     }
 
     public async Task<LoginResultDto> EjecutarLoginSP(string email, string password)
@@ -122,19 +127,36 @@ public class StoredProcedureService
     }
 
 
-    public async Task EjecutarCrearTareasPorSolicitud(int idSolicitud)
+    public async Task<(bool tareasGeneradas, bool contratoGenerado)> EjecutarCrearTareasYContrato(int idSolicitud)
     {
-        using var connection = new SqlConnection(_connectionString);
-        using var command = new SqlCommand("sp_CrearTareasPorSolicitudInversion", connection)
+        // 1. Ejecutar el SP que crea tareas y documentos
+        using (var connection = new SqlConnection(_connectionString))
+        using (var command = new SqlCommand("sp_CrearTareasPorSolicitudInversion", connection))
         {
-            CommandType = CommandType.StoredProcedure
-        };
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@IdSolicitudInversion", idSolicitud);
 
-        command.Parameters.AddWithValue("@IdSolicitudInversion", idSolicitud);
+            await connection.OpenAsync();
+            await command.ExecuteNonQueryAsync();
+        }
 
-        await connection.OpenAsync();
-        await command.ExecuteNonQueryAsync();
+        // 2. Buscar la tarea de tipo 1 recién creada
+        var tarea = await _context.Tarea
+            .Where(t => t.IdSolicitudInversion == idSolicitud && t.IdTipoTarea == 1)
+            .OrderByDescending(t => t.FechaCreacion)
+            .FirstOrDefaultAsync();
+
+        if (tarea != null)
+        {
+            var generado = await _generadorContratoService.GenerarContratoDesdeTareaAsync(tarea.IdTarea);
+            return (true, generado);
+        }
+
+        return (true, false); // tareas sí, contrato no
     }
+
+
+
 
 
 }

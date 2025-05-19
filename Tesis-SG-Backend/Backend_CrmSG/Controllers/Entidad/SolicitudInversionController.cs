@@ -166,12 +166,13 @@ namespace Backend_CrmSG.Controllers.Entidad
         {
             try
             {
-                await _spService.EjecutarCrearTareasPorSolicitud(dto.IdSolicitudInversion);
+                var (tareasGeneradas, contratoGenerado) = await _spService.EjecutarCrearTareasYContrato(dto.IdSolicitudInversion);
 
                 return Ok(new
                 {
-                    success = true,
-                    message = "Tareas generadas correctamente."
+                    success = tareasGeneradas,
+                    message = "Tareas generadas correctamente.",
+                    contratoGenerado
                 });
             }
             catch (Exception ex)
@@ -179,11 +180,12 @@ namespace Backend_CrmSG.Controllers.Entidad
                 return StatusCode(500, new
                 {
                     success = false,
-                    message = "Error al generar tareas.",
+                    message = "Error al generar tareas o contrato.",
                     error = ex.Message
                 });
             }
         }
+
 
 
 

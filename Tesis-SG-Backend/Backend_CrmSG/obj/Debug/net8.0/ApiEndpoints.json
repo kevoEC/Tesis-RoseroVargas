@@ -955,6 +955,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Backend_CrmSG.Controllers.Documento.ContratoController",
+    "Method": "GenerarContrato",
+    "RelativePath": "api/Contrato/generar-por-solicitud",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.DTOs.GenerarContratoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Backend_CrmSG.Controllers.Documento.DocumentoController",
     "Method": "CrearDocumento",
     "RelativePath": "api/Documento",

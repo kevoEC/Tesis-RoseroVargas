@@ -154,8 +154,7 @@ builder.Services.AddScoped<IDocumentoService, DocumentoService>();
 builder.Services.AddScoped<ICorreoService, CorreoService>();
 builder.Services.AddScoped<ISmsService, TwilioSmsService>();
 builder.Services.AddScoped<ITareaService, TareaService>();
-
-
+builder.Services.AddScoped<GeneradorContratoService>();
 
 // Catálogos
 builder.Services.AddScoped<IProductoService, ProductoService>();

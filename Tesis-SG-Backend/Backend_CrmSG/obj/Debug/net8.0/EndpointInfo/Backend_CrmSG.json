@@ -1604,6 +1604,37 @@
         }
       }
     },
+    "/api/Contrato/generar-por-solicitud": {
+      "post": {
+        "tags": [
+          "Contrato"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerarContratoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerarContratoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerarContratoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Documento/entidad": {
       "get": {
         "tags": [
@@ -7975,6 +8006,16 @@
         "additionalProperties": false
       },
       "FinalizarSolicitudDto": {
+        "type": "object",
+        "properties": {
+          "idSolicitudInversion": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GenerarContratoRequest": {
         "type": "object",
         "properties": {
           "idSolicitudInversion": {
