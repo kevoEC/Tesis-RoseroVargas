@@ -193,14 +193,14 @@ export default function ProyeccionNueva() {
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-gray-800">Nueva Proyección</h2>
-        <Button 
+        {/* <Button 
         variant="outline" 
         className="bg-white hover:bg-gray-300"
         onClick={() => navigate(`/solicitudes/editar/${id}`)}>
           <span className="flex items-center gap-1">
             <FaArrowLeft /> Regresar a solicitud
           </span>
-        </Button>
+        </Button> */}
       </div>
 
       <Card className="border border-gray-700 shadow-sm bg-white rounded-2xl">
@@ -263,7 +263,7 @@ export default function ProyeccionNueva() {
           </div>
 
           {tasaSeleccionada !== null && (
-            <div className="bg-blue-100 border border-blue-300 rounded-xl p-4 flex items-center justify-between">
+            <div className="bg-blue-100 border border-blue-300 rounded-xl p-4 flex justify-center items-center">
               <div>
                 <p className="text-sm text-blue-600 font-medium">Tasa asignada</p>
                 <p className="text-3xl font-bold text-blue-800">{tasaSeleccionada.toFixed(2)}%</p>
@@ -339,7 +339,6 @@ export default function ProyeccionNueva() {
               <TablaCustom2
                 data={cronograma}
                 columns={[
-
                   {
                     key: 'periodo',
                     label: 'Período',
@@ -347,23 +346,23 @@ export default function ProyeccionNueva() {
                   },
                   {
                     key: 'fechaInicial',
-                    label: 'Fecha Inicial',
-                    render: (value) => <div className="text-right">{formatDate(value)}</div>
+                    label: 'F. Inicial',
+                    render: (value) => <div className="text-center">{formatDate(value)}</div>
                   },
                   {
                     key: 'fechaVencimiento',
-                    label: 'Fecha Vencimiento',
-                    render: (value) => <div className="text-right">{formatDate(value)}</div>
+                    label: 'F. Vencimiento',
+                    render: (value) => <div className="text-center">{formatDate(value)}</div>
                   },
 
                   {
                     key: 'tasa',
                     label: 'Tasa',
-                    render: (value) => <div className="text-right">{value.toFixed(2)}%</div>
+                    render: (value) => <div className="text-center">{value.toFixed(2)}%</div>
                   },
                   {
                     key: 'aporteAdicional',
-                    label: 'Aporte Adicional',
+                    label: 'Aporte Adic.',
                     render: (value) => <div className="text-right">{formatCurrency(value)}</div>
                   },
                   {
@@ -383,12 +382,12 @@ export default function ProyeccionNueva() {
                   },
                   {
                     key: 'costoOperativo',
-                    label: 'Coste Operativo',
+                    label: 'Coste Op.',
                     render: (value) => <div className="text-right">{formatCurrency(value)}</div>
                   },
                   {
                     key: 'rentaAcumulada',
-                    label: 'Renta Acumulada',
+                    label: 'Renta Acum.',
                     render: (value) => <div className="text-right">{formatCurrency(value)}</div>
                   },
                   {

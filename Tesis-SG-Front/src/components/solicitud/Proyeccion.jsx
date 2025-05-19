@@ -23,7 +23,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import ProyeccionNueva from "@/pages/Entidad/Proyecciones/ProyeccionNueva";
 export default function Proyeccion() {
   const { id: idSolicitud } = useParams();
   const { notify } = useUI();
@@ -35,6 +42,7 @@ export default function Proyeccion() {
   const [justificativos, setJustificativos] = useState([]);
   const [origenes, setOrigenes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     idAsesorComercial: "",
     idJustificativoTransaccion: "",
@@ -137,12 +145,8 @@ export default function Proyeccion() {
               <TablaCustom2
                 columns={columnas}
                 data={proyecciones}
-                mostrarAgregarNuevo
-                onAgregarNuevoClick={() =>
-                  navigate(
-                    `/solicitudes/editar/${idSolicitud}/proyeccion/nueva`
-                  )
-                }
+                mostrarAgregarNuevo={true}
+                onAgregarNuevoClick={() => setIsModalOpen(true)}
                 mostrarEditar={false}
                 mostrarEliminar={false}
               />
@@ -154,7 +158,7 @@ export default function Proyeccion() {
               <Button
                 onClick={handleGuardar}
                 disabled={loading}
-                className="text-white"
+                className="text-white bg-primary hover:bg-primary/85"
               >
                 Guardar datos
               </Button>
@@ -283,6 +287,24 @@ export default function Proyeccion() {
               </div>
             </CardContent>
           </Card>
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogContent
+              className="
+              w-full              max-w-md                
+              sm:max-w-xl         md:max-w-4xl              
+              xl:max-w-screen-xl  2xl:max-w-screen-2xl 
+              3xl:max-w-screen-3xl     
+              max-h-[calc(100vh-4rem)]     
+              overflow-y-auto     p-4">
+              <ProyeccionNueva />
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+                  Cancelar
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
         </>
       )}
     </div>
