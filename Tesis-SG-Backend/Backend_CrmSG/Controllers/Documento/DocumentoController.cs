@@ -1,4 +1,5 @@
-﻿using Backend_CrmSG.DTOs;
+﻿using Backend_CrmSG.Data;
+using Backend_CrmSG.DTOs;
 using Backend_CrmSG.Services.Documento;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace Backend_CrmSG.Controllers.Documento
     public class DocumentoController : ControllerBase
     {
         private readonly IDocumentoService _documentoService;
+        private readonly AppDbContext _context;
 
-        public DocumentoController(IDocumentoService documentoService)
+        public DocumentoController(IDocumentoService documentoService, AppDbContext context)
         {
             _documentoService = documentoService;
+            _context = context;
         }
 
         // 1. Listar documentos de una entidad (Solicitud, Tarea, Inversión)
@@ -134,5 +137,19 @@ namespace Backend_CrmSG.Controllers.Documento
             var documentos = await _documentoService.ObtenerPorSolicitudYMotivoAsync(idSolicitudInversion, idMotivo);
             return Ok(new { success = true, data = documentos });
         }
+
+        [HttpGet("descargar/{id}")]
+        public async Task<IActionResult> DescargarDocumento(int id)
+        {
+            var doc = await _context.Documento.FindAsync(id);
+            if (doc == null || doc.Archivo == null)
+                return NotFound(new { success = false, message = "Documento no encontrado o sin contenido." });
+
+            return File(doc.Archivo,
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                $"{doc.DocumentoNombre}.docx");
+        }
+
+
     }
 }
