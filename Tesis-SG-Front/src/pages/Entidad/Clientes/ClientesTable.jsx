@@ -16,9 +16,9 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import ProspectoForm from "./ProspectoForm";
+import ProspectoForm from "../Prospectos/ProspectoForm";
 
-export default function Prospectos() {
+export default function ClientesTable() {
   const navigate = useNavigate();
 
   const [prospectos, setProspectos] = useState([]);
@@ -136,7 +136,7 @@ export default function Prospectos() {
     <div className="p-4 sm:p-6 md:p-8 max-w-full">
       <Card className="w-full border border-muted rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.12)]">
         <CardHeader>
-          <CardTitle className="text-3xl">Lista de Prospectos</CardTitle>
+          <CardTitle className="text-3xl">Lista de Clientes</CardTitle>
         </CardHeader>
         <CardContent className="p-6 overflow-x-auto">
           <TablaCustom2
