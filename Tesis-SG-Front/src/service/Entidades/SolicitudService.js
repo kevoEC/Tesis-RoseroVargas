@@ -45,6 +45,7 @@ export const createSolicitud = async (data) => {
 };
 
 export const updateSolicitud = async (id, data) => {
+  console.log("ddkjdflkjfk", data);
   const res = await fetch(
     `${API_BASE_URL}/solicitudinversion/estructura/${id}`,
     {
@@ -83,7 +84,6 @@ export const getSolicitudesByProspectoId = async (id) => {
   const result = await handleResponse(res);
   return result.data ?? [];
 };
-
 
 // 🔍 VALIDACIONES
 
