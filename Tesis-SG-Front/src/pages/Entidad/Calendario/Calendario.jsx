@@ -1,5 +1,9 @@
 // PaymentScreen.jsx
 import React from "react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+
 
 export default function PaymentScreen() {
   return (
@@ -44,14 +48,17 @@ export default function PaymentScreen() {
                 <div key={label} className="flex items-center justify-between">
                   <span className="text-sm">{label}</span>
                   <label className="inline-flex items-center cursor-not-allowed">
-                    <input
+                    {/* <input
                       type="checkbox"
                       className="sr-only peer"
                       defaultChecked
                       disabled
                     />
                     <div className="w-10 h-5 bg-gray-200 rounded-full peer-checked:bg-blue-600" />
-                    <span className="ml-2 text-sm">Sí</span>
+                    <span className="ml-2 text-sm">Sí</span> */}
+                    <FormSwitch
+                    
+                    />
                   </label>
                 </div>
               ))}
@@ -91,9 +98,12 @@ export default function PaymentScreen() {
                   Descartar pagos
                 </label>
                 <label className="inline-flex items-center cursor-pointer">
-                  <input type="checkbox" className="sr-only peer" />
+                  {/* <input type="checkbox" className="sr-only peer" />
                   <div className="w-10 h-5 bg-gray-200 rounded-full peer-checked:bg-blue-600" />
-                  <span className="ml-2 text-sm">No</span>
+                  <span className="ml-2 text-sm">No</span> */}
+                  <FormSwitch>
+
+                  </FormSwitch>
                 </label>
               </div>
             </div>
@@ -107,6 +117,51 @@ export default function PaymentScreen() {
           </section>
         </aside>
       </div>
+    </div>
+  );
+}
+
+function FormSwitch({ label, checked, onChange }) {
+  return (
+    <div className="flex items-center gap-4">
+      <div className="relative">
+        <Switch
+          checked={checked}
+          onCheckedChange={onChange}
+          className={`
+            peer
+            inline-flex
+            h-6 w-11 shrink-0
+            cursor-pointer
+            items-center
+            rounded-full
+            border
+            border-black
+            transition-colors
+            duration-200
+            ease-in-out
+            ${checked ? "bg-primary" : "bg-gray-300"}
+          `}
+        />
+        {/* Círculo */}
+        <span
+          className={`
+            pointer-events-none
+            absolute
+            left-0.5 top-0.5
+            h-5 w-5
+            transform
+            rounded-full
+            bg-white
+            shadow
+            transition-transform
+            duration-200
+            ease-in-out
+            ${checked ? "translate-x-5" : "translate-x-0"}
+          `}
+        />
+      </div>
+      <Label className="text-sm font-medium text-gray-700">{label}</Label>
     </div>
   );
 }
