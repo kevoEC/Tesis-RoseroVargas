@@ -21,7 +21,7 @@ namespace Backend_CrmSG.Controllers.Documento
         {
             try
             {
-                var resultado = await _service.GenerarContratoDesdeTareaAsync(dto.IdSolicitudInversion);
+                var resultado = await _service.GenerarContratoDesdeSolicitudAsync(dto.IdSolicitudInversion);
                 return Ok(new
                 {
                     success = resultado,

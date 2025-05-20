@@ -148,7 +148,7 @@ public class StoredProcedureService
 
         if (tarea != null)
         {
-            var generado = await _generadorContratoService.GenerarContratoDesdeTareaAsync(tarea.IdTarea);
+            var generado = await _generadorContratoService.GenerarContratoDesdeSolicitudAsync(idSolicitud);
             return (true, generado);
         }
 
