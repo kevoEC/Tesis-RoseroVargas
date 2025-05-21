@@ -20,11 +20,20 @@ const Inversiones = lazy(() =>
 const InversionesTable = lazy(() =>
   import("@/pages/Entidad/Inversiones/InversionesTable")
 );
+const ClientesTable = lazy(() =>
+  import("@/pages/Entidad/Clientes/ClientesTable")
+);
 const Clientes = lazy(() => import("@/pages/Entidad/Clientes/Clientes"));
 const Calendario = lazy(() => import("@/pages/Entidad/Calendario/Calendario"));
+const CalendarioTable = lazy(() =>
+  import("@/pages/Entidad/Calendario/CalendarioTable")
+);
 const Pagos = lazy(() => import("@/pages/Entidad/Pagos/Pagos"));
+const PagosTable = lazy(() => import("@/pages/Entidad/Pagos/PagosTable"));
 const Casos = lazy(() => import("@/pages/Entidad/Casos/Casos"));
+const CasosTable = lazy(() => import("@/pages/Entidad/Casos/CasosTable"));
 const Tareas = lazy(() => import("@/pages/Entidad/Tareas/TareasDetalle"));
+const TareasTable = lazy(() => import("@/pages/Entidad/Tareas/Tareas"));
 const ProspectoForm = lazy(() =>
   import("@/pages/Entidad/Prospectos/ProspectoForm")
 );
@@ -128,17 +137,22 @@ export const protectedRoutes = [
 
   // Inversiones
   { path: "/inversiones/vista", element: <InversionesTable /> },
-  { path: "/solicitudes/editar/:id", element: <Inversiones /> },
+  { path: "/inversiones/editar/:id", element: <Inversiones /> },
   // Clientes
-  { path: "/clientes/vista", element: <Clientes /> },
+  { path: "/clientes/vista", element: <ClientesTable /> },
+  { path: "/clientes/editar/:id", element: <Clientes /> },
   // Tareas
-  { path: "/tareas/vista", element: <Tareas /> },
+  { path: "/tareas/vista", element: <TareasTable /> },
+  { path: "/tareas/editar/:id", element: <Tareas /> },
   // Casos
-  { path: "/casos/vista", element: <Casos /> },
+  { path: "/casos/vista", element: <CasosTable /> },
+  { path: "/casos/editar/:id", element: <Casos /> },
   // Pagos
-  { path: "/pagos/vista", element: <Pagos /> },
+  { path: "/pagos/vista", element: <PagosTable /> },
+  { path: "/pagos/editar/:id", element: <Pagos /> },
   // Calendario
-  { path: "/calendario/vista", element: <Calendario /> },
+  { path: "/calendario/vista", element: <CalendarioTable /> },
+  { path: "/calendario/editar/:id", element: <Calendario /> },
 
   // Configuraciones generales
   { path: "/settings", element: <Settings /> },
