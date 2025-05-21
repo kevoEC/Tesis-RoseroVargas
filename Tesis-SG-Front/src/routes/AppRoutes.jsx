@@ -24,6 +24,7 @@ const Clientes = lazy(() => import("@/pages/Entidad/Clientes/Clientes"));
 const Calendario = lazy(() => import("@/pages/Entidad/Calendario/Calendario"));
 const Pagos = lazy(() => import("@/pages/Entidad/Pagos/Pagos"));
 const Casos = lazy(() => import("@/pages/Entidad/Casos/Casos"));
+const Tareas = lazy(() => import("@/pages/Entidad/Tareas/TareasDetalle"));
 const ProspectoForm = lazy(() =>
   import("@/pages/Entidad/Prospectos/ProspectoForm")
 );
@@ -131,7 +132,7 @@ export const protectedRoutes = [
   // Clientes
   { path: "/clientes/vista", element: <Clientes /> },
   // Tareas
-  { path: "/tareas/vista", element: <Prospectos /> },
+  { path: "/tareas/vista", element: <Tareas /> },
   // Casos
   { path: "/casos/vista", element: <Casos /> },
   // Pagos
