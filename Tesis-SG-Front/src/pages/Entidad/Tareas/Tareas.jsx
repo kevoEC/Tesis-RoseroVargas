@@ -1,21 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EntidadView from "@/components/shared/VistaEntidad";
-import {
-  getProspectos,
-  deleteProspecto,
-} from "@/service/Entidades/ProspectoService";
+import { getTareas } from "@/service/Entidades/TareasService";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export default function Tareas() {
   const navigate = useNavigate();
-
   const [tareas, setTareas] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const cargarProspectos = async () => {
+  const cargarTareas = async () => {
     try {
-      const data = await getProspectos();
+      const data = await getTareas();
       setTareas(data);
     } catch (error) {
       console.error("Error al cargar tareas:", error);
@@ -23,14 +19,14 @@ export default function Tareas() {
   };
 
   useEffect(() => {
-    cargarProspectos();
+    cargarTareas();
   }, []);
 
   /*Cargar los datos al montar el componente*/
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getProspectos(); // Ejecutar función async
+        const data = await getTareas(); // Ejecutar función async
         setTareas(data);
       } catch (error) {
         console.error("Error al cargar tareas:", error);
@@ -42,7 +38,7 @@ export default function Tareas() {
 
   // 🟡 Editar
   const handleEditar = (item) => {
-    navigate(`/tareas/editar/${item.idProspecto}`);
+    navigate(`/tareas/editar/${item.idTarea}`);
   };
 
   // 🔴 Eliminar
@@ -63,62 +59,27 @@ export default function Tareas() {
   };
 
   const columnas = [
+
+    { key: "idTarea", label: "ID --QUITAR--" },
+    { key: "nombreTipoTarea", label: "Tipo de Tarea" },
     {
-      key: "idProspecto",
-      label: "Prospecto",
-      render: (value) => (
-        <div className="flex items-center justify-center group relative text-gray-500">
-          <svg
-            className="w-5 h-5 md:w-6 md:h-6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M5.121 17.804A9.003 9.003 0 0112 15c2.486 0 4.735.996 6.364 2.634M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 text-xs text-white bg-zinc-800 px-2 py-0.5 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 whitespace-nowrap">
-            ID: {value}
-          </span>
-        </div>
-      ),
-    },
-    {
-      key: "nombreCompleto",
-      label: "Nombre completo",
-      render: (_, row) => (
-        <span className="whitespace-nowrap">
-          {`${row.nombres ?? ""} ${row.apellidoPaterno ?? ""} ${
-            row.apellidoMaterno ?? ""
-          }`}
-        </span>
-      ),
-    },
-    { key: "tipoIdentificacion", label: "Tipo ID" },
-    { key: "telefonoCelular", label: "Núm. Celular" },
-    { key: "correoElectronico", label: "Correo" },
-    { key: "nombreOrigen", label: "Origen" },
-    { key: "productoInteres", label: "Producto de Interés" },
-    { key: "agencia", label: "Agencia" },
-    {
-      key: "estado",
-      label: "Estado",
+      key: "nombreResultado",
+      label: "Resultado",
       render: (value) => (
         <span
-          className={`px-2 py-1 text-xs font-semibold rounded-full ${
-            value
+          className={`px-2 py-1 text-xs font-semibold rounded-full ${value
               ? "bg-green-100 text-green-700"
               : "bg-yellow-200 text-yellow-700"
-          }`}
+            }`}
         >
-          {value ? "Activo" : "Inactivo"}
+          {value ? "Aprobado" : "Pendiente"}
         </span>
       ),
     },
+    { key: "fechaCreacion", label: "Fecha Creación" },
+    { key: "fechaModificacion", label: "Fecha Modificación" },
+ 
+
   ];
 
   return (

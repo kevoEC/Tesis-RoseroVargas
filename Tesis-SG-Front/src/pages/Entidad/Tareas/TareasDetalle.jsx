@@ -1,17 +1,44 @@
 import Adjuntos from "@/components/solicitud/Adjuntos";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getTareaById } from "@/service/Entidades/TareasService";
 
 export default function TareaDetalleEditable() {
   const [descripcion, setDescripcion] = useState(
     "Hacer firmar por gerencia y el cliente el contrato o adendum y anexo de inversión, y adjuntar a la plataforma."
   );
-  const [resultado, setResultado] = useState("Aprobado");
+  const { id } = useParams();
+  const [resultado, setResultado] = useState("Pendiente");
   const [observacion, setObservacion] = useState("");
-
+  const [tareas, setTareas] = useState([]);
   const [firmadoGerencia, setFirmadoGerencia] = useState(false);
   const [solicitarAbono, setSolicitarAbono] = useState(false);
   const [reconocimientoFirmas, setReconocimientoFirmas] = useState(true);
   const [modoFirma, setModoFirma] = useState("Física");
+  const cargarTareas = async () => {
+      try {
+        const data = await getTareaById(id);
+        setTareas(data);
+      } catch (error) {
+        console.error("Error al cargar tareas:", error);
+      }
+    };
+    useEffect(() => {
+      cargarTareas();
+    }, []);
+  /*Cargar los datos al montar el componente*/
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const data = await getTareaById(id); // Ejecutar función async
+          setTareas(data);
+        } catch (error) {
+          console.error("Error al cargar tareas:", error);
+        }
+      };
+  
+      fetchData();
+    }, []);
 
   return (
     <div className="p-10 max-w-7xl mx-auto space-y-10 bg-white shadow rounded-xl">
@@ -19,7 +46,7 @@ export default function TareaDetalleEditable() {
       <div className="text-2xl font-bold mb-6">
         Contrato - Nueva -{" "}
         <span className="font-normal text-gray-700">
-          JESSICA KARINA ORRALA QUINDE SG-FRF-2025-02486
+          {tareas.tareaNombre}
         </span>
         <div className="text-sm text-gray-500 mt-1">Tarea de solicitud</div>
       </div>
@@ -91,29 +118,6 @@ export default function TareaDetalleEditable() {
             />
           </section>
 
-          {/* Solicitud de inversión */}
-          <section className="border border-gray-300 rounded-xl p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-800 mb-3">
-              Solicitud de inversión
-            </h2>
-            <div>
-              <label className="text-sm font-medium text-gray-800">
-                Modo de firma
-              </label>
-              <select
-                className="w-full border border-gray-300 rounded-lg p-2 text-sm mt-1 text-gray-900 focus:outline-blue-500 focus:ring-1 focus:ring-blue-500"
-                value={modoFirma}
-                onChange={(e) => setModoFirma(e.target.value)}
-              >
-                <option value="Física">
-                  Nueva - JESSICA KARINA ORRALA QUINDE SG-FRF-2025-02486
-                </option>
-                <option value="Digital">
-                  Nueva - JESSICA KARINA ORRALA QUINDE SG-FRF-2025-02486
-                </option>
-              </select>
-            </div>
-          </section>
         </div>
       </div>
       <Adjuntos id={13} tipo={"tareas"} />

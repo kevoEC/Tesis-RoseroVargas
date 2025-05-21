@@ -143,7 +143,7 @@ export const protectedRoutes = [
   { path: "/clientes/editar/:id", element: <Clientes /> },
   // Tareas
   { path: "/tareas/vista", element: <TareasTable /> },
-  { path: "/tareas/editar/:id", element: <Tareas /> },
+  { path: "/tareas/editar/:id", element: <TareaDetalleEditable /> },
   // Casos
   { path: "/casos/vista", element: <CasosTable /> },
   { path: "/casos/editar/:id", element: <Casos /> },
