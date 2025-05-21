@@ -127,7 +127,7 @@ public class StoredProcedureService
     }
 
 
-    public async Task<(bool tareasGeneradas, bool contratoGenerado)> EjecutarCrearTareasYContrato(int idSolicitud)
+    public async Task<(bool tareasGeneradas, bool contratoGenerado, int cantidadBeneficiarios)> EjecutarCrearTareasYContrato(int idSolicitud)
     {
         // 1. Ejecutar el SP que crea tareas y documentos
         using (var connection = new SqlConnection(_connectionString))
@@ -148,14 +148,17 @@ public class StoredProcedureService
 
         if (tarea != null)
         {
-            var generado = await _generadorContratoService.GenerarContratoDesdeTareaAsync(tarea.IdTarea);
-            return (true, generado);
+            var generado = await _generadorContratoService.GenerarContratoDesdeSolicitudAsync(idSolicitud);
+
+            // Nueva consulta a la tabla de beneficiarios
+            var cantidadBeneficiarios = await _context.BeneficiariosDetalle
+                .CountAsync(b => b.IdSolicitudInversion == idSolicitud);
+
+            return (true, generado, cantidadBeneficiarios);
         }
 
-        return (true, false); // tareas sí, contrato no
+        return (true, false, 0); // tareas sí, contrato no, y 0 beneficiarios
     }
-
-
 
 
 
