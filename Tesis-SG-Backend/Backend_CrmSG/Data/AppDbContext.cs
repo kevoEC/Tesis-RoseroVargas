@@ -76,7 +76,7 @@ namespace Backend_CrmSG.Data
         public DbSet<ProyeccionDetalle> ProyeccionDetalle { get; set; } // ← esta línea
         public DbSet<DocumentoDetalle> DocumentosAdjuntos { get; set; } // ← esta línea
         public DbSet<DocumentoBasicoDetalle> DocumentosBasicos { get; set; } // ← esta línea
-        public DbSet<TareaDetalle> TareasDetalle { get; set; }
+        public DbSet<TareaDetalleExtendida> TareasDetalle { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -130,7 +130,12 @@ namespace Backend_CrmSG.Data
             .HasNoKey()
             .ToView("vw_TareaDetalle");
 
-            modelBuilder.Entity<TransaccionesValidacion>()
+            modelBuilder.Entity<TareaDetalleExtendida>()
+            .HasNoKey()
+            .ToView("vw_TareaDetalleExtendida");
+        
+
+        modelBuilder.Entity<TransaccionesValidacion>()
             .HasOne(t => t.TipoTransaccion)
             .WithMany(tt => tt.Transacciones)
             .HasForeignKey(t => t.IdTipoTransaccion)

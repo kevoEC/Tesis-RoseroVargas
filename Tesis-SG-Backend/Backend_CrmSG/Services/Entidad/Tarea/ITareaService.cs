@@ -5,12 +5,11 @@ namespace Backend_CrmSG.Services.Entidad
 {
     public interface ITareaService
     {
-        Task<List<TareaDetalle>> ObtenerTodas();
-        Task<List<TareaDetalle>> ObtenerPorRol(int idRol);
-        Task<TareaDetalle?> ObtenerDetallePorId(int idTarea);
-        Task Actualizar(int idTarea, TareaUpdateDTO dto, int idUsuario);
-        Task<List<TareaDetalle>> ObtenerPorSolicitudAsync(int idSolicitudInversion);
+        Task<List<TareaDetalleExtendida>> ObtenerTodas();
+        Task<List<TareaDetalleExtendida>> ObtenerPorRol(int idRol);
+        Task<List<TareaDetalleExtendida>> ObtenerPorSolicitudAsync(int idSolicitudInversion);
 
+        Task<TareaDetalleDinamicoDTO?> ObtenerDetallePorId(int idTarea);
+        Task ActualizarDinamico(int idTarea, TareaUpdateDinamicoDTO dto, int idUsuario);
     }
-
 }

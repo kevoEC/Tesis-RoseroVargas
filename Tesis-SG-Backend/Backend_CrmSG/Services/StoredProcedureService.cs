@@ -15,14 +15,16 @@ public class StoredProcedureService
     public string ConnectionString => _connectionString;
     private readonly AppDbContext _context;
     private readonly GeneradorContratoService _generadorContratoService;
+    private readonly GeneradorAnexoService _generadorAnexoService;
 
 
-    public StoredProcedureService(IConfiguration configuration, AppDbContext context, GeneradorContratoService generadorContratoService)
+    public StoredProcedureService(IConfiguration configuration, AppDbContext context, GeneradorContratoService generadorContratoService, GeneradorAnexoService generadorAnexoService)
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("La cadena de conexión 'DefaultConnection' no está configurada.");
         _context = context;
         _generadorContratoService = generadorContratoService;
+        _generadorAnexoService = generadorAnexoService;
     }
 
     public async Task<LoginResultDto> EjecutarLoginSP(string email, string password)
@@ -148,18 +150,21 @@ public class StoredProcedureService
 
         if (tarea != null)
         {
-            var generado = await _generadorContratoService.GenerarContratoDesdeSolicitudAsync(idSolicitud);
+            // 3. Generar contrato principal (IdTipoDocumento = 22)
+            var contratoGenerado = await _generadorContratoService.GenerarContratoDesdeSolicitudAsync(idSolicitud);
 
-            // Nueva consulta a la tabla de beneficiarios
+            // 4. Generar Anexo (IdTipoDocumento = 11)
+            var anexoGenerado = await _generadorAnexoService.GenerarAnexoDesdeSolicitudAsync(idSolicitud);
+
+            // 5. Consultar cantidad de beneficiarios
             var cantidadBeneficiarios = await _context.BeneficiariosDetalle
                 .CountAsync(b => b.IdSolicitudInversion == idSolicitud);
 
-            return (true, generado, cantidadBeneficiarios);
+            return (true, contratoGenerado && anexoGenerado, cantidadBeneficiarios);
         }
 
-        return (true, false, 0); // tareas sí, contrato no, y 0 beneficiarios
+        return (true, false, 0);
     }
-
 
 
 }

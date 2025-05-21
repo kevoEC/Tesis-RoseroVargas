@@ -3163,7 +3163,7 @@
       },
       {
         "Name": "dto",
-        "Type": "Backend_CrmSG.DTOs.TareaUpdateDTO",
+        "Type": "Backend_CrmSG.DTOs.TareaUpdateDinamicoDTO",
         "IsRequired": true
       }
     ],
