@@ -15,14 +15,16 @@ public class StoredProcedureService
     public string ConnectionString => _connectionString;
     private readonly AppDbContext _context;
     private readonly GeneradorContratoService _generadorContratoService;
+    private readonly GeneradorAnexoService _generadorAnexoService;
 
 
-    public StoredProcedureService(IConfiguration configuration, AppDbContext context, GeneradorContratoService generadorContratoService)
+    public StoredProcedureService(IConfiguration configuration, AppDbContext context, GeneradorContratoService generadorContratoService, GeneradorAnexoService generadorAnexoService)
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("La cadena de conexión 'DefaultConnection' no está configurada.");
         _context = context;
         _generadorContratoService = generadorContratoService;
+        _generadorAnexoService = generadorAnexoService;
     }
 
     public async Task<LoginResultDto> EjecutarLoginSP(string email, string password)
@@ -127,7 +129,7 @@ public class StoredProcedureService
     }
 
 
-    public async Task<(bool tareasGeneradas, bool contratoGenerado)> EjecutarCrearTareasYContrato(int idSolicitud)
+    public async Task<(bool tareasGeneradas, bool contratoGenerado, int cantidadBeneficiarios)> EjecutarCrearTareasYContrato(int idSolicitud)
     {
         // 1. Ejecutar el SP que crea tareas y documentos
         using (var connection = new SqlConnection(_connectionString))
@@ -148,15 +150,21 @@ public class StoredProcedureService
 
         if (tarea != null)
         {
-            var generado = await _generadorContratoService.GenerarContratoDesdeTareaAsync(tarea.IdTarea);
-            return (true, generado);
+            // 3. Generar contrato principal (IdTipoDocumento = 22)
+            var contratoGenerado = await _generadorContratoService.GenerarContratoDesdeSolicitudAsync(idSolicitud);
+
+            // 4. Generar Anexo (IdTipoDocumento = 11)
+            var anexoGenerado = await _generadorAnexoService.GenerarAnexoDesdeSolicitudAsync(idSolicitud);
+
+            // 5. Consultar cantidad de beneficiarios
+            var cantidadBeneficiarios = await _context.BeneficiariosDetalle
+                .CountAsync(b => b.IdSolicitudInversion == idSolicitud);
+
+            return (true, contratoGenerado && anexoGenerado, cantidadBeneficiarios);
         }
 
-        return (true, false); // tareas sí, contrato no
+        return (true, false, 0);
     }
-
-
-
 
 
 }

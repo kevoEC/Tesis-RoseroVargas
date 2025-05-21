@@ -1,12 +1,11 @@
 {
   "Version": 1,
-  "Hash": "PBgjI+CbPrzG3EvMI9Nn323RjU8BhBLy1U/qJQ01CNc=",
+  "Hash": "Bdx9HOAmHcOnZChQrouGO9p9sZVCdNs4vbJPdgJJlA0=",
   "Source": "Backend_CrmSG",
   "BasePath": "_content/Backend_CrmSG",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": []
 }

@@ -1,5 +1,4 @@
 ﻿using Backend_CrmSG.DTOs;
-using Backend_CrmSG.Models.Entidades;
 using Backend_CrmSG.Services.Entidad;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +33,14 @@ namespace Backend_CrmSG.Controllers.Entidad
             return Ok(tareas);
         }
 
+        // GET: api/tarea/por-solicitud/{idSolicitud}
+        [HttpGet("por-solicitud/{idSolicitud}")]
+        public async Task<IActionResult> ObtenerPorSolicitud(int idSolicitud)
+        {
+            var tareas = await _tareaService.ObtenerPorSolicitudAsync(idSolicitud);
+            return Ok(new { success = true, data = tareas });
+        }
+
         // GET: api/tarea/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> ObtenerDetallePorId(int id)
@@ -47,12 +54,17 @@ namespace Backend_CrmSG.Controllers.Entidad
 
         // PUT: api/tarea/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> Actualizar(int id, [FromBody] TareaUpdateDTO dto)
+        public async Task<IActionResult> Actualizar(int id, [FromBody] TareaUpdateDinamicoDTO dto)
         {
             try
             {
-                var idUsuario = int.Parse(User.Claims.First(c => c.Type == "id").Value);
-                await _tareaService.Actualizar(id, dto, idUsuario);
+                var idClaim = User.Claims.FirstOrDefault(c => c.Type == "idUsuario");
+                if (idClaim == null)
+                    return Unauthorized(new { success = false, message = "Token no contiene el idUsuario." });
+
+                var idUsuario = int.Parse(idClaim.Value);
+
+                await _tareaService.ActualizarDinamico(id, dto, idUsuario);
                 return Ok(new { success = true, message = "Tarea actualizada correctamente." });
             }
             catch (KeyNotFoundException ex)
@@ -64,13 +76,5 @@ namespace Backend_CrmSG.Controllers.Entidad
                 return StatusCode(500, new { success = false, message = "Error al actualizar tarea.", error = ex.Message });
             }
         }
-
-        [HttpGet("por-solicitud/{idSolicitud}")]
-        public async Task<IActionResult> ObtenerPorSolicitud(int idSolicitud)
-        {
-            var tareas = await _tareaService.ObtenerPorSolicitudAsync(idSolicitud);
-            return Ok(new { success = true, data = tareas });
-        }
-
     }
 }

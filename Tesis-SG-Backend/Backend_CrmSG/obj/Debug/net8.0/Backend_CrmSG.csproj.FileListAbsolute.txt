@@ -543,3 +543,6 @@ D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\De
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\System.IO.Packaging.dll
+D:\Tesis KR\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
+D:\Tesis KR\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll
+D:\Tesis KR\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\System.IO.Packaging.dll
