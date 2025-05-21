@@ -16,7 +16,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import ProspectoForm from "../Prospectos/ProspectoForm";
+import InversioneForm from "../Inversiones/InversionForm";
 
 export default function InversionesTable() {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ export default function InversionesTable() {
 
   // 🟡 Editar
   const handleEditar = (item) => {
-    navigate(`/prospectos/editar/${item.idProspecto}`);
+    navigate(`/inversiones/editar/${item.idProspecto}`);
   };
 
   // 🔴 Eliminar
@@ -76,7 +76,7 @@ export default function InversionesTable() {
   const columnas = [
     {
       key: "idProspecto",
-      label: "Prospecto",
+      label: "Inversion",
       render: (value) => (
         <div className="flex items-center justify-center group relative text-gray-500">
           <svg
@@ -159,12 +159,12 @@ export default function InversionesTable() {
       >
         <DialogContent className="min-w-3xl">
           <DialogHeader>
-            <DialogTitle>Agregar Prospecto</DialogTitle>
+            <DialogTitle>Agregar Inversion</DialogTitle>
             <DialogDescription>
               Completa la información del nuevo prospecto
             </DialogDescription>
           </DialogHeader>
-          <ProspectoForm
+          <InversioneForm
             onClose={handleCerrarDialog}
             onSaved={cargarProspectos}
           />
