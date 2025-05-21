@@ -16,9 +16,9 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import ClienteForm from "../Clientes/ClienteForm";
+import ProspectoForm from "../Pagos/PagosForm";
 
-export default function ClientesTable() {
+export default function PagosTable() {
   const navigate = useNavigate();
 
   const [prospectos, setProspectos] = useState([]);
@@ -52,7 +52,7 @@ export default function ClientesTable() {
 
   // 🟡 Editar
   const handleEditar = (item) => {
-    navigate(`/clientes/editar/${item.idProspecto}`);
+    navigate(`/pagos/editar/${item.idProspecto}`);
   };
 
   // 🔴 Eliminar
@@ -136,7 +136,7 @@ export default function ClientesTable() {
     <div className="p-4 sm:p-6 md:p-8 max-w-full">
       <Card className="w-full border border-muted rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.12)]">
         <CardHeader>
-          <CardTitle className="text-3xl">Lista de Clientes</CardTitle>
+          <CardTitle className="text-3xl">Lista de Pagos</CardTitle>
         </CardHeader>
         <CardContent className="p-6 overflow-x-auto">
           <TablaCustom2
@@ -159,12 +159,12 @@ export default function ClientesTable() {
       >
         <DialogContent className="min-w-3xl">
           <DialogHeader>
-            <DialogTitle>Agregar Cliente</DialogTitle>
+            <DialogTitle>Agregar Pago</DialogTitle>
             <DialogDescription>
               Completa la información del nuevo prospecto
             </DialogDescription>
           </DialogHeader>
-          <ClienteForm
+          <ProspectoForm
             onClose={handleCerrarDialog}
             onSaved={cargarProspectos}
           />
