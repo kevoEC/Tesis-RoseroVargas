@@ -34,6 +34,7 @@ const Casos = lazy(() => import("@/pages/Entidad/Casos/Casos"));
 const CasosTable = lazy(() => import("@/pages/Entidad/Casos/CasosTable"));
 const Tareas = lazy(() => import("@/pages/Entidad/Tareas/TareasDetalle"));
 const TareasTable = lazy(() => import("@/pages/Entidad/Tareas/Tareas"));
+const TareaDetalleEditable = lazy(() => import("@/pages/Entidad/Tareas/TareasDetalle"));
 const ProspectoForm = lazy(() =>
   import("@/pages/Entidad/Prospectos/ProspectoForm")
 );
