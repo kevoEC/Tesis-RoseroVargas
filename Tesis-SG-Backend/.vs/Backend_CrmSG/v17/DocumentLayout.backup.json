@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\tesis kr\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\tesis kr\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\models\\vistas\\tareadetalleextendida.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\models\\vistas\\tareadetalleextendida.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\tesis kr\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\controllers\\entidad\\tareacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\controllers\\entidad\\tareacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -27,10 +35,6 @@
       "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\tesis kr\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\models\\vistas\\tareadetalleextendida.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\models\\vistas\\tareadetalleextendida.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\tesis kr\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\models\\entidades\\tarea.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\models\\entidades\\tarea.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -41,10 +45,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\tesis kr\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\tesis kr\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\tesis kr\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\services\\storedprocedureservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -58,7 +58,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 12,
           "Children": [
             {
               "$type": "Bookmark",
@@ -70,7 +70,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "TareaUpdateDinamicoDTO.cs",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\TareaUpdateDinamicoDTO.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\DTOs\\TareaUpdateDinamicoDTO.cs",
@@ -83,7 +83,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "TareaDetalleDinamicoDTO.cs",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\TareaDetalleDinamicoDTO.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\DTOs\\TareaDetalleDinamicoDTO.cs",
@@ -96,7 +96,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "AppDbContext.cs",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Data\\AppDbContext.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Data\\AppDbContext.cs",
@@ -109,20 +109,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
               "Title": "TareaDetalleExtendida.cs",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Vistas\\TareaDetalleExtendida.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Models\\Vistas\\TareaDetalleExtendida.cs",
               "ToolTip": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Vistas\\TareaDetalleExtendida.cs",
               "RelativeToolTip": "Backend_CrmSG\\Models\\Vistas\\TareaDetalleExtendida.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAA1wAwAAAAwAAAAAAAAAA==",
+              "ViewState": "AgIAABgAAAAAAAAAAAA1wCoAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-21T15:21:06.411Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "TareaController.cs",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Controllers\\Entidad\\TareaController.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Controllers\\Entidad\\TareaController.cs",
@@ -135,7 +135,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "Tarea.cs",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Entidades\\Tarea.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Models\\Entidades\\Tarea.cs",
@@ -148,7 +148,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "TareaService.cs",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\Entidad\\Tarea\\TareaService.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Services\\Entidad\\Tarea\\TareaService.cs",
@@ -161,7 +161,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "ITareaService.cs",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\Entidad\\Tarea\\ITareaService.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Services\\Entidad\\Tarea\\ITareaService.cs",
@@ -174,7 +174,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "TareaDetalle.cs",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Vistas\\TareaDetalle.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Models\\Vistas\\TareaDetalle.cs",
@@ -187,7 +187,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Program.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Program.cs",
@@ -200,13 +200,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 0,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\appsettings.json",
               "RelativeDocumentMoniker": "Backend_CrmSG\\appsettings.json",
               "ToolTip": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\appsettings.json",
               "RelativeToolTip": "Backend_CrmSG\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAA7AAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACAAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-05-21T14:29:28.876Z",
               "EditorCaption": ""

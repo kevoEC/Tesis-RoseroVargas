@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\tesis kr\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\tesis kr\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\models\\vistas\\tareadetalleextendida.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\models\\vistas\\tareadetalleextendida.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\tesis kr\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\tesis kr\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\controllers\\entidad\\tareacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -58,7 +58,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 12,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -78,8 +78,7 @@
               "RelativeToolTip": "Backend_CrmSG\\DTOs\\TareaUpdateDinamicoDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T15:32:47.194Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T15:32:47.194Z"
             },
             {
               "$type": "Document",
@@ -91,8 +90,7 @@
               "RelativeToolTip": "Backend_CrmSG\\DTOs\\TareaDetalleDinamicoDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T15:32:17.104Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T15:32:17.104Z"
             },
             {
               "$type": "Document",
@@ -104,18 +102,17 @@
               "RelativeToolTip": "Backend_CrmSG\\Data\\AppDbContext.cs",
               "ViewState": "AgIAADsAAAAAAAAAAAAcwEsAAABXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T15:21:51.143Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T15:21:51.143Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "TareaDetalleExtendida.cs",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Vistas\\TareaDetalleExtendida.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Models\\Vistas\\TareaDetalleExtendida.cs",
               "ToolTip": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Vistas\\TareaDetalleExtendida.cs",
               "RelativeToolTip": "Backend_CrmSG\\Models\\Vistas\\TareaDetalleExtendida.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAA1wCoAAAAwAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAAQwCoAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-21T15:21:06.411Z",
               "EditorCaption": ""
@@ -130,8 +127,7 @@
               "RelativeToolTip": "Backend_CrmSG\\Controllers\\Entidad\\TareaController.cs",
               "ViewState": "AgIAACYAAAAAAAAAAAAQwDsAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T14:42:49.084Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T14:42:49.084Z"
             },
             {
               "$type": "Document",
@@ -143,8 +139,7 @@
               "RelativeToolTip": "Backend_CrmSG\\Models\\Entidades\\Tarea.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T14:42:41.649Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T14:42:41.649Z"
             },
             {
               "$type": "Document",
@@ -156,8 +151,7 @@
               "RelativeToolTip": "Backend_CrmSG\\Services\\Entidad\\Tarea\\TareaService.cs",
               "ViewState": "AgIAAE0AAAAAAAAAAAAwwGIAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T14:42:10.375Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T14:42:10.375Z"
             },
             {
               "$type": "Document",
@@ -169,8 +163,7 @@
               "RelativeToolTip": "Backend_CrmSG\\Services\\Entidad\\Tarea\\ITareaService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T14:42:09.445Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T14:42:09.445Z"
             },
             {
               "$type": "Document",
@@ -182,8 +175,7 @@
               "RelativeToolTip": "Backend_CrmSG\\Models\\Vistas\\TareaDetalle.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T14:41:55.32Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T14:41:55.32Z"
             },
             {
               "$type": "Document",
@@ -195,18 +187,17 @@
               "RelativeToolTip": "Backend_CrmSG\\Program.cs",
               "ViewState": "AgIAADYAAAAAAAAAAAAAAJcAAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T14:30:04.119Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T14:30:04.119Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\appsettings.json",
               "RelativeDocumentMoniker": "Backend_CrmSG\\appsettings.json",
               "ToolTip": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\appsettings.json",
               "RelativeToolTip": "Backend_CrmSG\\appsettings.json",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAACAAAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACUAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-05-21T14:29:28.876Z",
               "EditorCaption": ""
@@ -221,8 +212,7 @@
               "RelativeToolTip": "Backend_CrmSG\\Services\\StoredProcedureService.cs",
               "ViewState": "AgIAAJEAAAAAAAAAAAAcwKYAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T14:20:52.305Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T14:20:52.305Z"
             }
           ]
         }
