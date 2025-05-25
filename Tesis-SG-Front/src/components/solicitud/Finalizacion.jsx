@@ -16,13 +16,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { getCatalogoFinalizacion } from "@/service/Catalogos/FinalService";
 
 export default function FinalizacionForm({ id }) {
   const [loading, setLoading] = useState(true);
   const [solicitudData, setSolicitudData] = useState(null);
+  const [opcionesAccion, setOpcionesAccion] = useState([]);
   const [finalizacion, setFinalizacion] = useState({
     numeroContrato: "",
-    idContinuarSolicitud: "",
+    idContinuarSolicitud: "", /*viene de catálogo, valor sería 1, 2 o sin seleccionar*/
+    nombreContinuarSolicitud: ""/*También viene de catálogo*/,
     motivoFinalizacion: "",
     observacionFinalizacion: "",
     confirmar: false,
@@ -38,9 +41,9 @@ export default function FinalizacionForm({ id }) {
         setFinalizacion({
           numeroContrato: data.finalizacion.numeroContrato ?? "",
           idContinuarSolicitud: data.finalizacion.idContinuarSolicitud ?? "",
+          nombreContinuarSolicitud: data.finalizacion.nombreContinuarSolicitud ?? "",
           motivoFinalizacion: data.finalizacion.motivoFinalizacion ?? "",
-          observacionFinalizacion:
-            data.finalizacion.observacionFinalizacion ?? "",
+          observacionFinalizacion: data.finalizacion.observacionFinalizacion ?? "",
           confirmar: data.finalizacion.confirmar ?? false,
         });
       } catch (err) {
@@ -52,17 +55,32 @@ export default function FinalizacionForm({ id }) {
     cargar();
   }, [id]);
 
+  /*Cargo catálogo de acciones*/
+  useEffect(() => {
+    const cargarCatalogo = async () => {
+      try {
+        const res = await getCatalogoFinalizacion();
+        /*solo para verificar que sea array*/
+        const catalogo = Array.isArray(res) ? res : [];
+        setOpcionesAccion(catalogo);
+
+      } catch (err) {
+        toast.error("Error al cargar catálogo de acciones: " + err.message);
+      }
+    };
+    cargarCatalogo();
+  }, []);
   const handleGuardar = async () => {
     if (!solicitudData) return;
     try {
       setLoading(true);
       const payload = {
-        ...solicitudData,
-        finalizacion: {
+        ...solicitudData, finalizacion: {
           ...solicitudData.finalizacion,
           ...finalizacion,
         },
       };
+      console.log("payload finalización" + JSON.stringify(payload))
       const res = await updateSolicitud(id, payload);
       if (res.success) toast.success("Finalización actualizada.");
       else toast.error("Error al actualizar finalización.");
@@ -71,6 +89,14 @@ export default function FinalizacionForm({ id }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const generarContrato = () => {
+    const provisional = `PROVISIONAL-${ Math.random() * (10 - 1 + 1)}`;
+    setFinalizacion((f) => ({
+      ...f,
+      numeroContrato: provisional,
+    }));
   };
 
   if (loading) return <p>Cargando datos de finalización...</p>;
@@ -82,74 +108,127 @@ export default function FinalizacionForm({ id }) {
       <Button onClick={handleGuardar} disabled={loading} className="text-white">
         Guardar datos
       </Button>
-      <Card>
-        <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-          <FormInput
-            label="Número de contrato"
-            value={finalizacion.numeroContrato}
-            onChange={(e) =>
-              setFinalizacion({
-                ...finalizacion,
-                numeroContrato: e.target.value,
-              })
-            }
-          />
-          <FormInput
-            label="ID Continuar solicitud"
-            type="number"
-            value={finalizacion.idContinuarSolicitud}
-            onChange={(e) =>
-              setFinalizacion({
-                ...finalizacion,
-                idContinuarSolicitud: e.target.value,
-              })
-            }
-          />
-          <FormInput
-            label="Motivo de finalización"
-            value={finalizacion.motivoFinalizacion}
-            onChange={(e) =>
-              setFinalizacion({
-                ...finalizacion,
-                motivoFinalizacion: e.target.value,
-              })
-            }
-          />
-          <FormInput
-            label="Observación de finalización"
-            value={finalizacion.observacionFinalizacion}
-            onChange={(e) =>
-              setFinalizacion({
-                ...finalizacion,
-                observacionFinalizacion: e.target.value,
-              })
-            }
-          />
-          <FormSwitch
-            label="Confirmar"
-            checked={finalizacion.confirmar}
-            onChange={(checked) =>
-              setFinalizacion({ ...finalizacion, confirmar: checked })
-            }
-          />
-        </CardContent>
-      </Card>
 
-      {/* Select local — no se envía al backend */}
-      <div className="space-y-1.5">
-        <Label className="text-sm font-medium text-gray-700">Acción</Label>
-        <Select value={decision} onValueChange={setDecision}>
-          <SelectTrigger className="text-sm border border-black">
-            <SelectValue placeholder="Seleccione una acción" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            <SelectItem value="Finalizar con el registro">
-              Finalizar con el registro
-            </SelectItem>
-            <SelectItem value="Rechazar">Rechazar</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+
+      <Card>
+        <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+            <div className="flex items-end gap-2">
+  
+              <div className="flex flex-col space-y-1">
+                <Label className="text-sm font-medium text-gray-700">
+                  Número de contrato
+                </Label>
+                <Input
+                  placeholder="---"
+                  type="text"
+                  value={finalizacion.numeroContrato}
+                  onChange={(e) =>
+                    setFinalizacion({
+                      ...finalizacion,
+                      numeroContrato: e.target.value,
+                    })
+                  }
+                  className="h-10"
+                />
+              </div>
+
+              <Button
+                onClick={generarContrato}
+                className="h-10"
+                variant="muted"
+              >
+                Generar contrato
+              </Button>
+            </div>
+
+            {/* Dropdown unificado para acción */}
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">
+                Acción
+              </Label>
+              <Select
+                value={String(finalizacion.idContinuarSolicitud)}
+                onValueChange={(value) => {
+                  const id = parseInt(value, 10);
+                  const seleccion = opcionesAccion.find(
+                    (o) => o.idContinuarSolicitud === id
+                  );
+                  setFinalizacion({
+                    ...finalizacion,
+                    idContinuarSolicitud: id,
+                    nombreContinuarSolicitud: seleccion?.nombre ?? "",
+                  });
+                }}
+              >
+                <SelectTrigger className="text-sm border border-black">
+                  <SelectValue placeholder="Seleccione una acción" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {opcionesAccion.length > 0 ? (
+                    opcionesAccion.map((opt) => (
+                      <SelectItem
+                        key={opt.idContinuarSolicitud}
+                        value={String(opt.idContinuarSolicitud)}
+                      >
+                        {opt.nombre}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem disabled value="no-options">
+                      No hay opciones disponibles
+                    </SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+
+
+            {/* Renderizado condicional según la selección */}
+            {finalizacion.idContinuarSolicitud === 1 && (
+              <>
+                <FormInput
+                  label="Motivo de finalización"
+                  value={finalizacion.motivoFinalizacion}
+                  onChange={(e) =>
+                    setFinalizacion({
+                      ...finalizacion,
+                      motivoFinalizacion: e.target.value,
+                    })
+                  }
+                />
+                <FormInput
+                  label="Observación de finalización"
+                  value={finalizacion.observacionFinalizacion}
+                  onChange={(e) =>
+                    setFinalizacion({
+                      ...finalizacion,
+                      observacionFinalizacion: e.target.value,
+                    })
+                  }
+                />
+                <FormSwitch
+                  label="Confirmar"
+                  checked={finalizacion.confirmar}
+                  onChange={(checked) =>
+                    setFinalizacion({ ...finalizacion, confirmar: checked })
+                  }
+                />
+              </>
+            )}
+
+            {finalizacion.idContinuarSolicitud === 2 && (
+              <FormSwitch
+                label="Confirmar"
+                checked={finalizacion.confirmar}
+                onChange={(checked) =>
+                  setFinalizacion({ ...finalizacion, confirmar: checked })
+                }
+              />
+            )}
+            {/* Si idContinuarSolicitud es "" o cualquier otro, no se renderiza ninguno */}
+          </CardContent>
+      </Card>
     </div>
   );
 }

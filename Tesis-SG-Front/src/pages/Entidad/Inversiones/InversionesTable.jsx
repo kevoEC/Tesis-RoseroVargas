@@ -16,9 +16,9 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import ProspectoForm from "./ProspectoForm";
+import InversioneForm from "../Inversiones/InversionForm";
 
-export default function Prospectos() {
+export default function InversionesTable() {
   const navigate = useNavigate();
 
   const [prospectos, setProspectos] = useState([]);
@@ -52,7 +52,7 @@ export default function Prospectos() {
 
   // 🟡 Editar
   const handleEditar = (item) => {
-    navigate(`/prospectos/editar/${item.idProspecto}`);
+    navigate(`/inversiones/editar/${item.idProspecto}`);
   };
 
   // 🔴 Eliminar
@@ -76,7 +76,7 @@ export default function Prospectos() {
   const columnas = [
     {
       key: "idProspecto",
-      label: "Prospecto",
+      label: "Inversion",
       render: (value) => (
         <div className="flex items-center justify-center group relative text-gray-500">
           <svg
@@ -136,7 +136,7 @@ export default function Prospectos() {
     <div className="p-4 sm:p-6 md:p-8 max-w-full">
       <Card className="w-full border border-muted rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.12)]">
         <CardHeader>
-          <CardTitle className="text-3xl">Lista de Prospectos</CardTitle>
+          <CardTitle className="text-3xl">Lista de Inversiones</CardTitle>
         </CardHeader>
         <CardContent className="p-6 overflow-x-auto">
           <TablaCustom2
@@ -159,12 +159,12 @@ export default function Prospectos() {
       >
         <DialogContent className="min-w-3xl">
           <DialogHeader>
-            <DialogTitle>Agregar Prospecto</DialogTitle>
+            <DialogTitle>Agregar Inversion</DialogTitle>
             <DialogDescription>
               Completa la información del nuevo prospecto
             </DialogDescription>
           </DialogHeader>
-          <ProspectoForm
+          <InversioneForm
             onClose={handleCerrarDialog}
             onSaved={cargarProspectos}
           />

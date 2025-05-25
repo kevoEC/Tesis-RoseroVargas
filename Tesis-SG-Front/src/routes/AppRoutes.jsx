@@ -14,6 +14,27 @@ const Politica = lazy(() => import("@/pages/Legal/PoliticaPrivacidad"));
 const DashboardPanel = lazy(() => import("@/pages/Panel/Dashboard"));
 
 const Prospectos = lazy(() => import("@/pages/Entidad/Prospectos/Prospectos"));
+const Inversiones = lazy(() =>
+  import("@/pages/Entidad/Inversiones/Inversiones")
+);
+const InversionesTable = lazy(() =>
+  import("@/pages/Entidad/Inversiones/InversionesTable")
+);
+const ClientesTable = lazy(() =>
+  import("@/pages/Entidad/Clientes/ClientesTable")
+);
+const Clientes = lazy(() => import("@/pages/Entidad/Clientes/Clientes"));
+const Calendario = lazy(() => import("@/pages/Entidad/Calendario/Calendario"));
+const CalendarioTable = lazy(() =>
+  import("@/pages/Entidad/Calendario/CalendarioTable")
+);
+const Pagos = lazy(() => import("@/pages/Entidad/Pagos/Pagos"));
+const PagosTable = lazy(() => import("@/pages/Entidad/Pagos/PagosTable"));
+const Casos = lazy(() => import("@/pages/Entidad/Casos/Casos"));
+const CasosTable = lazy(() => import("@/pages/Entidad/Casos/CasosTable"));
+const Tareas = lazy(() => import("@/pages/Entidad/Tareas/TareasDetalle"));
+const TareasTable = lazy(() => import("@/pages/Entidad/Tareas/Tareas"));
+const TareaDetalleEditable = lazy(() => import("@/pages/Entidad/Tareas/TareasDetalle"));
 const ProspectoForm = lazy(() =>
   import("@/pages/Entidad/Prospectos/ProspectoForm")
 );
@@ -116,17 +137,23 @@ export const protectedRoutes = [
   { path: "/solicitudes/editar/:id/proyeccion/nueva", element: <Proyeccion /> },
 
   // Inversiones
-  { path: "/inversiones/vista", element: <Prospectos /> },
+  { path: "/inversiones/vista", element: <InversionesTable /> },
+  { path: "/inversiones/editar/:id", element: <Inversiones /> },
   // Clientes
-  { path: "/clientes/vista", element: <Prospectos /> },
+  { path: "/clientes/vista", element: <ClientesTable /> },
+  { path: "/clientes/editar/:id", element: <Clientes /> },
   // Tareas
-  { path: "/tareas/vista", element: <Prospectos /> },
+  { path: "/tareas/vista", element: <TareasTable /> },
+  { path: "/tareas/editar/:id", element: <TareaDetalleEditable /> },
   // Casos
-  { path: "/casos/vista", element: <Prospectos /> },
+  { path: "/casos/vista", element: <CasosTable /> },
+  { path: "/casos/editar/:id", element: <Casos /> },
   // Pagos
-  { path: "/pagos/vista", element: <Prospectos /> },
+  { path: "/pagos/vista", element: <PagosTable /> },
+  { path: "/pagos/editar/:id", element: <Pagos /> },
   // Calendario
-  { path: "/calendario/vista", element: <Prospectos /> },
+  { path: "/calendario/vista", element: <CalendarioTable /> },
+  { path: "/calendario/editar/:id", element: <Calendario /> },
 
   // Configuraciones generales
   { path: "/settings", element: <Settings /> },

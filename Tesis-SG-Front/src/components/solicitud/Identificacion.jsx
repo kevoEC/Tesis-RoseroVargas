@@ -4,7 +4,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { getTipoIdentificacion } from "@/service/Catalogos/TipoIdentificacionService";
 import {
   Select,
   SelectTrigger,
@@ -19,15 +18,20 @@ import {
   getSolicitudById,
   updateSolicitud,
 } from "@/service/Entidades/SolicitudService";
+import { getTipoSolicitud } from "@/service/Catalogos/TipoSolicitudService";
+import { getTipoCliente } from "@/service/Catalogos/TipoClienteService";
+import { getTipoIdentificacion } from "@/service/Catalogos/TipoIdentificacionService";
 import { Loader2 } from "lucide-react";
 import { useUI } from "@/hooks/useUI";
 import { Button } from "@/components/ui/button";
 
 export default function Identificacion({ id }) {
   const { notify, setSolicitudHabilitada } = useUI();
-
-  // tipos dinámicos
+  /********Catálogos Tipos Identifi, CLiente, Documn************* */
+  const [tiposSolicitud, setTiposSolicitud] = useState([]);
+  const [tiposCliente, setTiposCliente] = useState([]);
   const [tiposIdentificacion, setTiposIdentificacion] = useState([]);
+
 
   // datos completos de la solicitud
   const [solicitudData, setSolicitudData] = useState(null);
@@ -38,9 +42,9 @@ export default function Identificacion({ id }) {
 
   // formulario controlado
   const [form, setForm] = useState({
-    tipoSolicitud: "",
-    tipoCliente: "",
-    tipoDocumento: "",
+    idTipoSolicitud: null,
+    idTipoCliente: null,
+    idTipoDocumento: null,
     numeroDocumento: "",
     nombres: "",
     apellidoPaterno: "",
@@ -50,67 +54,67 @@ export default function Identificacion({ id }) {
     obsEquifax: "",
     listasControl: "",
     obsListasControl: "",
-    continuar: "",
+    continuar: 1,            // numérico: 1=continuar, 0=rechazar
   });
+  // mapeos label ↔ número para “Continuar”
+  const continuarOptions = [
+    { id: 1, label: "Continuar con la solicitud" },
+    { id: 0, label: "Rechazar solicitud" }
+  ];
+  // mapeo de continuar (aunque aquí ya lo tienes numérico, así te aseguras)
+  const mapContinuarNumeric = (val) => Number(val);
 
-  // carga tipos de documento
+  /*Carga todos los catálogos en paralelo*/
+
   useEffect(() => {
-    getTipoIdentificacion().then(setTiposIdentificacion);
-  }, []);
+    (async () => {
+      try {
+        const [sol, cli, idt] = await Promise.all([
+          getTipoSolicitud(),
+          getTipoCliente(),
+          getTipoIdentificacion(),
+        ]);
+        setTiposSolicitud(sol);         // sol ya es un Array
+        setTiposCliente(cli);           // cli ya es un Array
+        setTiposIdentificacion(idt);    // idt ya es un Array
+      } catch (err) {
+        toast.error("Error al cargar catálogos: " + err.message);
+      }
+    })();
+  }, []); // solo al montar
 
-  // mapeos numérico <-> etiqueta
-  const mapTipoSolicitudLabel = (v) =>
-    v === 1 ? "Nueva" : v === 2 ? "Renovación" : "Incremento";
-  const mapTipoClienteLabel = (v) => (v === 1 ? "Natural" : "Jurídico");
-  const mapTipoDocumentoLabel = (v) =>
-    v === 1 ? "Cédula" : v === 2 ? "RUC" : "Pasaporte";
-  const mapContinuarLabel = (v) =>
-    v === 1 ? "Continuar con la solicitud" : "Rechazar solicitud";
-
-  const mapContinuarNumeric = (s) =>
-    s === "Continuar con la solicitud" ? 1 : 0;
-  const mapToNumericValues = (f) => ({
-    tipoSolicitud:
-      f.tipoSolicitud === "Nueva"
-        ? 1
-        : f.tipoSolicitud === "Renovación"
-          ? 2
-          : 3,
-    tipoCliente: f.tipoCliente === "Natural" ? 1 : 2,
-    tipoDocumento:
-      f.tipoDocumento === "Cédula" ? 1 : f.tipoDocumento === "RUC" ? 2 : 3,
-  });
-
-  // cargar datos de la solicitud
   useEffect(() => {
-    const cargar = async () => {
+    (async () => {
       try {
         const res = await getSolicitudById(id);
-        const data = res.data[0];
-        setSolicitudData(data);
-        const i = data.identificacion;
-        setForm({
-          tipoSolicitud: mapTipoSolicitudLabel(i.tipoSolicitud),
-          tipoCliente: mapTipoClienteLabel(i.tipoCliente),
-          tipoDocumento: mapTipoDocumentoLabel(i.tipoDocumento),
-          numeroDocumento: i.numeroDocumento || "",
-          nombres: i.nombres || "",
-          apellidoPaterno: i.apellidoPaterno || "",
-          apellidoMaterno: i.apellidoMaterno || "",
-          validar: i.validar || false,
-          equifax: i.equifax || "",
-          obsEquifax: i.obsEquifax || "",
-          listasControl: i.listasControl || "",
-          obsListasControl: i.obsListasControl || "",
-          continuar: mapContinuarLabel(i.continuar),
-        });
-        setBloquearCampos(i.validar);
+        const full = res.data[0];
+        console.log("mi res"+JSON.stringify(res))
+        console.log("mi res.data[0]"+JSON.stringify(full))
+
+        const data = full.identificacion;
+        setSolicitudData(full);
+        setForm(f => ({
+           ...f,
+          idTipoSolicitud: data.idTipoSolicitud,
+          idTipoCliente: data.idTipoCliente,
+          idTipoDocumento: data.idTipoDocumento,
+          numeroDocumento: data.numeroDocumento || "",
+          nombres: data.nombres || "",
+          apellidoPaterno: data.apellidoPaterno || "",
+          apellidoMaterno: data.apellidoMaterno || "",
+          validar: data.validar || false,
+          equifax: data.equifax || "",
+          obsEquifax: data.obsEquifax || "",
+          listasControl: data.listasControl || "",
+          obsListasControl: data.obsListasControl || "",
+          continuar: data.continuar, // 1 o 0
+        }));
+        setBloquearCampos(data.validar);
       } catch (err) {
         toast.error("Error al cargar identificación: " + err.message);
       }
-    };
-    cargar();
-  }, [id]);
+    })();
+  }, [id]); // cada vez que cambie el prop id
 
   // habilitar solicitud
   useEffect(() => {
@@ -125,9 +129,9 @@ export default function Identificacion({ id }) {
   const ejecutarValidaciones = async () => {
     if (loadingValidacion || bloquearCampos) return;
     if (
-      !form.tipoSolicitud ||
-      !form.tipoCliente ||
-      !form.tipoDocumento ||
+      !form.idTipoSolicitud ||
+      !form.idTipoCliente ||
+      !form.idTipoDocumento ||
       !form.numeroDocumento ||
       !form.nombres ||
       !form.apellidoPaterno ||
@@ -186,12 +190,16 @@ export default function Identificacion({ id }) {
     if (!solicitudData) return;
     setLoadingSave(true);
     try {
-      const numeric = mapToNumericValues(form);
+      // const numeric = mapToNumericValues(form);
+      const numeric = form;
       const payload = {
         ...solicitudData,
         identificacion: {
           ...solicitudData.identificacion,
-          ...numeric,
+          // ...numeric,
+          idTipoSolicitud: form.idTipoSolicitud,
+          idTipoCliente: form.idTipoCliente,
+          idTipoDocumento: form.idTipoDocumento,
           numeroDocumento: form.numeroDocumento,
           nombres: form.nombres,
           apellidoPaterno: form.apellidoPaterno,
@@ -204,6 +212,7 @@ export default function Identificacion({ id }) {
           continuar: mapContinuarNumeric(form.continuar),
         },
       };
+      console.log("mipayload:" + JSON.stringify(payload))
       const res = await updateSolicitud(id, payload);
       res.success
         ? toast.success("Identificación actualizada.")
@@ -254,41 +263,43 @@ export default function Identificacion({ id }) {
       <Card className="shadow-md rounded-2xl bg-white border border-gray-200 shadow-md">
         <CardContent className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Tipo de solicitud */}
             <FormSelect
               label="Tipo de solicitud"
-              value={form.tipoSolicitud}
-              onChange={(v) => handleChange("tipoSolicitud", v)}
-              options={["Nueva", "Renovación", "Incremento"]}
+              options={tiposSolicitud.map(t => ({
+                id: t.idTipoDeSolicitud,         // <-- clave
+                label: t.nombreTipoDeSolicitud,     // <-- texto visible
+              }))}
+              value={form.idTipoSolicitud}
+              onChange={id => handleChange("idTipoSolicitud", id)}
               disabled={bloquearCampos}
             />
+
+            {/* Tipo de cliente */}
             <FormSelect
               label="Tipo de cliente"
-              value={form.tipoCliente}
-              onChange={(v) => handleChange("tipoCliente", v)}
-              options={["Natural", "Jurídico"]}
+              options={tiposCliente.map(c => ({
+                id: c.idTipoCliente,
+                label: c.nombreTipoCliente,
+              }))}
+              value={form.idTipoCliente}
+              onChange={id => handleChange("idTipoCliente", id)}
               disabled={bloquearCampos}
             />
-            <div className="space-y-1">
-              <Label className="text-sm text-gray-700 font-medium">
-                Tipo de documento
-              </Label>
-              <Select
-                value={form.tipoDocumento}
-                onValueChange={(v) => handleChange("tipoDocumento", v)}
-                disabled={bloquearCampos}
-              >
-                <SelectTrigger className="text-sm border-black">
-                  <SelectValue placeholder="Seleccione un tipo" />
-                </SelectTrigger>
-                <SelectContent className="bg-white">
-                  {tiposIdentificacion.map((t) => (
-                    <SelectItem key={t.idTipoIdentificacion} value={t.tipo}>
-                      {t.tipo}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+
+            {/* Tipo de documento */}
+            <FormSelect
+              label="Tipo de documento"
+              options={tiposIdentificacion.map(d => ({
+                id: d.idTipoIdentificacion,
+                label: d.tipo,
+              }))}
+              value={form.idTipoDocumento}
+              onChange={id => handleChange("idTipoDocumento", id)}
+              disabled={bloquearCampos}
+            />
+
+
             <FormInput
               label="Número de identificación"
               value={form.numeroDocumento}
@@ -328,50 +339,52 @@ export default function Identificacion({ id }) {
         </CardContent>
       </Card>
 
-      {form.validar && (
-        <>
-          <h2 className="text-2xl font-semibold text-gray-800">Validación</h2>
-          <Separator />
-          <Card className="shadow-md rounded-2xl bg-white border border-gray-200 shadow-md">
-            <CardContent className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormInput
-                  label="Identidad (Equifax)"
-                  value={form.equifax}
-                  disabled
-                />
-                <FormTextArea
-                  label="Observación Equifax"
-                  value={form.obsEquifax}
-                  disabled
-                />
-                <FormInput
-                  label="Listas de Control (LDS)"
-                  value={form.listasControl}
-                  disabled
-                />
-                <FormTextArea
-                  label="Observación LDS"
-                  value={form.obsListasControl}
-                  disabled
-                />
-                <FormSelect
-                  label="Continuar"
-                  value={form.continuar}
-                  onChange={(v) => handleChange("continuar", v)}
-                  options={["Continuar con la solicitud", "Rechazar solicitud"]}
-                  full
-                  disabled={
-                    form.equifax === "Rechazado" ||
-                    form.listasControl === "Rechazado"
-                  }
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </>
-      )}
-    </div>
+      {
+        form.validar && (
+          <>
+            <h2 className="text-2xl font-semibold text-gray-800">Validación</h2>
+            <Separator />
+            <Card className="shadow-md rounded-2xl bg-white border border-gray-200 shadow-md">
+              <CardContent className="p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormInput
+                    label="Identidad (Equifax)"
+                    value={form.equifax}
+                    disabled
+                  />
+                  <FormTextArea
+                    label="Observación Equifax"
+                    value={form.obsEquifax}
+                    disabled
+                  />
+                  <FormInput
+                    label="Listas de Control (LDS)"
+                    value={form.listasControl}
+                    disabled
+                  />
+                  <FormTextArea
+                    label="Observación LDS"
+                    value={form.obsListasControl}
+                    disabled
+                  />
+                  <FormSelect
+                    label="Continuar"
+                    value={form.continuar}
+                    onChange={(v) => handleChange("continuar", v)}
+                    options={["Continuar con la solicitud", "Rechazar solicitud"]}
+                    full
+                    disabled={
+                      form.equifax === "Rechazado" ||
+                      form.listasControl === "Rechazado"
+                    }
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )
+      }
+    </div >
   );
 }
 
@@ -390,25 +403,22 @@ function FormInput({ label, value, onChange, disabled }) {
   );
 }
 
-function FormSelect({
-  label,
-  value,
-  onChange,
-  options = [],
-  full = false,
-  disabled,
-}) {
+function FormSelect({ label, value, onChange, options, full = false, disabled }) {
   return (
     <div className={`space-y-1 ${full ? "md:col-span-2" : ""}`}>
       <Label className="text-sm text-gray-700 font-medium">{label}</Label>
-      <Select value={value} onValueChange={onChange} disabled={disabled}>
+      <Select
+        value={value != null ? String(value) : undefined}
+        onValueChange={val => onChange(Number(val))}
+        disabled={disabled}
+      >
         <SelectTrigger className="text-sm border-black">
           <SelectValue placeholder={label} />
         </SelectTrigger>
         <SelectContent className="bg-white">
-          {options.map((opt) => (
-            <SelectItem key={opt} value={opt}>
-              {opt}
+          {options.map(opt => (
+            <SelectItem key={opt.id} value={String(opt.id)}>
+              {opt.label}
             </SelectItem>
           ))}
         </SelectContent>
@@ -416,6 +426,7 @@ function FormSelect({
     </div>
   );
 }
+
 function FormSwitch({ label, checked, onChange }) {
   return (
     <div className="flex items-center gap-4">

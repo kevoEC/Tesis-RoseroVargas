@@ -31,3 +31,9 @@ export const getJustificativoTransaccion = async () => {
   });
   return handleResponse(res);
 };
+export const getOrigenCliente = async () => {
+  const res = await fetch(`${API_BASE_URL}/OrigenCliente`, {
+    headers: getAuthHeaders(),
+  });
+  return handleResponse(res);
+};
