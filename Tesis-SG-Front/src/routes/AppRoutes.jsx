@@ -34,6 +34,7 @@ const Casos = lazy(() => import("@/pages/Entidad/Casos/Casos"));
 const CasosTable = lazy(() => import("@/pages/Entidad/Casos/CasosTable"));
 const Tareas = lazy(() => import("@/pages/Entidad/Tareas/TareasDetalle"));
 const TareasTable = lazy(() => import("@/pages/Entidad/Tareas/Tareas"));
+const TareaDetalleEditable = lazy(() => import("@/pages/Entidad/Tareas/TareasDetalle"));
 const ProspectoForm = lazy(() =>
   import("@/pages/Entidad/Prospectos/ProspectoForm")
 );
@@ -143,7 +144,7 @@ export const protectedRoutes = [
   { path: "/clientes/editar/:id", element: <Clientes /> },
   // Tareas
   { path: "/tareas/vista", element: <TareasTable /> },
-  { path: "/tareas/editar/:id", element: <Tareas /> },
+  { path: "/tareas/editar/:id", element: <TareaDetalleEditable /> },
   // Casos
   { path: "/casos/vista", element: <CasosTable /> },
   { path: "/casos/editar/:id", element: <Casos /> },

@@ -1,25 +1,40 @@
 import Adjuntos from "@/components/solicitud/Adjuntos";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getTareaById } from "@/service/Entidades/TareasService";
 
 export default function TareaDetalleEditable() {
   const [descripcion, setDescripcion] = useState(
     "Hacer firmar por gerencia y el cliente el contrato o adendum y anexo de inversión, y adjuntar a la plataforma."
   );
-  const [resultado, setResultado] = useState("Aprobado");
+  const { id } = useParams();
+  const [resultado, setResultado] = useState("Pendiente");
   const [observacion, setObservacion] = useState("");
-
+  const [tareas, setTareas] = useState([]);
   const [firmadoGerencia, setFirmadoGerencia] = useState(false);
   const [solicitarAbono, setSolicitarAbono] = useState(false);
   const [reconocimientoFirmas, setReconocimientoFirmas] = useState(true);
   const [modoFirma, setModoFirma] = useState("Física");
-
+  const cargarTareas = async () => {
+      try {
+        const data = await getTareaById(id);
+        setTareas(data.data);
+        console.log("ladata: "+JSON.stringify(data));
+      } catch (error) {
+        console.error("Error al cargar tareas:", error);
+      }
+    };
+    useEffect(() => {
+      cargarTareas();
+    }, []);
+ 
   return (
     <div className="p-10 max-w-7xl mx-auto space-y-10 bg-white shadow rounded-xl">
       {/* Encabezado */}
       <div className="text-2xl font-bold mb-6">
-        Contrato - Nueva -{" "}
+        Contrato - Nueva - 
         <span className="font-normal text-gray-700">
-          JESSICA KARINA ORRALA QUINDE SG-FRF-2025-02486
+          {tareas.tareaNombre}
         </span>
         <div className="text-sm text-gray-500 mt-1">Tarea de solicitud</div>
       </div>
@@ -77,7 +92,7 @@ export default function TareaDetalleEditable() {
             <input
               type="text"
               className="w-full border border-gray-300 rounded-lg p-3 text-sm text-gray-900 focus:outline-blue-500 focus:ring-1 focus:ring-blue-500"
-              value={resultado}
+              value={tareas.idResultado}
               onChange={(e) => setResultado(e.target.value)}
             />
             <label className="block text-sm font-medium text-gray-800 mt-5 mb-1">
@@ -86,34 +101,11 @@ export default function TareaDetalleEditable() {
             <textarea
               className="w-full border border-gray-300 rounded-lg p-3 text-sm text-gray-900 resize-y focus:outline-blue-500 focus:ring-1 focus:ring-blue-500"
               rows={3}
-              value={observacion}
+              value={tareas.observacion}
               onChange={(e) => setObservacion(e.target.value)}
             />
           </section>
 
-          {/* Solicitud de inversión */}
-          <section className="border border-gray-300 rounded-xl p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-800 mb-3">
-              Solicitud de inversión
-            </h2>
-            <div>
-              <label className="text-sm font-medium text-gray-800">
-                Modo de firma
-              </label>
-              <select
-                className="w-full border border-gray-300 rounded-lg p-2 text-sm mt-1 text-gray-900 focus:outline-blue-500 focus:ring-1 focus:ring-blue-500"
-                value={modoFirma}
-                onChange={(e) => setModoFirma(e.target.value)}
-              >
-                <option value="Física">
-                  Nueva - JESSICA KARINA ORRALA QUINDE SG-FRF-2025-02486
-                </option>
-                <option value="Digital">
-                  Nueva - JESSICA KARINA ORRALA QUINDE SG-FRF-2025-02486
-                </option>
-              </select>
-            </div>
-          </section>
         </div>
       </div>
       <Adjuntos id={13} tipo={"tareas"} />
@@ -132,7 +124,7 @@ function Switch({ label, checked, onChange }) {
           onChange={(e) => onChange(e.target.checked)}
           className="sr-only peer"
         />
-        <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all"></div>
+        <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/80 rounded-full peer peer-checked:bg-primary transition-all"></div>
         <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-5"></div>
       </label>
     </div>
