@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { mapIdentificacionToUpdate } from "@/utils/mappers";
 import {
   getSolicitudById,
   updateSolicitud,
@@ -103,6 +104,7 @@ export default function ContactoUbicacion({ id }) {
       setLoading(true);
       const payload = {
         ...solicitudData,
+        identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
         contactoUbicacion,
       };
       const res = await updateSolicitud(id, payload);

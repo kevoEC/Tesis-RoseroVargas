@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { mapIdentificacionToUpdate } from "@/utils/mappers";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -87,22 +88,21 @@ export default function DatosGenerales() {
     if (!solicitudData) return;
     setLoadingGeneral(true);
     try {
-      const payload = {
-        ...solicitudData,
-        datosGenerales: {
-          ...solicitudData.datosGenerales,
-          fechaNacimiento: datosGenerales.fechaNacimiento,
-          idGenero: parseInt(datosGenerales.genero) || null,
-          idEstadoCivil: parseInt(datosGenerales.estadoCivil) || null,
-          idNivelAcademico: parseInt(datosGenerales.nivelAcademico) || null,
-          numeroCargasFamiliares:
-            parseInt(datosGenerales.numeroCargasFamiliares) || 0,
-          idNacionalidad: datosGenerales.nacionalidad,
-          idProfesion: datosGenerales.profesion,
-          idEtnia: datosGenerales.etnia,
-          // no hay campos de nacimiento en API, sólo en UI
-        },
-      };
+    const payload = {
+      ...solicitudData,
+      identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
+      datosGenerales: {
+        ...solicitudData.datosGenerales,
+        fechaNacimiento: datosGenerales.fechaNacimiento,
+        idGenero: parseInt(datosGenerales.genero) || null,
+        idEstadoCivil: parseInt(datosGenerales.estadoCivil) || null,
+        idNivelAcademico: parseInt(datosGenerales.nivelAcademico) || null,
+        numeroCargasFamiliares: parseInt(datosGenerales.numeroCargasFamiliares) || 0,
+        idNacionalidad: datosGenerales.nacionalidad,
+        idProfesion: datosGenerales.profesion,
+        idEtnia: datosGenerales.etnia,
+      },
+    };
       const res = await updateSolicitud(id, payload);
       res.success
         ? toast.success("Datos generales actualizados.")

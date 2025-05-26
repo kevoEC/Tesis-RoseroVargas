@@ -2841,6 +2841,191 @@
         }
       }
     },
+    "/api/ModoFirma": {
+      "get": {
+        "tags": [
+          "ModoFirma"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModoFirma"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModoFirma"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModoFirma"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ModoFirma"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModoFirma"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModoFirma"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModoFirma"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModoFirma"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModoFirma"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModoFirma"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ModoFirma/{id}": {
+      "get": {
+        "tags": [
+          "ModoFirma"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModoFirma"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModoFirma"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModoFirma"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ModoFirma"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModoFirma"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModoFirma"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModoFirma"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ModoFirma"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Nacionalidad": {
       "get": {
         "tags": [
@@ -5223,6 +5408,29 @@
         }
       }
     },
+    "/api/Tarea/por-solicitud/{idSolicitud}": {
+      "get": {
+        "tags": [
+          "Tarea"
+        ],
+        "parameters": [
+          {
+            "name": "idSolicitud",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Tarea/{id}": {
       "get": {
         "tags": [
@@ -5264,44 +5472,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TareaUpdateDTO"
+                "$ref": "#/components/schemas/TareaUpdateDinamicoDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/TareaUpdateDTO"
+                "$ref": "#/components/schemas/TareaUpdateDinamicoDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/TareaUpdateDTO"
+                "$ref": "#/components/schemas/TareaUpdateDinamicoDTO"
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Tarea/por-solicitud/{idSolicitud}": {
-      "get": {
-        "tags": [
-          "Tarea"
-        ],
-        "parameters": [
-          {
-            "name": "idSolicitud",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -8269,6 +8454,38 @@
         },
         "additionalProperties": false
       },
+      "ModoFirma": {
+        "type": "object",
+        "properties": {
+          "idModoFirma": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreModoFirma": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCreacion": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "idUsuarioCreacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fechaModificacion": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Nacionalidad": {
         "type": "object",
         "properties": {
@@ -8872,19 +9089,22 @@
         },
         "additionalProperties": false
       },
-      "TareaUpdateDTO": {
+      "TareaUpdateDinamicoDTO": {
         "type": "object",
         "properties": {
           "idResultado": {
             "type": "integer",
             "format": "int32"
           },
-          "observación": {
+          "observacion": {
             "type": "string",
             "nullable": true
           },
-          "datosEspecificos": {
-            "type": "string",
+          "camposTipo": {
+            "type": "object",
+            "additionalProperties": {
+              "nullable": true
+            },
             "nullable": true
           }
         },

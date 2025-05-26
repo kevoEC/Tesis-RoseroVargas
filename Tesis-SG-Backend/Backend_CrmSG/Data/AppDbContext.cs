@@ -41,6 +41,7 @@ namespace Backend_CrmSG.Data
         public DbSet<TipoReferencia> TipoReferencia { get; set; }
         public DbSet<ContinuarSolicitud> ContinuarSolicitud { get; set; }
         public DbSet<Tarea> Tarea { get; set; }
+        public DbSet<ModoFirma> ModoFirma { get; set; } // ← esta línea
 
         // DbSets de tus tablas de entidades principales
         public DbSet<Prospecto> Prospecto { get; set; }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { mapIdentificacionToUpdate } from "@/utils/mappers";
 import {
   getSolicitudById,
   updateSolicitud,
@@ -113,9 +114,14 @@ export default function ActividadEconomica({ id }) {
     try {
       // Creamos un objeto con todos los datos de la solicitud y actualizamos solo la parte de actividadEconomica
       const dataToSave = {
-        ...solicitudData, // Copia todo el JSON original
-        actividadEconomica, // Solo se actualizará esta parte
+        ...solicitudData,
+        identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
+        actividadEconomica: {
+          ...actividadEconomica,
+          esPEP: actividadEconomica.isPEP
+        },
       };
+
       console.log(dataToSave);
 
       setLoading(true);
