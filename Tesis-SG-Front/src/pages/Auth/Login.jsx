@@ -9,16 +9,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Icons } from "@/components/icons";
 import { Eye, EyeOff } from "lucide-react";
+import GlassLoader from "@/components/ui/GlassLoader"; // Asegúrate de tener este componente
 
 export default function Login() {
   const { login } = useAuth();
   const { notify } = useUI();
   const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(true);
   const [email, setEmail] = useState("");
   const [contraseña, setContraseña] = useState("");
-
+  const [loading, setLoading] = useState(false); // Estado del GlassLoader
 
   const handleLogin = async () => {
     try {
@@ -29,35 +31,38 @@ export default function Login() {
       if (!/\S+@\S+\.\S+/.test(email)) {
         notify.error("Por favor ingresa un correo electrónico válido.");
         return;
-      }      
+      }
+
+      setLoading(true); // Mostrar loader
       await login(email, contraseña);
       notify.success("Bienvenido 👋");
       navigate("/panel/metricas");
     } catch (err) {
       notify.error("Error al iniciar sesión", err.message);
+    } finally {
+      setLoading(false); // Ocultar loader
     }
   };
-  
 
   return (
-    <div className="min-h-screen bg-pattern flex flex-col items-center justify-center px-4 text-[--color-fg]">
+    <div className="min-h-screen bg-pattern flex flex-col items-center justify-center px-4 text-[--color-fg] relative">
+      {loading && <GlassLoader />} {/* Capa superior de carga */}
+
       {/* Logo fuera del card */}
       <img
         src="/png/Logo SG 1 1.png"
         alt="SG Consulting Group"
-        className="h-14 mb-8"
+        className="h-14 mb-8 z-10"
       />
 
       {/* Card */}
-      <Card className="w-full max-w-md bg-white text-[--color-fg] shadow-md rounded-xl border border-[--color-border] fade-in-up">
+      <Card className="w-full max-w-md bg-white text-[--color-fg] shadow-md rounded-xl border border-[--color-border] fade-in-up z-10">
         <CardContent className="py-8 px-10 space-y-8">
-          {/* Título */}
           <div className="space-y-1 text-left">
             <h1 className="text-3xl font-bold text-black">Inicio de sesión</h1>
             <p className="text-sm text-[--color-muted]">Ingresa a tu cuenta para continuar.</p>
           </div>
 
-          {/* Email */}
           <div className="space-y-2">
             <Label htmlFor="email" className="text-base font-medium">
               Correo electrónico
@@ -72,7 +77,6 @@ export default function Login() {
             />
           </div>
 
-          {/* Contraseña */}
           <div className="space-y-2">
             <Label htmlFor="password" className="text-base font-medium">
               Contraseña
@@ -96,7 +100,6 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Recordarme */}
           <div className="flex items-center gap-2">
             <input
               id="remember"
@@ -110,7 +113,6 @@ export default function Login() {
             </label>
           </div>
 
-          {/* Botones */}
           <div className="space-y-3 pt-2">
             <Button
               className="w-full btn-primary btn-animated text-base py-3 h-12"
@@ -118,42 +120,31 @@ export default function Login() {
             >
               Ingresar
             </Button>
-
-            {/* <Button
-              type="button"
-              variant="outline"
-              className="w-full flex items-center justify-center gap-2 btn-microsoft btn-animated text-base py-3 h-12"
-            >
-              <Icons.microsoft className="h-5 w-5" />
-              Ingresar con Microsoft
-            </Button> */}
           </div>
 
           <Separator />
 
-          {/* Links */}
           <div className="text-center space-y-1">
-          <button
-            onClick={() => navigate("/forgot-password")}
-            className="text-sm text-[--color-muted] hover:underline"
-          >
-            ¿Olvidaste tu contraseña?
-          </button>
-          <p className="text-sm text-[--color-muted]">
-            ¿No tienes una cuenta?{" "}
             <button
-              onClick={() => navigate("/register")}
-              className="text-[--color-primary] hover:underline font-medium"
+              onClick={() => navigate("/forgot-password")}
+              className="text-sm text-[--color-muted] hover:underline"
             >
-              Regístrate
+              ¿Olvidaste tu contraseña?
             </button>
-          </p>
-        </div>
+            <p className="text-sm text-[--color-muted]">
+              ¿No tienes una cuenta?{" "}
+              <button
+                onClick={() => navigate("/register")}
+                className="text-[--color-primary] hover:underline font-medium"
+              >
+                Regístrate
+              </button>
+            </p>
+          </div>
         </CardContent>
       </Card>
 
-      {/* Footer */}
-      <footer className="text-center text-xs text-[--color-muted] mt-8">
+      <footer className="text-center text-xs text-[--color-muted] mt-8 z-10">
         © SG CONSULTING GROUP ·{" "}
         <a href="/legal/privacidad" target="_blank" className="underline hover:text-[--color-primary]">
           Privacidad y condiciones

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // src/services/ProspectoService.js
 import { API_BASE_URL } from "@/config";
 
@@ -82,7 +83,10 @@ export const deleteallAdjunto = async (id, data) => {
 };
 
 // ✅ GET: Adjuntos por solicitud y motivo
-export const getAdjuntosPorMotivo = async (idSolicitudInversion, idMotivo = 32) => {
+export const getAdjuntosPorMotivo = async (
+  idSolicitudInversion,
+  idMotivo = 32
+) => {
   const res = await fetch(
     `${API_BASE_URL}/documento/por-solicitud-y-motivo?idSolicitudInversion=${idSolicitudInversion}&idMotivo=${idMotivo}`,
     {
@@ -92,3 +96,16 @@ export const getAdjuntosPorMotivo = async (idSolicitudInversion, idMotivo = 32) 
   return handleResponse(res);
 };
 
+// 🟣 GET: Descargar archivo binario por ID
+export const descargarAdjunto = async (id) => {
+  const token = JSON.parse(localStorage.getItem("user"))?.token;
+  const res = await fetch(`${API_BASE_URL}/documento/descargar/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("No se pudo descargar el archivo");
+
+  return await res.blob(); // <-- devolver como blob para descarga
+};

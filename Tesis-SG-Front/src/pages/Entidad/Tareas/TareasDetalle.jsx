@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import GlassLoader from "@/components/ui/GlassLoader";
-import { getTareaById, updateTarea, getDocumentosPorSolicitudYMotivo } from "@/service/Entidades/TareasService";
+import { updateTarea, getDocumentosPorSolicitudYMotivo } from "@/service/Entidades/TareaService";
+import { getTareaById } from "@/service/Entidades/TareasService";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
 import AdjuntoForm from "@/components/solicitud/AdjuntoForm";
 import {
@@ -40,9 +42,9 @@ export default function TareaDetalleEditable() {
   const MOTIVOS_POR_TIPO = {
     1: 23,
     2: 23,
-    3: 7,
-    4: 8,
-    5: 14,
+    3: 14,
+    4: 7,
+    5: 8,
   };
 
   const cargarTarea = async () => {
@@ -54,8 +56,9 @@ export default function TareaDetalleEditable() {
         setObservacion(res.data.observacion ?? "");
 
         const idMotivo = MOTIVOS_POR_TIPO[res.data.idTipoTarea];
-        const docs = await getDocumentosPorSolicitudYMotivo(res.data.idSolicitudInversion, idMotivo);
-        setDocumentos(docs.data || []);
+        const docs = await getDocumentosPorSolicitudYMotivo(1024, idMotivo);
+        setDocumentos(docs);
+
       }
     } catch (err) {
       toast.error("Error al cargar la tarea: " + err.message);
@@ -88,7 +91,7 @@ export default function TareaDetalleEditable() {
       toast.success("Tarea actualizada correctamente");
       setResult(pendingResult);
     } catch (err) {
-      toast.error("Error al actualizar tarea");
+      toast.error("Error al actualizar tarea" + (err.response?.data?.message || err.message));
     } finally {
       setShowConfirmDialog(false);
     }
@@ -177,10 +180,6 @@ export default function TareaDetalleEditable() {
         <Button variant="outline" onClick={() => navigate("/tareas/vista")}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Volver al listado
-        </Button>
-        <Button onClick={handleConfirmResultado} className="bg-primary text-white hover:bg-primary/80 flex items-center gap-2">
-          <Save className="w-4 h-4" />
-          Guardar
         </Button>
       </div>
 
