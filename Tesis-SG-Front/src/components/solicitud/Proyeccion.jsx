@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useUI } from "@/hooks/useUI";
+import { toast } from "sonner";
+import { mapIdentificacionToUpdate } from "@/utils/mappers";
 import {
   getSolicitudById,
   updateSolicitud,
@@ -26,14 +27,14 @@ import { Switch } from "@/components/ui/switch";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
 import ProyeccionNueva from "@/pages/Entidad/Proyecciones/ProyeccionNueva";
+
+
+
 export default function Proyeccion() {
   const { id: idSolicitud } = useParams();
-  const { notify } = useUI();
   const navigate = useNavigate();
 
   const [solicitudData, setSolicitudData] = useState(null);
@@ -62,23 +63,20 @@ export default function Proyeccion() {
           setSolicitudData(data);
           setFormData({
             idAsesorComercial: data.proyeccion?.idAsesorComercial || "",
-            idJustificativoTransaccion:
-              data.proyeccion?.idJustificativoTransaccion || "",
-            idProyeccionSeleccionada:
-              data.proyeccion?.idProyeccionSeleccionada || "",
+            idJustificativoTransaccion: data.proyeccion?.idJustificativoTransaccion || "",
+            idProyeccionSeleccionada: data.proyeccion?.idProyeccionSeleccionada || "",
             origenFondos: data.proyeccion?.origenFondos || "",
-            enviarProyeccion: data.proyeccion?.enviarProyeccion || false,
+            enviarProyeccion: false,
             clienteAcepta: data.proyeccion?.clienteAcepta || false,
           });
         }
 
-        const [proyRes, asesoresData, justificativosData, origenesData] =
-          await Promise.all([
-            getProyeccionesPorSolicitud(idSolicitud),
-            getAsesoresComerciales(),
-            getJustificativoTransaccion(),
-            getOrigenCliente(),
-          ]);
+        const [proyRes, asesoresData, justificativosData, origenesData] = await Promise.all([
+          getProyeccionesPorSolicitud(idSolicitud),
+          getAsesoresComerciales(),
+          getJustificativoTransaccion(),
+          getOrigenCliente(),
+        ]);
 
         setProyecciones(proyRes.proyecciones || []);
         setAsesores(asesoresData || []);
@@ -86,17 +84,14 @@ export default function Proyeccion() {
         setOrigenes(origenesData || []);
       } catch (error) {
         console.error(error);
-        notify({
-          type: "error",
-          message: "Error al cargar datos: " + error.message,
-        });
+        toast.error("Error al cargar los datos de la solicitud: " + error.message);
       } finally {
         setLoading(false);
       }
     };
 
     cargarDatos();
-  }, [idSolicitud, notify]);
+  }, [idSolicitud]);
 
   const handleGuardar = async () => {
     if (!solicitudData) return;
@@ -104,20 +99,19 @@ export default function Proyeccion() {
       setLoading(true);
       const dataToSave = {
         ...solicitudData,
-        proyeccion: formData,
+        identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
+        proyeccion: {
+          ...formData,
+          enviarProyeccion: false,
+        },
       };
       const response = await updateSolicitud(idSolicitud, dataToSave);
-      if (response.success) {
-        notify({ type: "success", message: "Datos guardados exitosamente." });
-      } else {
-        notify({ type: "error", message: "Error al guardar los datos." });
-      }
+      response.success
+        ? toast.success("Datos guardados exitosamente.")
+        : toast.error("Error al guardar los datos.");
     } catch (error) {
       console.error(error);
-      notify({
-        type: "error",
-        message: "Error al guardar los datos: " + error.message,
-      });
+      toast.error("Error al guardar los datos: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -175,10 +169,7 @@ export default function Proyeccion() {
                     </SelectTrigger>
                     <SelectContent className="bg-white">
                       {asesores.map((a) => (
-                        <SelectItem
-                          key={a.idUsuario}
-                          value={String(a.idUsuario)}
-                        >
+                        <SelectItem key={a.idUsuario} value={String(a.idUsuario)}>
                           {a.nombreCompleto}
                         </SelectItem>
                       ))}
@@ -190,10 +181,7 @@ export default function Proyeccion() {
                   <Select
                     value={String(formData.idJustificativoTransaccion)}
                     onValueChange={(val) =>
-                      setFormData({
-                        ...formData,
-                        idJustificativoTransaccion: val,
-                      })
+                      setFormData({ ...formData, idJustificativoTransaccion: val })
                     }
                   >
                     <SelectTrigger className="bg-white border border-black">
@@ -201,10 +189,7 @@ export default function Proyeccion() {
                     </SelectTrigger>
                     <SelectContent className="bg-white">
                       {justificativos.map((j) => (
-                        <SelectItem
-                          key={j.idJustificativoTransaccion}
-                          value={String(j.idJustificativoTransaccion)}
-                        >
+                        <SelectItem key={j.idJustificativoTransaccion} value={String(j.idJustificativoTransaccion)}>
                           {j.nombre}
                         </SelectItem>
                       ))}
@@ -216,10 +201,7 @@ export default function Proyeccion() {
                   <Select
                     value={String(formData.idProyeccionSeleccionada)}
                     onValueChange={(val) =>
-                      setFormData({
-                        ...formData,
-                        idProyeccionSeleccionada: val,
-                      })
+                      setFormData({ ...formData, idProyeccionSeleccionada: val })
                     }
                   >
                     <SelectTrigger className="bg-white border border-black">
@@ -227,10 +209,7 @@ export default function Proyeccion() {
                     </SelectTrigger>
                     <SelectContent className="bg-white">
                       {proyecciones.map((p) => (
-                        <SelectItem
-                          key={p.idProyeccion}
-                          value={String(p.idProyeccion)}
-                        >
+                        <SelectItem key={p.idProyeccion} value={String(p.idProyeccion)}>
                           {p.proyeccionNombre}
                         </SelectItem>
                       ))}
@@ -238,38 +217,19 @@ export default function Proyeccion() {
                   </Select>
                 </FormGroup>
 
-                <FormGroup label="Origen de fondos">
-                  <Select
-                    value={formData.origenFondos}
-                    onValueChange={(val) =>
-                      setFormData({ ...formData, origenFondos: val })
-                    }
-                  >
-                    <SelectTrigger className="bg-white border border-black">
-                      <SelectValue placeholder="-Selecciona origen de fondos-" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white">
-                      {origenes.map((o) => (
-                        <SelectItem
-                          key={o.idOrigenCliente}
-                          value={o.nombreOrigen}
-                        >
-                          {o.nombreOrigen}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormGroup>
-
-                <FormGroup label="Enviar proyección">
-                  <FormSwitch
-                    label={formData.enviarProyeccion ? "Sí" : "No"}
-                    checked={formData.enviarProyeccion}
-                    onChange={(checked) =>
-                      setFormData({ ...formData, enviarProyeccion: checked })
-                    }
-                  />
-                </FormGroup>
+                <div className="md:col-span-2">
+                  <FormGroup label="Origen de fondos">
+                    <textarea
+                      className="w-full border border-black rounded-md px-3 py-2 text-sm"
+                      rows={3}
+                      placeholder="Describe el origen de los fondos"
+                      value={formData.origenFondos}
+                      onChange={(e) =>
+                        setFormData({ ...formData, origenFondos: e.target.value })
+                      }
+                    />
+                  </FormGroup>
+                </div>
 
                 <FormGroup label="Aceptación del cliente">
                   <FormSwitch
@@ -287,15 +247,9 @@ export default function Proyeccion() {
               </div>
             </CardContent>
           </Card>
+
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-            <DialogContent
-              className="
-              w-full              max-w-md                
-              sm:max-w-xl         md:max-w-4xl              
-              xl:max-w-screen-xl  2xl:max-w-screen-2xl 
-              3xl:max-w-screen-3xl     
-              max-h-[calc(100vh-4rem)]     
-              overflow-y-auto     p-4">
+            <DialogContent className="w-full max-w-4xl max-h-[calc(100vh-4rem)] overflow-y-auto p-4">
               <ProyeccionNueva />
               <DialogFooter>
                 <Button variant="outline" onClick={() => setIsModalOpen(false)}>
@@ -304,12 +258,12 @@ export default function Proyeccion() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-
         </>
       )}
     </div>
   );
 }
+
 
 function FormGroup({ label, children }) {
   return (

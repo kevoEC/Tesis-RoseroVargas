@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { mapIdentificacionToUpdate } from "@/utils/mappers";
 import {
   getSolicitudById,
   updateSolicitud,
@@ -71,6 +72,7 @@ export default function BancoForm({ id }) {
       setLoading(true);
       const payload = {
         ...solicitudData,
+        identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
         banco,
       };
       const res = await updateSolicitud(id, payload);

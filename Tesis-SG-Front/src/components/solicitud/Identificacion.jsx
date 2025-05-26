@@ -1,3 +1,4 @@
+// ...parte superior del archivo...
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -25,22 +26,32 @@ import { Loader2 } from "lucide-react";
 import { useUI } from "@/hooks/useUI";
 import { Button } from "@/components/ui/button";
 
+const mapGetToForm = (identificacion) => ({
+  idTipoSolicitud: identificacion.idTipoSolicitud ?? identificacion.tipoSolicitud ?? null,
+  idTipoCliente: identificacion.idTipoCliente ?? identificacion.tipoCliente ?? null,
+  idTipoDocumento: identificacion.idTipoDocumento ?? identificacion.tipoDocumento ?? null,
+  numeroDocumento: identificacion.numeroDocumento || "",
+  nombres: identificacion.nombres || "",
+  apellidoPaterno: identificacion.apellidoPaterno || "",
+  apellidoMaterno: identificacion.apellidoMaterno || "",
+  validar: identificacion.validar || false,
+  equifax: identificacion.equifax || "",
+  obsEquifax: identificacion.obsEquifax || "",
+  listasControl: identificacion.listasControl || "",
+  obsListasControl: identificacion.obsListasControl || "",
+  continuar: typeof identificacion.continuar === "number" ? identificacion.continuar : 1,
+});
+
 export default function Identificacion({ id }) {
   const { notify, setSolicitudHabilitada } = useUI();
-  /********Catálogos Tipos Identifi, CLiente, Documn************* */
   const [tiposSolicitud, setTiposSolicitud] = useState([]);
   const [tiposCliente, setTiposCliente] = useState([]);
   const [tiposIdentificacion, setTiposIdentificacion] = useState([]);
-
-
-  // datos completos de la solicitud
   const [solicitudData, setSolicitudData] = useState(null);
-
-  // estado de la validación (equifax/lds)
   const [loadingValidacion, setLoadingValidacion] = useState(false);
   const [bloquearCampos, setBloquearCampos] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
 
-  // formulario controlado
   const [form, setForm] = useState({
     idTipoSolicitud: null,
     idTipoCliente: null,
@@ -54,17 +65,13 @@ export default function Identificacion({ id }) {
     obsEquifax: "",
     listasControl: "",
     obsListasControl: "",
-    continuar: 1,            // numérico: 1=continuar, 0=rechazar
+    continuar: 1,
   });
-  // mapeos label ↔ número para “Continuar”
+
   const continuarOptions = [
     { id: 1, label: "Continuar con la solicitud" },
-    { id: 0, label: "Rechazar solicitud" }
+    { id: 0, label: "Rechazar solicitud" },
   ];
-  // mapeo de continuar (aunque aquí ya lo tienes numérico, así te aseguras)
-  const mapContinuarNumeric = (val) => Number(val);
-
-  /*Carga todos los catálogos en paralelo*/
 
   useEffect(() => {
     (async () => {
@@ -74,60 +81,39 @@ export default function Identificacion({ id }) {
           getTipoCliente(),
           getTipoIdentificacion(),
         ]);
-        setTiposSolicitud(sol);         // sol ya es un Array
-        setTiposCliente(cli);           // cli ya es un Array
-        setTiposIdentificacion(idt);    // idt ya es un Array
+        setTiposSolicitud(sol);
+        setTiposCliente(cli);
+        setTiposIdentificacion(idt);
       } catch (err) {
         toast.error("Error al cargar catálogos: " + err.message);
       }
     })();
-  }, []); // solo al montar
+  }, []);
 
   useEffect(() => {
     (async () => {
       try {
         const res = await getSolicitudById(id);
         const full = res.data[0];
-        console.log("mi res"+JSON.stringify(res))
-        console.log("mi res.data[0]"+JSON.stringify(full))
-
-        const data = full.identificacion;
         setSolicitudData(full);
-        setForm(f => ({
-           ...f,
-          idTipoSolicitud: data.idTipoSolicitud,
-          idTipoCliente: data.idTipoCliente,
-          idTipoDocumento: data.idTipoDocumento,
-          numeroDocumento: data.numeroDocumento || "",
-          nombres: data.nombres || "",
-          apellidoPaterno: data.apellidoPaterno || "",
-          apellidoMaterno: data.apellidoMaterno || "",
-          validar: data.validar || false,
-          equifax: data.equifax || "",
-          obsEquifax: data.obsEquifax || "",
-          listasControl: data.listasControl || "",
-          obsListasControl: data.obsListasControl || "",
-          continuar: data.continuar, // 1 o 0
-        }));
-        setBloquearCampos(data.validar);
+        setForm(mapGetToForm(full.identificacion));
+        setBloquearCampos(full.identificacion.validar);
       } catch (err) {
         toast.error("Error al cargar identificación: " + err.message);
       }
     })();
-  }, [id]); // cada vez que cambie el prop id
+  }, [id]);
 
-  // habilitar solicitud
   useEffect(() => {
-    setSolicitudHabilitada(form.continuar === "Continuar con la solicitud");
+    setSolicitudHabilitada(form.continuar === 1);
   }, [form.continuar, setSolicitudHabilitada]);
 
-  // manejar cambios
   const handleChange = (field, value) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
-  // validaciones Equifax / LDS
   const ejecutarValidaciones = async () => {
     if (loadingValidacion || bloquearCampos) return;
+
     if (
       !form.idTipoSolicitud ||
       !form.idTipoCliente ||
@@ -140,21 +126,21 @@ export default function Identificacion({ id }) {
       notify.error("Por favor llena todos los campos antes de validar.");
       return false;
     }
+
     setLoadingValidacion(true);
     notify.info("Iniciando validación...");
+
     try {
       const resE = await validarEquifax(form.numeroDocumento);
       if (resE.success) {
         const r = resE.resultado;
-        handleChange(
-          "equifax",
-          r.error ? "Error" : r.resultado ? "Paso" : "Rechazado"
-        );
+        handleChange("equifax", r.error ? "Error" : r.resultado ? "Paso" : "Rechazado");
         handleChange("obsEquifax", r.observacion || "Sin observación");
       } else {
         handleChange("equifax", "Error");
         handleChange("obsEquifax", "Error en validación Equifax");
       }
+
       const resL = await validarLDS({
         identificacion: form.numeroDocumento,
         primerNombre: form.nombres.split(" ")[0] || "",
@@ -162,17 +148,16 @@ export default function Identificacion({ id }) {
         primerApellido: form.apellidoPaterno,
         segundoApellido: form.apellidoMaterno,
       });
+
       if (resL.success) {
         const r = resL.resultado;
-        handleChange(
-          "listasControl",
-          r.error ? "Error" : r.coincidencia ? "Rechazado" : "Paso"
-        );
+        handleChange("listasControl", r.error ? "Error" : r.coincidencia ? "Rechazado" : "Paso");
         handleChange("obsListasControl", r.mensaje || "Sin observación");
       } else {
         handleChange("listasControl", "Error");
         handleChange("obsListasControl", "Error en validación LDS");
       }
+
       setBloquearCampos(true);
       notify.success("Validación completada");
       return true;
@@ -184,22 +169,16 @@ export default function Identificacion({ id }) {
     }
   };
 
-  // guardar identificación
-  const [loadingSave, setLoadingSave] = useState(false);
   const handleSaveIdentificacion = async () => {
     if (!solicitudData) return;
     setLoadingSave(true);
     try {
-      // const numeric = mapToNumericValues(form);
-      const numeric = form;
       const payload = {
         ...solicitudData,
         identificacion: {
-          ...solicitudData.identificacion,
-          // ...numeric,
-          idTipoSolicitud: form.idTipoSolicitud,
-          idTipoCliente: form.idTipoCliente,
-          idTipoDocumento: form.idTipoDocumento,
+          tipoSolicitud: form.idTipoSolicitud,
+          tipoCliente: form.idTipoCliente,
+          tipoDocumento: form.idTipoDocumento,
           numeroDocumento: form.numeroDocumento,
           nombres: form.nombres,
           apellidoPaterno: form.apellidoPaterno,
@@ -209,10 +188,9 @@ export default function Identificacion({ id }) {
           obsEquifax: form.obsEquifax,
           listasControl: form.listasControl,
           obsListasControl: form.obsListasControl,
-          continuar: mapContinuarNumeric(form.continuar),
+          continuar: form.continuar
         },
       };
-      console.log("mipayload:" + JSON.stringify(payload))
       const res = await updateSolicitud(id, payload);
       res.success
         ? toast.success("Identificación actualizada.")
@@ -370,8 +348,8 @@ export default function Identificacion({ id }) {
                   <FormSelect
                     label="Continuar"
                     value={form.continuar}
-                    onChange={(v) => handleChange("continuar", v)}
-                    options={["Continuar con la solicitud", "Rechazar solicitud"]}
+                    onChange={(v) => handleChange("continuar", Number(v))}
+                    options={continuarOptions}
                     full
                     disabled={
                       form.equifax === "Rechazado" ||
@@ -486,3 +464,5 @@ function FormTextArea({ label, value, disabled }) {
     </div>
   );
 }
+
+// Aquí puedes agregar o mantener tus componentes auxiliares FormInput, FormSelect, etc.
