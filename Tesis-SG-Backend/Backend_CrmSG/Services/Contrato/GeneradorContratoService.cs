@@ -9,10 +9,12 @@ using Backend_CrmSG.Models.Entidades;
 public class GeneradorContratoService
 {
     private readonly AppDbContext _context;
+    private readonly IWebHostEnvironment _env;
 
-    public GeneradorContratoService(AppDbContext context)
+    public GeneradorContratoService(AppDbContext context, IWebHostEnvironment env)
     {
         _context = context;
+        _env = env;
     }
 
     public async Task<bool> GenerarContratoDesdeSolicitudAsync(int idSolicitudInversion)
@@ -111,7 +113,7 @@ public class GeneradorContratoService
         };
 
         // 4. Cargar plantilla y preparar memoria
-        string plantillaPath = Path.Combine("Plantillas", "PlantillaContratoTESIS.docx");
+        string plantillaPath = Path.Combine(_env.ContentRootPath, "Plantillas", "PlantillaContratoTESIS.docx");
         if (!File.Exists(plantillaPath))
             throw new FileNotFoundException("Plantilla Word no encontrada.", plantillaPath);
 

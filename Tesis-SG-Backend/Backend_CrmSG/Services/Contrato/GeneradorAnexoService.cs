@@ -11,10 +11,12 @@ using Backend_CrmSG.Models.Documentos;
 public class GeneradorAnexoService
 {
     private readonly AppDbContext _context;
+    private readonly IWebHostEnvironment _env;
 
-    public GeneradorAnexoService(AppDbContext context)
+    public GeneradorAnexoService(AppDbContext context, IWebHostEnvironment env)
     {
         _context = context;
+        _env = env;
     }
 
     public async Task<bool> GenerarAnexoDesdeSolicitudAsync(int idSolicitudInversion)
@@ -76,7 +78,7 @@ public class GeneradorAnexoService
         var periodos = JsonSerializer.Deserialize<List<CronogramaPeriodo>>(cronograma.PeriodosJson)
             ?? throw new Exception("Error al parsear JSON del cronograma");
 
-        string plantillaPath = Path.Combine("Plantillas", "PlantillaAnexoProyeccionRentaFija.docx");
+        string plantillaPath = Path.Combine(_env.ContentRootPath, "Plantillas", "PlantillaAnexoProyeccionRentaFija.docx");
         if (!File.Exists(plantillaPath))
             throw new FileNotFoundException("Plantilla Word no encontrada.", plantillaPath);
 

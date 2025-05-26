@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config";
 
-// 🧱 Función común para manejar respuestas
+// Utilidad para manejar la respuesta
 const handleResponse = async (response) => {
   if (!response.ok) {
     const errorText = await response.text();
@@ -9,7 +9,7 @@ const handleResponse = async (response) => {
   return await response.json();
 };
 
-// 🔐 Función para obtener headers con token
+// Headers con autenticación
 const getAuthHeaders = () => {
   const token = JSON.parse(localStorage.getItem("user"))?.token;
   return {
@@ -18,10 +18,14 @@ const getAuthHeaders = () => {
   };
 };
 
-// 🟢 GET: Obtener todos los modos de firma
-export const getModoFirma = async () => {
-  const res = await fetch(`${API_BASE_URL}/ModoFirma`, {
+// ✅ POST: Finalizar solicitud y generar tareas
+export const finalizarSolicitudYGenerarTareas = async (idSolicitudInversion) => {
+  const res = await fetch(`${API_BASE_URL}/SolicitudInversion/finalizar`, {
+    method: "POST",
     headers: getAuthHeaders(),
+    body: JSON.stringify({
+      idSolicitudInversion: Number(idSolicitudInversion),
+    }),
   });
   return handleResponse(res);
 };

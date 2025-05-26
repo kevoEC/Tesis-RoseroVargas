@@ -29,8 +29,8 @@ export default function SolicitudesDetalle() {
     { label: "Banco", icon: Banknote, component: <Banco id={id} /> },
     { label: "Beneficiarios", icon: Users, component: <Beneficiarios id={id} /> },
     { label: "Adjuntos", icon: Paperclip, component: <Adjuntos id={id} /> },
-    { label: "Tareas de solicitudes", icon: ListTodo, component: <DatosGenerales id={id} /> },
     { label: "Finalización", icon: CheckCircle, component: <Finalizacion id={id} /> },
+    { label: "Tareas", icon: ListTodo, component: <DatosGenerales id={id} /> }
   ];
 
   const goNext = () => setCurrent((c) => Math.min(c + 1, steps.length - 1));

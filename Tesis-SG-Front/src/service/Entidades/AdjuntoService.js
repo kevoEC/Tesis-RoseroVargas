@@ -80,3 +80,15 @@ export const deleteallAdjunto = async (id, data) => {
   );
   return handleResponse(res);
 };
+
+// ✅ GET: Adjuntos por solicitud y motivo
+export const getAdjuntosPorMotivo = async (idSolicitudInversion, idMotivo = 32) => {
+  const res = await fetch(
+    `${API_BASE_URL}/documento/por-solicitud-y-motivo?idSolicitudInversion=${idSolicitudInversion}&idMotivo=${idMotivo}`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+  return handleResponse(res);
+};
+
