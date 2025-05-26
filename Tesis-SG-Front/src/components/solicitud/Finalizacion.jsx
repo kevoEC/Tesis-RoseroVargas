@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
+import { mapIdentificacionToUpdate } from "@/utils/mappers";
 import {
   getSolicitudById,
   updateSolicitud,
 } from "@/service/Entidades/SolicitudService";
-import { Card, CardContent } from "@/components/ui/card";
+import { getCatalogoFinalizacion } from "@/service/Catalogos/FinalService";
+import { finalizarSolicitudYGenerarTareas } from "@/service/Entidades/TareaService";
+import {
+  Card,
+  CardContent,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -16,21 +22,32 @@ import {
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { getCatalogoFinalizacion } from "@/service/Catalogos/FinalService";
+import GlassLoader from "@/components/ui/GlassLoader";
+import { Save } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 export default function FinalizacionForm({ id }) {
   const [loading, setLoading] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [solicitudData, setSolicitudData] = useState(null);
   const [opcionesAccion, setOpcionesAccion] = useState([]);
   const [finalizacion, setFinalizacion] = useState({
     numeroContrato: "",
-    idContinuarSolicitud: "", /*viene de catálogo, valor sería 1, 2 o sin seleccionar*/
-    nombreContinuarSolicitud: ""/*También viene de catálogo*/,
+    idContinuarSolicitud: "",
+    nombreContinuarSolicitud: "",
     motivoFinalizacion: "",
     observacionFinalizacion: "",
     confirmar: false,
   });
-  const [decision, setDecision] = useState("Finalizar con el registro");
 
   useEffect(() => {
     const cargar = async () => {
@@ -47,7 +64,7 @@ export default function FinalizacionForm({ id }) {
           confirmar: data.finalizacion.confirmar ?? false,
         });
       } catch (err) {
-        toast.error("Error al cargar datos de finalización: " + err.message);
+        toast.error("Error al cargar finalización: " + err.message);
       } finally {
         setLoading(false);
       }
@@ -55,35 +72,31 @@ export default function FinalizacionForm({ id }) {
     cargar();
   }, [id]);
 
-  /*Cargo catálogo de acciones*/
   useEffect(() => {
     const cargarCatalogo = async () => {
       try {
         const res = await getCatalogoFinalizacion();
-        /*solo para verificar que sea array*/
-        const catalogo = Array.isArray(res) ? res : [];
-        setOpcionesAccion(catalogo);
-
+        setOpcionesAccion(Array.isArray(res) ? res : []);
       } catch (err) {
-        toast.error("Error al cargar catálogo de acciones: " + err.message);
+        toast.error("Error al cargar catálogo: " + err.message);
       }
     };
     cargarCatalogo();
   }, []);
+
   const handleGuardar = async () => {
     if (!solicitudData) return;
     try {
       setLoading(true);
       const payload = {
-        ...solicitudData, finalizacion: {
-          ...solicitudData.finalizacion,
-          ...finalizacion,
-        },
+        ...solicitudData,
+        identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
+        finalizacion,
       };
-      console.log("payload finalización" + JSON.stringify(payload))
       const res = await updateSolicitud(id, payload);
-      if (res.success) toast.success("Finalización actualizada.");
-      else toast.error("Error al actualizar finalización.");
+      res.success
+        ? toast.success("Finalización actualizada.")
+        : toast.error("Error al actualizar.");
     } catch (err) {
       toast.error("Error al guardar: " + err.message);
     } finally {
@@ -92,201 +105,170 @@ export default function FinalizacionForm({ id }) {
   };
 
   const generarContrato = () => {
-    const provisional = `PROVISIONAL-${ Math.random() * (10 - 1 + 1)}`;
+    const provisional = `PROVISIONAL-${Math.floor(Math.random() * 1000)}`;
     setFinalizacion((f) => ({
       ...f,
       numeroContrato: provisional,
     }));
   };
 
-  if (loading) return <p>Cargando datos de finalización...</p>;
+  const handleConfirmar = async () => {
+    if (finalizacion.idContinuarSolicitud === 1) {
+      setIsGenerating(true);
+      try {
+        await finalizarSolicitudYGenerarTareas(id);
+        toast.success("Tareas generadas correctamente.");
+      } catch (err) {
+        toast.error("Error al generar tareas: " + err.message);
+      } finally {
+        setIsGenerating(false);
+      }
+    }
+    setFinalizacion({ ...finalizacion, confirmar: true });
+  };
+
+  if (loading) return <GlassLoader visible message="Cargando finalización..." />;
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-6 relative">
+      <GlassLoader visible={isGenerating} message="Generando tareas..." />
+
+      <div className="flex justify-end">
+        <Button onClick={handleGuardar} className="bg-primary text-white hover:bg-primary/80 flex items-center gap-2">
+          <Save className="w-4 h-4" /> Guardar
+        </Button>
+      </div>
+
       <h2 className="text-xl font-semibold">Finalización</h2>
-
-      <Button onClick={handleGuardar} disabled={loading} className="text-white">
-        Guardar datos
-      </Button>
-
 
       <Card>
         <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-            <div className="flex items-end gap-2">
-  
-              <div className="flex flex-col space-y-1">
-                <Label className="text-sm font-medium text-gray-700">
-                  Número de contrato
-                </Label>
-                <Input
-                  placeholder="---"
-                  type="text"
-                  value={finalizacion.numeroContrato}
-                  onChange={(e) =>
-                    setFinalizacion({
-                      ...finalizacion,
-                      numeroContrato: e.target.value,
-                    })
-                  }
-                  className="h-10"
-                />
-              </div>
+          {/* Número de contrato */}
+          <div className="flex items-end gap-2">
+            <FormInput
+              label="Número de contrato"
+              value={finalizacion.numeroContrato}
+              onChange={(e) => setFinalizacion({ ...finalizacion, numeroContrato: e.target.value })}
+              disabled={finalizacion.confirmar}
+            />
+            <Button
+              onClick={generarContrato}
+              className="h-10"
+              variant="muted"
+              disabled={!!finalizacion.numeroContrato.trim() || finalizacion.confirmar}
+            >
+              Generar contrato
+            </Button>
+          </div>
 
-              <Button
-                onClick={generarContrato}
-                className="h-10"
-                variant="muted"
-              >
-                Generar contrato
-              </Button>
-            </div>
+          {/* Acción */}
+          <FormGroup label="Acción">
+            <Select
+              disabled={finalizacion.confirmar}
+              value={String(finalizacion.idContinuarSolicitud)}
+              onValueChange={(value) => {
+                const id = parseInt(value, 10);
+                const seleccion = opcionesAccion.find(o => o.idContinuarSolicitud === id);
+                setFinalizacion({
+                  ...finalizacion,
+                  idContinuarSolicitud: id,
+                  nombreContinuarSolicitud: seleccion?.nombre ?? "",
+                });
+              }}
+            >
+              <SelectTrigger className="text-sm border border-black">
+                <SelectValue placeholder="Seleccione una acción" />
+              </SelectTrigger>
+              <SelectContent className="bg-white">
+                {opcionesAccion.map((opt) => (
+                  <SelectItem key={opt.idContinuarSolicitud} value={String(opt.idContinuarSolicitud)}>
+                    {opt.nombre}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FormGroup>
 
-            {/* Dropdown unificado para acción */}
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Acción
-              </Label>
-              <Select
-                value={String(finalizacion.idContinuarSolicitud)}
-                onValueChange={(value) => {
-                  const id = parseInt(value, 10);
-                  const seleccion = opcionesAccion.find(
-                    (o) => o.idContinuarSolicitud === id
-                  );
-                  setFinalizacion({
-                    ...finalizacion,
-                    idContinuarSolicitud: id,
-                    nombreContinuarSolicitud: seleccion?.nombre ?? "",
-                  });
-                }}
-              >
-                <SelectTrigger className="text-sm border border-black">
-                  <SelectValue placeholder="Seleccione una acción" />
-                </SelectTrigger>
-                <SelectContent className="bg-white">
-                  {opcionesAccion.length > 0 ? (
-                    opcionesAccion.map((opt) => (
-                      <SelectItem
-                        key={opt.idContinuarSolicitud}
-                        value={String(opt.idContinuarSolicitud)}
-                      >
-                        {opt.nombre}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <SelectItem disabled value="no-options">
-                      No hay opciones disponibles
-                    </SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-
-
-            {/* Renderizado condicional según la selección */}
-            {finalizacion.idContinuarSolicitud === 1 && (
-              <>
-                <FormInput
-                  label="Motivo de finalización"
-                  value={finalizacion.motivoFinalizacion}
-                  onChange={(e) =>
-                    setFinalizacion({
-                      ...finalizacion,
-                      motivoFinalizacion: e.target.value,
-                    })
-                  }
-                />
-                <FormInput
-                  label="Observación de finalización"
-                  value={finalizacion.observacionFinalizacion}
-                  onChange={(e) =>
-                    setFinalizacion({
-                      ...finalizacion,
-                      observacionFinalizacion: e.target.value,
-                    })
-                  }
-                />
-                <FormSwitch
-                  label="Confirmar"
-                  checked={finalizacion.confirmar}
-                  onChange={(checked) =>
-                    setFinalizacion({ ...finalizacion, confirmar: checked })
-                  }
-                />
-              </>
-            )}
-
-            {finalizacion.idContinuarSolicitud === 2 && (
-              <FormSwitch
-                label="Confirmar"
-                checked={finalizacion.confirmar}
-                onChange={(checked) =>
-                  setFinalizacion({ ...finalizacion, confirmar: checked })
-                }
+          {/* Motivo y observación si opción = 2 */}
+          {finalizacion.idContinuarSolicitud === 2 && (
+            <>
+              <FormInput
+                label="Motivo de finalización"
+                value={finalizacion.motivoFinalizacion}
+                onChange={(e) => setFinalizacion({ ...finalizacion, motivoFinalizacion: e.target.value })}
               />
-            )}
-            {/* Si idContinuarSolicitud es "" o cualquier otro, no se renderiza ninguno */}
-          </CardContent>
+              <FormInput
+                label="Observación de finalización"
+                value={finalizacion.observacionFinalizacion}
+                onChange={(e) => setFinalizacion({ ...finalizacion, observacionFinalizacion: e.target.value })}
+              />
+            </>
+          )}
+
+          {/* Confirmar */}
+          {(finalizacion.idContinuarSolicitud === 1 || finalizacion.idContinuarSolicitud === 2) && (
+            <ConfirmSwitch
+              label="Confirmar"
+              checked={finalizacion.confirmar}
+              idContinuar={finalizacion.idContinuarSolicitud}
+              onConfirm={handleConfirmar}
+              className="border border-gray-300 p-4 rounded-md"
+            />
+          )}
+        </CardContent>
       </Card>
     </div>
   );
 }
 
-// Reutilizables
-
-function FormInput({ label, value, onChange, type = "text" }) {
+function FormInput({ label, value, onChange, type = "text", disabled }) {
   return (
     <div className="space-y-1.5">
       <Label className="text-sm font-medium text-gray-700">{label}</Label>
-      <Input placeholder="---" type={type} value={value} onChange={onChange} />
+      <Input placeholder="---" type={type} value={value} onChange={onChange} disabled={disabled} />
     </div>
   );
 }
 
+function ConfirmSwitch({ label, checked, onConfirm, idContinuar }) {
+  const [open, setOpen] = useState(false);
 
-function FormSwitch({ label, checked, onChange }) {
-  return (
-    <div className="flex items-center gap-4">
-      <div className="relative">
-        <Switch
-          checked={checked}
-          onCheckedChange={onChange}
-          className={`
-            peer
-            inline-flex
-            h-6 w-11 shrink-0
-            cursor-pointer
-            items-center
-            rounded-full
-            border
-            border-gray-700
-            transition-colors
-            duration-200
-            ease-in-out
-            ${checked ? "bg-primary" : "bg-gray-300"}
-          `}
-        />
-        {/* Círculo deslizante */}
-        <span
-          className={`
-            pointer-events-none
-            absolute
-            left-0.5 top-0.5
-            h-5 w-5
-            transform
-            rounded-full
-            bg-white
-            shadow
-            transition-transform
-            duration-200
-            ease-in-out
-            ${checked ? "translate-x-5" : "translate-x-0"}
-          `}
-        />
+  const handleConfirm = () => {
+    setOpen(false);
+    onConfirm();
+  };
+
+  if (checked) {
+    return (
+      <div className="flex items-center gap-4">
+        <Switch checked disabled className="bg-primary border-primary" />
+        <Label className="text-sm font-medium text-gray-700">{label}</Label>
       </div>
-      <Label className="text-sm font-medium text-gray-700">{label}</Label>
-    </div>
+    );
+  }
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <div className="flex items-center gap-4 cursor-pointer">
+          <Switch checked={false} onCheckedChange={() => setOpen(true)} />
+          <Label className="text-sm font-medium text-gray-700">{label}</Label>
+        </div>
+      </AlertDialogTrigger>
+      <AlertDialogContent className="bg-white text-black border border-gray-300">
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            ¿Estás seguro de terminar la solicitud?
+          </AlertDialogTitle>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={handleConfirm}>
+            Sí, {idContinuar === 1 ? "crear tareas" : "finalizar"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
