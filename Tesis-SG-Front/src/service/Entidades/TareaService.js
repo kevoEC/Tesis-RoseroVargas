@@ -29,3 +29,42 @@ export const finalizarSolicitudYGenerarTareas = async (idSolicitudInversion) => 
   });
   return handleResponse(res);
 };
+
+
+// GET: Tareas por solicitud de inversión
+export const getTareasPorSolicitud = async (idSolicitudInversion) => {
+  const res = await fetch(`${API_BASE_URL}/Tarea/por-solicitud/${idSolicitudInversion}`, {
+    headers: getAuthHeaders(),
+  });
+  const json = await handleResponse(res);
+  return json.data;
+};
+
+export const getTareasPorRol = async (idRol) => {
+  const res = await fetch(`${API_BASE_URL}/tarea/por-rol/${idRol}`, {
+    headers: getAuthHeaders()
+  });
+  if (!res.ok) throw new Error("Error al obtener tareas por rol");
+  const data = await res.json();
+  return data;
+};
+
+
+// GET: Documentos filtrados por idSolicitud e idMotivo
+export const getDocumentosPorSolicitudYMotivo = async (idSolicitudInversion, idMotivo) => {
+  const res = await fetch(
+    `${API_BASE_URL}/documento/por-solicitud-y-motivo?idSolicitudInversion=${idSolicitudInversion}&idMotivo=${idMotivo}`,
+    {
+      method: "GET",
+      headers: getAuthHeaders(),
+    }
+  );
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(errText || "Error al obtener documentos");
+  }
+
+  const json = await res.json();
+  return json.data || [];
+};
