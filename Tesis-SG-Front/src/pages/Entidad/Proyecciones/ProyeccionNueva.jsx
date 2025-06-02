@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useUI } from "@/hooks/useUI";
