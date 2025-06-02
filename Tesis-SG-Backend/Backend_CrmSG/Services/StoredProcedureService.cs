@@ -166,5 +166,24 @@ public class StoredProcedureService
         return (true, false, 0);
     }
 
+    public async Task<string> EjecutarSpCrearClienteEInversionPorSolicitud(int idSolicitudInversion)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand("sp_CrearClienteEInversionPorSolicitud", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@IdSolicitudInversion", idSolicitudInversion);
+
+        await connection.OpenAsync();
+        using var reader = await command.ExecuteReaderAsync();
+        if (await reader.ReadAsync())
+        {
+            return reader["Mensaje"]?.ToString() ?? "Sin mensaje";
+        }
+        return "Sin mensaje";
+    }
+
+
 
 }

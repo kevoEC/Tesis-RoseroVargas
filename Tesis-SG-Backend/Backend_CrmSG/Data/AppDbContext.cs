@@ -7,6 +7,7 @@ using Backend_CrmSG.Models.Entidades;
 using Backend_CrmSG.Models.Vistas;
 using Backend_CrmSG.Models.Documentos;
 using Backend_CrmSG.DTOs;
+using Backend_CrmSG.Models.Entidades.Cliente;
 
 namespace Backend_CrmSG.Data
 {
@@ -46,6 +47,13 @@ namespace Backend_CrmSG.Data
         // DbSets de tus tablas de entidades principales
         public DbSet<Prospecto> Prospecto { get; set; }
         public DbSet<Actividad> Actividad { get; set; }
+
+        public DbSet<Cliente> Cliente { get; set; }
+        public DbSet<ClienteContacto> ClienteContacto { get; set; }
+        public DbSet<ClienteActividadEconomica> ClienteActividadEconomica { get; set; }
+        public DbSet<ClienteCuentaBancaria> ClienteCuentaBancaria { get; set; }
+        public DbSet<ClienteEconomico> ClienteEconomico { get; set; } // Si usas esta tabla
+
         // DbSets de tus tablas de seguridad
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Rol> Rol { get; set; }
@@ -78,6 +86,10 @@ namespace Backend_CrmSG.Data
         public DbSet<DocumentoDetalle> DocumentosAdjuntos { get; set; } // ← esta línea
         public DbSet<DocumentoBasicoDetalle> DocumentosBasicos { get; set; } // ← esta línea
         public DbSet<TareaDetalleExtendida> TareasDetalle { get; set; }
+        public DbSet<ClienteDetalle> ClienteDetalle { get; set; }
+        public DbSet<InversionDetalle> InversionDetalle { get; set; }
+
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -134,9 +146,19 @@ namespace Backend_CrmSG.Data
             modelBuilder.Entity<TareaDetalleExtendida>()
             .HasNoKey()
             .ToView("vw_TareaDetalleExtendida");
-        
 
-        modelBuilder.Entity<TransaccionesValidacion>()
+            modelBuilder.Entity<ClienteDetalle>()
+            .HasNoKey()
+            .ToView("vw_ClienteDetalleCompleto");
+
+            modelBuilder.Entity<InversionDetalle>()
+            .HasNoKey()
+            .ToView("vw_InversionDetalleCompleto");
+
+
+
+
+            modelBuilder.Entity<TransaccionesValidacion>()
             .HasOne(t => t.TipoTransaccion)
             .WithMany(tt => tt.Transacciones)
             .HasForeignKey(t => t.IdTipoTransaccion)
