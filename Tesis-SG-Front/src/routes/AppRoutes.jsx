@@ -20,9 +20,7 @@ const Inversiones = lazy(() =>
 const InversionesTable = lazy(() =>
   import("@/pages/Entidad/Inversiones/InversionesTable")
 );
-const ClientesTable = lazy(() =>
-  import("@/pages/Entidad/Clientes/ClientesTable")
-);
+const ClienteForm = lazy(() => import("@/pages/Entidad/Clientes/ClienteForm"));
 const Clientes = lazy(() => import("@/pages/Entidad/Clientes/Clientes"));
 const Calendario = lazy(() => import("@/pages/Entidad/Calendario/Calendario"));
 const CalendarioTable = lazy(() =>
@@ -140,8 +138,8 @@ export const protectedRoutes = [
   { path: "/inversiones/vista", element: <InversionesTable /> },
   { path: "/inversiones/editar/:id", element: <Inversiones /> },
   // Clientes
-  { path: "/clientes/vista", element: <ClientesTable /> },
-  { path: "/clientes/editar/:id", element: <Clientes /> },
+  { path: "/clientes/vista", element: <Clientes /> },
+  { path: "/clientes/editar/:id", element: <ClienteForm /> },
   // Tareas
   { path: "/tareas/vista", element: <TareasTable /> },
   { path: "/tareas/editar/:id", element: <TareaDetalleEditable /> },

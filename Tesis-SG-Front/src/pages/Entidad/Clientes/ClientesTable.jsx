@@ -1,139 +1,96 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EntidadView from "@/components/shared/VistaEntidad";
-import {
-  getProspectos,
-  deleteProspecto,
-} from "@/service/Entidades/ProspectoService";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
+import GlassLoader from "@/components/ui/GlassLoader";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import ClienteForm from "../Clientes/ClienteForm";
+import { toast } from "sonner";
+import { getClientes, getClientesPorPropietario } from "@/service/Entidades/ClienteService";
 
-export default function ClientesTable() {
+// Mapeo de nombre de rol a ID
+const ROLES_MAP = {
+  "Administrador": 1,
+  "Asesor Comercial": 2,
+  "Asesor Legal": 3,
+  "Analista de riesgos": 4,
+  "Analista de emisión": 5,
+  "Analista financiero": 6,
+  "Gerencia Comercial": 7,
+  "Gerencia": 8,
+  "Externo": 9
+};
+
+export default function Clientes() {
   const navigate = useNavigate();
+  const [clientes, setClientes] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [prospectos, setProspectos] = useState([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const cargarProspectos = async () => {
-    try {
-      const data = await getProspectos();
-      setProspectos(data);
-    } catch (error) {
-      console.error("Error al cargar prospectos:", error);
-    }
+  const obtenerInfoUsuario = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const nombreRol = user?.roles?.[0];
+    const idRol = ROLES_MAP[nombreRol] || null;
+    const idUsuario = user?.id;
+    return { idRol, idUsuario };
   };
 
-  useEffect(() => {
-    cargarProspectos();
-  }, []);
-
-  /*Cargar los datos al montar el componente*/
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getProspectos(); // Ejecutar función async
-        setProspectos(data);
-      } catch (error) {
-        console.error("Error al cargar prospectos:", error);
+  const cargarClientes = async () => {
+    try {
+      const { idRol, idUsuario } = obtenerInfoUsuario();
+      if (!idRol) {
+        toast.error("No se pudo determinar el rol del usuario.");
+        return;
       }
-    };
 
-    fetchData();
-  }, []);
-
-  // 🟡 Editar
-  const handleEditar = (item) => {
-    navigate(`/clientes/editar/${item.idProspecto}`);
-  };
-
-  // 🔴 Eliminar
-  const handleEliminar = async (item) => {
-    try {
-      await deleteProspecto(item.idProspecto);
-      // Si usas refetch dentro de VistaEntidad, lo puedes llamar aquí después
-    } catch (err) {
-      console.error("Error al eliminar prospecto:", err);
+      let data = [];
+      if (idRol === 2 || idRol === 9) {
+        // Solo ve los de los que es propietario
+        data = await getClientesPorPropietario(idUsuario);
+      } else {
+        // Puede ver todos los clientes
+        data = await getClientes();
+      }
+      setClientes(data);
+    } catch (error) {
+      toast.error("Error al cargar clientes: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
-  const handleDesactivar = async (item) => {};
 
-  const handleAbrirFormulario = () => {
-    setIsDialogOpen(true);
-  };
-  const handleCerrarDialog = () => {
-    setIsDialogOpen(false);
+  useEffect(() => {
+    cargarClientes();
+  }, []);
+
+  const handleEditar = (item) => {
+    navigate(`/clientes/editar/${item.idCliente}`);
   };
 
   const columnas = [
     {
-      key: "idProspecto",
-      label: "Prospecto",
+      key: "idCliente",
+      label: "",
       render: (value) => (
         <div className="flex items-center justify-center group relative text-gray-500">
-          <svg
-            className="w-5 h-5 md:w-6 md:h-6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M5.121 17.804A9.003 9.003 0 0112 15c2.486 0 4.735.996 6.364 2.634M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 17h6m-6-4h6m2 9a2 2 0 002-2V7a2 2 0 00-2-2h-3.586a1 1 0 01-.707-.293l-1.414-1.414A1 1 0 0011.586 3H9a2 2 0 00-2 2v14a2 2 0 002 2h6z" />
           </svg>
           <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 text-xs text-white bg-zinc-800 px-2 py-0.5 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 whitespace-nowrap">
             ID: {value}
           </span>
         </div>
-      ),
+      )
     },
-    {
-      key: "nombreCompleto",
-      label: "Nombre completo",
-      render: (_, row) => (
-        <span className="whitespace-nowrap">
-          {`${row.nombres ?? ""} ${row.apellidoPaterno ?? ""} ${
-            row.apellidoMaterno ?? ""
-          }`}
-        </span>
-      ),
-    },
-    { key: "tipoIdentificacion", label: "Tipo ID" },
-    { key: "telefonoCelular", label: "Núm. Celular" },
+    { key: "numeroDocumento", label: "Documento" },
+    { key: "nombres", label: "Nombres" },
+    { key: "apellidoPaterno", label: "Apellido Paterno" },
+    { key: "apellidoMaterno", label: "Apellido Materno" },
     { key: "correoElectronico", label: "Correo" },
-    { key: "nombreOrigen", label: "Origen" },
-    { key: "productoInteres", label: "Producto de Interés" },
-    { key: "agencia", label: "Agencia" },
-    {
-      key: "estado",
-      label: "Estado",
-      render: (value) => (
-        <span
-          className={`px-2 py-1 text-xs font-semibold rounded-full ${
-            value
-              ? "bg-green-100 text-green-700"
-              : "bg-yellow-200 text-yellow-700"
-          }`}
-        >
-          {value ? "Activo" : "Inactivo"}
-        </span>
-      ),
-    },
+    { key: "telefonoCelular", label: "Celular" },
+    { key: "fechaCreacion", label: "Fecha Creación", render: (v) => v ? new Date(v).toLocaleDateString() : "" }
   ];
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-full">
+    <div className="p-4 sm:p-6 md:p-8 max-w-full relative">
+      <GlassLoader visible={loading} message="Cargando clientes..." />
       <Card className="w-full border border-muted rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.12)]">
         <CardHeader>
           <CardTitle className="text-3xl">Lista de Clientes</CardTitle>
@@ -141,35 +98,15 @@ export default function ClientesTable() {
         <CardContent className="p-6 overflow-x-auto">
           <TablaCustom2
             columns={columnas}
-            data={prospectos}
+            data={clientes}
             mostrarEditar={true}
-            mostrarAgregarNuevo={true}
-            mostrarEliminar={true}
-            onAgregarNuevoClick={handleAbrirFormulario}
+            mostrarEliminar={false}  // Eliminación desactivada
+            mostrarAgregarNuevo={false}
             onEditarClick={handleEditar}
-            onEliminarClick={handleEliminar}
+            // No onEliminarClick
           />
         </CardContent>
       </Card>
-      {/* Dialog para el formulario */}
-      <Dialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        className="min-w-3xl"
-      >
-        <DialogContent className="min-w-3xl">
-          <DialogHeader>
-            <DialogTitle>Agregar Cliente</DialogTitle>
-            <DialogDescription>
-              Completa la información del nuevo prospecto
-            </DialogDescription>
-          </DialogHeader>
-          <ClienteForm
-            onClose={handleCerrarDialog}
-            onSaved={cargarProspectos}
-          />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
