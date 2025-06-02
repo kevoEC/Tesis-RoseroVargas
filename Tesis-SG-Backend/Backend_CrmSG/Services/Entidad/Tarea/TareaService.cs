@@ -10,10 +10,12 @@ namespace Backend_CrmSG.Services.Entidad
     public class TareaService : ITareaService
     {
         private readonly AppDbContext _context;
+        private readonly StoredProcedureService _storedProcedureService;
 
-        public TareaService(AppDbContext context)
+        public TareaService(AppDbContext context, StoredProcedureService storedProcedureService)
         {
             _context = context;
+            _storedProcedureService = storedProcedureService;
         }
 
         // ✅ Obtener todas las tareas desde la vista enriquecida
@@ -92,7 +94,6 @@ namespace Backend_CrmSG.Services.Entidad
                     break;
                 case 6:
                     dto.CamposTipo["FechaValidacion"] = tarea.FechaValidacionRiesgo;
-                    dto.CamposTipo["PorcentajeCoincidencia"] = tarea.PorcentajeCoincidenciaRiesgo;
                     break;
             }
 
@@ -110,10 +111,20 @@ namespace Backend_CrmSG.Services.Entidad
             tarea.Observación = dto.Observacion;
             tarea.IdUsuarioModificacion = idUsuario;
             tarea.FechaModificacion = DateTime.Now;
-
             tarea.DatosEspecificos = JsonSerializer.Serialize(dto.CamposTipo);
 
             await _context.SaveChangesAsync();
+
+            // 🚦 SOLO si la tarea queda en estado aprobado (1)
+            if (tarea.IdResultado == 1)
+            {
+                // Llamar al SP usando el IdSolicitudInversion de la tarea
+                var mensaje = await _storedProcedureService.EjecutarSpCrearClienteEInversionPorSolicitud(tarea.IdSolicitudInversion);
+
+                // Opcional: puedes guardar el mensaje en logs, devolverlo, etc.
+                // Ejemplo: Console.WriteLine(mensaje);
+            }
         }
+
     }
 }

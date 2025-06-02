@@ -1279,6 +1279,104 @@
         }
       }
     },
+    "/api/Cliente": {
+      "get": {
+        "tags": [
+          "Cliente"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Cliente/{id}": {
+      "get": {
+        "tags": [
+          "Cliente"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Cliente"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClienteUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClienteUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClienteUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Cliente/por-propietario/{idUsuario}": {
+      "get": {
+        "tags": [
+          "Cliente"
+        ],
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/ConfiguracionProducto/{idProducto}": {
       "get": {
         "tags": [
@@ -2494,6 +2592,64 @@
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Inversion": {
+      "get": {
+        "tags": [
+          "Inversion"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Inversion/{id}": {
+      "get": {
+        "tags": [
+          "Inversion"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Inversion/por-propietario/{idUsuario}": {
+      "get": {
+        "tags": [
+          "Inversion"
+        ],
+        "parameters": [
+          {
+            "name": "idUsuario",
             "in": "path",
             "required": true,
             "schema": {
@@ -7800,6 +7956,271 @@
           "idProvincia": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClienteActividadEconomica": {
+        "type": "object",
+        "properties": {
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idActividadPrincipal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idActividadLugarTrabajo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lugarTrabajo": {
+            "type": "string",
+            "nullable": true
+          },
+          "correoTrabajo": {
+            "type": "string",
+            "nullable": true
+          },
+          "otraActividad": {
+            "type": "string",
+            "nullable": true
+          },
+          "cargo": {
+            "type": "string",
+            "nullable": true
+          },
+          "antiguedad": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "telefonoTrabajo": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaInicioActividad": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "direccionTrabajo": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenciaDireccionTrabajo": {
+            "type": "string",
+            "nullable": true
+          },
+          "esPEP": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClienteContacto": {
+        "type": "object",
+        "properties": {
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "correoElectronico": {
+            "type": "string",
+            "nullable": true
+          },
+          "telefonoCelular": {
+            "type": "string",
+            "nullable": true
+          },
+          "otroTelefono": {
+            "type": "string",
+            "nullable": true
+          },
+          "telefonoFijo": {
+            "type": "string",
+            "nullable": true
+          },
+          "idTipoVia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "callePrincipal": {
+            "type": "string",
+            "nullable": true
+          },
+          "numeroDomicilio": {
+            "type": "string",
+            "nullable": true
+          },
+          "calleSecundaria": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenciaDomicilio": {
+            "type": "string",
+            "nullable": true
+          },
+          "sectorBarrio": {
+            "type": "string",
+            "nullable": true
+          },
+          "tiempoResidencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idPaisResidencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idProvinciaResidencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idCiudadResidencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "residenteOtroPais": {
+            "type": "boolean"
+          },
+          "contribuyenteEEUU": {
+            "type": "boolean"
+          },
+          "numeroIdentificacionOtroPais": {
+            "type": "string",
+            "nullable": true
+          },
+          "numeroIdentificacionEEUU": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClienteCuentaBancaria": {
+        "type": "object",
+        "properties": {
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idBanco": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idTipoCuenta": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numeroCuenta": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClienteEconomico": {
+        "type": "object",
+        "properties": {
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalIngresosMensuales": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "totalEgresosMensuales": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "totalActivos": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "totalPasivos": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "activosMuebles": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "activosInmuebles": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "activosTitulosValor": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ingresosFijos": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ingresosVariables": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "origenIngresoVariable": {
+            "type": "string",
+            "nullable": true
+          },
+          "patrimonioNeto": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClienteUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idGenero": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idEstadoCivil": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idNacionalidad": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idNivelAcademico": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contacto": {
+            "$ref": "#/components/schemas/ClienteContacto"
+          },
+          "actividadEconomica": {
+            "$ref": "#/components/schemas/ClienteActividadEconomica"
+          },
+          "cuentaBancaria": {
+            "$ref": "#/components/schemas/ClienteCuentaBancaria"
+          },
+          "datosEconomicos": {
+            "$ref": "#/components/schemas/ClienteEconomico"
           }
         },
         "additionalProperties": false
