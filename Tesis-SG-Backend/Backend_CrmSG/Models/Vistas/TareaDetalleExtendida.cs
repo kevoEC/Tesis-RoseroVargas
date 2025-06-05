@@ -7,7 +7,7 @@ namespace Backend_CrmSG.Models.Vistas
     {
         public int IdTarea { get; set; }
         public string TareaNombre { get; set; } = string.Empty;
-        public string Descripcion { get; set; } = string.Empty;
+        public string? Descripcion { get; set; } = string.Empty;
         public int IdResultado { get; set; }
         public string? NombreResultado { get; set; }
         public string? Observación { get; set; }
@@ -19,7 +19,7 @@ namespace Backend_CrmSG.Models.Vistas
         public DateTime? FechaModificacion { get; set; }
         public int IdUsuarioPropietario { get; set; }
         public string? NombreUsuarioPropietario { get; set; }
-        public string DatosEspecificos { get; set; } = string.Empty;
+        public string? DatosEspecificos { get; set; } = string.Empty;
         public int IdTipoTarea { get; set; }
         public string? NombreTipoTarea { get; set; }
         public int IdSolicitudInversion { get; set; }
@@ -45,6 +45,5 @@ namespace Backend_CrmSG.Models.Vistas
 
         // TipoTarea 6: Revisión por Riesgo
         public string? FechaValidacionRiesgo { get; set; }
-        public string? PorcentajeCoincidenciaRiesgo { get; set; }
     }
 }

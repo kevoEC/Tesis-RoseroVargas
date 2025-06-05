@@ -78,9 +78,21 @@ public class GeneradorAnexoService
         var periodos = JsonSerializer.Deserialize<List<CronogramaPeriodo>>(cronograma.PeriodosJson)
             ?? throw new Exception("Error al parsear JSON del cronograma");
 
-        string plantillaPath = Path.Combine(_env.ContentRootPath, "Plantillas", "PlantillaAnexoProyeccionRentaFija.docx");
+        // --- SEGMENTACIÓN POR PLANTILLA SEGÚN PRODUCTO ---
+        string plantillaPath;
+
+        if (proyeccion.IdProducto == 1)
+        {
+            plantillaPath = Path.Combine(_env.ContentRootPath, "Plantillas", "PlantillaAnexoProyeccionRentaFija.docx");
+        }
+        else
+        {
+            plantillaPath = Path.Combine(_env.ContentRootPath, "Plantillas", "PlantillaAnexoProyeccionRentaPeriodica.docx");
+        }
+
         if (!File.Exists(plantillaPath))
             throw new FileNotFoundException("Plantilla Word no encontrada.", plantillaPath);
+
 
         byte[] resultadoBytes;
         using (var plantillaStream = new MemoryStream())
