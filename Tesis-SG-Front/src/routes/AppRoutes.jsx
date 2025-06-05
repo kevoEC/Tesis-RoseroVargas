@@ -14,15 +14,13 @@ const Politica = lazy(() => import("@/pages/Legal/PoliticaPrivacidad"));
 const DashboardPanel = lazy(() => import("@/pages/Panel/Dashboard"));
 
 const Prospectos = lazy(() => import("@/pages/Entidad/Prospectos/Prospectos"));
-const Inversiones = lazy(() =>
-  import("@/pages/Entidad/Inversiones/Inversiones")
+const InversionForm = lazy(() =>
+  import("@/pages/Entidad/Inversion/InversionDetalle")
 );
-const InversionesTable = lazy(() =>
-  import("@/pages/Entidad/Inversiones/InversionesTable")
+const Inversion = lazy(() =>
+  import("@/pages/Entidad/Inversion/Inversiones")
 );
-const ClientesTable = lazy(() =>
-  import("@/pages/Entidad/Clientes/ClientesTable")
-);
+const ClienteForm = lazy(() => import("@/pages/Entidad/Clientes/ClienteForm"));
 const Clientes = lazy(() => import("@/pages/Entidad/Clientes/Clientes"));
 const Calendario = lazy(() => import("@/pages/Entidad/Calendario/Calendario"));
 const CalendarioTable = lazy(() =>
@@ -137,11 +135,11 @@ export const protectedRoutes = [
   { path: "/solicitudes/editar/:id/proyeccion/nueva", element: <Proyeccion /> },
 
   // Inversiones
-  { path: "/inversiones/vista", element: <InversionesTable /> },
-  { path: "/inversiones/editar/:id", element: <Inversiones /> },
+  { path: "/inversiones/vista", element: <Inversion /> },
+  { path: "/inversiones/editar/:id", element: <InversionForm/> },
   // Clientes
-  { path: "/clientes/vista", element: <ClientesTable /> },
-  { path: "/clientes/editar/:id", element: <Clientes /> },
+  { path: "/clientes/vista", element: <Clientes /> },
+  { path: "/clientes/editar/:id", element: <ClienteForm /> },
   // Tareas
   { path: "/tareas/vista", element: <TareasTable /> },
   { path: "/tareas/editar/:id", element: <TareaDetalleEditable /> },

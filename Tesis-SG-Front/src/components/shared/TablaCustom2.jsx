@@ -156,7 +156,7 @@ const TablaCustom2 = ({
   onClick={handleAgregarNuevo}
   className="bg-[#4f46e5] text-white hover:bg-[#4338ca] transition-colors duration-200 flex items-center gap-2 shadow-sm"
 >
-  <FaPlus className="text-white" /> Agregar Nuevo
+  <FaPlus className="text-white" /> Nuevo
 </Button>
 
 
