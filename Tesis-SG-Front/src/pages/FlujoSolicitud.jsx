@@ -1,6 +1,6 @@
 import { useState } from "react";
-import StepperHeader from "./StepperHeader";
-import StepperBody from "./StepperBody";
+// import StepperHeader from "./StepperHeader";
+// import StepperBody from "./StepperBody";
 import Identificacion from "@/components/solicitud/Identificacion";
 import Proyeccion from "@/components/solicitud/Proyeccion";
 import DatosGenerales from "@/components/solicitud/DatosGenerales";
@@ -44,6 +44,7 @@ export default function FlujoSolicitud() {
   const [pasoActivo, setPasoActivo] = useState(pasos[0].id);
 
   // avanzar al siguiente
+  // eslint-disable-next-line no-unused-vars
   const handleNext = () => {
     const idx = pasos.findIndex((p) => p.id === pasoActivo);
     if (idx < pasos.length - 1) {
@@ -52,6 +53,7 @@ export default function FlujoSolicitud() {
   };
 
   // retroceder
+  // eslint-disable-next-line no-unused-vars
   const handlePrev = () => {
     const idx = pasos.findIndex((p) => p.id === pasoActivo);
     if (idx > 0) {
@@ -61,6 +63,7 @@ export default function FlujoSolicitud() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
+      {/* 
       <StepperHeader
         pasos={pasos}
         activo={pasoActivo}
@@ -74,6 +77,11 @@ export default function FlujoSolicitud() {
         isFirst={pasoActivo === pasos[0].id}
         isLast={pasoActivo === pasos[pasos.length - 1].id}
       />
+      */}
+      {/* Puedes dejar solo el componente actual si quieres: */}
+      <div className="p-6">
+        {componentesPorPaso[pasoActivo]}
+      </div>
     </div>
   );
 }
