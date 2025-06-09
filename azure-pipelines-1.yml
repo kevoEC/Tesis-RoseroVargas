@@ -27,7 +27,7 @@ steps:
   - script: |
       cd Tesis-SG-Front
       npm install
-      npm run build
+      npx vite --mode production build
     displayName: 'Instalar dependencias y compilar el proyecto con Vite'
 
   - task: AzureStaticWebApp@0
