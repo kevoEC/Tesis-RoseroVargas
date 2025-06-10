@@ -27,7 +27,12 @@ steps:
   - script: |
       cd Tesis-SG-Front
       npm install
-      npx vite --mode production build
+      # Asegúrate de que vite tenga permisos de ejecución
+      chmod +x ./node_modules/.bin/vite
+      # Agrega el directorio de binarios de node_modules al PATH, por si acaso
+      export PATH=$PATH:./node_modules/.bin
+      # Ejecuta el comando de construcción usando npm run build
+      npm run build
     displayName: 'Instalar dependencias y compilar el proyecto con Vite'
 
   - task: AzureStaticWebApp@0
@@ -36,6 +41,3 @@ steps:
       azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_BLACK_GRASS_04C403C0F)
       app_location: "client"
       output_location: "dist"
-
-
-
