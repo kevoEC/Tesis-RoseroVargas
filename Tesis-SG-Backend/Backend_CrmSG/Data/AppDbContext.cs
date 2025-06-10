@@ -53,6 +53,11 @@ namespace Backend_CrmSG.Data
         public DbSet<ClienteActividadEconomica> ClienteActividadEconomica { get; set; }
         public DbSet<ClienteCuentaBancaria> ClienteCuentaBancaria { get; set; }
         public DbSet<ClienteEconomico> ClienteEconomico { get; set; } // Si usas esta tabla
+        public DbSet<CalendarioOperaciones> CalendarioOperaciones { get; set; }
+        public DbSet<Caso> Caso { get; set; }
+        public DbSet<Pago> Pago { get; set; }
+
+
 
         // DbSets de tus tablas de seguridad
         public DbSet<Usuario> Usuario { get; set; }
@@ -88,7 +93,7 @@ namespace Backend_CrmSG.Data
         public DbSet<TareaDetalleExtendida> TareasDetalle { get; set; }
         public DbSet<ClienteDetalle> ClienteDetalle { get; set; }
         public DbSet<InversionDetalle> InversionDetalle { get; set; }
-
+        public DbSet<CasoDetalleExtendida> CasosDetalleExtendida { get; set; }
 
 
 
@@ -154,6 +159,10 @@ namespace Backend_CrmSG.Data
             modelBuilder.Entity<InversionDetalle>()
             .HasNoKey()
             .ToView("vw_InversionDetalleCompleto");
+
+            modelBuilder.Entity<CasoDetalleExtendida>()
+            .HasNoKey()
+            .ToView("vw_CasoDetalleExtendida");
 
 
 

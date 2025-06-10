@@ -626,6 +626,258 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidades.CalendarioOperacionesController",
+    "Method": "Get",
+    "RelativePath": "api/CalendarioOperaciones",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Backend_CrmSG.Models.Entidades.CalendarioOperaciones, Backend_CrmSG, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidades.CalendarioOperacionesController",
+    "Method": "Post",
+    "RelativePath": "api/CalendarioOperaciones",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "item",
+        "Type": "Backend_CrmSG.Models.Entidades.CalendarioOperaciones",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Backend_CrmSG.Models.Entidades.CalendarioOperaciones",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidades.CalendarioOperacionesController",
+    "Method": "Get",
+    "RelativePath": "api/CalendarioOperaciones/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Backend_CrmSG.Models.Entidades.CalendarioOperaciones",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidades.CalendarioOperacionesController",
+    "Method": "Put",
+    "RelativePath": "api/CalendarioOperaciones/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.DTOs.CalendarioOperaciones.CalendarioOperacionesUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidades.CalendarioOperacionesController",
+    "Method": "Delete",
+    "RelativePath": "api/CalendarioOperaciones/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.CasosController",
+    "Method": "Get",
+    "RelativePath": "api/Casos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.CasosController",
+    "Method": "Post",
+    "RelativePath": "api/Casos",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.DTOs.Caso.CasoCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.CasosController",
+    "Method": "Get",
+    "RelativePath": "api/Casos/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.CasosController",
+    "Method": "Put",
+    "RelativePath": "api/Casos/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.DTOs.Caso.CasoUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.CasosController",
+    "Method": "ContinuarCaso",
+    "RelativePath": "api/Casos/{id}/continuar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.CasosController",
+    "Method": "GetPorCliente",
+    "RelativePath": "api/Casos/por-cliente/{idCliente}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idCliente",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.CasosController",
+    "Method": "GetPorInversion",
+    "RelativePath": "api/Casos/por-inversion/{idInversion}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idInversion",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.CasosController",
+    "Method": "GetPorPago",
+    "RelativePath": "api/Casos/por-pago/{idPago}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idPago",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.CasosController",
+    "Method": "RollbackPagos",
+    "RelativePath": "api/Casos/rollback-pagos",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.Controllers.Entidad.RollbackPagosDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Backend_CrmSG.Controllers.Catalogos.CiudadController",
     "Method": "Get",
     "RelativePath": "api/Ciudad",
@@ -2122,6 +2374,117 @@
     "Parameters": [
       {
         "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.PagosController",
+    "Method": "Get",
+    "RelativePath": "api/Pagos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.PagosController",
+    "Method": "Post",
+    "RelativePath": "api/Pagos",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.DTOs.Pago.PagoCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.PagosController",
+    "Method": "Get",
+    "RelativePath": "api/Pagos/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.PagosController",
+    "Method": "Put",
+    "RelativePath": "api/Pagos/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.DTOs.Pago.PagoUpdateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.PagosController",
+    "Method": "Delete",
+    "RelativePath": "api/Pagos/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.PagosController",
+    "Method": "GenerarPorCalendario",
+    "RelativePath": "api/Pagos/generar-por-calendario",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.Controllers.Entidad.GenerarPagosCalendarioDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.PagosController",
+    "Method": "GetPorCalendario",
+    "RelativePath": "api/Pagos/por-calendario/{idCalendario}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idCalendario",
         "Type": "System.Int32",
         "IsRequired": true
       }

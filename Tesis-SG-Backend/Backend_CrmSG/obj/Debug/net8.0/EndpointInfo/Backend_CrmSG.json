@@ -1045,6 +1045,418 @@
         }
       }
     },
+    "/api/CalendarioOperaciones": {
+      "get": {
+        "tags": [
+          "CalendarioOperaciones"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CalendarioOperaciones"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CalendarioOperaciones"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CalendarioOperaciones"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "CalendarioOperaciones"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarioOperaciones"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarioOperaciones"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarioOperaciones"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarioOperaciones"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarioOperaciones"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarioOperaciones"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CalendarioOperaciones/{id}": {
+      "get": {
+        "tags": [
+          "CalendarioOperaciones"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarioOperaciones"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarioOperaciones"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarioOperaciones"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "CalendarioOperaciones"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarioOperacionesUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarioOperacionesUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarioOperacionesUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "CalendarioOperaciones"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos": {
+      "get": {
+        "tags": [
+          "Casos"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Casos"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CasoCreateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CasoCreateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CasoCreateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos/{id}": {
+      "get": {
+        "tags": [
+          "Casos"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Casos"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CasoUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CasoUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CasoUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos/por-cliente/{idCliente}": {
+      "get": {
+        "tags": [
+          "Casos"
+        ],
+        "parameters": [
+          {
+            "name": "idCliente",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos/por-inversion/{idInversion}": {
+      "get": {
+        "tags": [
+          "Casos"
+        ],
+        "parameters": [
+          {
+            "name": "idInversion",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos/por-pago/{idPago}": {
+      "get": {
+        "tags": [
+          "Casos"
+        ],
+        "parameters": [
+          {
+            "name": "idPago",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos/{id}/continuar": {
+      "post": {
+        "tags": [
+          "Casos"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos/rollback-pagos": {
+      "post": {
+        "tags": [
+          "Casos"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RollbackPagosDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RollbackPagosDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RollbackPagosDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Ciudad": {
       "get": {
         "tags": [
@@ -3545,6 +3957,185 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Pagos": {
+      "get": {
+        "tags": [
+          "Pagos"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Pagos"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoCreateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoCreateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoCreateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Pagos/{id}": {
+      "get": {
+        "tags": [
+          "Pagos"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Pagos"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Pagos"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Pagos/por-calendario/{idCalendario}": {
+      "get": {
+        "tags": [
+          "Pagos"
+        ],
+        "parameters": [
+          {
+            "name": "idCalendario",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Pagos/generar-por-calendario": {
+      "post": {
+        "tags": [
+          "Pagos"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerarPagosCalendarioDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerarPagosCalendarioDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerarPagosCalendarioDTO"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -7934,6 +8525,182 @@
         },
         "additionalProperties": false
       },
+      "CalendarioOperaciones": {
+        "type": "object",
+        "properties": {
+          "idCalendario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCorte": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "calendarioInversiones": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaGenerarPagos": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaEnvioEECC": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "estadoProcesoPagos": {
+            "type": "boolean"
+          },
+          "estadoProcesoEnvioEECC": {
+            "type": "boolean"
+          },
+          "estadoCalendario": {
+            "type": "boolean"
+          },
+          "fechaCreacion": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaModificacion": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "idUsuarioCreacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idUsuarioPropietario": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CalendarioOperacionesUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCorte": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "calendarioInversiones": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaGenerarPagos": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaEnvioEECC": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "estadoProcesoPagos": {
+            "type": "boolean"
+          },
+          "estadoProcesoEnvioEECC": {
+            "type": "boolean"
+          },
+          "estadoCalendario": {
+            "type": "boolean"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CasoCreateDTO": {
+        "type": "object",
+        "properties": {
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idMotivo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descripcion": {
+            "type": "string",
+            "nullable": true
+          },
+          "idInversion": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idPago": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "datosEspecificos": {
+            "type": "string",
+            "nullable": true
+          },
+          "continuarCaso": {
+            "type": "boolean"
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "idUsuarioCreacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioPropietario": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CasoUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "descripcion": {
+            "type": "string",
+            "nullable": true
+          },
+          "continuarCaso": {
+            "type": "boolean"
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioPropietario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "datosEspecificos": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Ciudad": {
         "type": "object",
         "properties": {
@@ -8654,6 +9421,24 @@
         },
         "additionalProperties": false
       },
+      "GenerarPagosCalendarioDTO": {
+        "type": "object",
+        "properties": {
+          "idCalendario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idPago": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuario": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "Genero": {
         "type": "object",
         "properties": {
@@ -8933,6 +9718,72 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagoCreateDTO": {
+        "type": "object",
+        "properties": {
+          "idCalendario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cantidadPagos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descartarPagos": {
+            "type": "boolean"
+          },
+          "generarPagos": {
+            "type": "boolean"
+          },
+          "detalle": {
+            "type": "string",
+            "nullable": true
+          },
+          "confirmarRegistrosPagos": {
+            "type": "boolean"
+          },
+          "idUsuarioCreacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioPropietario": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagoUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "cantidadPagos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descartarPagos": {
+            "type": "boolean"
+          },
+          "generarPagos": {
+            "type": "boolean"
+          },
+          "detalle": {
+            "type": "string",
+            "nullable": true
+          },
+          "confirmarRegistrosPagos": {
+            "type": "boolean"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioPropietario": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -9416,6 +10267,20 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RollbackPagosDTO": {
+        "type": "object",
+        "properties": {
+          "idPago": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
