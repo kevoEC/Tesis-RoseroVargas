@@ -1,254 +1,197 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { PlusCircle } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
-import { createProspecto } from "@/service/Entidades/ProspectoService";
+import { createCalendarioOperaciones, updateCalendarioOperaciones } from "@/service/Entidades/CalendarioOperacionesService";
 import { useAuth } from "@/hooks/useAuth";
-import { getAgencias } from "@/service/Catalogos/AgenciaService";
-import { getProductosInteres } from "@/service/Catalogos/ProductoInteresService";
-import { getOrigenes } from "@/service/Catalogos/OrigenClienteService";
-import { getTipoIdentificacion } from "@/service/Catalogos/TipoIdentificacionService";
 import GlassLoader from "@/components/ui/GlassLoader";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { Checkbox } from "@/components/ui/checkbox";
 
-export default function CalendariosForm({ onClose, onSaved }) {
+export default function CalendarioForm({ onClose, onSaved, initialData }) {
   const { user } = useAuth();
-
-  const [form, setForm] = useState({
-    nombres: "",
-    apellidoPaterno: "",
-    apellidoMaterno: "",
-    correoElectronico: "",
-    telefonoCelular: "",
-    idTipoIdentificacion: "",
-    idOrigenCliente: "",
-    idProductoInteres: "",
-    idAgencia: "",
-  });
-
   const [loading, setLoading] = useState(false);
 
-  const [catalogos, setCatalogos] = useState({
-    tipoIdentificaciones: [],
-    origenes: [],
-    productos: [],
-    agencias: [],
+  // Estado inicial del formulario
+  const [form, setForm] = useState({
+    nombre: "",
+    fechaCorte: null,
+    calendarioInversiones: "1",
+    fechaGenerarPagos: null,
+    fechaEnvioEECC: null,
+    estadoProcesoPagos: false,
+    estadoProcesoEnvioEECC: false,
+    estadoCalendario: false,
+    ...initialData
   });
 
-  useEffect(() => {
-    const cargarCatalogos = async () => {
-      try {
-        const [agencias, productos, origenes, tipoIdentificaciones] =
-          await Promise.all([
-            getAgencias(),
-            getProductosInteres(),
-            getOrigenes(),
-            getTipoIdentificacion(),
-          ]);
-
-        setCatalogos({ agencias, productos, origenes, tipoIdentificaciones });
-      } catch (error) {
-        toast.error("No se pudieron cargar los catálogos");
-      }
-    };
-
-    cargarCatalogos();
-  }, []);
-
+  // Manejar cambios en los inputs
   const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+    setForm(prev => ({ ...prev, [key]: value }));
   };
 
-  const handlePhoneChange = (value) => {
-    const raw = value.replace(/\D/g, "").slice(0, 10);
-    const formatted = raw.replace(/(\d{3})(\d{3})(\d{0,4})/, "$1-$2-$3");
-    handleChange("telefonoCelular", formatted);
-  };
-
+  // Manejar envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = {
-      ...form,
-      estado: true,
-      idSolicitudInversion: null,
-      fechaCreacion: new Date().toISOString(),
-      fechaModificacion: new Date().toISOString(),
-      idUsuarioCreacion: user?.id || null,
-      idUsuarioModificacion: user?.id || null,
-      idUsuarioPropietario: user?.id || null,
-      esCliente: false,
-    };
-
     setLoading(true);
+
     try {
-      await createProspecto(payload);
-      toast.success("Prospecto guardado correctamente");
+      const payload = {
+        ...form,
+        idUsuarioCreacion: user?.id,
+        idUsuarioPropietario: user?.id
+      };
+
+      if (initialData?.idCalendario) {
+        await updateCalendarioOperaciones(initialData.idCalendario, payload);
+        toast.success("Calendario actualizado correctamente");
+      } else {
+        await createCalendarioOperaciones(payload);
+        toast.success("Calendario creado correctamente");
+      }
+
       onSaved?.();
       onClose?.();
     } catch (error) {
-      toast.error("Error al guardar prospecto");
+      toast.error(`Error al ${initialData ? 'actualizar' : 'crear'} calendario: ${error.message ?? error}`);
     } finally {
       setLoading(false);
     }
   };
 
+  // Componente para seleccionar fecha
+  const DatePicker = ({ date, setDate, label }) => (
+    <FormGroup label={label}>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className="w-full justify-start text-left font-normal"
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {date ? format(date, "PPP", { locale: es }) : <span>Seleccionar fecha</span>}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0">
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={setDate}
+            initialFocus
+            locale={es}
+          />
+        </PopoverContent>
+      </Popover>
+    </FormGroup>
+  );
+
   return (
     <div className="p-4 relative">
-      <GlassLoader visible={loading} message="Guardando prospecto..." />
+      <GlassLoader visible={loading} message={initialData ? "Actualizando calendario..." : "Creando calendario..."} />
       <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-md">
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
-        >
-          <FormGroup label="Nombres">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Nombre del calendario */}
+          <FormGroup label="Nombre del Calendario">
             <Input
-              placeholder="Ej: Juan Andrés"
-              value={form.nombres}
-              onChange={(e) => handleChange("nombres", e.target.value)}
+              placeholder="Ej: 01 JUNIO 2026"
+              value={form.nombre}
+              onChange={(e) => handleChange("nombre", e.target.value)}
               required
             />
           </FormGroup>
 
-          <FormGroup label="Apellido Paterno">
+          {/* Día de inversiones */}
+          <FormGroup label="Día de Inversiones">
             <Input
-              placeholder="Ej: Pérez"
-              value={form.apellidoPaterno}
-              onChange={(e) => handleChange("apellidoPaterno", e.target.value)}
+              type="number"
+              min="1"
+              max="31"
+              placeholder="Ej: 1"
+              value={form.calendarioInversiones}
+              onChange={(e) => handleChange("calendarioInversiones", e.target.value)}
               required
             />
           </FormGroup>
 
-          <FormGroup label="Apellido Materno">
-            <Input
-              placeholder="Ej: Gutiérrez"
-              value={form.apellidoMaterno}
-              onChange={(e) => handleChange("apellidoMaterno", e.target.value)}
-              required
-            />
+          {/* Selectores de fecha */}
+          <DatePicker 
+            date={form.fechaCorte} 
+            setDate={(date) => handleChange("fechaCorte", date)} 
+            label="Fecha de Corte" 
+          />
+
+          <DatePicker 
+            date={form.fechaGenerarPagos} 
+            setDate={(date) => handleChange("fechaGenerarPagos", date)} 
+            label="Fecha para Generar Pagos" 
+          />
+
+          <DatePicker 
+            date={form.fechaEnvioEECC} 
+            setDate={(date) => handleChange("fechaEnvioEECC", date)} 
+            label="Fecha para Envío de EECC" 
+          />
+
+          {/* Checkboxes de estado */}
+          <FormGroup label="Estado del Proceso de Pagos">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="estadoProcesoPagos"
+                checked={form.estadoProcesoPagos}
+                onCheckedChange={(checked) => handleChange("estadoProcesoPagos", checked)}
+              />
+              <Label htmlFor="estadoProcesoPagos">
+                {form.estadoProcesoPagos ? "Completado" : "Pendiente"}
+              </Label>
+            </div>
           </FormGroup>
 
-          <FormGroup label="Correo Electrónico">
-            <Input
-              type="email"
-              placeholder="Ej: ejemplo@correo.com"
-              value={form.correoElectronico}
-              onChange={(e) =>
-                handleChange("correoElectronico", e.target.value)
-              }
-              required
-            />
+          <FormGroup label="Estado del Proceso de EECC">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="estadoProcesoEnvioEECC"
+                checked={form.estadoProcesoEnvioEECC}
+                onCheckedChange={(checked) => handleChange("estadoProcesoEnvioEECC", checked)}
+              />
+              <Label htmlFor="estadoProcesoEnvioEECC">
+                {form.estadoProcesoEnvioEECC ? "Completado" : "Pendiente"}
+              </Label>
+            </div>
           </FormGroup>
 
-          <FormGroup label="Teléfono Celular">
-            <Input
-              placeholder="Ej: 099-123-4567"
-              value={form.telefonoCelular}
-              onChange={(e) => handlePhoneChange(e.target.value)}
-              maxLength={12}
-              required
-            />
+          <FormGroup label="Estado del Calendario">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="estadoCalendario"
+                checked={form.estadoCalendario}
+                onCheckedChange={(checked) => handleChange("estadoCalendario", checked)}
+              />
+              <Label htmlFor="estadoCalendario">
+                {form.estadoCalendario ? "Cerrado" : "Abierto"}
+              </Label>
+            </div>
           </FormGroup>
 
-          <FormGroup label="Tipo de Identificación">
-            <Select
-              onValueChange={(val) =>
-                handleChange("idTipoIdentificacion", Number(val))
-              }
+          {/* Botón de submit */}
+          <div className="col-span-full flex justify-end gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="px-6 py-2"
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar..." />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {catalogos.tipoIdentificaciones.map((item) => (
-                  <SelectItem
-                    key={item.idTipoIdentificacion}
-                    value={item.idTipoIdentificacion.toString()}
-                  >
-                    {item.tipo}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormGroup>
-
-          <FormGroup label="Origen del Cliente">
-            <Select
-              onValueChange={(val) =>
-                handleChange("idOrigenCliente", Number(val))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar..." />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {catalogos.origenes.map((item) => (
-                  <SelectItem
-                    key={item.idOrigenCliente}
-                    value={item.idOrigenCliente.toString()}
-                  >
-                    {item.nombreOrigen}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormGroup>
-
-          <FormGroup label="Producto de Interés">
-            <Select
-              onValueChange={(val) =>
-                handleChange("idProductoInteres", Number(val))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar..." />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {catalogos.productos.map((item) => (
-                  <SelectItem
-                    key={item.idProductoInteres}
-                    value={item.idProductoInteres.toString()}
-                  >
-                    {item.nombre}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormGroup>
-
-          <FormGroup label="Agencia">
-            <Select
-              onValueChange={(val) => handleChange("idAgencia", Number(val))}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar..." />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {catalogos.agencias.map((item) => (
-                  <SelectItem
-                    key={item.idAgencia}
-                    value={item.idAgencia.toString()}
-                  >
-                    {item.ciudad}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormGroup>
-
-          <div className="col-span-full">
+              Cancelar
+            </Button>
             <Button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
             >
-              <PlusCircle className="w-4 h-4 mr-2" /> Guardar Calendario
+              {initialData ? "Actualizar Calendario" : "Crear Calendario"}
             </Button>
           </div>
         </form>
