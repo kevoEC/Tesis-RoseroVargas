@@ -13,6 +13,8 @@ using Backend_CrmSG.Services.Correo;
 using Backend_CrmSG.Services.SMS;
 using Backend_CrmSG.Services.Entidad;
 using Backend_CrmSG.Services.Entidad.Inversion;
+using Backend_CrmSG.Services.Entidad.Caso;
+using Backend_CrmSG.Services.Entidad.Pago;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtKey = builder.Configuration["Jwt:Key"]
@@ -159,6 +161,8 @@ builder.Services.AddScoped<GeneradorContratoService>();
 builder.Services.AddScoped<GeneradorAnexoService>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IInversionService, InversionService>();
+builder.Services.AddScoped<ICasoService, CasoService>();
+builder.Services.AddScoped<IPagoService, PagoService>();
 
 
 

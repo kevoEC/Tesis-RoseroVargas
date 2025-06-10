@@ -1,6 +1,7 @@
 ﻿using Backend_CrmSG.Data;
 using Backend_CrmSG.DTOs;
 using Backend_CrmSG.DTOs.Backend_CrmSG.DTOs.Seguridad;
+using Backend_CrmSG.DTOs.Caso;
 using Backend_CrmSG.DTOs.Seguridad;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -183,6 +184,71 @@ public class StoredProcedureService
         }
         return "Sin mensaje";
     }
+
+    public async Task<int> EjecutarSpCrearCaso(CasoCreateDTO dto)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand("sp_CrearCaso", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@IdCliente", dto.IdCliente);
+        command.Parameters.AddWithValue("@IdMotivo", dto.IdMotivo);
+        command.Parameters.AddWithValue("@Descripcion", dto.Descripcion ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@IdInversion", (object?)dto.IdInversion ?? DBNull.Value);
+        command.Parameters.AddWithValue("@IdPago", (object?)dto.IdPago ?? DBNull.Value);
+        command.Parameters.AddWithValue("@DatosEspecificos", dto.DatosEspecificos ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@ContinuarCaso", dto.ContinuarCaso ? 1 : 0);
+        command.Parameters.AddWithValue("@Estado", dto.Estado ?? "Iniciado");
+        command.Parameters.AddWithValue("@IdUsuarioCreacion", dto.IdUsuarioCreacion);
+        command.Parameters.AddWithValue("@IdUsuarioPropietario", dto.IdUsuarioPropietario);
+
+        await connection.OpenAsync();
+        var result = await command.ExecuteScalarAsync();
+        return Convert.ToInt32(result); // IdCaso generado
+    }
+
+    public async Task EjecutarSpContinuarFlujoCaso(int idCaso)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand("sp_ContinuarFlujoCaso", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@IdCaso", idCaso);
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+    }
+
+    public async Task EjecutarRollbackPagosPorIdPago(int idPago, int idUsuarioModificacion)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand("sp_RollbackPagosPorIdPago", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@IdPago", idPago);
+        command.Parameters.AddWithValue("@IdUsuarioModificacion", idUsuarioModificacion);
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+    }
+
+    public async Task GenerarPagosPorCalendarioAsync(int idCalendario, int idPago, int idUsuario)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand("sp_GenerarPagosPorCalendario", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@IdCalendario", idCalendario);
+        command.Parameters.AddWithValue("@IdPago", idPago); // <--- ESTE ES EL CAMBIO CLAVE
+        command.Parameters.AddWithValue("@IdUsuarioCreacion", idUsuario);
+        // Puedes omitir el IdUsuarioPropietario si el SP lo tiene default (o envíalo si lo tienes en tu DTO)
+
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+    }
+
 
 
 

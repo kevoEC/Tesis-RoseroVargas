@@ -547,9 +547,8 @@ D:\Tesis KR\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\DocumentFor
 D:\Tesis KR\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll
 D:\Tesis KR\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\System.IO.Packaging.dll
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Plantillas\PlantillaAnexoProyeccionRentaFija.docx
-D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Plantillas\PlantillaAnexoProyeccionRentaFija.xml
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Plantillas\PlantillaContratoTESIS.docx
-D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Plantillas\PlantillaContratoTESIS.xml
 D:\Tesis KR\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Plantillas\PlantillaAnexoProyeccionRentaFija.docx
 D:\Tesis KR\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Plantillas\PlantillaContratoTESIS.docx
 D:\Tesis KR\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Plantillas\PlantillaAnexoProyeccionRentaPeriodica.docx
+D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Plantillas\PlantillaAnexoProyeccionRentaPeriodica.docx
