@@ -148,7 +148,7 @@
               "RelativeDocumentMoniker": "Backend_CrmSG\\appsettings.json",
               "ToolTip": "D:\\Tesis KR\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\appsettings.json",
               "RelativeToolTip": "Backend_CrmSG\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-06-16T22:25:36.699Z",
               "EditorCaption": ""
@@ -163,8 +163,7 @@
               "RelativeToolTip": "Backend_CrmSG\\appsettings.Development.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-06-16T22:25:16.141Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-16T22:25:16.141Z"
             },
             {
               "$type": "Document",
@@ -284,8 +283,7 @@
               "RelativeToolTip": "Backend_CrmSG\\Controllers\\Entidad\\CasosController.cs",
               "ViewState": "AgIAAD4AAAAAAAAAAAAuwFkAAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-10T02:41:24.743Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-10T02:41:24.743Z"
             },
             {
               "$type": "Document",
