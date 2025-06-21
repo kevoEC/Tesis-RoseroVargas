@@ -26,6 +26,10 @@ const Calendario = lazy(() => import("@/pages/Entidad/Calendario/Calendario"));
 const CalendarioTable = lazy(() =>
   import("@/pages/Entidad/Calendario/CalendarioTable")
 );
+const CalendarioForm = lazy(() =>
+  import("@/pages/Entidad/Calendario/CalendariosForm")
+);
+
 const Pagos = lazy(() => import("@/pages/Entidad/Pagos/Pagos"));
 const PagosTable = lazy(() => import("@/pages/Entidad/Pagos/PagosTable"));
 const Casos = lazy(() => import("@/pages/Entidad/Casos/Casos"));
@@ -152,6 +156,7 @@ export const protectedRoutes = [
   // Calendario
   { path: "/calendario/vista", element: <CalendarioTable /> },
   { path: "/calendario/editar/:id", element: <Calendario /> },
+  { path : "/calendario/nuevo", element: <CalendarioForm /> },
 
   // Configuraciones generales
   { path: "/settings", element: <Settings /> },

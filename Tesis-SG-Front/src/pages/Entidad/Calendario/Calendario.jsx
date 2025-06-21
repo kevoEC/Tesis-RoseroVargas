@@ -1,18 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import GlassLoader from "@/components/ui/GlassLoader";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
-import { updateCalendarioOperaciones, getCalendarioOperaciones } from "@/service/Entidades/CalendarioOperacionesService";
+import { updateCalendarioOperaciones, getCalendarioOperacionesById } from "@/service/Entidades/CalendarioOperacionesService";
 
 export default function EditarCalendario() {
   const { id } = useParams();
@@ -21,33 +15,32 @@ export default function EditarCalendario() {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
     nombre: "",
-    fechaCorte: null,
+    fechaCorte: "",
     calendarioInversiones: "1",
-    fechaGenerarPagos: null,
-    fechaEnvioEECC: null,
+    fechaGenerarPagos: "",
+    fechaEnvioEECC: "",
     estadoProcesoPagos: false,
     estadoProcesoEnvioEECC: false,
     estadoCalendario: false
   });
 
-  // Cargar datos iniciales
-  useState(() => {
+  useEffect(() => {
     const cargarDatos = async () => {
       try {
-        const data = await getCalendarioOperaciones(id);
+        const data = await getCalendarioOperacionesById(id);
         setForm({
           nombre: data.nombre,
-          fechaCorte: new Date(data.fechaCorte),
+          fechaCorte: data.fechaCorte ? data.fechaCorte.split("T")[0] : "",
           calendarioInversiones: data.calendarioInversiones.toString(),
-          fechaGenerarPagos: new Date(data.fechaGenerarPagos),
-          fechaEnvioEECC: new Date(data.fechaEnvioEECC),
+          fechaGenerarPagos: data.fechaGenerarPagos ? data.fechaGenerarPagos.split("T")[0] : "",
+          fechaEnvioEECC: data.fechaEnvioEECC ? data.fechaEnvioEECC.split("T")[0] : "",
           estadoProcesoPagos: data.estadoProcesoPagos,
           estadoProcesoEnvioEECC: data.estadoProcesoEnvioEECC,
           estadoCalendario: data.estadoCalendario
         });
       } catch (error) {
         toast.error("Error al cargar calendario: " + (error.message ?? error));
-        navigate("/calendarios");
+        navigate("/calendario/vista");
       } finally {
         setLoading(false);
       }
@@ -66,10 +59,10 @@ export default function EditarCalendario() {
     try {
       const payload = {
         nombre: form.nombre,
-        fechaCorte: form.fechaCorte.toISOString(),
+        fechaCorte: form.fechaCorte ? new Date(form.fechaCorte).toISOString() : null,
         calendarioInversiones: form.calendarioInversiones,
-        fechaGenerarPagos: form.fechaGenerarPagos.toISOString(),
-        fechaEnvioEECC: form.fechaEnvioEECC.toISOString(),
+        fechaGenerarPagos: form.fechaGenerarPagos ? new Date(form.fechaGenerarPagos).toISOString() : null,
+        fechaEnvioEECC: form.fechaEnvioEECC ? new Date(form.fechaEnvioEECC).toISOString() : null,
         estadoProcesoPagos: form.estadoProcesoPagos,
         estadoProcesoEnvioEECC: form.estadoProcesoEnvioEECC,
         estadoCalendario: form.estadoCalendario,
@@ -78,7 +71,7 @@ export default function EditarCalendario() {
 
       await updateCalendarioOperaciones(id, payload);
       toast.success("Calendario actualizado correctamente");
-      navigate("/calendarios");
+      navigate("/calendario/vista");
     } catch (error) {
       toast.error("Error al actualizar calendario: " + (error.message ?? error));
     } finally {
@@ -86,75 +79,49 @@ export default function EditarCalendario() {
     }
   };
 
-  const DatePicker = ({ date, setDate, label }) => (
-    <div className="space-y-1.5">
-      <Label className="font-medium text-gray-700 text-sm">{label}</Label>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            className="w-full justify-start text-left font-normal"
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, "PPP", { locale: es }) : <span>Seleccionar fecha</span>}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            initialFocus
-            locale={es}
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
-
   if (loading) return <GlassLoader visible={true} message="Cargando calendario..." />;
 
   return (
-    <div className="p-6 space-y-6 relative">
-      <GlassLoader visible={loading} message="Guardando cambios..." />
-
-      {/* Header */}
-      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center border-b pb-4">
+    <div className="p-8 space-y-6 relative">
+      {/* HEADER con estado principal */}
+      <header className="flex flex-col md:flex-row md:items-center md:justify-between border-b pb-5 mb-5 gap-2">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-800">Editar Calendario</h1>
-          <p className="text-sm text-gray-600">{form.nombre}</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight flex items-center gap-2">
+            {form.nombre}
+            <span className="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full ml-2">
+              {form.estadoCalendario ? "CERRADO" : "ABIERTO"}
+            </span>
+          </h1>
+          <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">
+            Calendario de operaciones
+          </p>
         </div>
       </header>
 
-      {/* Formulario */}
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Columna izquierda - Datos principales */}
-        <section className="bg-white shadow rounded-lg p-6 space-y-4">
-          <h2 className="text-lg font-semibold">Información General</h2>
-          
+      {/* FORMULARIO, diseño tipo Dynamics */}
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* General */}
+        <section className="space-y-5 bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+          <h2 className="font-semibold text-lg text-gray-800 mb-2">General</h2>
           <div className="space-y-4">
             <div>
-              <Label className="block text-sm font-medium mb-1">
-                Nombre <span className="text-red-500">*</span>
-              </Label>
+              <Label className="block text-sm font-medium mb-1">Nombre *</Label>
               <Input
-                type="text"
                 value={form.nombre}
                 onChange={(e) => handleChange("nombre", e.target.value)}
                 required
               />
             </div>
-
-            <DatePicker 
-              date={form.fechaCorte} 
-              setDate={(date) => handleChange("fechaCorte", date)} 
-              label="Fecha de Corte *" 
-            />
-
+            <FormGroup label="Fecha de Corte *">
+              <Input
+                type="date"
+                value={form.fechaCorte}
+                onChange={e => handleChange("fechaCorte", e.target.value)}
+                required
+              />
+            </FormGroup>
             <div>
-              <Label className="block text-sm font-medium mb-1">
-                Día de Inversiones <span className="text-red-500">*</span>
-              </Label>
+              <Label className="block text-sm font-medium mb-1">Día de Inversiones *</Label>
               <select
                 className="w-full border rounded-md p-2 bg-white text-sm"
                 value={form.calendarioInversiones}
@@ -171,80 +138,60 @@ export default function EditarCalendario() {
           </div>
         </section>
 
-        {/* Columna central - Fechas importantes */}
-        <section className="bg-white shadow rounded-lg p-6 space-y-4">
-          <h2 className="text-lg font-semibold">Fechas Clave</h2>
-          
+        {/* Fechas Clave */}
+        <section className="space-y-5 bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+          <h2 className="font-semibold text-lg text-gray-800 mb-2">Fechas Clave</h2>
           <div className="space-y-4">
-            <DatePicker 
-              date={form.fechaGenerarPagos} 
-              setDate={(date) => handleChange("fechaGenerarPagos", date)} 
-              label="Fecha para Generar Pagos *" 
-            />
+            <FormGroup label="Fecha para Generar Pagos *">
+              <Input
+                type="date"
+                value={form.fechaGenerarPagos}
+                onChange={e => handleChange("fechaGenerarPagos", e.target.value)}
+                required
+              />
+            </FormGroup>
+            <FormGroup label="Fecha para Envío de EECC *">
+              <Input
+                type="date"
+                value={form.fechaEnvioEECC}
+                onChange={e => handleChange("fechaEnvioEECC", e.target.value)}
+                required
+              />
+            </FormGroup>
+          </div>
+        </section>
 
-            <DatePicker 
-              date={form.fechaEnvioEECC} 
-              setDate={(date) => handleChange("fechaEnvioEECC", date)} 
-              label="Fecha para Envío de EECC *" 
+        {/* ESTADOS (solo lectura) */}
+        <section className="space-y-5 bg-gray-50 rounded-xl border border-gray-100 p-6 shadow-none">
+          <h2 className="font-semibold text-lg text-gray-800 mb-2">Estados del Calendario</h2>
+          <div className="space-y-4">
+            <EstadoVisor
+              label="Proceso de Pagos"
+              value={form.estadoProcesoPagos}
+              textoActivo="Completado"
+              textoInactivo="Pendiente"
+            />
+            <EstadoVisor
+              label="Envío de EECC"
+              value={form.estadoProcesoEnvioEECC}
+              textoActivo="Completado"
+              textoInactivo="Pendiente"
+            />
+            <EstadoVisor
+              label="Estado del Calendario"
+              value={form.estadoCalendario}
+              textoActivo="Cerrado"
+              textoInactivo="Abierto"
             />
           </div>
         </section>
 
-        {/* Columna derecha - Estados */}
-        <section className="bg-white shadow rounded-lg p-6 space-y-4">
-          <h2 className="text-lg font-semibold">Estados</h2>
-          
-          <div className="space-y-6">
-            <div className="flex items-center space-x-3">
-              <Checkbox
-                id="estadoProcesoPagos"
-                checked={form.estadoProcesoPagos}
-                onCheckedChange={(checked) => handleChange("estadoProcesoPagos", checked)}
-              />
-              <Label htmlFor="estadoProcesoPagos" className="flex-1">
-                <div className="font-medium">Proceso de Pagos</div>
-                <p className="text-sm text-gray-500">
-                  {form.estadoProcesoPagos ? "Completado" : "Pendiente"}
-                </p>
-              </Label>
-            </div>
-
-            <div className="flex items-center space-x-3">
-              <Checkbox
-                id="estadoProcesoEnvioEECC"
-                checked={form.estadoProcesoEnvioEECC}
-                onCheckedChange={(checked) => handleChange("estadoProcesoEnvioEECC", checked)}
-              />
-              <Label htmlFor="estadoProcesoEnvioEECC" className="flex-1">
-                <div className="font-medium">Envío de EECC</div>
-                <p className="text-sm text-gray-500">
-                  {form.estadoProcesoEnvioEECC ? "Completado" : "Pendiente"}
-                </p>
-              </Label>
-            </div>
-
-            <div className="flex items-center space-x-3">
-              <Checkbox
-                id="estadoCalendario"
-                checked={form.estadoCalendario}
-                onCheckedChange={(checked) => handleChange("estadoCalendario", checked)}
-              />
-              <Label htmlFor="estadoCalendario" className="flex-1">
-                <div className="font-medium">Estado del Calendario</div>
-                <p className="text-sm text-gray-500">
-                  {form.estadoCalendario ? "Cerrado" : "Abierto"}
-                </p>
-              </Label>
-            </div>
-          </div>
-        </section>
-
-        {/* Botones de acción */}
-        <div className="lg:col-span-3 flex justify-end gap-4 pt-4 border-t">
+        {/* Botones abajo, barra completa */}
+        <div className="md:col-span-3 flex justify-end gap-4 pt-8 border-t mt-8">
           <Button
             type="button"
             variant="outline"
-            onClick={() => navigate("/calendarios")}
+            onClick={() => navigate("/calendario/vista")}
             className="px-6 py-2"
           >
             Cancelar
@@ -257,6 +204,33 @@ export default function EditarCalendario() {
           </Button>
         </div>
       </form>
+    </div>
+  );
+}
+
+function FormGroup({ label, children }) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-sm font-medium text-gray-700">{label}</Label>
+      {children}
+    </div>
+  );
+}
+
+// Componente solo lectura para los estados
+function EstadoVisor({ label, value, textoActivo, textoInactivo }) {
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <span className="font-medium text-gray-700">{label}</span>
+      <span
+        className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
+          value
+            ? "bg-green-100 text-green-700"
+            : "bg-yellow-100 text-yellow-700"
+        }`}
+      >
+        {value ? textoActivo : textoInactivo}
+      </span>
     </div>
   );
 }

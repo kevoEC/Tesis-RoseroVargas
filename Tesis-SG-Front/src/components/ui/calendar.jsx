@@ -1,9 +1,11 @@
-import * as React from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker } from "react-day-picker"
+import * as React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { DayPicker } from "react-day-picker";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
-import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
+// Días abreviados en español
+const diasSemana = ["do", "lu", "ma", "mi", "ju", "vi", "sá"];
 
 function Calendar({
   className,
@@ -14,7 +16,7 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-3", className)}
+      className={cn("p-3 bg-white rounded-xl shadow border", className)}
       classNames={{
         months: "flex flex-col sm:flex-row gap-2",
         month: "flex flex-col gap-4",
@@ -57,6 +59,15 @@ function Calendar({
         day_hidden: "invisible",
         ...classNames,
       }}
+      formatters={{
+        // Sobreescribe los nombres de la cabecera
+        formatWeekdayName: (day) => {
+          // JS: Sunday = 0, Monday = 1, ..., Saturday = 6
+          // Quieres: "lu", "ma", "mi", "ju", "vi", "sá", "do" (pero react-day-picker espera Sunday primero)
+          // Así que este array ["do","lu","ma","mi","ju","vi","sá"] corresponde a Sunday->Saturday
+          return diasSemana[day.getDay()];
+        },
+      }}
       components={{
         IconLeft: ({ className, ...props }) => (
           <ChevronLeft className={cn("size-4", className)} {...props} />
@@ -65,8 +76,9 @@ function Calendar({
           <ChevronRight className={cn("size-4", className)} {...props} />
         ),
       }}
-      {...props} />
+      {...props}
+    />
   );
 }
 
-export { Calendar }
+export { Calendar };
