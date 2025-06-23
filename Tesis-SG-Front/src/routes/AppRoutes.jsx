@@ -156,7 +156,6 @@ export const protectedRoutes = [
   // Calendario
   { path: "/calendario/vista", element: <CalendarioTable /> },
   { path: "/calendario/editar/:id", element: <Calendario /> },
-  { path : "/calendario/nuevo", element: <CalendarioForm /> },
 
   // Configuraciones generales
   { path: "/settings", element: <Settings /> },
