@@ -5,12 +5,24 @@ import TablaCustom2 from "@/components/shared/TablaCustom2";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Calendar as CalendarIcon, Lock } from "lucide-react";
 import { getCasoById, updateCaso } from "@/service/Entidades/CasosService";
 import { getInversiones } from "@/service/Entidades/InversionService";
+import { getCatalogoBancos, getCatalogoTiposCuenta } from "@/service/Catalogos/BancoService";
 import { toast } from "sonner";
-import { AlertCircle } from "lucide-react";
 
-// Definición de motivos y campos específicos
+const TIPO_PAGO_OPTIONS = [
+  { value: 1, label: "Rentabilidad mensual" },
+  { value: 2, label: "Pago final" },
+  { value: 3, label: "Terminación" }
+];
+const FECHA_CORTE_OPTIONS = [
+  { value: 1, label: "1" },
+  { value: 10, label: "10" },
+  { value: 20, label: "20" }
+];
+
 const MOTIVOS = [
   { id: 6, nombre: "Autorización de actualización de datos" },
   { id: 13, nombre: "Envío de estado de cuenta" },
@@ -18,41 +30,26 @@ const MOTIVOS = [
   { id: 19, nombre: "Generación de pago manual" },
   { id: 35, nombre: "Terminación de inversión" }
 ];
-
-// Motivos que requieren inversión
 const MOTIVOS_REQUIEREN_INVERSION = [18, 19, 35];
 
-const CAMPOS_POR_MOTIVO = {
-  13: [
-    { key: "fechaCorte", label: "Fecha de Corte", type: "date" },
-    { key: "correoEnvio", label: "Correo de Envío", type: "text" },
-  ],
-  18: [
-    { key: "TipoPago", label: "Tipo de Pago", type: "select", options: [{ value: 1, label: "Transferencia" }, { value: 2, label: "Cheque" }] },
-    { key: "FechaPago", label: "Fecha de Pago", type: "date" },
-    { key: "MontoPago", label: "Monto de Pago", type: "number" },
-    { key: "BancoPago", label: "Banco", type: "text" },
-    { key: "TipoCuentaPago", label: "Tipo de Cuenta", type: "select", options: [{ value: 1, label: "Ahorros" }, { value: 2, label: "Corriente" }] },
-    { key: "NumeroCuentaPago", label: "Número de Cuenta", type: "text" },
-  ],
-  19: [
-    { key: "TipoPago", label: "Tipo de Pago", type: "select", options: [{ value: 1, label: "Transferencia" }, { value: 2, label: "Cheque" }] },
-    { key: "FechaPago", label: "Fecha de Pago", type: "date" },
-    { key: "MontoPago", label: "Monto de Pago", type: "number" },
-    { key: "BancoPago", label: "Banco", type: "text" },
-    { key: "TipoCuentaPago", label: "Tipo de Cuenta", type: "select", options: [{ value: 1, label: "Ahorros" }, { value: 2, label: "Corriente" }] },
-    { key: "NumeroCuentaPago", label: "Número de Cuenta", type: "text" },
-  ],
-  35: [
-    { key: "MotivoTerminacion", label: "Motivo de Terminación", type: "text" },
-  ]
-};
-
-// Map label para selects (para modo solo lectura)
-const LABELS_SELECT = {
-  TipoPago: { 1: "Transferencia", 2: "Cheque" },
-  TipoCuentaPago: { 1: "Ahorros", 2: "Corriente" }
-};
+// --- DateInput PRO ---
+function DateInput({ value, onChange, label, required = true, disabled }) {
+  return (
+    <FormGroup label={label}>
+      <div className="relative">
+        <Input
+          type="date"
+          value={value}
+          onChange={onChange}
+          className={`pr-10 ${disabled ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}`}
+          required={required}
+          disabled={disabled}
+        />
+        <CalendarIcon className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none w-5 h-5" />
+      </div>
+    </FormGroup>
+  );
+}
 
 export default function CasoDetalle() {
   const { id } = useParams();
@@ -60,22 +57,42 @@ export default function CasoDetalle() {
   const [loading, setLoading] = useState(true);
   const [initialData, setInitialData] = useState(null);
   const [inversiones, setInversiones] = useState([]);
-  const [form, setForm] = useState({ descripcion: "", continuarCaso: false, estado: "" });
+  const [bancos, setBancos] = useState([]);
+  const [tiposCuenta, setTiposCuenta] = useState([]);
+  const [form, setForm] = useState({});
   const [continuar, setContinuar] = useState(false);
-  const [warning, setWarning] = useState(false);
   const [guardando, setGuardando] = useState(false);
+  const [modalAdvertencia, setModalAdvertencia] = useState(false);
 
-  // Mock documentos adjuntos (reemplaza por API real si tienes)
   const [adjuntos] = useState([]);
+  // --- Usuario actual desde localStorage
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const userId = user?.id;
 
-  // Carga de datos
   useEffect(() => {
     setLoading(true);
     getCasoById(id)
       .then(async (data) => {
         setInitialData(data);
-        setForm({ descripcion: data.descripcion || "", continuarCaso: !!data.continuarCaso, estado: data.estado || "Iniciado" });
+        setForm({
+          ...data,
+          datosEspecificos: data.datosEspecificos
+            ? (typeof data.datosEspecificos === "string"
+              ? JSON.parse(data.datosEspecificos)
+              : data.datosEspecificos)
+            : {}
+        });
         setContinuar(!!data.continuarCaso);
+
+        // Catálogos
+        const [bancosData, tiposCuentaData] = await Promise.all([
+          getCatalogoBancos().catch(() => []),
+          getCatalogoTiposCuenta().catch(() => [])
+        ]);
+        setBancos(bancosData);
+        setTiposCuenta(tiposCuentaData);
+
+        // Inversiones si aplica
         if (data.idInversion && MOTIVOS_REQUIEREN_INVERSION.includes(data.idMotivo)) {
           try {
             const inversionesData = await getInversiones();
@@ -89,68 +106,195 @@ export default function CasoDetalle() {
 
   if (loading || !initialData) return <GlassLoader visible message="Cargando caso..." />;
 
-  // Parse datosEspecificos JSON si existe
-  let datosEspecificos = {};
-  try {
-    if (initialData.datosEspecificos && typeof initialData.datosEspecificos === "string") {
-      datosEspecificos = JSON.parse(initialData.datosEspecificos);
-    }
-  } catch (err) { datosEspecificos = {}; console.error("Error parsing datosEspecificos:", err); }
-
-  // Encuentra motivo actual
   const motivo = MOTIVOS.find(m => m.id === initialData.idMotivo);
 
-  // Encuentra inversión bonita
   let inversionNombre = "";
   if (initialData.idInversion && inversiones.length > 0) {
     const inv = inversiones.find(i => i.idInversion === initialData.idInversion);
-    if (inv) inversionNombre = `${inv.inversionNombre} - ${inv.nombreCompletoCliente ?? ""}`;
-    else inversionNombre = `ID: ${initialData.idInversion}`;
+    inversionNombre = inv
+      ? `${inv.inversionNombre} - ${inv.nombreCompletoCliente ?? ""}`
+      : `ID: ${initialData.idInversion}`;
   }
 
-  // Renderiza todos los campos por motivo (camposEspecificos y también los del objeto raíz si existen)
-  const renderCamposPorMotivo = () => {
-    const campos = CAMPOS_POR_MOTIVO[initialData.idMotivo] || [];
-    if (campos.length === 0) return null;
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {campos.map((campo) => {
-          // El valor puede venir de datosEspecificos o del objeto root
-          let value =
-            datosEspecificos[campo.key] ??
-            initialData[campo.key] ??
-            "";
-          // Renderiza bonito select/fecha/number/text
-          if (campo.type === "select") {
-            value = LABELS_SELECT[campo.key]?.[value] ?? value;
-          }
-          if (campo.type === "date" && value)
-            value = new Date(value).toLocaleDateString("es-EC");
-          if (campo.type === "number" && value)
-            value = Number(value).toLocaleString("es-EC", { minimumFractionDigits: 2 });
-
-          return (
-            <FormGroup key={campo.key} label={campo.label}>
-              <Input value={value || ""} disabled />
-            </FormGroup>
-          );
-        })}
-      </div>
-    );
+  const handleDatosChange = (key, value) => {
+    setForm((prev) => ({
+      ...prev,
+      datosEspecificos: { ...prev.datosEspecificos, [key]: value }
+    }));
   };
 
-  // Guardar solo continuar flujo
-  const handleContinuarFlujo = async () => {
+  // --- Validación antes de permitir continuar flujo
+  const datosEspecificosLlenos = () => {
+    const idMotivo = initialData.idMotivo;
+    if (idMotivo === 18 || idMotivo === 19) {
+      const req = ["TipoPago", "FechaPago", "MontoPago", "BancoPago", "TipoCuentaPago", "NumeroCuentaPago"];
+      return req.every(k => form.datosEspecificos?.[k] && form.datosEspecificos[k].toString().trim() !== "");
+    }
+    if (idMotivo === 13) {
+      const req = ["fechaCorte", "correoEnvio"];
+      return req.every(k => form.datosEspecificos?.[k] && form.datosEspecificos[k].toString().trim() !== "");
+    }
+    if (idMotivo === 35) {
+      return !!form.datosEspecificos?.MotivoTerminacion && form.datosEspecificos.MotivoTerminacion.trim() !== "";
+    }
+    return true;
+  };
+
+  // --- Render dinámico de campos según motivo
+  const renderCamposEspecificos = () => {
+    const idMotivo = initialData.idMotivo;
+    const disabledAll = continuar;
+
+    if (idMotivo === 19 || idMotivo === 18) {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormGroup label="Tipo de Pago">
+            <select
+              className={`w-full border rounded-md p-2 bg-white text-sm ${disabledAll ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}`}
+              value={form.datosEspecificos.TipoPago ?? ""}
+              onChange={e => handleDatosChange("TipoPago", Number(e.target.value))}
+              required
+              disabled={disabledAll}
+            >
+              <option value="" hidden>Seleccionar tipo de pago...</option>
+              {TIPO_PAGO_OPTIONS.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </FormGroup>
+          <DateInput
+            label="Fecha de Pago"
+            value={form.datosEspecificos.FechaPago ?? ""}
+            onChange={e => handleDatosChange("FechaPago", e.target.value)}
+            disabled={disabledAll}
+          />
+          <FormGroup label="Monto de Pago">
+            <div className="relative">
+              <span className="absolute left-2 top-2 text-gray-400 text-lg">$</span>
+              <Input
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                className={`pl-7 ${disabledAll ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}`}
+                value={form.datosEspecificos.MontoPago ?? ""}
+                onChange={e => handleDatosChange("MontoPago", e.target.value)}
+                required
+                disabled={disabledAll}
+              />
+            </div>
+          </FormGroup>
+          <FormGroup label="Banco">
+            <select
+              className={`w-full border rounded-md p-2 bg-white text-sm ${disabledAll ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}`}
+              value={form.datosEspecificos.BancoPago ?? ""}
+              onChange={e => handleDatosChange("BancoPago", Number(e.target.value))}
+              required
+              disabled={disabledAll}
+            >
+              <option value="" hidden>Seleccionar banco...</option>
+              {bancos?.map(b => (
+                <option key={b.idBanco} value={b.idBanco}>{b.bancoNombre}</option>
+              ))}
+            </select>
+          </FormGroup>
+          <FormGroup label="Tipo de Cuenta">
+            <select
+              className={`w-full border rounded-md p-2 bg-white text-sm ${disabledAll ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}`}
+              value={form.datosEspecificos.TipoCuentaPago ?? ""}
+              onChange={e => handleDatosChange("TipoCuentaPago", Number(e.target.value))}
+              required
+              disabled={disabledAll}
+            >
+              <option value="" hidden>Seleccionar tipo de cuenta...</option>
+              {tiposCuenta?.map(tc => (
+                <option key={tc.idTipoCuenta} value={tc.idTipoCuenta}>{tc.nombre || tc.descripcion || "Tipo de cuenta"}</option>
+              ))}
+            </select>
+          </FormGroup>
+          <FormGroup label="Número de Cuenta">
+            <Input
+              type="text"
+              placeholder="Ej: 123456789"
+              className={disabledAll ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}
+              value={form.datosEspecificos.NumeroCuentaPago ?? ""}
+              onChange={e => handleDatosChange("NumeroCuentaPago", e.target.value)}
+              required
+              disabled={disabledAll}
+            />
+          </FormGroup>
+        </div>
+      );
+    }
+    if (idMotivo === 13) {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormGroup label="Fecha de Corte">
+            <select
+              className={`w-full border rounded-md p-2 bg-white text-sm ${continuar ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}`}
+              value={form.datosEspecificos.fechaCorte ?? ""}
+              onChange={e => handleDatosChange("fechaCorte", Number(e.target.value))}
+              required
+              disabled={continuar}
+            >
+              <option value="" hidden>Seleccionar fecha de corte...</option>
+              {FECHA_CORTE_OPTIONS.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </FormGroup>
+          <FormGroup label="Correo de Envío">
+            <Input
+              type="email"
+              placeholder="correo@ejemplo.com"
+              className={continuar ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}
+              value={form.datosEspecificos.correoEnvio ?? ""}
+              onChange={e => handleDatosChange("correoEnvio", e.target.value)}
+              required
+              disabled={continuar}
+            />
+          </FormGroup>
+        </div>
+      );
+    }
+    if (idMotivo === 35) {
+      return (
+        <FormGroup label="Motivo de Terminación">
+          <Input
+            type="text"
+            placeholder="Describe el motivo de terminación"
+            className={continuar ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}
+            value={form.datosEspecificos.MotivoTerminacion ?? ""}
+            onChange={e => handleDatosChange("MotivoTerminacion", e.target.value)}
+            required
+            disabled={continuar}
+          />
+        </FormGroup>
+      );
+    }
+    return null;
+  };
+
+  // Guardar actualización
+  const handleGuardar = async (e) => {
+    e.preventDefault();
+    if (continuar && !datosEspecificosLlenos()) {
+      toast.warning("Debes completar todos los campos requeridos antes de continuar el flujo.");
+      return;
+    }
     setGuardando(true);
     try {
-      await updateCaso(initialData.idCaso, {
-        continuarCaso: true,
-        idUsuarioModificacion: initialData.idUsuarioModificacion,
-        idUsuarioPropietario: initialData.idUsuarioPropietario,
-      });
-      toast.success("El caso ha continuado el flujo. No se puede editar más.");
-      setContinuar(true);
-      setWarning(false);
+      const payload = {
+        descripcion: form.descripcion,
+        continuarCaso: continuar,
+        estado: continuar ? "Cerrado" : form.estado,
+        idUsuarioModificacion: userId,
+        idUsuarioPropietario: userId,
+        datosEspecificos: JSON.stringify(form.datosEspecificos)
+      };
+      await updateCaso(initialData.idCaso, payload);
+      toast.success("Caso actualizado correctamente");
+      navigate("/casos/vista");
     } catch (error) {
       toast.error(`Error al actualizar caso: ${error.message ?? error}`);
     } finally {
@@ -158,155 +302,199 @@ export default function CasoDetalle() {
     }
   };
 
-  // Manejador de check continuar
-  const handleCheckContinuar = (e) => {
-    if (e.target.checked) setWarning(true);
-    else setWarning(false);
-    setContinuar(e.target.checked);
-    if (e.target.checked) handleContinuarFlujo();
-  };
-
-  // Estado badge bonito
-  const getEstadoBadge = (estado) => {
-    switch (estado) {
-      case "Iniciado":
-        return "bg-blue-100 text-blue-700";
-      case "Cerrado":
-        return "bg-gray-300 text-gray-700";
-      default:
-        return "bg-yellow-100 text-yellow-700";
+  // Modal de confirmación para continuar flujo
+  const handleSwitchContinuar = () => {
+    if (!continuar) {
+      // Si va a continuar, validaciones primero:
+      if (!datosEspecificosLlenos()) {
+        toast.warning("Debes completar todos los campos requeridos antes de continuar el flujo.");
+        return;
+      }
+      setModalAdvertencia(true);
     }
   };
 
+  // Si confirma continuar flujo, realiza el update inmediato
+  const handleConfirmarContinuarFlujo = async () => {
+    setModalAdvertencia(false);
+    setGuardando(true);
+    try {
+      const payload = {
+        descripcion: form.descripcion,
+        continuarCaso: true,
+        estado: "Cerrado",
+        idUsuarioModificacion: userId,
+        idUsuarioPropietario: userId,
+        datosEspecificos: JSON.stringify(form.datosEspecificos)
+      };
+      await updateCaso(initialData.idCaso, payload);
+      toast.success("Caso actualizado correctamente");
+      setContinuar(true);
+      // Opcional: puedes recargar los datos aquí si necesitas
+      // navigate("/casos/vista");
+    } catch (error) {
+      toast.error(`Error al actualizar caso: ${error.message ?? error}`);
+    } finally {
+      setGuardando(false);
+    }
+  };
+
+  const getEstadoBadge = (estado) => {
+    switch (estado) {
+      case "Iniciado": return "bg-blue-100 text-blue-700";
+      case "Cerrado": return "bg-gray-300 text-gray-700";
+      default: return "bg-yellow-100 text-yellow-700";
+    }
+  };
+
+  const soloLectura = continuar || initialData.estado === "Cerrado";
+
   return (
-    <div className="p-6 md:p-10 max-w-6xl mx-auto bg-white min-h-screen">
-      {/* Header estilo Dynamics */}
-      <div className="flex flex-wrap items-center gap-2 mb-2">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-          {initialData.numeroCaso} - {motivo?.nombre || initialData.motivoNombre}
-        </h1>
-        <span className={`ml-3 px-3 py-1 text-xs font-semibold rounded-full ${getEstadoBadge(initialData.estado)}`}>
-          {initialData.estado}
-        </span>
-      </div>
-      <div className="flex flex-wrap text-xs text-gray-700 mb-6 border-b pb-2 gap-8">
-        <span>
-          <b>Cliente:</b> {initialData.nombreCliente}
-        </span>
-        {initialData.idInversion && inversionNombre && (
-          <span>
-            <b>Inversión:</b> {inversionNombre}
+    <div className="relative">
+      {soloLectura && (
+        <div className="w-full flex items-center px-6 py-2 bg-gray-50 border-b border-gray-300 shadow-sm mb-2 z-50" style={{ position: "sticky", top: 0 }}>
+          <Lock className="text-gray-700 w-5 h-5 mr-2" />
+          <span className="font-semibold text-gray-700 text-sm">
+            Solo lectura: estado de este registro: <span className="text-violet-700">{initialData.estado === "Cerrado" || continuar ? "Cerrado" : initialData.estado}</span>
           </span>
-        )}
-        <span>
-          <b>Creado:</b> {initialData.fechaCreacion ? new Date(initialData.fechaCreacion).toLocaleString("es-EC") : "-"}
-        </span>
-        <span>
-          <b>Owner:</b> {initialData.nombreUsuarioPropietario || "-"}
-        </span>
-      </div>
+        </div>
+      )}
 
-      {/* Dos columnas estilo Dynamics */}
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-        {/* Columna IZQUIERDA */}
-        <section className="border rounded-xl p-6 shadow-sm mb-0 flex flex-col gap-4">
-          <h2 className="text-lg font-semibold text-gray-800 mb-3">General</h2>
-          {initialData.idInversion && MOTIVOS_REQUIEREN_INVERSION.includes(initialData.idMotivo) && (
-            <FormGroup label="Producto de inversión">
-              <Input value={inversionNombre} disabled />
-            </FormGroup>
+      <div className="p-6 md:p-10 max-w-6xl mx-auto bg-white min-h-screen">
+        {/* Header */}
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            {initialData.numeroCaso} - {motivo?.nombre || initialData.motivoNombre}
+          </h1>
+          <span className={`ml-3 px-3 py-1 text-xs font-semibold rounded-full ${getEstadoBadge(continuar ? "Cerrado" : initialData.estado)}`}>
+            {continuar ? "Cerrado" : initialData.estado}
+          </span>
+        </div>
+        <div className="flex flex-wrap text-xs text-gray-700 mb-6 border-b pb-2 gap-8">
+          <span><b>Cliente:</b> {initialData.nombreCliente}</span>
+          {initialData.idInversion && inversionNombre && (
+            <span><b>Inversión:</b> {inversionNombre}</span>
           )}
-          <FormGroup label="Motivo">
-            <Input value={motivo?.nombre || initialData.motivoNombre} disabled />
-          </FormGroup>
-          <FormGroup label="Descripción">
-            <textarea
-              className="w-full border border-gray-300 rounded-lg p-2 text-sm"
-              value={initialData.descripcion || ""}
-              disabled
-              rows={3}
-            />
-          </FormGroup>
-          {/* Renderiza campos por motivo */}
-          {renderCamposPorMotivo()}
-        </section>
-
-        {/* Columna DERECHA */}
-        <div className="flex flex-col gap-6 w-full">
-          <section className="border rounded-xl p-6 shadow-sm flex flex-col gap-6">
-            <div>
-              <Label className="font-medium text-gray-700 text-sm mb-1 block">Estado actual</Label>
-              <Input value={initialData.estado} disabled className="font-semibold w-32" />
-            </div>
-            <div className="flex items-center gap-4">
-              <Label className="font-medium text-gray-700 text-base">
-                <span className="text-violet-800 font-bold text-lg">¿Continuar flujo?</span>
-              </Label>
-              <input
-                type="checkbox"
-                checked={continuar}
-                onChange={handleCheckContinuar}
-                disabled={continuar || guardando}
-                className="h-7 w-7 accent-violet-600 border-2 border-violet-300"
+          <span>
+            <b>Creado:</b> {initialData.fechaCreacion ? new Date(initialData.fechaCreacion).toLocaleString("es-EC") : "-"}
+          </span>
+          <span>
+            <b>Owner:</b> {initialData.nombreUsuarioPropietario || "-"}
+          </span>
+        </div>
+        {/* Formulario */}
+        <form onSubmit={handleGuardar} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          {/* IZQUIERDA */}
+          <section className="border rounded-xl p-6 shadow-sm mb-0 flex flex-col gap-4">
+            <h2 className="text-lg font-semibold text-gray-800 mb-3">General</h2>
+            {initialData.idInversion && MOTIVOS_REQUIEREN_INVERSION.includes(initialData.idMotivo) ? (
+              <FormGroup label="Producto de inversión">
+                <Input value={inversionNombre} disabled className="bg-gray-100 text-gray-500 font-medium" style={{ fontWeight: 500 }} />
+              </FormGroup>
+            ) : null}
+            <FormGroup label="Motivo">
+              <Input value={motivo?.nombre || initialData.motivoNombre} disabled className="bg-gray-100 text-gray-500 font-medium" style={{ fontWeight: 500 }} />
+            </FormGroup>
+            <FormGroup label="Descripción">
+              <textarea
+                className={`w-full border border-gray-300 rounded-lg p-2 text-sm ${continuar ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}`}
+                value={form.descripcion || ""}
+                onChange={e => setForm(prev => ({ ...prev, descripcion: e.target.value }))}
+                rows={3}
+                required
+                disabled={continuar}
               />
-              {guardando && (
-                <span className="text-xs text-gray-400 ml-2">Guardando...</span>
-              )}
-            </div>
-            {warning && !continuar && (
-              <div className="flex items-center gap-2 p-3 rounded bg-yellow-100 text-yellow-800 border border-yellow-300 my-2">
-                <AlertCircle className="w-5 h-5" />
-                <span>
-                  <b>Advertencia:</b> Si continúas el flujo no podrás modificar más este caso.
+            </FormGroup>
+            {renderCamposEspecificos()}
+          </section>
+          {/* DERECHA */}
+          <div className="flex flex-col gap-6 w-full">
+            <section className="border rounded-xl p-6 shadow-sm flex flex-col gap-6">
+              <div>
+                <Label className="font-medium text-gray-700 text-sm mb-1 block">Estado actual</Label>
+                <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${getEstadoBadge(continuar ? "Cerrado" : initialData.estado)}`}>
+                  {continuar ? "Cerrado" : initialData.estado}
                 </span>
               </div>
-            )}
-            <div className="flex gap-4 mt-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate("/casos/vista")}
-                className="px-6"
-              >
-                Regresar
-              </Button>
-              <Button
-                type="button"
-                className="bg-violet-600 hover:bg-violet-700 text-white px-8"
-                disabled={continuar}
-                onClick={() => {
-                  // Si habilitas edición de descripción u otros campos, agrega aquí handleSubmit()
-                  toast.info("Editar solo disponible antes de continuar flujo");
-                }}
-              >
-                Actualizar Caso
-              </Button>
+              <div className="flex items-center gap-4">
+                <Label className="font-medium text-gray-700 text-base">¿Continuar flujo?</Label>
+                <Switch
+                  checked={continuar}
+                  onCheckedChange={handleSwitchContinuar}
+                  disabled={continuar || guardando}
+                  className="data-[state=checked]:bg-violet-600 border-gray-300 data-[state=unchecked]:border-gray-300 data-[state=unchecked]:bg-gray-200 focus:ring-violet-500 focus:ring-offset-0 focus:ring-offset-white focus:ring-2 rounded-full w-10 h-6"
+                />
+              </div>
+              <div className="flex gap-4 mt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => navigate("/casos/vista")}
+                  className="px-6"
+                  disabled={guardando}
+                >
+                  Regresar
+                </Button>
+                <Button
+                  type="submit"
+                  className="bg-violet-600 hover:bg-violet-700 text-white px-8"
+                  disabled={continuar || guardando}
+                  loading={guardando}
+                >
+                  Actualizar Caso
+                </Button>
+              </div>
+            </section>
+            {/* Adjuntos */}
+            <section className="border border-gray-300 rounded-xl p-6 shadow-sm mt-0">
+              <h2 className="text-lg font-semibold text-gray-800 mb-3">Documentos Adjuntos</h2>
+              <TablaCustom2
+                columns={[
+                  { key: "nombre", label: "Nombre" },
+                  { key: "urlDocumentoAdjunto", label: "Url Documento Adjunto" }
+                ]}
+                data={adjuntos}
+                mostrarEditar={false}
+                mostrarAgregarNuevo={false}
+                mostrarEliminar={false}
+              />
+            </section>
+          </div>
+        </form>
+
+        {/* Modal de Advertencia */}
+        {modalAdvertencia && (
+          <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+            <div className="bg-white p-7 rounded-xl shadow-lg max-w-sm w-full border">
+              <div className="flex items-center gap-2 mb-3">
+                <Lock className="w-6 h-6 text-yellow-500" />
+                <span className="font-bold text-lg text-gray-800">¿Estás seguro?</span>
+              </div>
+              <p className="text-gray-700 mb-4">
+                Si continúas con el flujo, este caso se bloqueará y no podrá ser editado.<br />
+                <b>¿Deseas continuar?</b>
+              </p>
+              <div className="flex justify-end gap-4 mt-5">
+                <Button variant="outline" onClick={() => setModalAdvertencia(false)}>Cancelar</Button>
+                <Button
+                  className="bg-violet-600 text-white"
+                  onClick={handleConfirmarContinuarFlujo}
+                  loading={guardando}
+                >
+                  Sí, continuar flujo
+                </Button>
+              </div>
             </div>
-          </section>
-          {/* Tabla de adjuntos debajo */}
-          <section className="border border-gray-300 rounded-xl p-6 shadow-sm mt-0">
-            <h2 className="text-lg font-semibold text-gray-800 mb-3">Documentos Adjuntos</h2>
-            <TablaCustom2
-              columns={[
-                { key: "nombre", label: "Nombre" },
-                { key: "urlDocumentoAdjunto", label: "Url Documento Adjunto" }
-              ]}
-              data={adjuntos}
-              mostrarEditar={false}
-              mostrarAgregarNuevo={false}
-              mostrarEliminar={false}
-            />
-          </section>
-        </div>
-      </form>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-// Agrupador campo-label
 function FormGroup({ label, children }) {
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-1.5 relative">
       <Label className="font-medium text-gray-700 text-sm">{label}</Label>
       {children}
     </div>
