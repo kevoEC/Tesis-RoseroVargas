@@ -8,7 +8,7 @@ import TablaCustom2 from "@/components/shared/TablaCustom2";
 import GlassLoader from "@/components/ui/GlassLoader";
 import { getClienteById, updateCliente } from "@/service/Entidades/ClienteService";
 import { getInversionesPorClienteId } from "@/service/Entidades/InversionService";
-import { getCasosPorClienteId } from "@/service/Entidades/CasoService";
+import { getCasosPorCliente } from "@/service/Entidades/CasosService";
 import { toast } from "sonner";
 import { FaUser, FaUserTie, FaFileContract, FaFolderOpen, FaArrowLeft } from "react-icons/fa";
 
@@ -87,7 +87,7 @@ export default function ClienteForm() {
         const inversionesData = await getInversionesPorClienteId(id);
         setInversiones(Array.isArray(inversionesData) ? inversionesData : []);
 
-        const casosData = await getCasosPorClienteId(id);
+        const casosData = await getCasosPorCliente(id);
         setCasos(Array.isArray(casosData) ? casosData : []);
       } catch (e) {
         toast.error("Error al cargar datos del cliente" + (e.message ? `: ${e.message}` : ""));
