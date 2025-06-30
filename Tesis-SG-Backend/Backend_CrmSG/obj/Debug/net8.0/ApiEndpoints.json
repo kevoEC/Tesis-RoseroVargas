@@ -2461,6 +2461,27 @@
   },
   {
     "ContainingType": "Backend_CrmSG.Controllers.Entidad.PagosController",
+    "Method": "RollbackPagosPorIdPago",
+    "RelativePath": "api/Pagos/{id}/rollback",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.Controllers.Entidad.RollbackUsuarioDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.PagosController",
     "Method": "GenerarPorCalendario",
     "RelativePath": "api/Pagos/generar-por-calendario",
     "HttpMethod": "POST",

@@ -10,4 +10,5 @@ public interface IPagoService
     Task ActualizarAsync(int id, PagoUpdateDTO dto);
     Task EliminarAsync(int id);
     Task GenerarPagosPorCalendarioAsync(int idCalendario, int idPago, int idUsuario);
+    Task RollbackPagosPorIdPagoAsync(int idPago, int idUsuarioModificacion);
 }

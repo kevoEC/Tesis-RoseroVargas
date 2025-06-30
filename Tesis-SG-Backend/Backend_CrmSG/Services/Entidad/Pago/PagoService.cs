@@ -82,5 +82,10 @@ namespace Backend_CrmSG.Services.Entidad.Pago
             await _spService.GenerarPagosPorCalendarioAsync(idCalendario, idPago, idUsuario);
         }
 
+        public async Task RollbackPagosPorIdPagoAsync(int idPago, int idUsuarioModificacion)
+        {
+            await _spService.EjecutarRollbackPagosPorIdPago(idPago, idUsuarioModificacion);
+        }
+
     }
 }
