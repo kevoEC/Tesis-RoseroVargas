@@ -1,262 +1,133 @@
 import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { PlusCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { createProspecto } from "@/service/Entidades/ProspectoService";
-import { useAuth } from "@/hooks/useAuth";
-import { getAgencias } from "@/service/Catalogos/AgenciaService";
-import { getProductosInteres } from "@/service/Catalogos/ProductoInteresService";
-import { getOrigenes } from "@/service/Catalogos/OrigenClienteService";
-import { getTipoIdentificacion } from "@/service/Catalogos/TipoIdentificacionService";
 import GlassLoader from "@/components/ui/GlassLoader";
+import { crearPago } from "@/service/Entidades/PagosService";
+import { getCalendariosOperaciones } from "@/service/Entidades/CalendarioOperacionesService";
+import { useAuth } from "@/hooks/useAuth";
 
-export default function PagosForm({ onClose, onSaved }) {
+export default function PagosForm({ onClose, onSaved, initialData }) {
   const { user } = useAuth();
-
-  const [form, setForm] = useState({
-    nombres: "",
-    apellidoPaterno: "",
-    apellidoMaterno: "",
-    correoElectronico: "",
-    telefonoCelular: "",
-    idTipoIdentificacion: "",
-    idOrigenCliente: "",
-    idProductoInteres: "",
-    idAgencia: "",
-  });
-
   const [loading, setLoading] = useState(false);
-
-  const [catalogos, setCatalogos] = useState({
-    tipoIdentificaciones: [],
-    origenes: [],
-    productos: [],
-    agencias: [],
+  const [calendarios, setCalendarios] = useState([]);
+  const [form, setForm] = useState({
+    idCalendario: "",
+    detalle: "",
+    ...initialData
   });
 
   useEffect(() => {
-    const cargarCatalogos = async () => {
+    const cargarCalendarios = async () => {
       try {
-        const [agencias, productos, origenes, tipoIdentificaciones] =
-          await Promise.all([
-            getAgencias(),
-            getProductosInteres(),
-            getOrigenes(),
-            getTipoIdentificacion(),
-          ]);
-
-        setCatalogos({ agencias, productos, origenes, tipoIdentificaciones });
-      } catch (error) {
-        toast.error("No se pudieron cargar los catálogos");
+        const data = await getCalendariosOperaciones();
+        setCalendarios(Array.isArray(data) ? data : []);
+      } catch (err) {
+        toast.error("Error al cargar calendarios");
       }
     };
-
-    cargarCatalogos();
+    cargarCalendarios();
   }, []);
 
-  const handleChange = (key, value) => {
+  const handleChange = (key, value) =>
     setForm((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handlePhoneChange = (value) => {
-    const raw = value.replace(/\D/g, "").slice(0, 10);
-    const formatted = raw.replace(/(\d{3})(\d{3})(\d{0,4})/, "$1-$2-$3");
-    handleChange("telefonoCelular", formatted);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = {
-      ...form,
-      estado: true,
-      idSolicitudInversion: null,
-      fechaCreacion: new Date().toISOString(),
-      fechaModificacion: new Date().toISOString(),
-      idUsuarioCreacion: user?.id || null,
-      idUsuarioModificacion: user?.id || null,
-      idUsuarioPropietario: user?.id || null,
-      esCliente: false,
-    };
-
     setLoading(true);
     try {
-      await createProspecto(payload);
-      toast.success("Prospecto guardado correctamente");
+      const payload = {
+        idCalendario: Number(form.idCalendario),
+        cantidadPagos: 0,
+        descartarPagos: false,
+        generarPagos: false,
+        detalle: form.detalle,
+        confirmarRegistrosPagos: false,
+        idUsuarioCreacion: user?.id,
+        idUsuarioPropietario: user?.id,
+      };
+
+      await crearPago(payload);
+      toast.success("Pago creado correctamente");
       onSaved?.();
       onClose?.();
     } catch (error) {
-      toast.error("Error al guardar prospecto");
+      toast.error(`Error al crear pago: ${error.message ?? error}`);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-4 relative">
-      <GlassLoader visible={loading} message="Guardando prospecto..." />
-      <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-md">
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
-        >
-          <FormGroup label="Nombres">
-            <Input
-              placeholder="Ej: Juan Andrés"
-              value={form.nombres}
-              onChange={(e) => handleChange("nombres", e.target.value)}
+    <div className="relative px-2 py-3 md:px-7 md:py-7">
+      <GlassLoader visible={loading} message="Guardando pago..." />
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-8 max-w-xl mx-auto"
+        autoComplete="off"
+      >
+        <section className="bg-white rounded-2xl border border-gray-300 px-7 py-5 flex flex-col gap-4 shadow-lg transition-colors">
+          <h3 className="font-semibold text-lg text-blue-900 mb-3 border-b pb-2">
+            Datos del Pago
+          </h3>
+
+          {/* Calendario */}
+          <FormGroup label="Calendario">
+            <select
+              className="w-full border rounded-md p-2 bg-white text-sm"
+              value={form.idCalendario}
+              onChange={(e) => handleChange("idCalendario", e.target.value)}
+              required
+            >
+              <option value="">Seleccionar calendario...</option>
+              {calendarios.length === 0 && (
+                <option disabled value="">
+                  No hay calendarios disponibles
+                </option>
+              )}
+              {calendarios.map((cal) => (
+                <option key={cal.idCalendario} value={cal.idCalendario}>
+                  {cal.nombre}
+                </option>
+              ))}
+            </select>
+          </FormGroup>
+
+          {/* Detalle */}
+          <FormGroup label="Detalle">
+            <textarea
+              className="w-full border rounded-md p-2 bg-white text-sm"
+              placeholder="Detalle del pago..."
+              value={form.detalle}
+              rows={3}
+              onChange={(e) => handleChange("detalle", e.target.value)}
               required
             />
           </FormGroup>
-
-          <FormGroup label="Apellido Paterno">
-            <Input
-              placeholder="Ej: Pérez"
-              value={form.apellidoPaterno}
-              onChange={(e) => handleChange("apellidoPaterno", e.target.value)}
-              required
-            />
-          </FormGroup>
-
-          <FormGroup label="Apellido Materno">
-            <Input
-              placeholder="Ej: Gutiérrez"
-              value={form.apellidoMaterno}
-              onChange={(e) => handleChange("apellidoMaterno", e.target.value)}
-              required
-            />
-          </FormGroup>
-
-          <FormGroup label="Correo Electrónico">
-            <Input
-              type="email"
-              placeholder="Ej: ejemplo@correo.com"
-              value={form.correoElectronico}
-              onChange={(e) =>
-                handleChange("correoElectronico", e.target.value)
-              }
-              required
-            />
-          </FormGroup>
-
-          <FormGroup label="Teléfono Celular">
-            <Input
-              placeholder="Ej: 099-123-4567"
-              value={form.telefonoCelular}
-              onChange={(e) => handlePhoneChange(e.target.value)}
-              maxLength={12}
-              required
-            />
-          </FormGroup>
-
-          <FormGroup label="Tipo de Identificación">
-            <Select
-              onValueChange={(val) =>
-                handleChange("idTipoIdentificacion", Number(val))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar..." />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {catalogos.tipoIdentificaciones.map((item) => (
-                  <SelectItem
-                    key={item.idTipoIdentificacion}
-                    value={item.idTipoIdentificacion.toString()}
-                  >
-                    {item.tipo}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormGroup>
-
-          <FormGroup label="Origen del Cliente">
-            <Select
-              onValueChange={(val) =>
-                handleChange("idOrigenCliente", Number(val))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar..." />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {catalogos.origenes.map((item) => (
-                  <SelectItem
-                    key={item.idOrigenCliente}
-                    value={item.idOrigenCliente.toString()}
-                  >
-                    {item.nombreOrigen}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormGroup>
-
-          <FormGroup label="Producto de Interés">
-            <Select
-              onValueChange={(val) =>
-                handleChange("idProductoInteres", Number(val))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar..." />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {catalogos.productos.map((item) => (
-                  <SelectItem
-                    key={item.idProductoInteres}
-                    value={item.idProductoInteres.toString()}
-                  >
-                    {item.nombre}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormGroup>
-
-          <FormGroup label="Agencia">
-            <Select
-              onValueChange={(val) => handleChange("idAgencia", Number(val))}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar..." />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                {catalogos.agencias.map((item) => (
-                  <SelectItem
-                    key={item.idAgencia}
-                    value={item.idAgencia.toString()}
-                  >
-                    {item.ciudad}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormGroup>
-
-          <div className="col-span-full">
-            <Button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
-            >
-              <PlusCircle className="w-4 h-4 mr-2" /> Guardar Pago
-            </Button>
-          </div>
-        </form>
-      </div>
+        </section>
+        <div className="flex justify-end gap-4 pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            className="px-6 py-2"
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="submit"
+            className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2"
+          >
+            {initialData ? "Actualizar Pago" : "Crear Pago"}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }
 
+// Agrupador de campo y label
 function FormGroup({ label, children }) {
   return (
     <div className="space-y-1.5">

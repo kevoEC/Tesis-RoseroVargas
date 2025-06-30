@@ -76,6 +76,13 @@ namespace Backend_CrmSG.Controllers.Entidad
             return Ok(new { success = true, message = "Pagos generados automáticamente por calendario." });
         }
 
+        [HttpPost("{id}/rollback")]
+        public async Task<IActionResult> RollbackPagosPorIdPago(int id, [FromBody] RollbackUsuarioDto dto)
+        {
+            await _service.RollbackPagosPorIdPagoAsync(id, dto.IdUsuarioModificacion);
+            return Ok(new { success = true, message = "Rollback realizado correctamente." });
+        }
+
     }
 
     // DTO auxiliar para generación automática (puedes moverlo a DTOs si quieres)
@@ -84,6 +91,11 @@ namespace Backend_CrmSG.Controllers.Entidad
         public int IdCalendario { get; set; }
         public int IdPago { get; set; }
         public int IdUsuario { get; set; }
+    }
+
+    public class RollbackUsuarioDto
+    {
+        public int IdUsuarioModificacion { get; set; }
     }
 
 }
