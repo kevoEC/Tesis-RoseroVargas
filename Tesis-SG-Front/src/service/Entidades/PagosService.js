@@ -101,3 +101,14 @@ export const getCasosPorPago = async (idPago) => {
 };
 
 
+// PagosService.js
+export const rollbackPagosPorIdPago = async (idPago, idUsuarioModificacion) => {
+  const res = await fetch(`${API_BASE_URL}/Pagos/${idPago}/rollback`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ idUsuarioModificacion }),
+  });
+  return handleResponse(res);
+};
+
+
