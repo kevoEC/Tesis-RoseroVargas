@@ -41,9 +41,10 @@ export default function CalendarioTable() {
   };
 
   // Editar existente
-  const handleEditar = (item) => {
-    navigate(`/calendario/editar/${item.idCalendario}`);
-  };
+const handleEditar = (item) => {
+  // Aquí solo navegas, no usas el modal
+  navigate(`/calendario/editar/${item.idCalendario}`);
+};
 
   // Ver detalle
 
@@ -84,57 +85,69 @@ export default function CalendarioTable() {
     {
       key: "estadoCalendario",
       label: "Estado",
-      render: (v) => (
-        <span
-          className={`px-2 py-1 text-xs font-semibold rounded-full ${v === 0
-            ? "bg-blue-100 text-blue-700"
-            : "bg-gray-300 text-gray-700"
-          }`}>
-          {v === 0 ? "Abierto" : "Cerrado"}
-        </span>
-      )
+      render: (v) => {
+        const isCerrado = v === 1 || v === true || v === "1" || v === "true";
+        return (
+          <span
+            className={`px-2 py-1 text-xs font-semibold rounded-full ${!isCerrado
+              ? "bg-blue-100 text-blue-700"
+              : "bg-gray-300 text-gray-700"
+            }`}>
+            {!isCerrado ? "Abierto" : "Cerrado"}
+          </span>
+        );
+      }
     }
   ];
 
-  return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-full relative">
-      <GlassLoader visible={loading} message="Cargando calendarios..." />
-      <Card className="w-full border border-muted rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.12)]">
-        <CardHeader>
-          <CardTitle className="text-3xl">Lista de Calendarios</CardTitle>
-        </CardHeader>
-        <CardContent className="p-6 overflow-x-auto">
-          <TablaCustom2
-            columns={columnas}
-            data={calendarios}
-            mostrarEditar={true}
-            mostrarAgregarNuevo={true}
-            mostrarEliminar={true}
-            onAgregarNuevoClick={handleAbrirFormulario}
-            onEditarClick={handleEditar}
-            onEliminarClick={handleEliminar}
-            // Puedes agregar un onViewClick si tu TablaCustom2 lo soporta
-            // onViewClick={handleVer}
-          />
-        </CardContent>
-      </Card>
+return (
+  <div className="p-4 sm:p-6 md:p-8 max-w-full relative">
+    <GlassLoader visible={loading} message="Cargando calendarios..." />
+    <Card className="w-full border border-muted rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.12)]">
+      <CardHeader>
+        <CardTitle className="text-3xl">Lista de Calendarios</CardTitle>
+      </CardHeader>
+      <CardContent className="p-6 overflow-x-auto">
+        <TablaCustom2
+          columns={columnas}
+          data={calendarios}
+          mostrarEditar={true}
+          mostrarAgregarNuevo={true}
+          mostrarEliminar={true}
+          onAgregarNuevoClick={handleAbrirFormulario}
+          onEditarClick={handleEditar}
+          onEliminarClick={handleEliminar}
+        />
+      </CardContent>
+    </Card>
 
-      {/* Dialog para el formulario de nuevo calendario */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="min-w-[480px] max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Agregar Calendario</DialogTitle>
-            <DialogDescription>
-              Completa la información del nuevo calendario de operaciones
-            </DialogDescription>
-          </DialogHeader>
-          <CalendarioForm
-            onClose={() => setIsDialogOpen(false)}
-            onSaved={cargarCalendarios}
-            // Puedes pasarle más props si tu form necesita
-          />
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
+    {/* Modal SOLO para crear */}
+<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+  <DialogContent
+  className="
+    min-w-[420px]
+    max-w-2xl
+    max-h-[80vh]
+    overflow-y-auto
+    scrollbar-thin
+    scrollbar-thumb-rounded-full
+    scrollbar-thumb-zinc-300
+    scrollbar-track-transparent
+  "
+  >
+    <DialogHeader>
+      <DialogTitle>Agregar Calendario</DialogTitle>
+      <DialogDescription>
+        Completa la información del nuevo calendario de operaciones
+      </DialogDescription>
+    </DialogHeader>
+    <CalendarioForm
+      onClose={() => setIsDialogOpen(false)}
+      onSaved={cargarCalendarios}
+    />
+  </DialogContent>
+</Dialog>
+
+  </div>
+);
 }
