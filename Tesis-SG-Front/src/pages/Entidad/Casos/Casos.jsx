@@ -6,11 +6,39 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Calendar as CalendarIcon, Lock } from "lucide-react";
-import { getCasoById, updateCaso } from "@/service/Entidades/CasosService";
+import { Calendar as CalendarIcon, Lock, Eye } from "lucide-react";
+import { getCasoById, updateCaso, getDocumentosPorCaso } from "@/service/Entidades/CasosService";
 import { getInversiones } from "@/service/Entidades/InversionService";
 import { getCatalogoBancos, getCatalogoTiposCuenta } from "@/service/Catalogos/BancoService";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
+import AdjuntoForm from "@/components/solicitud/AdjuntoForm";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+
+function getCamposPorMotivo(idMotivo) {
+  if (idMotivo === 18 || idMotivo === 19) {
+    return [
+      { key: "TipoPago", default: "" },
+      { key: "FechaPago", default: "" },
+      { key: "MontoPago", default: "" },
+      { key: "BancoPago", default: "" },
+      { key: "TipoCuentaPago", default: "" },
+      { key: "NumeroCuentaPago", default: "" },
+    ];
+  }
+  if (idMotivo === 13) {
+    return [
+      { key: "fechaCorte", default: "" },
+      { key: "correoEnvio", default: "" },
+    ];
+  }
+  if (idMotivo === 35) {
+    return [
+      { key: "MotivoTerminacion", default: "" },
+    ];
+  }
+  return [];
+}
 
 const TIPO_PAGO_OPTIONS = [
   { value: 1, label: "Rentabilidad mensual" },
@@ -32,7 +60,6 @@ const MOTIVOS = [
 ];
 const MOTIVOS_REQUIEREN_INVERSION = [18, 19, 35];
 
-// --- DateInput PRO ---
 function DateInput({ value, onChange, label, required = true, disabled }) {
   return (
     <FormGroup label={label}>
@@ -54,7 +81,12 @@ function DateInput({ value, onChange, label, required = true, disabled }) {
 export default function CasoDetalle() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const userId = user?.id;
+
+  const [loadingCaso, setLoadingCaso] = useState(true);
+  const [loadingDocs, setLoadingDocs] = useState(true);
+
   const [initialData, setInitialData] = useState(null);
   const [inversiones, setInversiones] = useState([]);
   const [bancos, setBancos] = useState([]);
@@ -64,52 +96,86 @@ export default function CasoDetalle() {
   const [guardando, setGuardando] = useState(false);
   const [modalAdvertencia, setModalAdvertencia] = useState(false);
 
-  const [adjuntos] = useState([]);
-  // --- Usuario actual desde localStorage
-  const user = JSON.parse(localStorage.getItem("user")) || {};
-  const userId = user?.id;
+  // Adjuntos
+  const [documentos, setDocumentos] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [documentoId, setDocumentoId] = useState(null);
+  const [soloVerAdjunto, setSoloVerAdjunto] = useState(false);
 
-  useEffect(() => {
-    setLoading(true);
-    getCasoById(id)
-      .then(async (data) => {
-        setInitialData(data);
-        setForm({
-          ...data,
-          datosEspecificos: data.datosEspecificos
-            ? (typeof data.datosEspecificos === "string"
-              ? JSON.parse(data.datosEspecificos)
-              : data.datosEspecificos)
-            : {}
-        });
-        setContinuar(!!data.continuarCaso);
-
-        // Catálogos
-        const [bancosData, tiposCuentaData] = await Promise.all([
-          getCatalogoBancos().catch(() => []),
-          getCatalogoTiposCuenta().catch(() => [])
-        ]);
-        setBancos(bancosData);
-        setTiposCuenta(tiposCuentaData);
-
-        // Inversiones si aplica
-        if (data.idInversion && MOTIVOS_REQUIEREN_INVERSION.includes(data.idMotivo)) {
-          try {
-            const inversionesData = await getInversiones();
-            setInversiones(Array.isArray(inversionesData) ? inversionesData : []);
-          } catch { setInversiones([]); }
+  // Cargar caso y luego documentos
+  const reloadCaso = async () => {
+    setLoadingCaso(true);
+    try {
+      const data = await getCasoById(id);
+      let datosEspecificosObj = {};
+      try {
+        datosEspecificosObj = data.datosEspecificos
+          ? (typeof data.datosEspecificos === "string"
+            ? JSON.parse(data.datosEspecificos)
+            : data.datosEspecificos)
+          : {};
+      } catch { datosEspecificosObj = {}; }
+      const camposMotivo = getCamposPorMotivo(data.idMotivo);
+      let datosFinales = {};
+      camposMotivo.forEach(({ key, default: def }) => {
+        if (datosEspecificosObj[key] !== undefined && datosEspecificosObj[key] !== null) {
+          datosFinales[key] = datosEspecificosObj[key];
+        } else if (
+          data[key.charAt(0).toLowerCase() + key.slice(1)] !== undefined &&
+          data[key.charAt(0).toLowerCase() + key.slice(1)] !== null
+        ) {
+          datosFinales[key] = data[key.charAt(0).toLowerCase() + key.slice(1)];
+        } else {
+          datosFinales[key] = def;
         }
-      })
-      .catch((err) => toast.error("Error al cargar el caso: " + (err.message ?? err)))
-      .finally(() => setLoading(false));
-  }, [id]);
+      });
+      setInitialData(data);
+      setForm({
+        ...data,
+        datosEspecificos: datosFinales
+      });
+      setContinuar(!!data.continuarCaso);
 
-  if (loading || !initialData) return <GlassLoader visible message="Cargando caso..." />;
+      const [bancosData, tiposCuentaData] = await Promise.all([
+        getCatalogoBancos().catch(() => []),
+        getCatalogoTiposCuenta().catch(() => [])
+      ]);
+      setBancos(bancosData);
+      setTiposCuenta(tiposCuentaData);
+      if (data.idInversion && MOTIVOS_REQUIEREN_INVERSION.includes(data.idMotivo)) {
+        try {
+          const inversionesData = await getInversiones();
+          setInversiones(Array.isArray(inversionesData) ? inversionesData : []);
+        } catch { setInversiones([]); }
+      }
+      if (data.idCaso) cargarDocumentos(data.idCaso);
+    } catch (err) {
+      toast.error("Error al recargar el caso: " + (err.message ?? err));
+    } finally {
+      setLoadingCaso(false);
+    }
+  };
 
-  const motivo = MOTIVOS.find(m => m.id === initialData.idMotivo);
+  // Solo recarga la lista de documentos (no el caso)
+  const cargarDocumentos = async (idCaso) => {
+    setLoadingDocs(true);
+    try {
+      const docs = await getDocumentosPorCaso(idCaso);
+      setDocumentos(docs);
+    } catch (err) {
+      toast.error("Error al cargar documentos: " + err.message);
+      setDocumentos([]);
+    } finally {
+      setLoadingDocs(false);
+    }
+  };
+
+  useEffect(() => { reloadCaso(); }, [id]);
+
+  const motivo = initialData && MOTIVOS.find(m => m.id === initialData.idMotivo);
 
   let inversionNombre = "";
-  if (initialData.idInversion && inversiones.length > 0) {
+  if (initialData && initialData.idInversion && inversiones.length > 0) {
     const inv = inversiones.find(i => i.idInversion === initialData.idInversion);
     inversionNombre = inv
       ? `${inv.inversionNombre} - ${inv.nombreCompletoCliente ?? ""}`
@@ -123,8 +189,8 @@ export default function CasoDetalle() {
     }));
   };
 
-  // --- Validación antes de permitir continuar flujo
   const datosEspecificosLlenos = () => {
+    if (!initialData) return false;
     const idMotivo = initialData.idMotivo;
     if (idMotivo === 18 || idMotivo === 19) {
       const req = ["TipoPago", "FechaPago", "MontoPago", "BancoPago", "TipoCuentaPago", "NumeroCuentaPago"];
@@ -140,8 +206,16 @@ export default function CasoDetalle() {
     return true;
   };
 
-  // --- Render dinámico de campos según motivo
+  const getDocumentosFaltantes = () => {
+    if (!documentos?.length) return [];
+    return documentos
+      .filter(d => !d.archivo)
+      .map(d => d.tipoDocumentoNombre);
+  };
+  const hayDocumentosFaltantes = getDocumentosFaltantes().length > 0;
+
   const renderCamposEspecificos = () => {
+    if (!initialData) return null;
     const idMotivo = initialData.idMotivo;
     const disabledAll = continuar;
 
@@ -275,11 +349,14 @@ export default function CasoDetalle() {
     return null;
   };
 
-  // Guardar actualización
   const handleGuardar = async (e) => {
     e.preventDefault();
     if (continuar && !datosEspecificosLlenos()) {
       toast.warning("Debes completar todos los campos requeridos antes de continuar el flujo.");
+      return;
+    }
+    if (continuar && hayDocumentosFaltantes) {
+      toast.warning("Debes cargar todos los documentos requeridos antes de continuar el flujo.");
       return;
     }
     setGuardando(true);
@@ -294,7 +371,7 @@ export default function CasoDetalle() {
       };
       await updateCaso(initialData.idCaso, payload);
       toast.success("Caso actualizado correctamente");
-      navigate("/casos/vista");
+      reloadCaso();
     } catch (error) {
       toast.error(`Error al actualizar caso: ${error.message ?? error}`);
     } finally {
@@ -305,16 +382,18 @@ export default function CasoDetalle() {
   // Modal de confirmación para continuar flujo
   const handleSwitchContinuar = () => {
     if (!continuar) {
-      // Si va a continuar, validaciones primero:
       if (!datosEspecificosLlenos()) {
         toast.warning("Debes completar todos los campos requeridos antes de continuar el flujo.");
+        return;
+      }
+      if (hayDocumentosFaltantes) {
+        toast.warning("Debes cargar todos los documentos requeridos antes de continuar el flujo.");
         return;
       }
       setModalAdvertencia(true);
     }
   };
 
-  // Si confirma continuar flujo, realiza el update inmediato
   const handleConfirmarContinuarFlujo = async () => {
     setModalAdvertencia(false);
     setGuardando(true);
@@ -330,8 +409,7 @@ export default function CasoDetalle() {
       await updateCaso(initialData.idCaso, payload);
       toast.success("Caso actualizado correctamente");
       setContinuar(true);
-      // Opcional: puedes recargar los datos aquí si necesitas
-      // navigate("/casos/vista");
+      reloadCaso();
     } catch (error) {
       toast.error(`Error al actualizar caso: ${error.message ?? error}`);
     } finally {
@@ -347,7 +425,43 @@ export default function CasoDetalle() {
     }
   };
 
-  const soloLectura = continuar || initialData.estado === "Cerrado";
+  const soloLectura = continuar || (initialData && initialData.estado === "Cerrado");
+
+  // Columnas: agrega botón OJO si está en soloLectura, si no el botón editar default
+  const columnasDocs = [
+    { key: "idDocumento", label: "ID" },
+    { key: "tipoDocumentoNombre", label: "Tipo de Documento" },
+    { key: "motivoNombre", label: "Motivo" },
+    { key: "documentoNombre", label: "Nombre" },
+  ];
+  if (soloLectura) {
+    columnasDocs.push({
+      key: "ver",
+      label: "Ver",
+      render: (_, row) => (
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
+          className="text-primary hover:bg-violet-100"
+          onClick={() => {
+            setDocumentoId(row.idDocumento);
+            setSoloVerAdjunto(true);
+            setIsDialogOpen(true);
+          }}
+          title="Ver"
+        >
+          <Eye size={18} />
+        </Button>
+      )
+    });
+  }
+
+    // ---- 3. AQUI VA EL LOADER (justo antes del render principal) ----
+  if (loadingCaso || loadingDocs || !initialData) {
+    return <GlassLoader visible message="Cargando caso..." />;
+  }
+
 
   return (
     <div className="relative">
@@ -360,8 +474,7 @@ export default function CasoDetalle() {
         </div>
       )}
 
-      <div className="p-6 md:p-10 max-w-6xl mx-auto bg-white min-h-screen">
-        {/* Header */}
+      <div className="p-6 md:p-10 max-w-6xl mx-auto bg-white">
         <div className="flex flex-wrap items-center gap-2 mb-2">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
             {initialData.numeroCaso} - {motivo?.nombre || initialData.motivoNombre}
@@ -382,9 +495,10 @@ export default function CasoDetalle() {
             <b>Owner:</b> {initialData.nombreUsuarioPropietario || "-"}
           </span>
         </div>
-        {/* Formulario */}
-        <form onSubmit={handleGuardar} className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          {/* IZQUIERDA */}
+        <form
+          onSubmit={handleGuardar}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start"
+        >
           <section className="border rounded-xl p-6 shadow-sm mb-0 flex flex-col gap-4">
             <h2 className="text-lg font-semibold text-gray-800 mb-3">General</h2>
             {initialData.idInversion && MOTIVOS_REQUIEREN_INVERSION.includes(initialData.idMotivo) ? (
@@ -407,9 +521,18 @@ export default function CasoDetalle() {
             </FormGroup>
             {renderCamposEspecificos()}
           </section>
-          {/* DERECHA */}
           <div className="flex flex-col gap-6 w-full">
             <section className="border rounded-xl p-6 shadow-sm flex flex-col gap-6">
+              {hayDocumentosFaltantes && (
+                <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 p-3 rounded mb-4 flex flex-col gap-2">
+                  <b>Faltan documentos por cargar:</b>
+                  <ul className="list-disc pl-6">
+                    {getDocumentosFaltantes().map((nombre, idx) => (
+                      <li key={idx}>{nombre}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <div>
                 <Label className="font-medium text-gray-700 text-sm mb-1 block">Estado actual</Label>
                 <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${getEstadoBadge(continuar ? "Cerrado" : initialData.estado)}`}>
@@ -422,7 +545,7 @@ export default function CasoDetalle() {
                   checked={continuar}
                   onCheckedChange={handleSwitchContinuar}
                   disabled={continuar || guardando}
-                  className="data-[state=checked]:bg-violet-600 border-gray-300 data-[state=unchecked]:border-gray-300 data-[state=unchecked]:bg-gray-200 focus:ring-violet-500 focus:ring-offset-0 focus:ring-offset-white focus:ring-2 rounded-full w-10 h-6"
+                  className="data-[state=checked]:bg-violet-600 border data-[state=checked]:border-violet-600 data-[state=unchecked]:border-gray-300 data-[state=unchecked]:bg-gray-200 h-6 w-11 rounded-full relative transition-colors duration-200"
                 />
               </div>
               <div className="flex gap-4 mt-2">
@@ -439,30 +562,48 @@ export default function CasoDetalle() {
                   type="submit"
                   className="bg-violet-600 hover:bg-violet-700 text-white px-8"
                   disabled={continuar || guardando}
-                  loading={guardando}
                 >
+                  {guardando ? <span className="animate-spin mr-2">⏳</span> : null}
                   Actualizar Caso
                 </Button>
               </div>
             </section>
-            {/* Adjuntos */}
             <section className="border border-gray-300 rounded-xl p-6 shadow-sm mt-0">
               <h2 className="text-lg font-semibold text-gray-800 mb-3">Documentos Adjuntos</h2>
               <TablaCustom2
-                columns={[
-                  { key: "nombre", label: "Nombre" },
-                  { key: "urlDocumentoAdjunto", label: "Url Documento Adjunto" }
-                ]}
-                data={adjuntos}
-                mostrarEditar={false}
+                columns={columnasDocs}
+                data={documentos}
+                mostrarEditar={!soloLectura}
                 mostrarAgregarNuevo={false}
                 mostrarEliminar={false}
+                onEditarClick={(item) => {
+                  setDocumentoId(item.idDocumento);
+                  setSoloVerAdjunto(soloLectura); // Si está bloqueado, siempre es solo ver
+                  setIsDialogOpen(true);
+                }}
               />
             </section>
           </div>
         </form>
-
-        {/* Modal de Advertencia */}
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Adjunto</DialogTitle>
+              <DialogDescription>
+                {soloLectura ? "Visualización de archivo adjunto" : "Editar archivo"}
+              </DialogDescription>
+            </DialogHeader>
+            {/* <- Aquí va la magia */}
+            <AdjuntoForm
+              documentoId={documentoId}
+              readOnly={soloVerAdjunto}
+              onClose={() => {
+                setIsDialogOpen(false);
+                if (initialData?.idCaso) cargarDocumentos(initialData.idCaso);
+              }}
+            />
+          </DialogContent>
+        </Dialog>
         {modalAdvertencia && (
           <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
             <div className="bg-white p-7 rounded-xl shadow-lg max-w-sm w-full border">
@@ -479,8 +620,9 @@ export default function CasoDetalle() {
                 <Button
                   className="bg-violet-600 text-white"
                   onClick={handleConfirmarContinuarFlujo}
-                  loading={guardando}
+                  disabled={guardando}
                 >
+                  {guardando ? <span className="animate-spin mr-2">⏳</span> : null}
                   Sí, continuar flujo
                 </Button>
               </div>

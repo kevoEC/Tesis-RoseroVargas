@@ -74,21 +74,34 @@ export default function CasosTable() {
     { key: "nombreCliente", label: "Cliente" },
     { key: "motivoNombre", label: "Motivo" },
     { key: "descripcion", label: "Descripción" },
-    { key: "estado", label: "Estado", render: (value) => (
-      <span
-        className={`px-2 py-1 text-xs font-semibold rounded-full ${
-          value === "Iniciado"
-            ? "bg-blue-100 text-blue-700"
-            : value === "Cerrado"
-            ? "bg-gray-300 text-gray-700"
-            : "bg-yellow-100 text-yellow-700"
-        }`}
-      >
-        {value}
-      </span>
-    )},
-    { key: "fechaCreacion", label: "Fecha Creación", render: (v) => v ? new Date(v).toLocaleDateString() : "" }
+    {
+      key: "estado",
+      label: "Estado",
+      render: (value) => (
+        <span
+          className={`px-2 py-1 text-xs font-semibold rounded-full ${
+            value === "Iniciado"
+              ? "bg-blue-100 text-blue-700"
+              : value === "Cerrado"
+              ? "bg-gray-300 text-gray-700"
+              : "bg-yellow-100 text-yellow-700"
+          }`}
+        >
+          {value}
+        </span>
+      )
+    },
+    {
+      key: "fechaCreacion",
+      label: "Fecha Creación",
+      render: (v) => v ? new Date(v).toLocaleDateString() : ""
+    }
   ];
+
+  // Ordenar por fecha de creación descendente (más reciente primero)
+  const casosOrdenados = [...casos].sort(
+    (a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion)
+  );
 
   return (
     <div className="p-4 sm:p-6 md:p-8 max-w-full relative">
@@ -102,7 +115,7 @@ export default function CasosTable() {
         <CardContent className="p-6 overflow-x-auto">
           <TablaCustom2
             columns={columnas}
-            data={casos}
+            data={casosOrdenados}
             mostrarEditar={true}
             mostrarAgregarNuevo={true}
             mostrarEliminar={true}

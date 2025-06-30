@@ -64,12 +64,24 @@ namespace Backend_CrmSG.Services.Entidad
             {
                 IdTarea = tarea.IdTarea,
                 TareaNombre = tarea.TareaNombre,
+                // Updated line to handle possible null reference
+                Descripcion = tarea.Descripcion ?? string.Empty, // <--- Fix for CS8601
                 NombreTipoTarea = tarea.NombreTipoTarea ?? "",
                 IdTipoTarea = tarea.IdTipoTarea,
                 IdResultado = tarea.IdResultado,
+                NombreResultado = tarea.NombreResultado, // <--- Si lo tienes
                 Observacion = tarea.Observación,
+                IdUsuarioCreacion = tarea.IdUsuarioCreacion,
+                NombreUsuarioCreacion = tarea.NombreUsuarioCreacion,
+                FechaCreacion = tarea.FechaCreacion,
+                IdUsuarioModificacion = tarea.IdUsuarioModificacion,
+                NombreUsuarioModificacion = tarea.NombreUsuarioModificacion,
+                FechaModificacion = tarea.FechaModificacion,
+                IdUsuarioPropietario = tarea.IdUsuarioPropietario,
+                NombreUsuarioPropietario = tarea.NombreUsuarioPropietario,
                 CamposTipo = new Dictionary<string, object?>()
             };
+
 
             switch (tarea.IdTipoTarea)
             {

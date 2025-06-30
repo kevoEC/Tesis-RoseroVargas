@@ -113,3 +113,17 @@ export const deleteCaso = async (id) => {
   if (res.status === 204) return { success: true };
   return await handleResponse(res);
 };
+
+
+// 11. Trae los documentos de un caso específico
+export const getDocumentosPorCaso = async (idCaso) => {
+  const res = await fetch(
+    `${API_BASE_URL}/Documento/entidad?tipoEntidad=Caso&idEntidad=${idCaso}`,
+    {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    }
+  );
+  const data = await handleResponse(res);
+  // Por compatibilidad, soporta tanto data.documentos como data.data
+  return data.documentos || data.data || [];
+};
