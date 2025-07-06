@@ -65,5 +65,29 @@ namespace Backend_CrmSG.Controllers.Producto
             await _service.DeleteAsync(id);
             return NoContent();
         }
+
+        [HttpGet("vista")]
+        public async Task<IActionResult> GetAllConfiguracionesVista()
+        {
+            var result = await _service.GetAllConfiguracionesVistaAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("vista/{id}")]
+        public async Task<IActionResult> GetConfiguracionVistaById(int id)
+        {
+            var result = await _service.GetConfiguracionVistaByIdAsync(id);
+            if (result == null)
+                return NotFound();
+            return Ok(result);
+        }
+
+        [HttpGet("vista/por-producto/{idProducto}")]
+        public async Task<IActionResult> GetConfiguracionesVistaPorProducto(int idProducto)
+        {
+            var configuraciones = await _service.GetVistaByProductoIdAsync(idProducto);
+            return Ok(configuraciones);
+        }
+
     }
 }

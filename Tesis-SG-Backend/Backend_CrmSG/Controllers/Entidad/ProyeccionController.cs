@@ -264,5 +264,32 @@ namespace Backend_CrmSG.Controllers.Entidad
             }
         }
 
+
+        [HttpPost("incremento")]
+        public async Task<IActionResult> IncrementarProyeccion([FromBody] ProyeccionIncrementoDto dto)
+        {
+            try
+            {
+                var result = await _proyeccionService.IncrementarProyeccionAsync(dto);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Incremento realizado correctamente.",
+                    idProyeccion = result.IdProyeccionNueva,
+                    proyeccion = result.Proyeccion,
+                    cronograma = result.Cronograma
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Ocurrió un error al procesar el incremento.",
+                    details = ex.Message
+                });
+            }
+        }
     }
 }

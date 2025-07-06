@@ -313,6 +313,160 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.AdendumController",
+    "Method": "Crear",
+    "RelativePath": "api/Adendum",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.DTOs.AdendumCreateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.AdendumController",
+    "Method": "Actualizar",
+    "RelativePath": "api/Adendum",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.DTOs.AdendumUpdateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.AdendumController",
+    "Method": "ObtenerPorId",
+    "RelativePath": "api/Adendum/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.AdendumController",
+    "Method": "ContinuarFlujo",
+    "RelativePath": "api/Adendum/{id}/continuar-flujo",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.AdendumController",
+    "Method": "ObtenerDetalleCompleto",
+    "RelativePath": "api/Adendum/{id}/detalle-completo",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.AdendumController",
+    "Method": "GenerarDocumentos",
+    "RelativePath": "api/Adendum/{id}/generar-documentos",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "idUsuario",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.AdendumController",
+    "Method": "ObtenerDocumentosPorAdendum",
+    "RelativePath": "api/Adendum/por-adendum/{idAdendum}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idAdendum",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.AdendumController",
+    "Method": "ObtenerPorInversion",
+    "RelativePath": "api/Adendum/por-inversion/{idInversion}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idInversion",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.AdendumController",
+    "Method": "SetIncremento",
+    "RelativePath": "api/Adendum/set-incremento",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.DTOs.AdendumSetIncrementoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Backend_CrmSG.Controllers.Catalogos.AgenciaController",
     "Method": "Get",
     "RelativePath": "api/Agencia",
@@ -1161,6 +1315,48 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController",
+    "Method": "GetAllConfiguracionesVista",
+    "RelativePath": "api/ConfiguracionProducto/vista",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController",
+    "Method": "GetConfiguracionVistaById",
+    "RelativePath": "api/ConfiguracionProducto/vista/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController",
+    "Method": "GetConfiguracionesVistaPorProducto",
+    "RelativePath": "api/ConfiguracionProducto/vista/por-producto/{idProducto}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idProducto",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Backend_CrmSG.Controllers.Catalogos.ContinuarSolicitudController",
     "Method": "Get",
     "RelativePath": "api/ContinuarSolicitud",
@@ -1284,6 +1480,147 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ContratoSecuencialController",
+    "Method": "GenerarContrato",
+    "RelativePath": "api/ContratoSecuencial/generar",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "solicitud",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "proyeccion",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DashboardClienteController",
+    "Method": "GetEstadisticasClientes",
+    "RelativePath": "api/dashboard/clientes/estadisticas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "Backend_CrmSG.DTOs.Dashboard.Cliente.EstadisticasClienteDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Dashboard.DashboardInversionController",
+    "Method": "GetEstadisticasInversiones",
+    "RelativePath": "api/dashboard/inversiones/estadisticas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "Backend_CrmSG.DTOs.Dashboard.Inversion.EstadisticasInversionDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Dashboard.DashboardPagosCasosController",
+    "Method": "GetEstadisticasPagosCasos",
+    "RelativePath": "api/dashboard/pagos-casos/estadisticas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "Backend_CrmSG.DTOs.Dashboard.PagosCasos.EstadisticasPagosCasosDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Dashboard.DashboardProspectoController",
+    "Method": "GetEstadisticasProspectos",
+    "RelativePath": "api/dashboard/prospectos/estadisticas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "Backend_CrmSG.DTOs.Dashboard.Prospecto.EstadisticasProspectosDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Dashboard.DashboardSolicitudController",
+    "Method": "GetEstadisticasSolicitudes",
+    "RelativePath": "api/dashboard/solicitudes/estadisticas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "Backend_CrmSG.DTOs.Dashboard.Solicitud.EstadisticasSolicitudDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "DashboardTareasController",
+    "Method": "GetEstadisticasTareas",
+    "RelativePath": "api/dashboard/tareas/estadisticas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "Backend_CrmSG.DTOs.Dashboard.Tarea.EstadisticasTareasDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "Backend_CrmSG.Controllers.Documento.DocumentoController",
@@ -2821,9 +3158,62 @@
   },
   {
     "ContainingType": "Backend_CrmSG.Controllers.Producto.ProductoController",
+    "Method": "Create",
+    "RelativePath": "api/Producto",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "Backend_CrmSG.Models.Catalogos.Producto.Producto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Producto.ProductoController",
     "Method": "Get",
     "RelativePath": "api/Producto/{id}",
     "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Producto.ProductoController",
+    "Method": "Update",
+    "RelativePath": "api/Producto/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "Backend_CrmSG.Models.Catalogos.Producto.Producto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Producto.ProductoController",
+    "Method": "Delete",
+    "RelativePath": "api/Producto/{id}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -2855,6 +3245,32 @@
     "ContainingType": "Backend_CrmSG.Controllers.Producto.ProductoController",
     "Method": "GetProductoConConfiguraciones",
     "RelativePath": "api/Producto/{id}/detalle",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Producto.ProductoController",
+    "Method": "GetAllProductosVista",
+    "RelativePath": "api/Producto/vista",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Producto.ProductoController",
+    "Method": "GetProductoVistaById",
+    "RelativePath": "api/Producto/vista/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -3357,6 +3773,22 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.ProyeccionController",
+    "Method": "IncrementarProyeccion",
+    "RelativePath": "api/Proyeccion/incremento",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Backend_CrmSG.DTOs.ProyeccionIncrementoDto",
         "IsRequired": true
       }
     ],

@@ -43,6 +43,7 @@
         public DateTime? FechaIncremento { get; set; }
         public decimal? CosteNotarizacion { get; set; }
         public string? PeriodosJson { get; set; }
+
     }
 
 }

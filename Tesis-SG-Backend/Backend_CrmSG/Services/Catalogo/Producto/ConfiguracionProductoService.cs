@@ -1,6 +1,7 @@
 ﻿using Backend_CrmSG.Data;
 using Backend_CrmSG.DTOs;
 using Backend_CrmSG.Models.Catalogos.Producto;
+using Backend_CrmSG.Models.Vistas;
 using Backend_CrmSG.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -100,6 +101,24 @@ namespace Backend_CrmSG.Services.Producto
         public async Task<ConfiguracionesProducto?> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);
+        }
+
+        public async Task<IEnumerable<ConfiguracionProductoView>> GetAllConfiguracionesVistaAsync()
+        {
+            return await _context.ConfiguracionesProductoVista.ToListAsync();
+        }
+
+        public async Task<ConfiguracionProductoView?> GetConfiguracionVistaByIdAsync(int id)
+        {
+            return await _context.ConfiguracionesProductoVista
+                .FirstOrDefaultAsync(x => x.IdConfiguraciones == id);
+        }
+
+        public async Task<IEnumerable<ConfiguracionProductoView>> GetVistaByProductoIdAsync(int idProducto)
+        {
+            return await _context.ConfiguracionesProductoVista
+                .Where(c => c.IdProducto == idProducto)
+                .ToListAsync();
         }
     }
 }

@@ -533,6 +533,251 @@
         }
       }
     },
+    "/api/Adendum": {
+      "post": {
+        "tags": [
+          "Adendum"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumCreateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumCreateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Adendum"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumUpdateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumUpdateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumUpdateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Adendum/{id}": {
+      "get": {
+        "tags": [
+          "Adendum"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Adendum/por-inversion/{idInversion}": {
+      "get": {
+        "tags": [
+          "Adendum"
+        ],
+        "parameters": [
+          {
+            "name": "idInversion",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Adendum/{id}/generar-documentos": {
+      "post": {
+        "tags": [
+          "Adendum"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "idUsuario",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Adendum/{id}/continuar-flujo": {
+      "post": {
+        "tags": [
+          "Adendum"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "idUsuario",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Adendum/{id}/detalle-completo": {
+      "get": {
+        "tags": [
+          "Adendum"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Adendum/set-incremento": {
+      "put": {
+        "tags": [
+          "Adendum"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumSetIncrementoDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumSetIncrementoDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumSetIncrementoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Adendum/por-adendum/{idAdendum}": {
+      "get": {
+        "tags": [
+          "Adendum"
+        ],
+        "parameters": [
+          {
+            "name": "idAdendum",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Agencia": {
       "get": {
         "tags": [
@@ -1929,6 +2174,64 @@
         }
       }
     },
+    "/api/ConfiguracionProducto/vista": {
+      "get": {
+        "tags": [
+          "ConfiguracionProducto"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ConfiguracionProducto/vista/{id}": {
+      "get": {
+        "tags": [
+          "ConfiguracionProducto"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ConfiguracionProducto/vista/por-producto/{idProducto}": {
+      "get": {
+        "tags": [
+          "ConfiguracionProducto"
+        ],
+        "parameters": [
+          {
+            "name": "idProducto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/ContinuarSolicitud": {
       "get": {
         "tags": [
@@ -2141,6 +2444,210 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ContratoSecuencial/generar": {
+      "get": {
+        "tags": [
+          "ContratoSecuencial"
+        ],
+        "parameters": [
+          {
+            "name": "solicitud",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "proyeccion",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/dashboard/clientes/estadisticas": {
+      "get": {
+        "tags": [
+          "DashboardCliente"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasClienteDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasClienteDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasClienteDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/inversiones/estadisticas": {
+      "get": {
+        "tags": [
+          "DashboardInversion"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasInversionDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasInversionDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasInversionDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/pagos-casos/estadisticas": {
+      "get": {
+        "tags": [
+          "DashboardPagosCasos"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasPagosCasosDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasPagosCasosDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasPagosCasosDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/prospectos/estadisticas": {
+      "get": {
+        "tags": [
+          "DashboardProspecto"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasProspectosDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasProspectosDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasProspectosDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/solicitudes/estadisticas": {
+      "get": {
+        "tags": [
+          "DashboardSolicitud"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasSolicitudDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasSolicitudDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasSolicitudDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/tareas/estadisticas": {
+      "get": {
+        "tags": [
+          "DashboardTareas"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasTareasDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasTareasDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasTareasDTO"
+                }
+              }
+            }
           }
         }
       }
@@ -4690,10 +5197,100 @@
             "description": "OK"
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Producto"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Producto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Producto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Producto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/api/Producto/{id}": {
       "get": {
+        "tags": [
+          "Producto"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Producto"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Producto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Producto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Producto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
         "tags": [
           "Producto"
         ],
@@ -4739,6 +5336,41 @@
       }
     },
     "/api/Producto/{id}/detalle": {
+      "get": {
+        "tags": [
+          "Producto"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Producto/vista": {
+      "get": {
+        "tags": [
+          "Producto"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Producto/vista/{id}": {
       "get": {
         "tags": [
           "Producto"
@@ -5621,6 +6253,37 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Proyeccion/incremento": {
+      "post": {
+        "tags": [
+          "Proyeccion"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProyeccionIncrementoDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProyeccionIncrementoDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProyeccionIncrementoDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -8402,6 +9065,85 @@
         },
         "additionalProperties": false
       },
+      "AdendumCreateDto": {
+        "type": "object",
+        "properties": {
+          "idInversion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idProyeccionOriginal": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "periodoIncremento": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "montoIncremento": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "idUsuarioCreacion": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AdendumSetIncrementoDto": {
+        "type": "object",
+        "properties": {
+          "idAdendum": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idProyeccionIncremento": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idCronogramaProyeccionIncremento": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AdendumUpdateDto": {
+        "type": "object",
+        "properties": {
+          "idAdendum": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "estado": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "generarDocumentos": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "continuarFlujo": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "AdjuntosUpdateDTO": {
         "type": "object",
         "properties": {
@@ -8743,6 +9485,48 @@
         },
         "additionalProperties": false
       },
+      "CasosPorMotivoDTO": {
+        "type": "object",
+        "properties": {
+          "motivoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalCasos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CasosPorUsuarioDTO": {
+        "type": "object",
+        "properties": {
+          "nombreUsuarioCreacion": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalCasos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CasosTerminacionDTO": {
+        "type": "object",
+        "properties": {
+          "motivoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalCasos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "Ciudad": {
         "type": "object",
         "properties": {
@@ -9030,6 +9814,108 @@
           },
           "datosEconomicos": {
             "$ref": "#/components/schemas/ClienteEconomico"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorEdadDTO": {
+        "type": "object",
+        "properties": {
+          "rangoEdad": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorGeneroDTO": {
+        "type": "object",
+        "properties": {
+          "genero": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorIdentificacionDTO": {
+        "type": "object",
+        "properties": {
+          "tipoIdentificacion": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorMesDTO": {
+        "type": "object",
+        "properties": {
+          "año": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalClientes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorNacionalidadDTO": {
+        "type": "object",
+        "properties": {
+          "nacionalidad": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalClientes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorPaisDTO": {
+        "type": "object",
+        "properties": {
+          "pais": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalClientes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorTipoDTO": {
+        "type": "object",
+        "properties": {
+          "tipoCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -9388,6 +10274,410 @@
         },
         "additionalProperties": false
       },
+      "EstadisticasClienteDTO": {
+        "type": "object",
+        "properties": {
+          "totalClientes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "porMes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorMesDTO"
+            },
+            "nullable": true
+          },
+          "porGenero": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorGeneroDTO"
+            },
+            "nullable": true
+          },
+          "porTipoCliente": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorTipoDTO"
+            },
+            "nullable": true
+          },
+          "porTipoIdentificacion": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorIdentificacionDTO"
+            },
+            "nullable": true
+          },
+          "totalPEP": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalResidentesExterior": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "porEdad": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorEdadDTO"
+            },
+            "nullable": true
+          },
+          "totalCtasExterior": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalContribuyentesEEUU": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "porPais": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorPaisDTO"
+            },
+            "nullable": true
+          },
+          "porNacionalidad": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorNacionalidadDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EstadisticasInversionDTO": {
+        "type": "object",
+        "properties": {
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCapitalInvertido": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalRentabilidad": {
+            "type": "number",
+            "format": "double"
+          },
+          "porProducto": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InversionesPorProductoDTO"
+            },
+            "nullable": true
+          },
+          "porMes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InversionesPorMesDTO"
+            },
+            "nullable": true
+          },
+          "porTipoCliente": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InversionesPorTipoClienteDTO"
+            },
+            "nullable": true
+          },
+          "porEstado": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InversionesPorEstadoDTO"
+            },
+            "nullable": true
+          },
+          "rendimientoPromedio": {
+            "type": "number",
+            "format": "double"
+          },
+          "porPlazo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InversionesPorPlazoDTO"
+            },
+            "nullable": true
+          },
+          "rankingClientes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RankingClienteInversionDTO"
+            },
+            "nullable": true
+          },
+          "porPais": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InversionesPorPaisDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EstadisticasPagosCasosDTO": {
+        "type": "object",
+        "properties": {
+          "pagosPorCalendario": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PagosPorCalendarioDTO"
+            },
+            "nullable": true
+          },
+          "pagosConfirmadosDescartados": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PagosConfirmadosDescartadosDTO"
+            },
+            "nullable": true
+          },
+          "casosPorMotivo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CasosPorMotivoDTO"
+            },
+            "nullable": true
+          },
+          "pagosPorMotivo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PagosPorMotivoDTO"
+            },
+            "nullable": true
+          },
+          "estadoCasosPago": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EstadoCasosPagoDTO"
+            },
+            "nullable": true
+          },
+          "pagosUltimoCalendario": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PagosUltimoCalendarioDTO"
+            },
+            "nullable": true
+          },
+          "casosTerminacion": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CasosTerminacionDTO"
+            },
+            "nullable": true
+          },
+          "montoPagadoPorCalendario": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MontoPagadoPorCalendarioDTO"
+            },
+            "nullable": true
+          },
+          "pagosPendientesPorCliente": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PagosPendientesClienteDTO"
+            },
+            "nullable": true
+          },
+          "casosPorUsuario": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CasosPorUsuarioDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EstadisticasProspectosDTO": {
+        "type": "object",
+        "properties": {
+          "activos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inactivos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "convertidos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "noConvertidos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "porcentajeConversion": {
+            "type": "number",
+            "format": "double"
+          },
+          "porProductoInteres": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProspectosPorProductoDTO"
+            },
+            "nullable": true
+          },
+          "porOrigen": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProspectosPorOrigenDTO"
+            },
+            "nullable": true
+          },
+          "porMes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProspectosPorMesDTO"
+            },
+            "nullable": true
+          },
+          "prospectosConSolicitud": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prospectosSinSolicitud": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EstadisticasSolicitudDTO": {
+        "type": "object",
+        "properties": {
+          "porEstado": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolicitudesPorEstadoDTO"
+            },
+            "nullable": true
+          },
+          "totalCompletadas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "porcentajeConversion": {
+            "type": "number",
+            "format": "double"
+          },
+          "estadoPorProspecto": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolicitudProspectoEstadoDTO"
+            },
+            "nullable": true
+          },
+          "porMes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolicitudesPorMesDTO"
+            },
+            "nullable": true
+          },
+          "solicitudesConProyeccion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "solicitudesConProyeccionDetalle": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolicitudProyeccionDetalleDTO"
+            },
+            "nullable": true
+          },
+          "kpiFinanciero": {
+            "$ref": "#/components/schemas/KPIFinancieroSolicitudesDTO"
+          },
+          "proyeccionesPorProducto": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolicitudProyeccionPorProductoDTO"
+            },
+            "nullable": true
+          },
+          "solicitudesConProyeccionTotal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "solicitudesSinProyeccionTotal": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EstadisticasTareasDTO": {
+        "type": "object",
+        "properties": {
+          "conteoPorSolicitudEstado": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TareasPorSolicitudEstadoDTO"
+            },
+            "nullable": true
+          },
+          "matrizGlobalPorTipoEstado": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TareasPorTipoEstadoGlobalDTO"
+            },
+            "nullable": true
+          },
+          "pendientesPorSolicitud": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TareasPendientesPorSolicitudDTO"
+            },
+            "nullable": true
+          },
+          "contratosFirmados": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reporteCumplimiento": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReporteCumplimientoSolicitudDTO"
+            },
+            "nullable": true
+          },
+          "pendientesPorTipoGlobal": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TareasPendientesGlobalDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EstadoCasosPagoDTO": {
+        "type": "object",
+        "properties": {
+          "motivoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalCasos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "EstadoCivil": {
         "type": "object",
         "properties": {
@@ -9611,6 +10901,123 @@
         },
         "additionalProperties": false
       },
+      "InversionesPorEstadoDTO": {
+        "type": "object",
+        "properties": {
+          "estadoInversion": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalInvertido": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InversionesPorMesDTO": {
+        "type": "object",
+        "properties": {
+          "año": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalInvertido": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InversionesPorPaisDTO": {
+        "type": "object",
+        "properties": {
+          "pais": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalInvertido": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InversionesPorPlazoDTO": {
+        "type": "object",
+        "properties": {
+          "plazo": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalInvertido": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InversionesPorProductoDTO": {
+        "type": "object",
+        "properties": {
+          "idProducto": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalInvertido": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InversionesPorTipoClienteDTO": {
+        "type": "object",
+        "properties": {
+          "tipoCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalInvertido": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "JustificativoTransaccion": {
         "type": "object",
         "properties": {
@@ -9621,6 +11028,28 @@
           "nombre": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KPIFinancieroSolicitudesDTO": {
+        "type": "object",
+        "properties": {
+          "capitalTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "tasaPromedio": {
+            "type": "number",
+            "format": "double"
+          },
+          "plazoPromedio": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalProyecciones": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -9734,6 +11163,24 @@
         },
         "additionalProperties": false
       },
+      "MontoPagadoPorCalendarioDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCalendario": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCorte": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "montoTotalPagado": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "Nacionalidad": {
         "type": "object",
         "properties": {
@@ -9830,6 +11277,104 @@
         },
         "additionalProperties": false
       },
+      "PagosConfirmadosDescartadosDTO": {
+        "type": "object",
+        "properties": {
+          "idCalendario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreCalendario": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCorte": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pagosConfirmados": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pagosDescartados": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagosPendientesClienteDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "pagosPendientes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "montoPendiente": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagosPorCalendarioDTO": {
+        "type": "object",
+        "properties": {
+          "idCalendario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreCalendario": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCorte": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalPagos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagosPorMotivoDTO": {
+        "type": "object",
+        "properties": {
+          "motivoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalPagos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "montoTotal": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagosUltimoCalendarioDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCalendario": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalPagos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "Pais": {
         "type": "object",
         "properties": {
@@ -9874,6 +11419,80 @@
           },
           "categoria": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Producto": {
+        "type": "object",
+        "properties": {
+          "idProducto": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productoNombre": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "nombreComercial": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "productoCodigo": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "iniciales": {
+            "maxLength": 8,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "descripcion": {
+            "type": "string",
+            "nullable": true
+          },
+          "idFormaPago": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "periocidad": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "montoMinimoIncremento": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "penalidad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "idUsuarioCreacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fechaCreacion": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "fechaModificacion": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },
@@ -9999,6 +11618,58 @@
         },
         "additionalProperties": false
       },
+      "ProspectosPorMesDTO": {
+        "type": "object",
+        "properties": {
+          "año": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalProspectos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProspectosPorOrigenDTO": {
+        "required": [
+          "nombreOrigen"
+        ],
+        "type": "object",
+        "properties": {
+          "nombreOrigen": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProspectosPorProductoDTO": {
+        "required": [
+          "productoInteres"
+        ],
+        "type": "object",
+        "properties": {
+          "productoInteres": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "Provincia": {
         "type": "object",
         "properties": {
@@ -10076,6 +11747,28 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProyeccionIncrementoDto": {
+        "type": "object",
+        "properties": {
+          "idProyeccionOriginal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "periodoIncremento": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "montoIncremento": {
+            "type": "number",
+            "format": "double"
+          },
+          "idUsuario": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -10168,6 +11861,24 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RankingClienteInversionDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCompleto": {
+            "type": "string",
+            "nullable": true
+          },
+          "montoInvertido": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -10275,6 +11986,35 @@
           "contraseña": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReporteCumplimientoSolicitudDTO": {
+        "type": "object",
+        "properties": {
+          "idSolicitudInversion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "docAprobada": {
+            "type": "boolean"
+          },
+          "legalAprobada": {
+            "type": "boolean"
+          },
+          "contratoFirmado": {
+            "type": "boolean"
+          },
+          "comprobanteCargado": {
+            "type": "boolean"
+          },
+          "conciliacionOK": {
+            "type": "boolean"
+          },
+          "tareasPendientes": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -10427,6 +12167,120 @@
         },
         "additionalProperties": false
       },
+      "SolicitudProspectoEstadoDTO": {
+        "type": "object",
+        "properties": {
+          "idProspecto": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombres": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellidoPaterno": {
+            "type": "string",
+            "nullable": true
+          },
+          "ultimoEstadoSolicitud": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SolicitudProyeccionDetalleDTO": {
+        "type": "object",
+        "properties": {
+          "idSolicitudInversion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idProyeccion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "proyeccionNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "plazo": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "tasa": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "capital": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "faseProceso": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SolicitudProyeccionPorProductoDTO": {
+        "type": "object",
+        "properties": {
+          "idProducto": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalProyecciones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalTotal": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SolicitudesPorEstadoDTO": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalSolicitudes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SolicitudesPorMesDTO": {
+        "type": "object",
+        "properties": {
+          "año": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalSolicitudes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "TareaUpdateDinamicoDTO": {
         "type": "object",
         "properties": {
@@ -10444,6 +12298,94 @@
               "nullable": true
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TareasPendientesGlobalDTO": {
+        "type": "object",
+        "properties": {
+          "idTipoTarea": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreTipoTarea": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalPendientes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TareasPendientesPorSolicitudDTO": {
+        "type": "object",
+        "properties": {
+          "idSolicitudInversion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tareasPendientes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TareasPorSolicitudEstadoDTO": {
+        "type": "object",
+        "properties": {
+          "idSolicitudInversion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idTipoTarea": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreTipoTarea": {
+            "type": "string",
+            "nullable": true
+          },
+          "idResultado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreResultado": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TareasPorTipoEstadoGlobalDTO": {
+        "type": "object",
+        "properties": {
+          "idTipoTarea": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreTipoTarea": {
+            "type": "string",
+            "nullable": true
+          },
+          "idResultado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreResultado": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
