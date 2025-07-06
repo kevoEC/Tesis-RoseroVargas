@@ -1,8 +1,10 @@
-﻿using Backend_CrmSG.Services;
+﻿using Backend_CrmSG.Models.Catalogos.Producto;
+using Backend_CrmSG.Services;
 using Backend_CrmSG.Services.Producto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using ProductoModel = Backend_CrmSG.Models.Catalogos.Producto.Producto;
 
 namespace Backend_CrmSG.Controllers.Producto
 {
@@ -62,5 +64,49 @@ namespace Backend_CrmSG.Controllers.Producto
             return Ok(result);
         }
 
+        // ----------------------- NUEVOS ENDPOINTS -----------------------
+
+        [HttpGet("vista")]
+        public async Task<IActionResult> GetAllProductosVista()
+        {
+            var productosVista = await _productoService.GetAllProductosVistaAsync();
+            return Ok(productosVista);
+        }
+
+        [HttpGet("vista/{id}")]
+        public async Task<IActionResult> GetProductoVistaById(int id)
+        {
+            var productoVista = await _productoService.GetProductoVistaByIdAsync(id);
+            if (productoVista == null)
+                return NotFound();
+            return Ok(productoVista);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] ProductoModel model)
+        {
+            var id = await _productoService.CreateProductoAsync(model);
+            return CreatedAtAction(nameof(Get), new { id }, model);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] ProductoModel model)
+        {
+            var updated = await _productoService.UpdateProductoAsync(id, model);
+            if (!updated)
+                return NotFound();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var deleted = await _productoService.DeleteProductoAsync(id);
+            if (!deleted)
+                return NotFound();
+            return NoContent();
+        }
+
     }
+
 }

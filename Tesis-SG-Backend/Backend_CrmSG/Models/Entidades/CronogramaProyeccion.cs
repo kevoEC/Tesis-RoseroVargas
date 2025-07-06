@@ -20,6 +20,7 @@ namespace Backend_CrmSG.Models.Entidades
 
         public int Version { get; set; }
         public bool EsActivo { get; set; }
+        public int? ReferenciaOriginal { get; set; }
     }
 
 }

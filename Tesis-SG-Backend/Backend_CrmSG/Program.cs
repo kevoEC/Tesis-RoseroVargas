@@ -15,6 +15,9 @@ using Backend_CrmSG.Services.Entidad;
 using Backend_CrmSG.Services.Entidad.Inversion;
 using Backend_CrmSG.Services.Entidad.Caso;
 using Backend_CrmSG.Services.Entidad.Pago;
+using Backend_CrmSG.Services.Dashboard.Prospecto;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using Backend_CrmSG.Services.Entidad.Adendum;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtKey = builder.Configuration["Jwt:Key"]
@@ -163,8 +166,8 @@ builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IInversionService, InversionService>();
 builder.Services.AddScoped<ICasoService, CasoService>();
 builder.Services.AddScoped<IPagoService, PagoService>();
-
-
+builder.Services.AddScoped<ContratoSecuencialService>();
+builder.Services.AddScoped<IAdendumService, AdendumService>();
 
 // Catálogos
 builder.Services.AddScoped<IProductoService, ProductoService>();
@@ -176,6 +179,17 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IUsuarioRolService, UsuarioRolService>();
 builder.Services.AddScoped<EnsureMicrosoftUserExistsAttribute>();
+
+//Dashboard
+
+builder.Services.AddScoped<DashboardProspectoService>();
+builder.Services.AddScoped<DashboardSolicitudService>();
+builder.Services.AddScoped<DashboardTareasService>();
+builder.Services.AddScoped<DashboardClienteService>();
+builder.Services.AddScoped<DashboardInversionService>();
+builder.Services.AddScoped<DashboardPagosCasosService>();
+
+
 
 builder.WebHost.UseUrls("http://+:8080", "https://+:443");
 // ------------------ APP BUILD --------------------------------------

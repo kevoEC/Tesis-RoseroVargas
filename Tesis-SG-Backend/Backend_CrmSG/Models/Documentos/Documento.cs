@@ -15,5 +15,6 @@ namespace Backend_CrmSG.Models.Documentos
         public DateTime? FechaCreacion { get; set; }
         public bool Activo { get; set; }
         public string? Observaciones { get; set; }
+        public int? IdAdendum { get; set; }
     }
 }

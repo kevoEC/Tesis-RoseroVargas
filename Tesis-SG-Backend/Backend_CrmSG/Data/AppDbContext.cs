@@ -56,8 +56,9 @@ namespace Backend_CrmSG.Data
         public DbSet<CalendarioOperaciones> CalendarioOperaciones { get; set; }
         public DbSet<Caso> Caso { get; set; }
         public DbSet<Pago> Pago { get; set; }
-
-
+        public DbSet<ContratoSecuencial> ContratoSecuencial { get; set; } // ← esta línea
+        public DbSet<Adendum> Adendum { get; set; } // ← esta línea
+        public DbSet<Inversion> Inversion { get; set; }
 
         // DbSets de tus tablas de seguridad
         public DbSet<Usuario> Usuario { get; set; }
@@ -94,11 +95,14 @@ namespace Backend_CrmSG.Data
         public DbSet<ClienteDetalle> ClienteDetalle { get; set; }
         public DbSet<InversionDetalle> InversionDetalle { get; set; }
         public DbSet<CasoDetalleExtendida> CasosDetalleExtendida { get; set; }
+        public DbSet<ProductoView> ProductosVista { get; set; }
+        public DbSet<ConfiguracionProductoView> ConfiguracionesProductoVista { get; set; }
 
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             // Configuración de clave compuesta para UsuarioRol
             modelBuilder.Entity<UsuarioRol>()
                 .HasKey(ur => new { ur.IdUsuario, ur.IdRol });
@@ -164,7 +168,9 @@ namespace Backend_CrmSG.Data
             .HasNoKey()
             .ToView("vw_CasoDetalleExtendida");
 
+            modelBuilder.Entity<ProductoView>().HasNoKey().ToView("vw_Producto");
 
+            modelBuilder.Entity<ConfiguracionProductoView>().HasNoKey().ToView("vw_ConfiguracionesProducto");
 
 
             modelBuilder.Entity<TransaccionesValidacion>()
@@ -178,6 +184,7 @@ namespace Backend_CrmSG.Data
                 .WithMany()
                 .HasForeignKey(t => t.IdUsuario)
                 .OnDelete(DeleteBehavior.Restrict);
+
 
 
 
