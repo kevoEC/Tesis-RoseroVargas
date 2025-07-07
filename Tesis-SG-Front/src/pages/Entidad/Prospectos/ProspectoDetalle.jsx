@@ -22,6 +22,13 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 
+const FASE_PROCESO_MAP = {
+  1: { label: "Llenado de Información", color: "bg-yellow-100 text-yellow-700" },
+  2: { label: "Tareas Generadas", color: "bg-blue-100 text-blue-700" },
+  3: { label: "Solicitud Rechazada", color: "bg-red-100 text-red-700" },
+  4: { label: "Completada", color: "bg-green-100 text-green-700" },
+};
+
 export default function ProspectoDetalle() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -68,10 +75,13 @@ export default function ProspectoDetalle() {
     }
   };
 
+  // Validación para crear solicitud (debe haber una actividad en estado true)
+  const puedeCrearSolicitud = actividades.some(a => a.estado === true);
+
   // --- Validaciones ---
   const handleAgregarSolicitud = () => {
     if (prospecto?.esCliente) return;
-    if (!actividades.length) {
+    if (!puedeCrearSolicitud) {
       setAlertFaltaActividad(true);
       return;
     }
@@ -143,6 +153,18 @@ export default function ProspectoDetalle() {
     { key: "nombreTipoCliente", label: "Tipo Cliente", render: (_, row) => row.identificacion?.nombreTipoCliente || "—" },
     { key: "nombreTipoDocumento", label: "Tipo Documento", render: (_, row) => row.identificacion?.nombreTipoDocumento || "—" },
     { key: "nombreCompletoProspecto", label: "Nombre Prospecto" },
+    {
+      key: "faseProceso",
+      label: "Fase Proceso",
+      render: (value) => {
+        const fase = FASE_PROCESO_MAP[value] || { label: "Desconocido", color: "bg-gray-100 text-gray-500" };
+        return (
+          <span className={`px-2 py-1 text-xs font-semibold rounded-full ${fase.color}`}>
+            {fase.label}
+          </span>
+        );
+      }
+    }
   ];
 
   // Loader Dynamics
@@ -297,13 +319,13 @@ export default function ProspectoDetalle() {
         prioridades={prioridades}
       />
 
-      {/* Alert: No puede crear solicitud sin actividades */}
+      {/* Alert: No puede crear solicitud sin actividades válidas */}
       <AlertDialog open={alertFaltaActividad} onOpenChange={setAlertFaltaActividad}>
         <AlertDialogContent className="bg-white border border-yellow-300 rounded-xl shadow-xl p-7 max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-yellow-700">No hay actividades registradas</AlertDialogTitle>
+            <AlertDialogTitle className="text-yellow-700">No hay actividades válidas</AlertDialogTitle>
             <div className="text-gray-700 mt-2">
-              Para crear una solicitud de inversión, primero debe registrar al menos <b>una actividad</b> para este prospecto.
+              Para crear una solicitud de inversión, primero debe registrar al menos <b>una actividad finalizada</b> (en estado "Finalizada") para este prospecto.
             </div>
           </AlertDialogHeader>
           <AlertDialogFooter>
