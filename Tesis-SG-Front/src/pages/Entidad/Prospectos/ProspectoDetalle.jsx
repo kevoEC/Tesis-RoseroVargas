@@ -113,15 +113,6 @@ export default function ProspectoDetalle() {
       )
     },
     { key: "nombreTipoActividad", label: "Tipo" },
-    { key: "asunto", label: "Asunto" },
-    {
-      key: "descripcion",
-      label: "Descripción",
-      render: (value) => <span className="max-w-12 truncate block">{value}</span>,
-    },
-    { key: "duracion", label: "Duración" },
-    { key: "vencimiento", label: "Vencimiento" },
-    { key: "nombrePrioridad", label: "Prioridad" },
     {
       key: "estado",
       label: "Estado",
@@ -131,6 +122,15 @@ export default function ProspectoDetalle() {
         </span>
       )
     },
+    { key: "asunto", label: "Asunto" },
+    {
+      key: "descripcion",
+      label: "Descripción",
+      render: (value) => <span className="max-w-12 truncate block">{value}</span>,
+    },
+    { key: "duracion", label: "Duración" },
+    { key: "vencimiento", label: "Vencimiento" },
+    { key: "nombrePrioridad", label: "Prioridad" },
   ];
 
   const columnasInversion = [
@@ -180,7 +180,7 @@ export default function ProspectoDetalle() {
   );
 
   return (
-    <div className="p-6 md:p-10 max-w-7xl mx-auto bg-white rounded-2xl shadow-lg relative">
+    <div className="p-6 md:p-10 max-w-7xl mx-auto relative">
       {/* Candado Dynamics */}
       {esSoloLectura && (
         <div
@@ -215,7 +215,7 @@ export default function ProspectoDetalle() {
       {/* Layout tipo Dynamics: Izquierda 1/3, Derecha 2/3 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Panel izquierdo: Opciones */}
-        <section className="border rounded-xl p-6 shadow-sm flex flex-col gap-4 min-h-[360px] col-span-1 bg-white">
+        <section className="p-0 flex flex-col gap-4 min-h-[360px] col-span-1 bg-transparent">
           <div>
             <div className="font-semibold text-gray-800 mb-2">Opciones</div>
             <Button
@@ -245,9 +245,8 @@ export default function ProspectoDetalle() {
               columns={columnasActividad}
               data={actividades}
               mostrarEditar={!esSoloLectura}
-              mostrarAgregarNuevo={!esSoloLectura}
+              mostrarAgregarNuevo={false}
               mostrarEliminar={!esSoloLectura}
-              onAgregarNuevoClick={handleAgregarActividad}
               onEditarClick={actividad => {
                 setActividadEditar(actividad);
                 setModalEditarOpen(true);
@@ -262,9 +261,8 @@ export default function ProspectoDetalle() {
               columns={columnasInversion}
               data={solicitudes}
               mostrarEditar={true}
-              mostrarAgregarNuevo={!esSoloLectura}
+              mostrarAgregarNuevo={false}
               mostrarEliminar={false}
-              onAgregarNuevoClick={handleAgregarSolicitud}
               onEditarClick={solicitud => navigate(`/solicitudes/editar/${solicitud.idSolicitudInversion}`)}
             />
           </div>
@@ -323,7 +321,7 @@ export default function ProspectoDetalle() {
       <AlertDialog open={alertFaltaActividad} onOpenChange={setAlertFaltaActividad}>
         <AlertDialogContent className="bg-white border border-yellow-300 rounded-xl shadow-xl p-7 max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-yellow-700">No hay actividades válidas</AlertDialogTitle>
+            <AlertDialogTitle className="text-yellow-700">No hay actividades finalizadas</AlertDialogTitle>
             <div className="text-gray-700 mt-2">
               Para crear una solicitud de inversión, primero debe registrar al menos <b>una actividad finalizada</b> (en estado "Finalizada") para este prospecto.
             </div>
