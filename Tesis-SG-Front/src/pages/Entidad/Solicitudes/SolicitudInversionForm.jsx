@@ -67,7 +67,7 @@ export default function SolicitudInversionForm({
           tipoDocumento: doc,
         });
       } catch (err) {
-        toast.error("No se pudieron cargar los catálogos.");
+        toast.error("No se pudieron cargar los catálogos. " + (err.message || err));
       }
     })();
   }, []);

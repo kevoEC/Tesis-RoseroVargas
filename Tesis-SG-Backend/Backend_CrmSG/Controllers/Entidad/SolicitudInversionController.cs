@@ -105,12 +105,14 @@ namespace Backend_CrmSG.Controllers.Entidad
             if (existing == null)
                 return NotFound();
 
+            // Solo mapea los campos permitidos a actualizar
             var updatedEntity = SolicitudMapper.MapearParaActualizar(id, dto);
+            updatedEntity.FaseProceso = existing.FaseProceso; // <-- MANTÉN el valor
 
             await _repository.UpdateAsync(updatedEntity);
-
             return Ok(new { success = true, message = "Solicitud actualizada correctamente." });
         }
+
 
 
 

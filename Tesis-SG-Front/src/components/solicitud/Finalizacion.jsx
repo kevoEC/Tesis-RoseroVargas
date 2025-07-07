@@ -3,6 +3,7 @@ import { mapIdentificacionToUpdate } from "@/utils/mappers";
 import {
   getSolicitudById,
   updateSolicitud,
+  getNumeroContratoSecuencial,
 } from "@/service/Entidades/SolicitudService";
 import { getCatalogoFinalizacion } from "@/service/Catalogos/FinalService";
 import { finalizarSolicitudYGenerarTareas } from "@/service/Entidades/TareaService";
@@ -48,6 +49,8 @@ export default function FinalizacionForm({ id }) {
     observacionFinalizacion: "",
     confirmar: false,
   });
+  const [alertSinContrato, setAlertSinContrato] = useState(false);
+  const [glassMsg, setGlassMsg] = useState("");
 
   useEffect(() => {
     const cargar = async () => {
@@ -84,10 +87,15 @@ export default function FinalizacionForm({ id }) {
     cargarCatalogo();
   }, []);
 
+  // Guardar Finalización
   const handleGuardar = async () => {
+    if (!finalizacion.numeroContrato) {
+      setAlertSinContrato(true);
+      return;
+    }
     if (!solicitudData) return;
+    setLoading(true);
     try {
-      setLoading(true);
       const payload = {
         ...solicitudData,
         identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
@@ -104,37 +112,106 @@ export default function FinalizacionForm({ id }) {
     }
   };
 
-  const generarContrato = () => {
-    const provisional = `PROVISIONAL-${Math.floor(Math.random() * 1000)}`;
-    setFinalizacion((f) => ({
-      ...f,
-      numeroContrato: provisional,
-    }));
+  // Generar número de contrato real
+  const handleGenerarContrato = async () => {
+    if (!solicitudData?.idSolicitudInversion || !solicitudData?.proyeccion?.idProyeccionSeleccionada) {
+      toast.error("No se puede generar número de contrato. Verifica que exista una proyección seleccionada.");
+      return;
+    }
+    setGlassMsg("Generando número de contrato...");
+    setIsGenerating(true);
+    try {
+      const result = await getNumeroContratoSecuencial(
+        solicitudData.idSolicitudInversion,
+        solicitudData.proyeccion.idProyeccionSeleccionada
+      );
+      if (result && result.numeroContrato) {
+        setFinalizacion((f) => ({
+          ...f,
+          numeroContrato: result.numeroContrato,
+        }));
+        toast.success("Número de contrato generado.");
+      } else {
+        toast.error("No se pudo generar el número de contrato.");
+      }
+    } catch (err) {
+      toast.error(err.message || "Error al generar número de contrato.");
+    } finally {
+      setIsGenerating(false);
+      setGlassMsg("");
+    }
   };
 
+  // Confirmar (genera tareas Y guarda la finalización en backend)
   const handleConfirmar = async () => {
     if (finalizacion.idContinuarSolicitud === 1) {
       setIsGenerating(true);
+      setGlassMsg("Generando tareas y guardando...");
       try {
         await finalizarSolicitudYGenerarTareas(id);
-        toast.success("Tareas generadas correctamente.");
+
+        // Marca como confirmado y guarda la finalización en la BD
+        const payload = {
+          ...solicitudData,
+          identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
+          finalizacion: { ...finalizacion, confirmar: true },
+        };
+        
+        // eslint-disable-next-line no-unused-vars
+        const res = await updateSolicitud(id, payload);
+
+        setFinalizacion((f) => ({ ...f, confirmar: true }));
+        toast.success("Tareas generadas y finalización guardada.");
       } catch (err) {
-        toast.error("Error al generar tareas: " + err.message);
+        toast.error("Error al generar tareas o guardar finalización: " + err.message);
       } finally {
         setIsGenerating(false);
+        setGlassMsg("");
       }
+    } else {
+      // Solo confirma en local si la acción es distinta de 1
+      setFinalizacion((f) => ({ ...f, confirmar: true }));
     }
-    setFinalizacion({ ...finalizacion, confirmar: true });
   };
+
+  // Deshabilita campos si no hay número de contrato o ya se confirmó
+  const disabledCampos =
+    !finalizacion.numeroContrato ||
+    finalizacion.confirmar ||
+    isGenerating ||
+    loading;
 
   if (loading) return <GlassLoader visible message="Cargando finalización..." />;
 
   return (
     <div className="space-y-6 p-6 relative">
-      <GlassLoader visible={isGenerating} message="Generando tareas..." />
+      <GlassLoader visible={isGenerating} message={glassMsg} />
+
+      {/* Diálogo de alerta si falta número de contrato */}
+      <AlertDialog open={alertSinContrato} onOpenChange={setAlertSinContrato}>
+        <AlertDialogContent className="bg-white border border-gray-200 rounded-xl shadow-xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-violet-700 font-semibold">
+              Debes generar el número de contrato primero
+            </AlertDialogTitle>
+            <div className="text-gray-700 mt-2">
+              Antes de continuar, debes generar el número de contrato.
+            </div>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border border-gray-300 bg-white hover:bg-gray-50">
+              Cerrar
+            </AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <div className="flex justify-end">
-        <Button onClick={handleGuardar} className="bg-primary text-white hover:bg-primary/80 flex items-center gap-2">
+        <Button
+          onClick={handleGuardar}
+          className="bg-primary text-white hover:bg-primary/80 flex items-center gap-2"
+          disabled={loading || isGenerating}
+        >
           <Save className="w-4 h-4" /> Guardar
         </Button>
       </div>
@@ -148,23 +225,27 @@ export default function FinalizacionForm({ id }) {
             <FormInput
               label="Número de contrato"
               value={finalizacion.numeroContrato}
-              onChange={(e) => setFinalizacion({ ...finalizacion, numeroContrato: e.target.value })}
-              disabled={finalizacion.confirmar}
+              onChange={() => {}}
+              disabled={true}
             />
             <Button
-              onClick={generarContrato}
+              onClick={handleGenerarContrato}
               className="h-10"
               variant="muted"
-              disabled={!!finalizacion.numeroContrato.trim() || finalizacion.confirmar}
+              disabled={
+                !!finalizacion.numeroContrato.trim() ||
+                finalizacion.confirmar ||
+                isGenerating
+              }
             >
-              Generar contrato
+              Generar número de contrato
             </Button>
           </div>
 
           {/* Acción */}
           <FormGroup label="Acción">
             <Select
-              disabled={finalizacion.confirmar}
+              disabled={disabledCampos}
               value={String(finalizacion.idContinuarSolicitud)}
               onValueChange={(value) => {
                 const id = parseInt(value, 10);
@@ -196,11 +277,13 @@ export default function FinalizacionForm({ id }) {
                 label="Motivo de finalización"
                 value={finalizacion.motivoFinalizacion}
                 onChange={(e) => setFinalizacion({ ...finalizacion, motivoFinalizacion: e.target.value })}
+                disabled={disabledCampos}
               />
               <FormInput
                 label="Observación de finalización"
                 value={finalizacion.observacionFinalizacion}
                 onChange={(e) => setFinalizacion({ ...finalizacion, observacionFinalizacion: e.target.value })}
+                disabled={disabledCampos}
               />
             </>
           )}
@@ -213,6 +296,7 @@ export default function FinalizacionForm({ id }) {
               idContinuar={finalizacion.idContinuarSolicitud}
               onConfirm={handleConfirmar}
               className="border border-gray-300 p-4 rounded-md"
+              disabled={disabledCampos}
             />
           )}
         </CardContent>
@@ -220,6 +304,8 @@ export default function FinalizacionForm({ id }) {
     </div>
   );
 }
+
+// COMPONENTES AUXILIARES
 
 function FormInput({ label, value, onChange, type = "text", disabled }) {
   return (
@@ -230,18 +316,38 @@ function FormInput({ label, value, onChange, type = "text", disabled }) {
   );
 }
 
-function ConfirmSwitch({ label, checked, onConfirm, idContinuar }) {
+function ConfirmSwitch({ label, checked, onConfirm, idContinuar, disabled }) {
   const [open, setOpen] = useState(false);
 
   const handleConfirm = () => {
     setOpen(false);
-    onConfirm();
+    if (!disabled) onConfirm();
   };
 
   if (checked) {
     return (
       <div className="flex items-center gap-4">
-        <Switch checked disabled className="bg-primary border-primary" />
+        <Switch
+          checked
+          disabled
+          className="bg-violet-600 border-violet-700 opacity-90 !cursor-not-allowed"
+          style={{ opacity: 1 }}
+        />
+        <Label className="text-sm font-medium text-gray-700">{label}</Label>
+      </div>
+    );
+  }
+
+  // Cuando está deshabilitado pero no checked
+  if (disabled) {
+    return (
+      <div className="flex items-center gap-4">
+        <Switch
+          checked={false}
+          disabled
+          className="bg-black border-black-400 opacity-80 !cursor-not-allowed"
+          style={{ opacity: 1 }}
+        />
         <Label className="text-sm font-medium text-gray-700">{label}</Label>
       </div>
     );
@@ -257,7 +363,7 @@ function ConfirmSwitch({ label, checked, onConfirm, idContinuar }) {
       </AlertDialogTrigger>
       <AlertDialogContent className="bg-white text-black border border-gray-300">
         <AlertDialogHeader>
-          <AlertDialogTitle>
+          <AlertDialogTitle className="text-violet-700 font-semibold">
             ¿Estás seguro de terminar la solicitud?
           </AlertDialogTitle>
         </AlertDialogHeader>
