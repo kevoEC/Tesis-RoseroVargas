@@ -1,4 +1,4 @@
-// src/services/ActividadService.js
+// src/service/Entidades/ActividadService.js
 
 import { API_BASE_URL } from "@/config";
 
@@ -10,7 +10,8 @@ const handleResponse = async (response) => {
   }
   return await response.json();
 };
-// Función para obtener el token actual desde localStorage
+
+// Token bearer
 const getAuthHeaders = () => {
   const token = JSON.parse(localStorage.getItem("user"))?.token;
   return {
@@ -19,37 +20,7 @@ const getAuthHeaders = () => {
   };
 };
 
-
-let actividadesPorProspecto = {
-  1: [
-    {
-      idActividad: 1,
-      idTipoActividad: 1,
-      asunto: "Primera llamada",
-      descripcion: "Se realizó contacto inicial",
-      duracion: "00:15:00",
-      vencimiento: "2025-04-16T10:00",
-      idPrioridad: 2,
-      estado: true, // finalizada
-    },
-    {
-      idActividad: 2,
-      idTipoActividad: 2,
-      asunto: "Seguimiento por correo",
-      descripcion: "Se envió información adicional",
-      duracion: "00:30:00",
-      vencimiento: "2025-04-18T16:00",
-      idPrioridad: 1,
-      estado: false, // en progreso
-    },
-  ],
-};
-
-// export const getActividadesByProspectoId = async (idProspecto) => {
-//   return actividadesPorProspecto[idProspecto] || [];
-// };
-
-// 🔵 GET: Obtener prospecto por ID
+// 🔵 GET: Obtener actividades por IdProspecto
 export const getActividadesByProspectoId = async (id) => {
   const res = await fetch(`${API_BASE_URL}/vista/actividad/filtrar?por=IdProspecto&id=${id}`, {
     headers: getAuthHeaders(),
@@ -57,27 +28,49 @@ export const getActividadesByProspectoId = async (id) => {
   return handleResponse(res);
 };
 
-// 🟡 POST: Crear nuevo prospecto
+// 🟡 POST: Crear nueva actividad
 export const createActividad = async (data) => {
+  // Mapeo correcto a tu modelo backend
+  const payload = {
+    IdTipoActividad: Number(data.idTipoActividad),
+    Asunto: data.asunto,
+    Descripcion: data.descripcion,
+    Duracion: data.duracion, // Formato "HH:mm:ss"
+    Vencimiento: data.vencimiento, // Formato ISO
+    IdPrioridad: Number(data.idPrioridad),
+    Estado: !!data.estado, // true = finalizada
+    IdProspecto: Number(data.idProspecto),
+    IdUsuarioPropietario: data.idUsuarioPropietario ?? null, // si lo usas
+    FechaCreacion: data.fechaCreacion ?? null,
+  };
   const res = await fetch(`${API_BASE_URL}/Actividad`, {
     method: "POST",
     headers: getAuthHeaders(),
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   });
   return handleResponse(res);
 };
 
-
-
+// 🟣 PUT: Actualizar actividad (REAL!)
 export const updateActividad = async (idActividad, data) => {
-  const idP = data.idProspecto;
-  const lista = actividadesPorProspecto[idP] || [];
-
-  const index = lista.findIndex((a) => a.idActividad === idActividad);
-  if (index === -1) throw new Error("Actividad no encontrada");
-
-  actividadesPorProspecto[idP][index] = { ...lista[index], ...data };
-
-  console.log("🟡 Actividad actualizada:", actividadesPorProspecto[idP][index]);
-  return actividadesPorProspecto[idP][index];
+  // Mapear solo los campos permitidos por tu modelo
+  const payload = {
+    IdActividad: Number(idActividad),
+    IdTipoActividad: Number(data.idTipoActividad),
+    Asunto: data.asunto,
+    Descripcion: data.descripcion,
+    Duracion: data.duracion, // "HH:mm:ss"
+    Vencimiento: data.vencimiento, // fecha ISO
+    IdPrioridad: Number(data.idPrioridad),
+    Estado: !!data.estado, // true o false
+    IdProspecto: Number(data.idProspecto),
+    IdUsuarioPropietario: data.idUsuarioPropietario ?? null, // opcional
+    FechaCreacion: data.fechaCreacion ?? null, // opcional
+  };
+  const res = await fetch(`${API_BASE_URL}/Actividad/${idActividad}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(payload),
+  });
+  return handleResponse(res);
 };

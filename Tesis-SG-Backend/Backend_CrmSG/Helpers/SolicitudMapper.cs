@@ -172,9 +172,11 @@ public static class SolicitudMapper
             IdUsuarioPropietario = dto.IdUsuarioPropietario,
             IdProspecto = dto.IdProspecto,
             IdCliente = dto.IdCliente,
-            JSONDocument = jsonPayload
+            JSONDocument = jsonPayload,
+            FaseProceso = 1 // ← ***AGREGA ESTA LÍNEA***
         };
     }
+
 
 
 

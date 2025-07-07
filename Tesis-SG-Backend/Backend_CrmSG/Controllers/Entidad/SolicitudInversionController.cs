@@ -79,11 +79,21 @@ namespace Backend_CrmSG.Controllers.Entidad
             }
             catch (Exception ex)
             {
+                // Construir detalle extendido
+                string inner = ex.InnerException != null ? ex.InnerException.Message : null;
+                string stack = ex.StackTrace;
+                string fullError = ex.Message + (inner != null ? " | INNER: " + inner : "");
+
+                // Puedes poner un log en la consola del backend también
+                Console.WriteLine("❌ ERROR CREANDO SOLICITUD: " + fullError);
+                Console.WriteLine(stack);
+
                 return BadRequest(new
                 {
                     success = false,
                     message = "Error al crear la solicitud.",
-                    details = ex.Message
+                    details = fullError,
+                    stackTrace = stack
                 });
             }
         }
