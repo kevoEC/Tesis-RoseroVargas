@@ -10,6 +10,8 @@
         public DateTime FechaNacimiento { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
+        public bool ActualizacionDatos { get; set; }
+
         public int IdUsuarioCreacion { get; set; }
         public string UsuarioCreacionNombreCompleto { get; set; } = "";
         public int? IdUsuarioModificacion { get; set; }
