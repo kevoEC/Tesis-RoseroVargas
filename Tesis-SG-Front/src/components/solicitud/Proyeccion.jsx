@@ -30,10 +30,18 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import ProyeccionNueva from "@/pages/Entidad/Proyecciones/ProyeccionNueva";
+import GlassLoader from "@/components/ui/GlassLoader";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogCancel,
+  AlertDialogAction
+} from "@/components/ui/alert-dialog";
 
-
-
-export default function Proyeccion() {
+export default function Proyeccion({ bloquearEdicion = false }) {
   const { id: idSolicitud } = useParams();
   const navigate = useNavigate();
 
@@ -53,6 +61,9 @@ export default function Proyeccion() {
     clienteAcepta: false,
   });
 
+  const [alertFaltaCampos, setAlertFaltaCampos] = useState(false);
+  const proyeccionesDisponibles = Array.isArray(proyecciones) && proyecciones.length > 0;
+
   useEffect(() => {
     const cargarDatos = async () => {
       setLoading(true);
@@ -70,31 +81,40 @@ export default function Proyeccion() {
             clienteAcepta: data.proyeccion?.clienteAcepta || false,
           });
         }
-
         const [proyRes, asesoresData, justificativosData, origenesData] = await Promise.all([
-          getProyeccionesPorSolicitud(idSolicitud),
-          getAsesoresComerciales(),
-          getJustificativoTransaccion(),
-          getOrigenCliente(),
+          getProyeccionesPorSolicitud(idSolicitud).catch(() => ({ proyecciones: [] })),
+          getAsesoresComerciales().catch(() => []),
+          getJustificativoTransaccion().catch(() => []),
+          getOrigenCliente().catch(() => []),
         ]);
-
         setProyecciones(proyRes.proyecciones || []);
         setAsesores(asesoresData || []);
         setJustificativos(justificativosData || []);
         setOrigenes(origenesData || []);
       } catch (error) {
-        console.error(error);
-        toast.error("Error al cargar los datos de la solicitud: " + error.message);
+        toast.error("Error al cargar los datos de la solicitud.");
       } finally {
         setLoading(false);
       }
     };
 
     cargarDatos();
-  }, [idSolicitud]);
+  }, [idSolicitud, isModalOpen]);
 
   const handleGuardar = async () => {
     if (!solicitudData) return;
+
+    // Solo puedes guardar si TODOS los campos requeridos están llenos
+    const faltanCampos = !formData.idAsesorComercial ||
+      !formData.idJustificativoTransaccion ||
+      !formData.idProyeccionSeleccionada ||
+      !formData.origenFondos;
+
+    if (!proyeccionesDisponibles || faltanCampos) {
+      setAlertFaltaCampos(true);
+      return;
+    }
+
     try {
       setLoading(true);
       const dataToSave = {
@@ -110,8 +130,7 @@ export default function Proyeccion() {
         ? toast.success("Datos guardados exitosamente.")
         : toast.error("Error al guardar los datos.");
     } catch (error) {
-      console.error(error);
-      toast.error("Error al guardar los datos: " + error.message);
+      toast.error("Error al guardar los datos.");
     } finally {
       setLoading(false);
     }
@@ -125,25 +144,39 @@ export default function Proyeccion() {
     { key: "idUsuarioCreacion", label: "Usuario Creador" },
   ];
 
+  const deshabilitarCampos = bloquearEdicion || !proyeccionesDisponibles;
+
   return (
-    <div className="space-y-6 px-4 sm:px-6 py-6">
-      {loading ? (
-        <p>Cargando datos...</p>
-      ) : (
+    <div className="space-y-6 px-4 sm:px-6 py-6 relative">
+      <GlassLoader visible={loading} message="Cargando datos..." />
+      {!loading && (
         <>
           <h2 className="text-xl font-semibold text-gray-800">
             Proyecciones vinculadas
           </h2>
           <Card>
             <CardContent className="space-y-6 px-4 sm:px-6 py-6">
-              <TablaCustom2
-                columns={columnas}
-                data={proyecciones}
-                mostrarAgregarNuevo={true}
-                onAgregarNuevoClick={() => setIsModalOpen(true)}
-                mostrarEditar={false}
-                mostrarEliminar={false}
-              />
+              {proyeccionesDisponibles ? (
+                <TablaCustom2
+                  columns={columnas}
+                  data={proyecciones}
+                  mostrarAgregarNuevo={!bloquearEdicion}
+                  onAgregarNuevoClick={() => setIsModalOpen(true)}
+                  mostrarEditar={false}
+                  mostrarEliminar={false}
+                />
+              ) : (
+                <div className="py-6 text-center text-gray-500">
+                  No se encontraron proyecciones vinculadas.<br />
+                  <Button
+                    className="mt-4"
+                    onClick={() => setIsModalOpen(true)}
+                    disabled={bloquearEdicion}
+                  >
+                    Crear nueva proyección
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -151,7 +184,7 @@ export default function Proyeccion() {
             <CardContent className="p-6 space-y-6">
               <Button
                 onClick={handleGuardar}
-                disabled={loading}
+                disabled={deshabilitarCampos}
                 className="text-white bg-primary hover:bg-primary/85"
               >
                 Guardar datos
@@ -163,6 +196,7 @@ export default function Proyeccion() {
                     onValueChange={(val) =>
                       setFormData({ ...formData, idAsesorComercial: val })
                     }
+                    disabled={deshabilitarCampos}
                   >
                     <SelectTrigger className="bg-white border border-black">
                       <SelectValue placeholder="-Selecciona un asesor-" />
@@ -183,6 +217,7 @@ export default function Proyeccion() {
                     onValueChange={(val) =>
                       setFormData({ ...formData, idJustificativoTransaccion: val })
                     }
+                    disabled={deshabilitarCampos}
                   >
                     <SelectTrigger className="bg-white border border-black">
                       <SelectValue placeholder="-Selecciona un justificativo-" />
@@ -203,6 +238,7 @@ export default function Proyeccion() {
                     onValueChange={(val) =>
                       setFormData({ ...formData, idProyeccionSeleccionada: val })
                     }
+                    disabled={deshabilitarCampos}
                   >
                     <SelectTrigger className="bg-white border border-black">
                       <SelectValue placeholder="-Selecciona una proyección-" />
@@ -227,6 +263,7 @@ export default function Proyeccion() {
                       onChange={(e) =>
                         setFormData({ ...formData, origenFondos: e.target.value })
                       }
+                      disabled={deshabilitarCampos}
                     />
                   </FormGroup>
                 </div>
@@ -239,15 +276,26 @@ export default function Proyeccion() {
                         : "El Cliente No Acepta"
                     }
                     checked={formData.clienteAcepta}
-                    onChange={(checked) =>
-                      setFormData({ ...formData, clienteAcepta: checked })
-                    }
+                    onChange={(checked) => {
+                      if (
+                        !formData.idAsesorComercial ||
+                        !formData.idJustificativoTransaccion ||
+                        !formData.idProyeccionSeleccionada ||
+                        !formData.origenFondos
+                      ) {
+                        setAlertFaltaCampos(true);
+                        return;
+                      }
+                      setFormData({ ...formData, clienteAcepta: checked });
+                    }}
+                    disabled={deshabilitarCampos}
                   />
                 </FormGroup>
               </div>
             </CardContent>
           </Card>
 
+          {/* Modal para nueva proyección */}
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogContent className="w-full max-w-4xl max-h-[calc(100vh-4rem)] overflow-y-auto p-4">
               <ProyeccionNueva />
@@ -258,12 +306,37 @@ export default function Proyeccion() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
+
+          {/* Alert para campos faltantes */}
+          <AlertDialog open={alertFaltaCampos} onOpenChange={setAlertFaltaCampos}>
+          <AlertDialogContent className="bg-white border border-gray-200 rounded-xl shadow-xl">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-violet-700 font-semibold">Faltan campos obligatorios</AlertDialogTitle>
+                <div className="text-gray-700 mt-2">
+                  Para continuar, debes llenar todos los campos y tener al menos una proyección creada y seleccionada.
+                </div>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="border border-gray-300 bg-white hover:bg-gray-50">
+                  Cerrar
+                </AlertDialogCancel>
+                <AlertDialogAction asChild>
+                  <button
+                    className="bg-violet-600 text-white hover:bg-violet-700 px-4 py-2 rounded"
+                    onClick={() => setAlertFaltaCampos(false)}
+                    type="button"
+                  >
+                    OK
+                  </button>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </>
       )}
     </div>
   );
 }
-
 
 function FormGroup({ label, children }) {
   return (
@@ -274,13 +347,14 @@ function FormGroup({ label, children }) {
   );
 }
 
-function FormSwitch({ label, checked, onChange }) {
+function FormSwitch({ label, checked, onChange, disabled }) {
   return (
     <div className="flex items-center gap-4">
       <div className="relative">
         <Switch
           checked={checked}
           onCheckedChange={onChange}
+          disabled={disabled}
           className={`
             peer
             inline-flex
