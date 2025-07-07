@@ -27,9 +27,12 @@ export const getClientes = async () => {
 
 // ✅ GET: Clientes por propietario
 export const getClientesPorPropietario = async (idUsuarioPropietario) => {
-  const res = await fetch(`${API_BASE_URL}/cliente/por-propietario/${idUsuarioPropietario}`, {
-    headers: getAuthHeaders(),
-  });
+  const res = await fetch(
+    `${API_BASE_URL}/cliente/por-propietario/${idUsuarioPropietario}`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
   return await handleResponse(res);
 };
 
@@ -48,5 +51,16 @@ export const updateCliente = async (idCliente, payload) => {
     headers: getAuthHeaders(),
     body: JSON.stringify(payload),
   });
+  return await handleResponse(res);
+};
+
+// ✅ GET: Inversiones por Cliente
+export const getInversionesPorCliente = async (idCliente) => {
+  const res = await fetch(
+    `${API_BASE_URL}/inversion/por-cliente/${idCliente}`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
   return await handleResponse(res);
 };

@@ -47,6 +47,8 @@ public class ClienteService : IClienteService
         cliente.IdNivelAcademico = dto.IdNivelAcademico;
         cliente.IdUsuarioModificacion = dto.IdUsuarioModificacion;
         cliente.FechaModificacion = DateTime.Now;
+        cliente.ActualizacionDatos = false;
+
 
         // IMPORTANTE: Marcar actualización como realizada (flag a 0)
         cliente.ActualizacionDatos = false;

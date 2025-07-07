@@ -41,33 +41,35 @@ export default function TareaDetalleEditable() {
 
   const soloLectura = tarea && tarea.idResultado === 1;
 
-  // ----------- Documentos ----------
+  // Motivos por tipo de tarea
   const MOTIVOS_POR_TIPO = { 1: 23, 2: 23, 3: 14, 4: 7, 5: 8 };
 
-const cargarTarea = async () => {
-  setLoading(true);
-  try {
-    const res = await getTareaById(id);
-    if (res.success) {
-      setTarea(res.data);
-      setResult(res.data.idResultado);
-      setObservacion(res.data.observacion ?? "");
-      setCamposEditados(res.data.camposTipo || {});
-      const idSolicitudInversion = res.data.idSolicitudInversion ?? 1024;
-      const idMotivo = MOTIVOS_POR_TIPO[res.data.idTipoTarea];
-      const docs = await getDocumentosPorSolicitudYMotivo(idSolicitudInversion, idMotivo);
+  // ------- Cargar Tarea y Documentos -------
+  const cargarTarea = async () => {
+    setLoading(true);
+    try {
+      const res = await getTareaById(id);
+      if (res.success) {
+        setTarea(res.data);
+        setResult(res.data.idResultado);
+        setObservacion(res.data.observacion ?? "");
+        setCamposEditados(res.data.camposTipo || {});
 
-      // 🔥 Aquí filtramos por idTarea actual
-      const docsSoloTarea = docs.filter(doc => doc.idTarea === res.data.idTarea);
-      setDocumentos(docsSoloTarea);
+        // Ahora que tienes idSolicitudInversion y idTipoTarea, consulta los documentos
+        const idSolicitudInversion = res.data.idSolicitudInversion;
+        const idMotivo = MOTIVOS_POR_TIPO[res.data.idTipoTarea];
+        const docs = await getDocumentosPorSolicitudYMotivo(idSolicitudInversion, idMotivo);
+
+        // 👇 Solo los documentos relacionados a la tarea actual (prevención si el motivo agrupa varios docs)
+        const docsSoloTarea = docs.filter(doc => doc.idTarea === res.data.idTarea);
+        setDocumentos(docsSoloTarea);
+      }
+    } catch (err) {
+      toast.error("Error al cargar la tarea: " + err.message);
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    toast.error("Error al cargar la tarea: " + err.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   useEffect(() => {
     cargarTarea();
@@ -167,37 +169,33 @@ const cargarTarea = async () => {
             />
           </div>
         );
-case 5:
-  return (
-    <div className="flex flex-col gap-2">
-      {/* Fecha de operación: datetime-local */}
-      <FormInput
-        label="Fecha Operación"
-        type="datetime-local"
-        value={campos.FechaOperacion ? campos.FechaOperacion : ""}
-        onChange={e => handleCampoTipoChange("FechaOperacion", e.target.value)}
-        disabled={soloLectura}
-        placeholder="Seleccione fecha y hora"
-      />
-      {/* Cuenta Abono: string */}
-      <FormInput
-        label="Cuenta Abono"
-        value={campos.CuentaAbono || ""}
-        onChange={e => handleCampoTipoChange("CuentaAbono", e.target.value)}
-        disabled={soloLectura}
-        placeholder="Ej: 12345678"
-      />
-      {/* N° Comprobante Abono: password con ojito */}
-      <FormInputPassword
-        label="N° Comprobante Abono"
-        value={campos.NumeroComprobanteAbono || ""}
-        onChange={e => handleCampoTipoChange("NumeroComprobanteAbono", e.target.value)}
-        disabled={soloLectura}
-        placeholder="********"
-      />
-    </div>
-  );
-
+      case 5:
+        return (
+          <div className="flex flex-col gap-2">
+            <FormInput
+              label="Fecha Operación"
+              type="datetime-local"
+              value={campos.FechaOperacion ? campos.FechaOperacion : ""}
+              onChange={e => handleCampoTipoChange("FechaOperacion", e.target.value)}
+              disabled={soloLectura}
+              placeholder="Seleccione fecha y hora"
+            />
+            <FormInput
+              label="Cuenta Abono"
+              value={campos.CuentaAbono || ""}
+              onChange={e => handleCampoTipoChange("CuentaAbono", e.target.value)}
+              disabled={soloLectura}
+              placeholder="Ej: 12345678"
+            />
+            <FormInputPassword
+              label="N° Comprobante Abono"
+              value={campos.NumeroComprobanteAbono || ""}
+              onChange={e => handleCampoTipoChange("NumeroComprobanteAbono", e.target.value)}
+              disabled={soloLectura}
+              placeholder="********"
+            />
+          </div>
+        );
       default:
         return null;
     }
