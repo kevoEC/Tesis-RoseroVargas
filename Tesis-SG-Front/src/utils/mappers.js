@@ -13,5 +13,16 @@ export const mapIdentificacionToUpdate = (ident) => ({
   obsEquifax: ident?.obsEquifax ?? "",
   listasControl: ident?.listasControl ?? "",
   obsListasControl: ident?.obsListasControl ?? "",
-  continuar: Number(ident?.continuar ?? 1)
+  continuar: Number(ident?.continuar ?? 1),
+});
+
+// utils/mappers.js
+
+export const mapProyeccionToUpdate = (proy) => ({
+  idAsesorComercial: Number(proy?.idAsesorComercial) || null,
+  idJustificativoTransaccion: Number(proy?.idJustificativoTransaccion) || null,
+  idProyeccionSeleccionada: Number(proy?.idProyeccionSeleccionada) || null,
+  origenFondos: proy?.origenFondos ?? "",
+  enviarProyeccion: !!proy?.enviarProyeccion,
+  clienteAcepta: !!proy?.clienteAcepta,
 });

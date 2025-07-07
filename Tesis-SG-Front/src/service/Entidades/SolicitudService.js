@@ -150,3 +150,18 @@ export const getSolicitudesByClienteId = async (idCliente) => {
   if (!res.ok) throw new Error("Error al obtener solicitudes por cliente");
   return await res.json();
 };
+
+// 🔢 GET: Generar/Obtener número de contrato secuencial
+export const getNumeroContratoSecuencial = async (
+  idSolicitudInversion,
+  idProyeccion
+) => {
+  const res = await fetch(
+    `${API_BASE_URL}/contratosecuencial/generar?solicitud=${idSolicitudInversion}&proyeccion=${idProyeccion}`,
+    {
+      method: "GET",
+      headers: getAuthHeaders(),
+    }
+  );
+  return handleResponse(res);
+};

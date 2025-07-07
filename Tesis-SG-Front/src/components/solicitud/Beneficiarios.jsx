@@ -43,7 +43,7 @@ export default function Beneficiarios() {
       const data = await getBeneficiariosPorSolicitud(id);
       setBeneficiarios(data);
     } catch (error) {
-      toast.error("Error al cargar beneficiarios");
+      toast.error("Error al cargar beneficiarios" + (error.message || ""));
     } finally {
       setLoading(false);
     }
@@ -55,7 +55,7 @@ export default function Beneficiarios() {
         const data = await getTipoIdentificacion();
         setTiposIdentificacion(data);
       } catch (error) {
-        toast.error("Error al cargar tipos de identificación");
+        toast.error("Error al cargar tipos de identificación" + (error.message || ""));
       }
     };
     fetchTiposIdentificacion();
@@ -106,7 +106,7 @@ export default function Beneficiarios() {
       toast.success("Beneficiario eliminado");
       obtenerDatos();
     } catch (error) {
-      toast.error("Error al eliminar beneficiario");
+      toast.error("Error al eliminar beneficiario" + (error.message || ""));
     } finally {
       setLoading(false);
     }
@@ -272,7 +272,7 @@ export default function Beneficiarios() {
                     idUsuarioPropietario: user.idUsuario,
                   });
                 } catch (error) {
-                  toast.error("No se pudo guardar el beneficiario");
+                  toast.error("No se pudo guardar el beneficiario" + (error.message || ""));
                 } finally {
                   setLoadingGuardar(false);
                 }
