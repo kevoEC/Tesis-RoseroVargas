@@ -50,38 +50,37 @@ export default function Adjuntos({ id }) {
   });
   const [modoFirmaCatalogo, setModoFirmaCatalogo] = useState([]);
   const [loadingAll, setLoadingAll] = useState(false);
+  const [loadingGuardar, setLoadingGuardar] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [documentoId, setDocumentoId] = useState(null);
   const [loadingInitial, setLoadingInitial] = useState(true);
 
+  const fetchData = async () => {
+    setLoadingInitial(true);
+    try {
+      const [docRes, solicitudRes, firmaRes] = await Promise.all([
+        getAdjuntosPorMotivo(id, 32),
+        getSolicitudById(id),
+        getModoFirma(),
+      ]);
+      setDocumentos(docRes.data || []);
+      setSolicitudData(solicitudRes.data[0]);
 
-const fetchData = async () => {
-  setLoadingInitial(true);
-  try {
-    const [docRes, solicitudRes, firmaRes] = await Promise.all([
-      getAdjuntosPorMotivo(id, 32),
-      getSolicitudById(id),
-      getModoFirma(),
-    ]);
-    setDocumentos(docRes.data || []);
-    setSolicitudData(solicitudRes.data[0]);
+      const adj = solicitudRes.data[0]?.adjuntos || {};
+      setFormData({
+        idModoFirma: adj.idModoFirma || "1",
+        verDocumentosRequeridos: adj.verDocumentosRequeridos || false,
+        confirmaCargaDocumentosCorrectos: adj.confirmaCargaDocumentosCorrectos || false,
+      });
 
-    const adj = solicitudRes.data[0]?.adjuntos || {};
-    setFormData({
-      idModoFirma: adj.idModoFirma || "1",
-      verDocumentosRequeridos: adj.verDocumentosRequeridos || false,
-      confirmaCargaDocumentosCorrectos: adj.confirmaCargaDocumentosCorrectos || false,
-    });
-
-    setModoFirmaCatalogo(firmaRes || []);
-  } catch (err) {
-    toast.error("Error al cargar adjuntos: " + err.message);
-  } finally {
-    setLoadingInitial(false);
-  }
-};
-
+      setModoFirmaCatalogo(firmaRes || []);
+    } catch (err) {
+      toast.error("Error al cargar adjuntos: " + err.message);
+    } finally {
+      setLoadingInitial(false);
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -109,6 +108,7 @@ const fetchData = async () => {
   };
 
   const handleGuardar = async () => {
+    setLoadingGuardar(true);
     try {
       const payload = {
         ...solicitudData,
@@ -121,6 +121,8 @@ const fetchData = async () => {
         : toast.error("Error al guardar.");
     } catch (err) {
       toast.error("Error: " + err.message);
+    } finally {
+      setLoadingGuardar(false);
     }
   };
 
@@ -145,20 +147,28 @@ const fetchData = async () => {
 
   return (
     <div className="space-y-6 relative">
-        <GlassLoader
-          visible={loadingInitial || loadingAll}
-          message={loadingInitial ? "Cargando datos..." : "Generando documentos..."}
-        />
+      <GlassLoader
+        visible={loadingInitial || loadingAll || loadingGuardar}
+        message={
+          loadingInitial
+            ? "Cargando datos..."
+            : loadingAll
+            ? "Generando documentos..."
+            : loadingGuardar
+            ? "Guardando..."
+            : ""
+        }
+      />
 
-
-        <div className="flex justify-end">
-          <Button
-            onClick={handleGuardar}
-            className="bg-primary text-white flex items-center gap-2 hover:bg-primary/80"
-          >
-            <Save className="w-4 h-4" /> Guardar
-          </Button>
-        </div>
+      <div className="flex justify-end">
+        <Button
+          onClick={handleGuardar}
+          className="bg-primary text-white flex items-center gap-2 hover:bg-primary/80"
+          disabled={loadingGuardar || loadingAll || loadingInitial}
+        >
+          <Save className="w-4 h-4" /> Guardar
+        </Button>
+      </div>
       {/* Panel superior de configuración */}
       <Card className="p-6 border border-muted space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -233,6 +243,7 @@ const fetchData = async () => {
   );
 }
 
+// Reutilizables
 function FormSelect({ label, options, value, onChange, disabled }) {
   return (
     <div className="space-y-1.5">
