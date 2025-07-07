@@ -1,4 +1,3 @@
-// ...parte superior del archivo...
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -42,7 +41,7 @@ const mapGetToForm = (identificacion) => ({
   continuar: typeof identificacion.continuar === "number" ? identificacion.continuar : 1,
 });
 
-export default function Identificacion({ id }) {
+export default function Identificacion({ id, bloquearEdicion = false }) { // <--- NUEVO!
   const { notify, setSolicitudHabilitada } = useUI();
   const [tiposSolicitud, setTiposSolicitud] = useState([]);
   const [tiposCliente, setTiposCliente] = useState([]);
@@ -112,7 +111,7 @@ export default function Identificacion({ id }) {
     setForm((prev) => ({ ...prev, [field]: value }));
 
   const ejecutarValidaciones = async () => {
-    if (loadingValidacion || bloquearCampos) return;
+    if (loadingValidacion || bloquearCampos || bloquearEdicion) return; // <--- aquí agregas bloqueo por fase
 
     if (
       !form.idTipoSolicitud ||
@@ -170,7 +169,7 @@ export default function Identificacion({ id }) {
   };
 
   const handleSaveIdentificacion = async () => {
-    if (!solicitudData) return;
+    if (!solicitudData || bloquearEdicion) return; // <--- BLOQUEA edición total si fase 4
     setLoadingSave(true);
     try {
       const payload = {
@@ -210,8 +209,9 @@ export default function Identificacion({ id }) {
           <FormSwitch
             label="Validar"
             checked={form.validar}
+            disabled={bloquearEdicion}
             onChange={async (c) => {
-              if (!loadingValidacion && !bloquearCampos) {
+              if (!loadingValidacion && !bloquearCampos && !bloquearEdicion) {
                 if (!c) return handleChange("validar", false);
                 const ok = await ejecutarValidaciones();
                 handleChange("validar", ok);
@@ -224,14 +224,13 @@ export default function Identificacion({ id }) {
               Consultando...
             </span>
           )}
-          {bloquearCampos && (
+          {bloquearCampos && !bloquearEdicion && (
             <button
               onClick={() => setBloquearCampos(false)}
               className="text-sm text-gray-200 bg-primary hover:bg-primary/80 hover:text-white px-4 py-1.5 rounded-md ml-4"
             >
               Editar datos
             </button>
-
           )}
         </div>
       </div>
@@ -245,12 +244,12 @@ export default function Identificacion({ id }) {
             <FormSelect
               label="Tipo de solicitud"
               options={tiposSolicitud.map(t => ({
-                id: t.idTipoDeSolicitud,         // <-- clave
-                label: t.nombreTipoDeSolicitud,     // <-- texto visible
+                id: t.idTipoDeSolicitud,
+                label: t.nombreTipoDeSolicitud,
               }))}
               value={form.idTipoSolicitud}
               onChange={id => handleChange("idTipoSolicitud", id)}
-              disabled={bloquearCampos}
+              disabled={bloquearCampos || bloquearEdicion}
             />
 
             {/* Tipo de cliente */}
@@ -262,7 +261,7 @@ export default function Identificacion({ id }) {
               }))}
               value={form.idTipoCliente}
               onChange={id => handleChange("idTipoCliente", id)}
-              disabled={bloquearCampos}
+              disabled={bloquearCampos || bloquearEdicion}
             />
 
             {/* Tipo de documento */}
@@ -274,33 +273,32 @@ export default function Identificacion({ id }) {
               }))}
               value={form.idTipoDocumento}
               onChange={id => handleChange("idTipoDocumento", id)}
-              disabled={bloquearCampos}
+              disabled={bloquearCampos || bloquearEdicion}
             />
-
 
             <FormInput
               label="Número de identificación"
               value={form.numeroDocumento}
               onChange={(e) => handleChange("numeroDocumento", e.target.value)}
-              disabled={bloquearCampos}
+              disabled={bloquearCampos || bloquearEdicion}
             />
             <FormInput
               label="Nombres"
               value={form.nombres}
               onChange={(e) => handleChange("nombres", e.target.value)}
-              disabled={bloquearCampos}
+              disabled={bloquearCampos || bloquearEdicion}
             />
             <FormInput
               label="Apellido paterno"
               value={form.apellidoPaterno}
               onChange={(e) => handleChange("apellidoPaterno", e.target.value)}
-              disabled={bloquearCampos}
+              disabled={bloquearCampos || bloquearEdicion}
             />
             <FormInput
               label="Apellido materno"
               value={form.apellidoMaterno}
               onChange={(e) => handleChange("apellidoMaterno", e.target.value)}
-              disabled={bloquearCampos}
+              disabled={bloquearCampos || bloquearEdicion}
             />
           </div>
 
@@ -308,7 +306,7 @@ export default function Identificacion({ id }) {
           <div className="flex justify-end">
             <Button
               onClick={handleSaveIdentificacion}
-              disabled={loadingSave}
+              disabled={loadingSave || bloquearEdicion}
               className="text-gray-200 bg-primary hover:bg-primary/80"
             >
               {loadingSave ? "Guardando..." : "Guardar Identificación"}
@@ -317,52 +315,51 @@ export default function Identificacion({ id }) {
         </CardContent>
       </Card>
 
-      {
-        form.validar && (
-          <>
-            <h2 className="text-2xl font-semibold text-gray-800">Validación</h2>
-            <Separator />
-            <Card className="shadow-md rounded-2xl bg-white border border-gray-200 shadow-md">
-              <CardContent className="p-6 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormInput
-                    label="Identidad (Equifax)"
-                    value={form.equifax}
-                    disabled
-                  />
-                  <FormTextArea
-                    label="Observación Equifax"
-                    value={form.obsEquifax}
-                    disabled
-                  />
-                  <FormInput
-                    label="Listas de Control (LDS)"
-                    value={form.listasControl}
-                    disabled
-                  />
-                  <FormTextArea
-                    label="Observación LDS"
-                    value={form.obsListasControl}
-                    disabled
-                  />
-                  <FormSelect
-                    label="Continuar"
-                    value={form.continuar}
-                    onChange={(v) => handleChange("continuar", Number(v))}
-                    options={continuarOptions}
-                    full
-                    disabled={
-                      form.equifax === "Rechazado" ||
-                      form.listasControl === "Rechazado"
-                    }
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </>
-        )
-      }
-    </div >
+      {form.validar && (
+        <>
+          <h2 className="text-2xl font-semibold text-gray-800">Validación</h2>
+          <Separator />
+          <Card className="shadow-md rounded-2xl bg-white border border-gray-200 shadow-md">
+            <CardContent className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormInput
+                  label="Identidad (Equifax)"
+                  value={form.equifax}
+                  disabled
+                />
+                <FormTextArea
+                  label="Observación Equifax"
+                  value={form.obsEquifax}
+                  disabled
+                />
+                <FormInput
+                  label="Listas de Control (LDS)"
+                  value={form.listasControl}
+                  disabled
+                />
+                <FormTextArea
+                  label="Observación LDS"
+                  value={form.obsListasControl}
+                  disabled
+                />
+                <FormSelect
+                  label="Continuar"
+                  value={form.continuar}
+                  onChange={(v) => handleChange("continuar", Number(v))}
+                  options={continuarOptions}
+                  full
+                  disabled={
+                    form.equifax === "Rechazado" ||
+                    form.listasControl === "Rechazado" ||
+                    bloquearEdicion
+                  }
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </>
+      )}
+    </div>
   );
 }
 
@@ -405,13 +402,14 @@ function FormSelect({ label, value, onChange, options, full = false, disabled })
   );
 }
 
-function FormSwitch({ label, checked, onChange }) {
+function FormSwitch({ label, checked, onChange, disabled }) {
   return (
     <div className="flex items-center gap-4">
       <div className="relative">
         <Switch
           checked={checked}
           onCheckedChange={onChange}
+          disabled={disabled}
           className={`
             peer
             inline-flex
@@ -464,5 +462,3 @@ function FormTextArea({ label, value, disabled }) {
     </div>
   );
 }
-
-// Aquí puedes agregar o mantener tus componentes auxiliares FormInput, FormSelect, etc.

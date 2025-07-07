@@ -152,7 +152,6 @@ export default function ProspectoDetalle() {
     { key: "nombreTipoSolicitud", label: "Tipo Solicitud", render: (_, row) => row.identificacion?.nombreTipoSolicitud || "—" },
     { key: "nombreTipoCliente", label: "Tipo Cliente", render: (_, row) => row.identificacion?.nombreTipoCliente || "—" },
     { key: "nombreTipoDocumento", label: "Tipo Documento", render: (_, row) => row.identificacion?.nombreTipoDocumento || "—" },
-    { key: "nombreCompletoProspecto", label: "Nombre Prospecto" },
     {
       key: "faseProceso",
       label: "Fase Proceso",
