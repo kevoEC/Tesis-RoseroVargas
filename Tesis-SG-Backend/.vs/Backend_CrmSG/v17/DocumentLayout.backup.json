@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\dtos\\adendumupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\dtos\\adendumupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\services\\entidad\\adendum\\adendumservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\services\\entidad\\adendum\\adendumservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\services\\entidad\\adendum\\iadendumservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\services\\entidad\\adendum\\iadendumservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\dtos\\adendumdetalledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\dtos\\adendumdetalledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\controllers\\entidad\\adendumcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\controllers\\entidad\\adendumcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,16 +27,8 @@
       "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\models\\documentos\\documento.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\services\\entidad\\adendum\\adendumservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\services\\entidad\\adendum\\adendumservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\controllers\\entidad\\actividadcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\controllers\\entidad\\actividadcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\services\\entidad\\adendum\\iadendumservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\services\\entidad\\adendum\\iadendumservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\services\\proyeccionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -51,10 +59,6 @@
       "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\controllers\\entidad\\proyeccioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\dtos\\adendumdetalledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\dtos\\adendumdetalledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\models\\entidades\\adendum.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\models\\entidades\\adendum.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -65,10 +69,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\dtos\\adendumfulldetalledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\dtos\\adendumfulldetalledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\dtos\\adendumupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|solutionrelative:backend_crmsg\\dtos\\adendumupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{88881720-DDFC-4CF2-AE03-0B7DABEF7FB1}|Backend_CrmSG\\Backend_CrmSG.csproj|d:\\universidad\\tesis\\tesis-devops\\tesis_kr\\tesis-sg-backend\\backend_crmsg\\dtos\\adendumcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -258,24 +258,115 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Documento.cs",
-              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Documentos\\Documento.cs",
-              "RelativeDocumentMoniker": "Backend_CrmSG\\Models\\Documentos\\Documento.cs",
-              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Documentos\\Documento.cs",
-              "RelativeToolTip": "Backend_CrmSG\\Models\\Documentos\\Documento.cs",
-              "ViewState": "AgIAAAEAAAAAAAAAAAAiwA0AAAAtAAAAAAAAAA==",
+              "DocumentIndex": 11,
+              "Title": "SimuladorProyeccionService.cs",
+              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\SimuladorProyeccionService.cs",
+              "RelativeDocumentMoniker": "Backend_CrmSG\\Services\\SimuladorProyeccionService.cs",
+              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\SimuladorProyeccionService.cs",
+              "RelativeToolTip": "Backend_CrmSG\\Services\\SimuladorProyeccionService.cs",
+              "ViewState": "AgIAAHMAAAAAAAAAAAAswIYAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T16:35:27.557Z",
+              "WhenOpened": "2025-07-02T13:01:16.672Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AdendumController.cs",
+              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Controllers\\Entidad\\AdendumController.cs",
+              "RelativeDocumentMoniker": "Backend_CrmSG\\Controllers\\Entidad\\AdendumController.cs",
+              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Controllers\\Entidad\\AdendumController.cs",
+              "RelativeToolTip": "Backend_CrmSG\\Controllers\\Entidad\\AdendumController.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAowB0AAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-04T07:06:29.387Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AdendumService.cs",
+              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\Entidad\\Adendum\\AdendumService.cs",
+              "RelativeDocumentMoniker": "Backend_CrmSG\\Services\\Entidad\\Adendum\\AdendumService.cs",
+              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\Entidad\\Adendum\\AdendumService.cs",
+              "RelativeToolTip": "Backend_CrmSG\\Services\\Entidad\\Adendum\\AdendumService.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAAIwEEAAABQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-04T06:56:27.988Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "IAdendumService.cs",
+              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\Entidad\\Adendum\\IAdendumService.cs",
+              "RelativeDocumentMoniker": "Backend_CrmSG\\Services\\Entidad\\Adendum\\IAdendumService.cs",
+              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\Entidad\\Adendum\\IAdendumService.cs",
+              "RelativeToolTip": "Backend_CrmSG\\Services\\Entidad\\Adendum\\IAdendumService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAYAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-04T06:55:15.962Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ProyeccionIncrementoResultDto.cs",
+              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\ProyeccionIncrementoResultDto.cs",
+              "RelativeDocumentMoniker": "Backend_CrmSG\\DTOs\\ProyeccionIncrementoResultDto.cs",
+              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\ProyeccionIncrementoResultDto.cs",
+              "RelativeToolTip": "Backend_CrmSG\\DTOs\\ProyeccionIncrementoResultDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T13:21:13.683Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "AdendumDetalleDto.cs",
+              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\AdendumDetalleDto.cs",
+              "RelativeDocumentMoniker": "Backend_CrmSG\\DTOs\\AdendumDetalleDto.cs",
+              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\AdendumDetalleDto.cs",
+              "RelativeToolTip": "Backend_CrmSG\\DTOs\\AdendumDetalleDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAIAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-04T06:54:12.76Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AdendumUpdateDto.cs",
+              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\AdendumUpdateDto.cs",
+              "RelativeDocumentMoniker": "Backend_CrmSG\\DTOs\\AdendumUpdateDto.cs",
+              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\AdendumUpdateDto.cs",
+              "RelativeToolTip": "Backend_CrmSG\\DTOs\\AdendumUpdateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAcAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-04T06:53:54.858Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ProyeccionService.cs",
+              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\ProyeccionService.cs",
+              "RelativeDocumentMoniker": "Backend_CrmSG\\Services\\ProyeccionService.cs",
+              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\ProyeccionService.cs",
+              "RelativeToolTip": "Backend_CrmSG\\Services\\ProyeccionService.cs",
+              "ViewState": "AgIAAOsAAAAAAAAAAAAYwNIAAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-04T15:54:32.144Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "ActividadController.cs",
               "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Controllers\\Entidad\\ActividadController.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Controllers\\Entidad\\ActividadController.cs",
@@ -289,84 +380,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "ProyeccionService.cs",
-              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\ProyeccionService.cs",
-              "RelativeDocumentMoniker": "Backend_CrmSG\\Services\\ProyeccionService.cs",
-              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\ProyeccionService.cs",
-              "RelativeToolTip": "Backend_CrmSG\\Services\\ProyeccionService.cs",
-              "ViewState": "AgIAAOsAAAAAAAAAAAAYwNIAAABKAAAAAAAAAA==",
+              "Title": "Documento.cs",
+              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Documentos\\Documento.cs",
+              "RelativeDocumentMoniker": "Backend_CrmSG\\Models\\Documentos\\Documento.cs",
+              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Documentos\\Documento.cs",
+              "RelativeToolTip": "Backend_CrmSG\\Models\\Documentos\\Documento.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAiwA0AAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T15:54:32.144Z",
+              "WhenOpened": "2025-07-04T16:35:27.557Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "SimuladorProyeccionService.cs",
-              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\SimuladorProyeccionService.cs",
-              "RelativeDocumentMoniker": "Backend_CrmSG\\Services\\SimuladorProyeccionService.cs",
-              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\SimuladorProyeccionService.cs",
-              "RelativeToolTip": "Backend_CrmSG\\Services\\SimuladorProyeccionService.cs",
-              "ViewState": "AgIAAHMAAAAAAAAAAAAswIYAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T13:01:16.672Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AdendumController.cs",
-              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Controllers\\Entidad\\AdendumController.cs",
-              "RelativeDocumentMoniker": "Backend_CrmSG\\Controllers\\Entidad\\AdendumController.cs",
-              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Controllers\\Entidad\\AdendumController.cs",
-              "RelativeToolTip": "Backend_CrmSG\\Controllers\\Entidad\\AdendumController.cs",
-              "ViewState": "AgIAAJQAAAAAAAAAAAAAwKUAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T07:06:29.387Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AdendumService.cs",
-              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\Entidad\\Adendum\\AdendumService.cs",
-              "RelativeDocumentMoniker": "Backend_CrmSG\\Services\\Entidad\\Adendum\\AdendumService.cs",
-              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\Entidad\\Adendum\\AdendumService.cs",
-              "RelativeToolTip": "Backend_CrmSG\\Services\\Entidad\\Adendum\\AdendumService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T06:56:27.988Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "IAdendumService.cs",
-              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\Entidad\\Adendum\\IAdendumService.cs",
-              "RelativeDocumentMoniker": "Backend_CrmSG\\Services\\Entidad\\Adendum\\IAdendumService.cs",
-              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Services\\Entidad\\Adendum\\IAdendumService.cs",
-              "RelativeToolTip": "Backend_CrmSG\\Services\\Entidad\\Adendum\\IAdendumService.cs",
-              "ViewState": "AgIAAAEAAAAAAAAAAAAqwAoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T06:55:15.962Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "ProyeccionIncrementoResultDto.cs",
-              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\ProyeccionIncrementoResultDto.cs",
-              "RelativeDocumentMoniker": "Backend_CrmSG\\DTOs\\ProyeccionIncrementoResultDto.cs",
-              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\ProyeccionIncrementoResultDto.cs",
-              "RelativeToolTip": "Backend_CrmSG\\DTOs\\ProyeccionIncrementoResultDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T13:21:13.683Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "ProyeccionController.cs",
               "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Controllers\\Entidad\\ProyeccionController.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Controllers\\Entidad\\ProyeccionController.cs",
@@ -379,7 +405,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "Proyeccion.cs",
               "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Entidades\\Proyeccion.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Models\\Entidades\\Proyeccion.cs",
@@ -392,7 +418,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "Inversion.cs",
               "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Entidades\\Inversion.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Models\\Entidades\\Inversion.cs",
@@ -405,7 +431,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "AdendumSetIncrementoDto.cs",
               "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\AdendumSetIncrementoDto.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\DTOs\\AdendumSetIncrementoDto.cs",
@@ -418,7 +444,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "Adendum.cs",
               "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Entidades\\Adendum.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Models\\Entidades\\Adendum.cs",
@@ -431,20 +457,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "AdendumDetalleDto.cs",
-              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\AdendumDetalleDto.cs",
-              "RelativeDocumentMoniker": "Backend_CrmSG\\DTOs\\AdendumDetalleDto.cs",
-              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\AdendumDetalleDto.cs",
-              "RelativeToolTip": "Backend_CrmSG\\DTOs\\AdendumDetalleDto.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAA4wAUAAAAyAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T06:54:12.76Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "AdendumFullDetalleDto.cs",
               "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\AdendumFullDetalleDto.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\DTOs\\AdendumFullDetalleDto.cs",
@@ -457,7 +470,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "InversionDetalle.cs",
               "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\Models\\Vistas\\InversionDetalle.cs",
               "RelativeDocumentMoniker": "Backend_CrmSG\\Models\\Vistas\\InversionDetalle.cs",
@@ -492,19 +505,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwAIAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-04T06:53:40.6Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "AdendumUpdateDto.cs",
-              "DocumentMoniker": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\AdendumUpdateDto.cs",
-              "RelativeDocumentMoniker": "Backend_CrmSG\\DTOs\\AdendumUpdateDto.cs",
-              "ToolTip": "D:\\Universidad\\Tesis\\Tesis-DevOps\\Tesis_KR\\Tesis-SG-Backend\\Backend_CrmSG\\DTOs\\AdendumUpdateDto.cs",
-              "RelativeToolTip": "Backend_CrmSG\\DTOs\\AdendumUpdateDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T06:53:54.858Z",
               "EditorCaption": ""
             },
             {

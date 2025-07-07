@@ -1,84 +1,66 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EntidadView from "@/components/shared/VistaEntidad";
-import {
-  getProspectos,
-  deleteProspecto,
-} from "@/service/Entidades/ProspectoService";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
+import GlassLoader from "@/components/ui/GlassLoader";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import ProspectoForm from "./ProspectoForm";
+import { getProspectos, deleteProspecto } from "@/service/Entidades/ProspectoService";
+import { toast } from "sonner";
 
 export default function Prospectos() {
   const navigate = useNavigate();
-
   const [prospectos, setProspectos] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Cargar prospectos
   const cargarProspectos = async () => {
+    setLoading(true);
     try {
       const data = await getProspectos();
       setProspectos(data);
     } catch (error) {
-      console.error("Error al cargar prospectos:", error);
+      toast.error("Error al cargar prospectos: " + (error.message ?? error));
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     cargarProspectos();
+    // eslint-disable-next-line
   }, []);
 
-  /*Cargar los datos al montar el componente*/
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getProspectos(); // Ejecutar función async
-        setProspectos(data);
-      } catch (error) {
-        console.error("Error al cargar prospectos:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // 🟡 Editar
+  // Editar
   const handleEditar = (item) => {
     navigate(`/prospectos/editar/${item.idProspecto}`);
   };
 
-  // 🔴 Eliminar
+  // Eliminar
   const handleEliminar = async (item) => {
+    if (!window.confirm("¿Eliminar este prospecto?")) return;
     try {
       await deleteProspecto(item.idProspecto);
-      // Si usas refetch dentro de VistaEntidad, lo puedes llamar aquí después
+      toast.success("Prospecto eliminado.");
+      cargarProspectos();
     } catch (err) {
-      console.error("Error al eliminar prospecto:", err);
+      toast.error("Error al eliminar prospecto: " + (err.message ?? err));
     }
-  };
-  const handleDesactivar = async (item) => {};
-
-  const handleAbrirFormulario = () => {
-    setIsDialogOpen(true);
-  };
-  const handleCerrarDialog = () => {
-    setIsDialogOpen(false);
   };
 
   const columnas = [
     {
       key: "idProspecto",
-      label: "Prospecto",
+      label: "",
       render: (value) => (
-        <div className="flex items-center justify-center group relative text-gray-500">
+        <div className="flex items-center justify-center group relative text-gray-400">
           <svg
             className="w-5 h-5 md:w-6 md:h-6"
             fill="none"
@@ -102,10 +84,8 @@ export default function Prospectos() {
       key: "nombreCompleto",
       label: "Nombre completo",
       render: (_, row) => (
-        <span className="whitespace-nowrap">
-          {`${row.nombres ?? ""} ${row.apellidoPaterno ?? ""} ${
-            row.apellidoMaterno ?? ""
-          }`}
+        <span className="whitespace-nowrap font-semibold">
+          {`${row.nombres ?? ""} ${row.apellidoPaterno ?? ""} ${row.apellidoMaterno ?? ""}`}
         </span>
       ),
     },
@@ -123,7 +103,7 @@ export default function Prospectos() {
           className={`px-2 py-1 text-xs font-semibold rounded-full ${
             value
               ? "bg-green-100 text-green-700"
-              : "bg-yellow-200 text-yellow-700"
+              : "bg-yellow-100 text-yellow-700"
           }`}
         >
           {value ? "Activo" : "Inactivo"}
@@ -133,31 +113,39 @@ export default function Prospectos() {
   ];
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-full">
-      <Card className="w-full border border-muted rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.12)]">
+    <div className="p-4 sm:p-6 md:p-10 max-w-7xl mx-auto">
+      <GlassLoader visible={loading} message="Cargando prospectos..." />
+      <Card className="w-full border border-muted rounded-2xl shadow-[0_4px_10px_rgba(0,0,0,0.10)]">
         <CardHeader>
-          <CardTitle className="text-3xl">Lista de Prospectos</CardTitle>
+          <CardTitle className="text-3xl font-bold text-gray-900 flex items-center">
+            Lista de Prospectos
+          </CardTitle>
         </CardHeader>
         <CardContent className="p-6 overflow-x-auto">
           <TablaCustom2
             columns={columnas}
-            data={prospectos}
+            data={
+              [...prospectos].sort(
+                (a, b) =>
+                  new Date(b.fechaCreacion || b.fechaRegistro || 0) -
+                  new Date(a.fechaCreacion || a.fechaRegistro || 0)
+              )
+            }
             mostrarEditar={true}
             mostrarAgregarNuevo={true}
             mostrarEliminar={true}
-            onAgregarNuevoClick={handleAbrirFormulario}
+            onAgregarNuevoClick={() => setIsDialogOpen(true)}
             onEditarClick={handleEditar}
             onEliminarClick={handleEliminar}
           />
         </CardContent>
       </Card>
-      {/* Dialog para el formulario */}
+      {/* Dialog para el formulario de creación */}
       <Dialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
-        className="min-w-3xl"
       >
-        <DialogContent className="min-w-3xl">
+        <DialogContent className="min-w-[420px] max-w-xl">
           <DialogHeader>
             <DialogTitle>Agregar Prospecto</DialogTitle>
             <DialogDescription>
@@ -165,7 +153,7 @@ export default function Prospectos() {
             </DialogDescription>
           </DialogHeader>
           <ProspectoForm
-            onClose={handleCerrarDialog}
+            onClose={() => setIsDialogOpen(false)}
             onSaved={cargarProspectos}
           />
         </DialogContent>
