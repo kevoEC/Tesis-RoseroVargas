@@ -3,6 +3,7 @@
     public class SolicitudInversionDetalle
     {
         public int IdSolicitudInversion { get; set; }
+        public int? FaseProceso { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string? JSONDocument { get; set; }

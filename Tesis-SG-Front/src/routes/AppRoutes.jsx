@@ -100,8 +100,17 @@ const Proyeccion = lazy(() =>
   import("@/pages/Entidad/Proyecciones/ProyeccionNueva")
 );
 
+const ProductoTable = lazy(() => import("@/pages/Catalogo/Producto/ProductoTable"));
+const ProductoForm = lazy(() => import("@/pages/Catalogo/Producto/ProductoForm"));
+const Producto = lazy(() => import("@/pages/Catalogo/Producto/Producto"));
+
 const Adjunto = lazy(() => import("@/components/solicitud/Adjuntos"));
 const Pruebaflujo = lazy(() => import("@/pages/FlujoSolicitud"));
+
+// Páginas de configuraciones de producto (ajusta la ruta según tu estructura real)
+//const ConfiguracionesProducto = lazy(() => import("@/pages/Catalogo/ConfiguracionesProducto/ConfiguracionesProducto"));
+const ConfiguracionesProductoForm = lazy(() => import("@/pages/Catalogo/ConfiguracionesProducto/ConfiguracionesProductoForm"));
+
 
 export const publicRoutes = [
   { path: "/login", element: <LoginRedirect /> },
@@ -165,6 +174,11 @@ export const protectedRoutes = [
   { path: "/catalogo/agencia/nuevo", element: <AgenciaForm /> },
   { path: "/catalogo/agencia/editar/:id", element: <AgenciaForm /> },
 
+  // Catálogo de Productos de Inversión
+  { path: "/catalogo/producto/vista", element: <ProductoTable /> },
+  { path: "/catalogo/producto/nuevo", element: <ProductoForm /> },
+  { path: "/catalogo/producto/editar/:id", element: <Producto /> },
+
   // Catálogo de origenes potenciales
   { path: "/catalogo/origenpotencial/vista", element: <OrigenCliente /> },
   { path: "/catalogo/origenpotencial/nuevo", element: <OrigenClienteForm /> },
@@ -180,6 +194,11 @@ export const protectedRoutes = [
     path: "/catalogo/productointeres/editar/:id",
     element: <TipoProductoForm />,
   },
+
+  {
+  path: "/catalogo/configuracionesproducto/nuevo",
+  element: <ConfiguracionesProductoForm />
+},
 
   // Otros catálogos generales
   { path: "/catalogo/prioridad/vista", element: <Prioridad /> },
