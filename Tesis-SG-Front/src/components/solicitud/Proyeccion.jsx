@@ -43,7 +43,6 @@ import {
 
 export default function Proyeccion({ bloquearEdicion = false }) {
   const { id: idSolicitud } = useParams();
-  const navigate = useNavigate();
 
   const [solicitudData, setSolicitudData] = useState(null);
   const [proyecciones, setProyecciones] = useState([]);
@@ -64,6 +63,9 @@ export default function Proyeccion({ bloquearEdicion = false }) {
   const [alertFaltaCampos, setAlertFaltaCampos] = useState(false);
   const proyeccionesDisponibles = Array.isArray(proyecciones) && proyecciones.length > 0;
 
+  // NUEVO: Deshabilita campos y agregar nueva si clienteAcepta === true
+  const clienteYaAcepto = !!formData.clienteAcepta;
+
   useEffect(() => {
     const cargarDatos = async () => {
       setLoading(true);
@@ -78,7 +80,7 @@ export default function Proyeccion({ bloquearEdicion = false }) {
             idProyeccionSeleccionada: data.proyeccion?.idProyeccionSeleccionada || "",
             origenFondos: data.proyeccion?.origenFondos || "",
             enviarProyeccion: false,
-            clienteAcepta: data.proyeccion?.clienteAcepta || false,
+            clienteAcepta: !!data.proyeccion?.clienteAcepta, // <-- AQUI!!
           });
         }
         const [proyRes, asesoresData, justificativosData, origenesData] = await Promise.all([
@@ -103,8 +105,6 @@ export default function Proyeccion({ bloquearEdicion = false }) {
 
   const handleGuardar = async () => {
     if (!solicitudData) return;
-
-    // Solo puedes guardar si TODOS los campos requeridos están llenos
     const faltanCampos = !formData.idAsesorComercial ||
       !formData.idJustificativoTransaccion ||
       !formData.idProyeccionSeleccionada ||
@@ -144,7 +144,8 @@ export default function Proyeccion({ bloquearEdicion = false }) {
     { key: "idUsuarioCreacion", label: "Usuario Creador" },
   ];
 
-  const deshabilitarCampos = bloquearEdicion || !proyeccionesDisponibles;
+  // Ahora los campos se deshabilitan SI clienteAcepta es true o bloquearEdicion o no hay proyecciones
+  const deshabilitarCampos = bloquearEdicion || !proyeccionesDisponibles || clienteYaAcepto;
 
   return (
     <div className="space-y-6 px-4 sm:px-6 py-6 relative">
@@ -160,7 +161,7 @@ export default function Proyeccion({ bloquearEdicion = false }) {
                 <TablaCustom2
                   columns={columnas}
                   data={proyecciones}
-                  mostrarAgregarNuevo={!bloquearEdicion}
+                  mostrarAgregarNuevo={!clienteYaAcepto && !bloquearEdicion}
                   onAgregarNuevoClick={() => setIsModalOpen(true)}
                   mostrarEditar={false}
                   mostrarEliminar={false}
@@ -171,7 +172,7 @@ export default function Proyeccion({ bloquearEdicion = false }) {
                   <Button
                     className="mt-4"
                     onClick={() => setIsModalOpen(true)}
-                    disabled={bloquearEdicion}
+                    disabled={bloquearEdicion || clienteYaAcepto}
                   >
                     Crear nueva proyección
                   </Button>
@@ -192,9 +193,9 @@ export default function Proyeccion({ bloquearEdicion = false }) {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <FormGroup label="Asesor comercial">
                   <Select
-                    value={String(formData.idAsesorComercial)}
+                    value={formData.idAsesorComercial ? String(formData.idAsesorComercial) : ""}
                     onValueChange={(val) =>
-                      setFormData({ ...formData, idAsesorComercial: val })
+                      setFormData({ ...formData, idAsesorComercial: Number(val) })
                     }
                     disabled={deshabilitarCampos}
                   >
@@ -213,9 +214,9 @@ export default function Proyeccion({ bloquearEdicion = false }) {
 
                 <FormGroup label="Justificativo de transacción">
                   <Select
-                    value={String(formData.idJustificativoTransaccion)}
+                    value={formData.idJustificativoTransaccion ? String(formData.idJustificativoTransaccion) : ""}
                     onValueChange={(val) =>
-                      setFormData({ ...formData, idJustificativoTransaccion: val })
+                      setFormData({ ...formData, idJustificativoTransaccion: Number(val) })
                     }
                     disabled={deshabilitarCampos}
                   >
@@ -234,9 +235,9 @@ export default function Proyeccion({ bloquearEdicion = false }) {
 
                 <FormGroup label="Proyección seleccionada">
                   <Select
-                    value={String(formData.idProyeccionSeleccionada)}
+                    value={formData.idProyeccionSeleccionada ? String(formData.idProyeccionSeleccionada) : ""}
                     onValueChange={(val) =>
-                      setFormData({ ...formData, idProyeccionSeleccionada: val })
+                      setFormData({ ...formData, idProyeccionSeleccionada: Number(val) })
                     }
                     disabled={deshabilitarCampos}
                   >
@@ -309,7 +310,7 @@ export default function Proyeccion({ bloquearEdicion = false }) {
 
           {/* Alert para campos faltantes */}
           <AlertDialog open={alertFaltaCampos} onOpenChange={setAlertFaltaCampos}>
-          <AlertDialogContent className="bg-white border border-gray-200 rounded-xl shadow-xl">
+            <AlertDialogContent className="bg-white border border-gray-200 rounded-xl shadow-xl">
               <AlertDialogHeader>
                 <AlertDialogTitle className="text-violet-700 font-semibold">Faltan campos obligatorios</AlertDialogTitle>
                 <div className="text-gray-700 mt-2">

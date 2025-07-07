@@ -1,22 +1,19 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Select, SelectValue, SelectContent, SelectTrigger, SelectItem } from "../ui/select";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Plus } from "lucide-react";
 import TablaCustom2 from "../shared/TablaCustom2";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { getBeneficiariosPorSolicitud, crearBeneficiario, editarBeneficiario, eliminarBeneficiario, } from "@/service/Entidades/BeneficiariosService";
+import { getBeneficiariosPorSolicitud, crearBeneficiario, editarBeneficiario, eliminarBeneficiario } from "@/service/Entidades/BeneficiariosService";
 import { useAuth } from "@/hooks/useAuth";
 import { getTipoIdentificacion } from "@/service/Catalogos/TipoIdentificacionService";
+import GlassLoader from "@/components/ui/GlassLoader";
 
 export default function Beneficiarios() {
-
   const { id } = useParams();
   const { user } = useAuth();
 
@@ -24,6 +21,8 @@ export default function Beneficiarios() {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [tiposIdentificacion, setTiposIdentificacion] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingGuardar, setLoadingGuardar] = useState(false);
 
   const [nuevoDato, setNuevoDato] = useState({
     idSolicitudInversion: Number(id),
@@ -38,13 +37,15 @@ export default function Beneficiarios() {
     idUsuarioPropietario: user.idUsuario,
   });
 
-
   const obtenerDatos = async () => {
+    setLoading(true);
     try {
       const data = await getBeneficiariosPorSolicitud(id);
       setBeneficiarios(data);
     } catch (error) {
-      console.error("Error al cargar beneficiarios:", error);
+      toast.error("Error al cargar beneficiarios");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,12 +55,12 @@ export default function Beneficiarios() {
         const data = await getTipoIdentificacion();
         setTiposIdentificacion(data);
       } catch (error) {
-        console.error("Error al cargar tipos de identificación:", error);
+        toast.error("Error al cargar tipos de identificación");
       }
     };
-
     fetchTiposIdentificacion();
     obtenerDatos();
+    // eslint-disable-next-line
   }, []);
 
   const handleAbrirFormulario = () => {
@@ -94,20 +95,20 @@ export default function Beneficiarios() {
       fechaCreacion: item.fechaCreacion,
       idUsuarioPropietario: user.idUsuario,
     });
-
     setModalAbierto(true);
   };
 
   const handleEliminar = async (item) => {
     if (!window.confirm(`¿Deseas eliminar a "${item.nombre}"?`)) return;
-
+    setLoading(true);
     try {
       await eliminarBeneficiario(item.idBeneficiario);
       toast.success("Beneficiario eliminado");
       obtenerDatos();
     } catch (error) {
-      console.error("Error al eliminar:", error);
       toast.error("Error al eliminar beneficiario");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -122,29 +123,28 @@ export default function Beneficiarios() {
     { key: "fechaCreacion", label: "Fecha de Creación" },
   ];
 
-
   return (
-    <div className="space-y-6 p-6">
-      <h2 className="text-xl font-semibold text-gray-800">Beneficiarios</h2>
-
-     
-
-      <Card>
-        <CardContent className="p-6 space-y-4">
-          <div>
-            <TablaCustom2
-              columns={columnas}
-              data={beneficiarios}
-              mostrarEditar={true}
-              mostrarAgregarNuevo={true}
-              mostrarEliminar={true}
-              onAgregarNuevoClick={handleAbrirFormulario}
-              onEditarClick={handleEditar}
-              onEliminarClick={handleEliminar}
-            />
-          </div>
-        </CardContent>
-      </Card>
+    <div className="space-y-6 p-6 relative">
+      <GlassLoader visible={loading || loadingGuardar} message={loadingGuardar ? "Guardando..." : "Cargando beneficiarios..."} />
+      {!loading && (
+        <>
+          <h2 className="text-xl font-semibold text-gray-800">Beneficiarios</h2>
+          <Card>
+            <CardContent className="p-6 space-y-4">
+              <TablaCustom2
+                columns={columnas}
+                data={beneficiarios}
+                mostrarEditar={true}
+                mostrarAgregarNuevo={true}
+                mostrarEliminar={true}
+                onAgregarNuevoClick={handleAbrirFormulario}
+                onEditarClick={handleEditar}
+                onEliminarClick={handleEliminar}
+              />
+            </CardContent>
+          </Card>
+        </>
+      )}
 
       {/* Modal */}
       <Dialog open={modalAbierto} onOpenChange={setModalAbierto}>
@@ -152,18 +152,17 @@ export default function Beneficiarios() {
           <DialogHeader>
             <DialogTitle>{modoEdicion ? "Editar beneficiario" : "Agregar beneficiario"}</DialogTitle>
           </DialogHeader>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormGroup label="Nombre">
               <Input
+                placeholder="---"
                 value={nuevoDato.nombre}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, nombre: e.target.value })}
               />
             </FormGroup>
-
             <FormGroup label="Tipo Documento">
               <Select
-                value={nuevoDato.idTipoDocumento?.toString()}
+                value={nuevoDato.idTipoDocumento?.toString() || ""}
                 onValueChange={(value) =>
                   setNuevoDato({ ...nuevoDato, idTipoDocumento: Number(value) })
                 }
@@ -183,49 +182,47 @@ export default function Beneficiarios() {
                 </SelectContent>
               </Select>
             </FormGroup>
-
-
             <FormGroup label="Número Documento">
               <Input
+                placeholder="---"
                 value={nuevoDato.numeroDocumento}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, numeroDocumento: e.target.value })}
               />
             </FormGroup>
-
             <FormGroup label="Correo electrónico">
               <Input
+                placeholder="---"
                 type="email"
                 value={nuevoDato.correoElectronico}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, correoElectronico: e.target.value })}
               />
             </FormGroup>
-
             <FormGroup label="Teléfono">
               <Input
+                placeholder="---"
                 value={nuevoDato.telefono}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, telefono: e.target.value })}
               />
             </FormGroup>
-
             <FormGroup label="Dirección">
               <Input
+                placeholder="---"
                 value={nuevoDato.direccion}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, direccion: e.target.value })}
               />
             </FormGroup>
-
             <FormGroup label="Porcentaje de beneficio">
               <Input
                 type="number"
+                placeholder="---"
                 value={nuevoDato.porcentajeBeneficio}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, porcentajeBeneficio: e.target.value })}
               />
             </FormGroup>
           </div>
-
-
           <DialogFooter className="pt-4">
             <Button
+              disabled={loadingGuardar}
               onClick={async () => {
                 const {
                   nombre,
@@ -250,7 +247,7 @@ export default function Beneficiarios() {
                   return;
                 }
 
-
+                setLoadingGuardar(true);
                 try {
                   if (modoEdicion) {
                     await editarBeneficiario(nuevoDato.idBeneficiario, nuevoDato);
@@ -259,20 +256,25 @@ export default function Beneficiarios() {
                     await crearBeneficiario(nuevoDato);
                     toast.success("Beneficiario creado");
                   }
-
                   obtenerDatos();
                   setModalAbierto(false);
                   setModoEdicion(false);
                   setNuevoDato({
                     idSolicitudInversion: Number(id),
                     nombre: "",
+                    idTipoDocumento: "",
+                    numeroDocumento: "",
+                    correoElectronico: "",
                     telefono: "",
-                    porcentaje: "",
+                    direccion: "",
+                    porcentajeBeneficio: "",
+                    fechaCreacion: new Date().toISOString(),
                     idUsuarioPropietario: user.idUsuario,
                   });
                 } catch (error) {
-                  console.error("Error al guardar beneficiario:", error);
                   toast.error("No se pudo guardar el beneficiario");
+                } finally {
+                  setLoadingGuardar(false);
                 }
               }}
             >
