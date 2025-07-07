@@ -11,6 +11,7 @@ public static class SolicitudMapper
         return new SolicitudInversionDTO
         {
             IdSolicitudInversion = vista.IdSolicitudInversion,
+            FaseProceso = vista.FaseProceso,
             IdUsuarioPropietario = vista.IdUsuarioPropietario,
             IdProspecto = vista.IdProspecto,
             IdCliente = vista.IdCliente,
