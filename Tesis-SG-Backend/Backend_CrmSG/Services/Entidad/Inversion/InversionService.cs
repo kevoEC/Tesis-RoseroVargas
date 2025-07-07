@@ -22,6 +22,12 @@ namespace Backend_CrmSG.Services.Entidad.Inversion
             => await _context.InversionDetalle
                     .Where(x => x.IdUsuarioPropietario == idUsuarioPropietario)
                     .ToListAsync();
+
+        public async Task<List<InversionDetalle>> ObtenerPorClienteAsync(int idCliente)
+            => await _context.InversionDetalle
+                    .Where(x => x.IdCliente == idCliente)
+                    .ToListAsync();
+
     }
 
 }

@@ -51,6 +51,7 @@ export default function FinalizacionForm({ id }) {
   });
   const [alertSinContrato, setAlertSinContrato] = useState(false);
   const [glassMsg, setGlassMsg] = useState("");
+  const [bloquearTodo, setBloquearTodo] = useState(false);
 
   useEffect(() => {
     const cargar = async () => {
@@ -58,6 +59,10 @@ export default function FinalizacionForm({ id }) {
         const res = await getSolicitudById(id);
         const data = res.data[0];
         setSolicitudData(data);
+
+        // Bloquear todo si faseProceso !== 1
+        setBloquearTodo(data.faseProceso !== 1);
+
         setFinalizacion({
           numeroContrato: data.finalizacion.numeroContrato ?? "",
           idContinuarSolicitud: data.finalizacion.idContinuarSolicitud ?? "",
@@ -156,7 +161,7 @@ export default function FinalizacionForm({ id }) {
           identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
           finalizacion: { ...finalizacion, confirmar: true },
         };
-        
+
         // eslint-disable-next-line no-unused-vars
         const res = await updateSolicitud(id, payload);
 
@@ -174,18 +179,21 @@ export default function FinalizacionForm({ id }) {
     }
   };
 
-  // Deshabilita campos si no hay número de contrato o ya se confirmó
-  const disabledCampos =
-    !finalizacion.numeroContrato ||
-    finalizacion.confirmar ||
-    isGenerating ||
-    loading;
+  // Deshabilita campos si está bloqueado
+  const disabledCampos = bloquearTodo || !finalizacion.numeroContrato || finalizacion.confirmar || isGenerating || loading;
 
   if (loading) return <GlassLoader visible message="Cargando finalización..." />;
 
   return (
     <div className="space-y-6 p-6 relative">
       <GlassLoader visible={isGenerating} message={glassMsg} />
+
+      {/* Mensaje bonito si está bloqueado */}
+      {bloquearTodo && (
+        <div className="w-full flex items-center px-6 py-2 mb-4 rounded-xl bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
+          <span>No se permite editar la finalización en esta fase.</span>
+        </div>
+      )}
 
       {/* Diálogo de alerta si falta número de contrato */}
       <AlertDialog open={alertSinContrato} onOpenChange={setAlertSinContrato}>
@@ -210,7 +218,7 @@ export default function FinalizacionForm({ id }) {
         <Button
           onClick={handleGuardar}
           className="bg-primary text-white hover:bg-primary/80 flex items-center gap-2"
-          disabled={loading || isGenerating}
+          disabled={bloquearTodo || loading || isGenerating}
         >
           <Save className="w-4 h-4" /> Guardar
         </Button>
@@ -233,6 +241,7 @@ export default function FinalizacionForm({ id }) {
               className="h-10"
               variant="muted"
               disabled={
+                bloquearTodo ||
                 !!finalizacion.numeroContrato.trim() ||
                 finalizacion.confirmar ||
                 isGenerating

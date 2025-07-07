@@ -79,7 +79,8 @@ namespace Backend_CrmSG.Services.Entidad
                 FechaModificacion = tarea.FechaModificacion,
                 IdUsuarioPropietario = tarea.IdUsuarioPropietario,
                 NombreUsuarioPropietario = tarea.NombreUsuarioPropietario,
-                CamposTipo = new Dictionary<string, object?>()
+                CamposTipo = new Dictionary<string, object?>(),
+                IdSolicitudInversion = tarea.IdSolicitudInversion
             };
 
 

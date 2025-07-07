@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { mapIdentificacionToUpdate } from "@/utils/mappers";
 import {
@@ -48,6 +48,7 @@ export default function Proyeccion({ bloquearEdicion = false }) {
   const [proyecciones, setProyecciones] = useState([]);
   const [asesores, setAsesores] = useState([]);
   const [justificativos, setJustificativos] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [origenes, setOrigenes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -94,7 +95,7 @@ export default function Proyeccion({ bloquearEdicion = false }) {
         setJustificativos(justificativosData || []);
         setOrigenes(origenesData || []);
       } catch (error) {
-        toast.error("Error al cargar los datos de la solicitud.");
+        toast.error("Error al cargar los datos de la solicitud." + error.message);
       } finally {
         setLoading(false);
       }
@@ -130,7 +131,7 @@ export default function Proyeccion({ bloquearEdicion = false }) {
         ? toast.success("Datos guardados exitosamente.")
         : toast.error("Error al guardar los datos.");
     } catch (error) {
-      toast.error("Error al guardar los datos.");
+      toast.error("Error al guardar los datos." + error.message);
     } finally {
       setLoading(false);
     }
@@ -150,6 +151,12 @@ export default function Proyeccion({ bloquearEdicion = false }) {
   return (
     <div className="space-y-6 px-4 sm:px-6 py-6 relative">
       <GlassLoader visible={loading} message="Cargando datos..." />
+      {/* --- Mensaje característico de bloqueo --- */}
+      {bloquearEdicion && (
+        <div className="w-full flex items-center px-6 py-2 mb-4 rounded-xl bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
+          <span>No se permite editar la proyección en esta fase.</span>
+        </div>
+      )}
       {!loading && (
         <>
           <h2 className="text-xl font-semibold text-gray-800">

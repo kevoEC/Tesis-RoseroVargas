@@ -35,7 +35,6 @@ export default function Prospectos() {
 
   useEffect(() => {
     cargarProspectos();
-    // eslint-disable-next-line
   }, []);
 
   // Editar
@@ -86,6 +85,20 @@ export default function Prospectos() {
       render: (_, row) => (
         <span className="whitespace-nowrap font-semibold">
           {`${row.nombres ?? ""} ${row.apellidoPaterno ?? ""} ${row.apellidoMaterno ?? ""}`}
+        </span>
+      ),
+    },
+    // <-- Aquí agregamos el campo EsCliente (columna visual)
+    {
+      key: "esCliente",
+      label: "¿Es Cliente?",
+      render: (value) => (
+        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+          value
+            ? "bg-green-100 text-green-700"
+            : "bg-gray-200 text-gray-600"
+        }`}>
+          {value ? "Sí" : "No"}
         </span>
       ),
     },

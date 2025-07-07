@@ -8,12 +8,12 @@ import {
   getAdjuntoById,
   descargarAdjunto,
 } from "@/service/Entidades/AdjuntoService";
-import { Save, Download, Eye, FileText, FileX } from "lucide-react";
+import { Save, Download, Eye, FileText, FileX, RefreshCw } from "lucide-react";
 
 export default function AdjuntoForm({
   documentoId,
   onClose,
-  readOnly = false, // Cambia aquí si prefieres el nombre "soloLectura"
+  readOnly = false,
 }) {
   const [archivoBase64, setArchivoBase64] = useState("");
   const [tipoArchivo, setTipoArchivo] = useState(""); // "pdf", "docx" o ""
@@ -22,31 +22,37 @@ export default function AdjuntoForm({
   const [observaciones, setObservaciones] = useState("Subido por el cliente");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [lastApiResponse, setLastApiResponse] = useState(null);
   const fileInputRef = useRef();
 
-  // Carga de datos al abrir
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      setError("");
-      try {
-        const res = await getAdjuntoById(documentoId);
-        const contenido = res[0]?.base64Contenido || res[0]?.archivo || "";
-        setFileName(res[0]?.documentoNombre || "");
-        if (contenido) {
-          setArchivoBase64(contenido);
-          setTipoArchivo(detectarTipoArchivo(contenido));
-        } else {
-          setArchivoBase64("");
-          setTipoArchivo("");
-        }
-        setObservaciones(res[0]?.observaciones || "Subido por el cliente");
-      } catch {
-        setError("Error al cargar el archivo.");
-      } finally {
-        setLoading(false);
+  // Carga de datos al abrir o recargar
+  const cargarAdjunto = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await getAdjuntoById(documentoId);
+      setLastApiResponse(res[0]); // Debug
+      // Preferir base64Contenido si existe, sino archivo
+      const contenido = res[0]?.base64Contenido || res[0]?.archivo || "";
+      setFileName(res[0]?.documentoNombre || "");
+      if (contenido) {
+        setArchivoBase64(contenido);
+        setTipoArchivo(detectarTipoArchivo(contenido));
+      } else {
+        setArchivoBase64("");
+        setTipoArchivo("");
       }
-    })();
+      setObservaciones(res[0]?.observaciones || "Subido por el cliente");
+    } catch (e) {
+      setError("Error al cargar el archivo." + (e.message || ""));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    cargarAdjunto();
+    // eslint-disable-next-line
   }, [documentoId]);
 
   // Detecta tipo de archivo por base64
@@ -125,11 +131,8 @@ export default function AdjuntoForm({
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      const contentDisposition = blob?.headers?.get("Content-Disposition");
       const filename =
-        contentDisposition?.match(/filename="?(.+)"?/)?.[1] ||
-        fileName ||
-        `documento_${documentoId}.docx`;
+        fileName || `documento_${documentoId}.${tipoArchivo || "docx"}`;
       link.download = filename;
       document.body.appendChild(link);
       link.click();
@@ -159,7 +162,7 @@ export default function AdjuntoForm({
       )}
 
       {/* Vista previa */}
-      <div className="rounded border bg-gray-50 p-2 md:p-4 flex flex-col items-center">
+      <div className="rounded border bg-gray-50 p-2 md:p-4 flex flex-col items-center w-full">
         {tipoArchivo === "pdf" ? (
           <iframe
             src={`data:application/pdf;base64,${archivoBase64}`}
@@ -184,9 +187,43 @@ export default function AdjuntoForm({
             </Button>
           </div>
         ) : (
-          <p className="text-gray-500">No hay archivo cargado.</p>
+          <div className="flex flex-col items-center gap-3 w-full py-6">
+            <p className="text-gray-500 text-sm text-center">
+              {
+                lastApiResponse
+                  ? lastApiResponse.archivo || lastApiResponse.base64Contenido
+                    ? "El documento no puede ser previsualizado aquí, pero puedes intentar descargarlo."
+                    : "Aún no se ha generado o cargado ningún archivo para este documento.<br/>Si acabas de generarlo, intenta recargar."
+                  : "No hay archivo cargado."
+              }
+            </p>
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2 text-gray-500"
+              onClick={cargarAdjunto}
+              disabled={loading}
+              title="Recargar adjunto"
+            >
+              <RefreshCw className="w-4 h-4" /> Recargar
+            </Button>
+            {lastApiResponse?.archivo && (
+              <Button
+                type="button"
+                variant="outline"
+                className="flex items-center gap-2"
+                onClick={handleDescargarArchivo}
+                disabled={loading}
+              >
+                <Download className="w-4 h-4" />
+                Descargar archivo
+              </Button>
+            )}
+          </div>
         )}
       </div>
+
+      {/* Debug info opcional */}
+      {/* <pre className="text-xs text-gray-400 bg-gray-100 p-2 rounded">{JSON.stringify(lastApiResponse, null, 2)}</pre> */}
 
       {/* Formulario de carga y observación solo si es editable */}
       {!readOnly && (

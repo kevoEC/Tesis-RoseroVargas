@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Save, Lock, Eye } from "lucide-react";
+import { ArrowLeft, Save, Lock, Eye, EyeOff } from "lucide-react";
 
 export default function TareaDetalleEditable() {
   const { id } = useParams();
@@ -44,26 +44,30 @@ export default function TareaDetalleEditable() {
   // ----------- Documentos ----------
   const MOTIVOS_POR_TIPO = { 1: 23, 2: 23, 3: 14, 4: 7, 5: 8 };
 
-  const cargarTarea = async () => {
-    setLoading(true);
-    try {
-      const res = await getTareaById(id);
-      if (res.success) {
-        setTarea(res.data);
-        setResult(res.data.idResultado);
-        setObservacion(res.data.observacion ?? "");
-        setCamposEditados(res.data.camposTipo || {});
-        const idSolicitudInversion = res.data.idSolicitudInversion ?? 1024;
-        const idMotivo = MOTIVOS_POR_TIPO[res.data.idTipoTarea];
-        const docs = await getDocumentosPorSolicitudYMotivo(idSolicitudInversion, idMotivo);
-        setDocumentos(docs);
-      }
-    } catch (err) {
-      toast.error("Error al cargar la tarea: " + err.message);
-    } finally {
-      setLoading(false);
+const cargarTarea = async () => {
+  setLoading(true);
+  try {
+    const res = await getTareaById(id);
+    if (res.success) {
+      setTarea(res.data);
+      setResult(res.data.idResultado);
+      setObservacion(res.data.observacion ?? "");
+      setCamposEditados(res.data.camposTipo || {});
+      const idSolicitudInversion = res.data.idSolicitudInversion ?? 1024;
+      const idMotivo = MOTIVOS_POR_TIPO[res.data.idTipoTarea];
+      const docs = await getDocumentosPorSolicitudYMotivo(idSolicitudInversion, idMotivo);
+
+      // 🔥 Aquí filtramos por idTarea actual
+      const docsSoloTarea = docs.filter(doc => doc.idTarea === res.data.idTarea);
+      setDocumentos(docsSoloTarea);
     }
-  };
+  } catch (err) {
+    toast.error("Error al cargar la tarea: " + err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     cargarTarea();
@@ -163,14 +167,37 @@ export default function TareaDetalleEditable() {
             />
           </div>
         );
-      case 5:
-        return (
-          <div className="flex flex-col gap-2">
-            <FormInput label="Fecha Operación" value={campos.FechaOperacion || ""} onChange={e => handleCampoTipoChange("FechaOperacion", e.target.value)} disabled={soloLectura} />
-            <FormInput label="Cuenta Abono" value={campos.CuentaAbono || ""} onChange={e => handleCampoTipoChange("CuentaAbono", e.target.value)} disabled={soloLectura} />
-            <FormInput label="N° Comprobante Abono" value={campos.NumeroComprobanteAbono || ""} onChange={e => handleCampoTipoChange("NumeroComprobanteAbono", e.target.value)} disabled={soloLectura} />
-          </div>
-        );
+case 5:
+  return (
+    <div className="flex flex-col gap-2">
+      {/* Fecha de operación: datetime-local */}
+      <FormInput
+        label="Fecha Operación"
+        type="datetime-local"
+        value={campos.FechaOperacion ? campos.FechaOperacion : ""}
+        onChange={e => handleCampoTipoChange("FechaOperacion", e.target.value)}
+        disabled={soloLectura}
+        placeholder="Seleccione fecha y hora"
+      />
+      {/* Cuenta Abono: string */}
+      <FormInput
+        label="Cuenta Abono"
+        value={campos.CuentaAbono || ""}
+        onChange={e => handleCampoTipoChange("CuentaAbono", e.target.value)}
+        disabled={soloLectura}
+        placeholder="Ej: 12345678"
+      />
+      {/* N° Comprobante Abono: password con ojito */}
+      <FormInputPassword
+        label="N° Comprobante Abono"
+        value={campos.NumeroComprobanteAbono || ""}
+        onChange={e => handleCampoTipoChange("NumeroComprobanteAbono", e.target.value)}
+        disabled={soloLectura}
+        placeholder="********"
+      />
+    </div>
+  );
+
       default:
         return null;
     }
@@ -381,17 +408,49 @@ function Switch({ label, checked, onChange = () => {}, disabled }) {
   );
 }
 
-function FormInput({ label, value, onChange, disabled }) {
+function FormInput({ label, value, onChange, disabled, type = "text", placeholder = "" }) {
   return (
     <div className="space-y-1.5 mb-2">
       <label className="text-sm font-medium text-gray-800">{label}</label>
       <input
-        type="text"
+        type={type}
         value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={onChange}
         disabled={disabled}
+        placeholder={placeholder}
         className="w-full border border-gray-300 rounded-lg p-2 text-sm"
       />
+    </div>
+  );
+}
+
+function FormInputPassword({ label, value, onChange, disabled, placeholder }) {
+  const [show, setShow] = useState(false);
+
+  return (
+    <div className="space-y-1.5 mb-2 relative">
+      <label className="text-sm font-medium text-gray-800">{label}</label>
+      <div className="relative">
+        <input
+          type={show ? "text" : "password"}
+          value={value || ""}
+          onChange={onChange}
+          disabled={disabled}
+          placeholder={placeholder}
+          className="w-full border border-gray-300 rounded-lg p-2 text-sm pr-10"
+        />
+        <button
+          type="button"
+          tabIndex={-1}
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+          onClick={() => setShow((prev) => !prev)}
+          disabled={disabled}
+          aria-label={show ? "Ocultar" : "Mostrar"}
+          style={{ outline: "none" }}
+        >
+          {show ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      </div>
     </div>
   );
 }

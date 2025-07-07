@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -77,7 +78,7 @@ export default function DatosGenerales() {
         setSolicitudData(data);
 
         // Bloquear todo si faseProceso === 4 (Oportunidad lograda)
-        setBloquearTodo(data.faseProceso === 4);
+        setBloquearTodo(data.faseProceso !== 1);
 
         const dg = data.datosGenerales || {};
         setDatosGenerales({
@@ -253,7 +254,7 @@ export default function DatosGenerales() {
       <h2 className="text-xl font-semibold text-gray-800">Datos generales</h2>
       {bloquearTodo && (
         <div className="w-full flex items-center px-6 py-2 mb-4 rounded-xl bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
-          <span>Oportunidad lograda: No se permite editar datos generales en esta fase.</span>
+          <span>No se permite editar datos generales en esta fase.</span>
         </div>
       )}
 

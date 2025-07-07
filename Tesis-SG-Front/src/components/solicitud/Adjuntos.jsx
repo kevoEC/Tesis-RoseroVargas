@@ -37,7 +37,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import AdjuntoForm from "./AdjuntoForm";
-import { Save } from "lucide-react";
+import { Save, Eye } from "lucide-react";
 import GlassLoader from "@/components/ui/GlassLoader";
 
 export default function Adjuntos({ id }) {
@@ -55,7 +55,10 @@ export default function Adjuntos({ id }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [documentoId, setDocumentoId] = useState(null);
   const [loadingInitial, setLoadingInitial] = useState(true);
+  const [bloquearTodo, setBloquearTodo] = useState(false);
+  const [readOnly, setReadOnly] = useState(false);
 
+  // Carga todo, y detecta fase para bloquear
   const fetchData = async () => {
     setLoadingInitial(true);
     try {
@@ -66,6 +69,10 @@ export default function Adjuntos({ id }) {
       ]);
       setDocumentos(docRes.data || []);
       setSolicitudData(solicitudRes.data[0]);
+
+      // Bloquear todo si faseProceso !== 1
+      const bloqueado = solicitudRes.data[0]?.faseProceso !== 1;
+      setBloquearTodo(bloqueado);
 
       const adj = solicitudRes.data[0]?.adjuntos || {};
       setFormData({
@@ -84,10 +91,12 @@ export default function Adjuntos({ id }) {
 
   useEffect(() => {
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const handleEditar = (item) => {
+  const handleEditar = (item, soloVer = false) => {
     setDocumentoId(item.idDocumento);
+    setReadOnly(soloVer);
     setIsDialogOpen(true);
   };
 
@@ -101,7 +110,7 @@ export default function Adjuntos({ id }) {
       await fetchData();
       toast.success("Documentos generados.");
     } catch (err) {
-      toast.error("Error al generar documentos.");
+      toast.error("Error al generar documentos." + err.message);
     } finally {
       setLoadingAll(false);
     }
@@ -126,20 +135,29 @@ export default function Adjuntos({ id }) {
     }
   };
 
+  // --- Columnas: ojo solo en modo solo-ver ---
   const columnas = [
     {
       key: "idDocumento",
       label: "",
-      render: (value) => (
-        <div className="flex items-center justify-center group relative text-gray-500">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6M5 4v16h14V4H5zm2 2h10v12H7V6z" />
-          </svg>
-          <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 text-xs text-white bg-zinc-800 px-2 py-0.5 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 whitespace-nowrap">
-            ID: {value}
-          </span>
-        </div>
-      ),
+      render: (value, row) => {
+        if (bloquearTodo) {
+          return (
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="text-primary hover:bg-violet-100"
+              onClick={() => handleEditar(row, true)}
+              title="Ver"
+            >
+              <Eye size={18} />
+            </Button>
+          );
+        }
+        // Si editable, sin botón o con otro botón personalizado
+        return null;
+      },
     },
     { key: "tipoDocumentoNombre", label: "Tipo de Documento" },
     { key: "motivoNombre", label: "Motivo" },
@@ -160,15 +178,23 @@ export default function Adjuntos({ id }) {
         }
       />
 
+      <h2 className="text-xl font-semibold text-gray-800">Adjuntos</h2>
+      {bloquearTodo && (
+        <div className="w-full flex items-center px-6 py-2 mb-4 rounded-xl bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
+          <span>No se permite editar adjuntos en esta fase.</span>
+        </div>
+      )}
+
       <div className="flex justify-end">
         <Button
           onClick={handleGuardar}
           className="bg-primary text-white flex items-center gap-2 hover:bg-primary/80"
-          disabled={loadingGuardar || loadingAll || loadingInitial}
+          disabled={bloquearTodo || loadingGuardar || loadingAll || loadingInitial}
         >
           <Save className="w-4 h-4" /> Guardar
         </Button>
       </div>
+
       {/* Panel superior de configuración */}
       <Card className="p-6 border border-muted space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -177,22 +203,23 @@ export default function Adjuntos({ id }) {
             options={modoFirmaCatalogo}
             value={formData.idModoFirma}
             onChange={(v) => setFormData({ ...formData, idModoFirma: v })}
-            disabled={formData.confirmaCargaDocumentosCorrectos}
+            disabled={bloquearTodo || formData.confirmaCargaDocumentosCorrectos}
           />
 
           <FormCheckbox
             label="¿Ver documentos requeridos?"
             checked={formData.verDocumentosRequeridos}
-            onChange={() => setOpenAlert(true)}
-            disabled={formData.confirmaCargaDocumentosCorrectos}
+            onChange={() => !bloquearTodo && setOpenAlert(true)}
+            disabled={bloquearTodo || formData.confirmaCargaDocumentosCorrectos}
           />
 
           <FormCheckbox
             label="¿Confirma que cargó todos los documentos?"
             checked={formData.confirmaCargaDocumentosCorrectos}
             onChange={(checked) =>
-              setFormData({ ...formData, confirmaCargaDocumentosCorrectos: checked })
+              !bloquearTodo && setFormData({ ...formData, confirmaCargaDocumentosCorrectos: checked })
             }
+            disabled={bloquearTodo}
           />
         </div>
       </Card>
@@ -206,10 +233,10 @@ export default function Adjuntos({ id }) {
           <TablaCustom2
             columns={columnas}
             data={documentos}
-            mostrarEditar
+            mostrarEditar={!bloquearTodo}
             mostrarAgregarNuevo={false}
             mostrarEliminar={false}
-            onEditarClick={handleEditar}
+            onEditarClick={(item) => handleEditar(item, false)}
           />
         </CardContent>
       </Card>
@@ -219,9 +246,15 @@ export default function Adjuntos({ id }) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Adjunto</DialogTitle>
-            <DialogDescription>Editar archivo</DialogDescription>
+            <DialogDescription>
+              {readOnly ? "Visualización de archivo adjunto" : "Editar archivo"}
+            </DialogDescription>
           </DialogHeader>
-          <AdjuntoForm documentoId={documentoId} onClose={() => setIsDialogOpen(false)} />
+          <AdjuntoForm
+            documentoId={documentoId}
+            readOnly={readOnly}
+            onClose={() => setIsDialogOpen(false)}
+          />
         </DialogContent>
       </Dialog>
 
@@ -233,7 +266,10 @@ export default function Adjuntos({ id }) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmGenerate}>
+            <AlertDialogAction
+              onClick={bloquearTodo ? undefined : handleConfirmGenerate}
+              disabled={bloquearTodo}
+            >
               Sí, generar
             </AlertDialogAction>
           </AlertDialogFooter>

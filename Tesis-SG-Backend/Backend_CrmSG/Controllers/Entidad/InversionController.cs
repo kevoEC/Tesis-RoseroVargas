@@ -41,5 +41,13 @@ namespace Backend_CrmSG.Controllers.Entidad
             var inversiones = await _service.ObtenerPorPropietarioAsync(idUsuario);
             return Ok(inversiones);
         }
+
+        [HttpGet("por-cliente/{idCliente}")]
+        public async Task<IActionResult> GetPorCliente(int idCliente)
+        {
+            var inversiones = await _service.ObtenerPorClienteAsync(idCliente);
+            return Ok(inversiones);
+        }
+
     }
 }

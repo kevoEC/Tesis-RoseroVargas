@@ -2172,6 +2172,22 @@
   },
   {
     "ContainingType": "Backend_CrmSG.Controllers.Entidad.InversionController",
+    "Method": "GetPorCliente",
+    "RelativePath": "api/Inversion/por-cliente/{idCliente}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idCliente",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_CrmSG.Controllers.Entidad.InversionController",
     "Method": "GetPorPropietario",
     "RelativePath": "api/Inversion/por-propietario/{idUsuario}",
     "HttpMethod": "GET",
