@@ -1,6 +1,6 @@
 ﻿using Backend_CrmSG.Data;
-using Backend_CrmSG.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 
 public class ContratoSecuencialService
 {
@@ -13,14 +13,27 @@ public class ContratoSecuencialService
 
     public async Task<string> GenerarObtenerNumeroContratoAsync(int idSolicitudInversion, int idProyeccion)
     {
-        // Aquí ejecuta tu SP o lógica que retorna el número de contrato (como string)
-        // Por ejemplo usando Dapper o FromSqlRaw sobre una entidad real (no DTO)
+        // 1. Consultar si ya existe
         var resultado = await _context.ContratoSecuencial
             .Where(x => x.IdSolicitudInversion == idSolicitudInversion && x.IdProyeccion == idProyeccion)
             .Select(x => x.NumeroContrato)
             .FirstOrDefaultAsync();
 
-        return resultado ?? "";
-    }
+        if (!string.IsNullOrEmpty(resultado))
+            return resultado;
 
+        // 2. Si NO existe, ejecutar el SP para generarlo
+        var paramIdSolicitud = new SqlParameter("@IdSolicitudInversion", idSolicitudInversion);
+        var paramIdProyeccion = new SqlParameter("@IdProyeccion", idProyeccion);
+        var paramAnio = new SqlParameter("@Anio", System.Data.SqlDbType.Int) { Direction = System.Data.ParameterDirection.Output };
+        var paramNumeroContrato = new SqlParameter("@NumeroContrato", System.Data.SqlDbType.VarChar, 30) { Direction = System.Data.ParameterDirection.Output };
+
+        await _context.Database.ExecuteSqlRawAsync(
+            "EXEC sp_GenerarNumeroContrato @IdSolicitudInversion, @IdProyeccion, @Anio OUTPUT, @NumeroContrato OUTPUT",
+            paramIdSolicitud, paramIdProyeccion, paramAnio, paramNumeroContrato
+        );
+
+        // 3. Devolver el número de contrato generado (o vacío si hubo problema)
+        return paramNumeroContrato.Value?.ToString() ?? "";
+    }
 }
