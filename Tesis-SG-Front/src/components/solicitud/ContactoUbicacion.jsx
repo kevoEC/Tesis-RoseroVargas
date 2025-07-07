@@ -28,6 +28,8 @@ import GlassLoader from "@/components/ui/GlassLoader";
 export default function ContactoUbicacion({ id }) {
   const [loading, setLoading] = useState(true);
   const [solicitudData, setSolicitudData] = useState(null);
+  const [bloquearTodo, setBloquearTodo] = useState(false); // <-- NUEVO
+
   const [contactoUbicacion, setContactoUbicacion] = useState({
     correoElectronico: "",
     otroTelefono: "",
@@ -60,6 +62,10 @@ export default function ContactoUbicacion({ id }) {
         const res = await getSolicitudById(id);
         const data = res.data[0];
         setSolicitudData(data);
+
+        // Bloquea todo si faseProceso !== 1
+        setBloquearTodo(data.faseProceso !== 1);
+
         setContactoUbicacion({
           correoElectronico: data.contactoUbicacion?.correoElectronico || "",
           otroTelefono: data.contactoUbicacion?.otroTelefono || "",
@@ -81,7 +87,6 @@ export default function ContactoUbicacion({ id }) {
           numeroIdentificacionEEUU: data.contactoUbicacion?.numeroIdentificacionEEUU || "",
         });
 
-        // Cargar todos los países y tipo de vía
         const [paises, tipoVia] = await Promise.all([
           getCatalogoPais(),
           getCatalogoTipoVia(),
@@ -89,7 +94,6 @@ export default function ContactoUbicacion({ id }) {
         setCatalogoPaises(paises);
         setCatalogoTipoVia(tipoVia);
 
-        // Si ya hay país/provincia seleccionados, carga dependientes
         if (data.contactoUbicacion?.idPaisResidencia) {
           const provincias = await getCatalogoProvinciaPorPais(data.contactoUbicacion.idPaisResidencia);
           setCatalogoProvincias(provincias);
@@ -106,7 +110,6 @@ export default function ContactoUbicacion({ id }) {
       }
     };
     cargar();
-    // eslint-disable-next-line
   }, [id]);
 
   const handleGuardar = async () => {
@@ -164,7 +167,16 @@ export default function ContactoUbicacion({ id }) {
       {!loading && (
         <>
           <h2 className="text-xl font-semibold">Contacto y Ubicación</h2>
-          <Button onClick={handleGuardar} disabled={loading} className="text-white">
+          {bloquearTodo && (
+            <div className="w-full flex items-center px-6 py-2 mb-4 rounded-xl bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
+              <span>No se permite editar contacto y ubicación en esta fase.</span>
+            </div>
+          )}
+          <Button
+            onClick={handleGuardar}
+            disabled={loading || bloquearTodo}
+            className="text-white"
+          >
             Guardar datos
           </Button>
           <Card>
@@ -178,6 +190,7 @@ export default function ContactoUbicacion({ id }) {
                     correoElectronico: e.target.value,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormInput
                 label="Otro teléfono"
@@ -188,6 +201,7 @@ export default function ContactoUbicacion({ id }) {
                     otroTelefono: e.target.value,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormInput
                 label="Teléfono celular"
@@ -198,6 +212,7 @@ export default function ContactoUbicacion({ id }) {
                     telefonoCelular: e.target.value,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormInput
                 label="Teléfono fijo"
@@ -208,6 +223,7 @@ export default function ContactoUbicacion({ id }) {
                     telefonoFijo: e.target.value,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormGroup label="Tipo de vía">
                 <Select
@@ -215,6 +231,7 @@ export default function ContactoUbicacion({ id }) {
                   onValueChange={(v) =>
                     setContactoUbicacion({ ...contactoUbicacion, idTipoVia: v })
                   }
+                  disabled={bloquearTodo}
                 >
                   <SelectTrigger className="border border-black">
                     <SelectValue placeholder="---" />
@@ -238,6 +255,7 @@ export default function ContactoUbicacion({ id }) {
                     callePrincipal: e.target.value,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormInput
                 label="Número de domicilio"
@@ -248,6 +266,7 @@ export default function ContactoUbicacion({ id }) {
                     numeroDomicilio: e.target.value,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormInput
                 label="Calle secundaria"
@@ -258,6 +277,7 @@ export default function ContactoUbicacion({ id }) {
                     calleSecundaria: e.target.value,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormInput
                 label="Referencia"
@@ -268,6 +288,7 @@ export default function ContactoUbicacion({ id }) {
                     referenciaDomicilio: e.target.value,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormInput
                 label="Sector / Barrio"
@@ -278,6 +299,7 @@ export default function ContactoUbicacion({ id }) {
                     sectorBarrio: e.target.value,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormInput
                 label="Tiempo de residencia (años)"
@@ -289,11 +311,13 @@ export default function ContactoUbicacion({ id }) {
                     tiempoResidencia: e.target.value,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormGroup label="País de residencia">
                 <Select
                   value={contactoUbicacion.idPaisResidencia}
                   onValueChange={handlePaisChange}
+                  disabled={bloquearTodo}
                 >
                   <SelectTrigger className="border border-black">
                     <SelectValue placeholder="---" />
@@ -309,7 +333,7 @@ export default function ContactoUbicacion({ id }) {
               </FormGroup>
               <FormGroup label="Provincia">
                 <Select
-                  disabled={!contactoUbicacion.idPaisResidencia}
+                  disabled={!contactoUbicacion.idPaisResidencia || bloquearTodo}
                   value={contactoUbicacion.idProvinciaResidencia}
                   onValueChange={handleProvinciaChange}
                 >
@@ -327,7 +351,7 @@ export default function ContactoUbicacion({ id }) {
               </FormGroup>
               <FormGroup label="Ciudad">
                 <Select
-                  disabled={!contactoUbicacion.idProvinciaResidencia}
+                  disabled={!contactoUbicacion.idProvinciaResidencia || bloquearTodo}
                   value={contactoUbicacion.idCiudadResidencia}
                   onValueChange={(v) =>
                     setContactoUbicacion({ ...contactoUbicacion, idCiudadResidencia: v })
@@ -354,6 +378,7 @@ export default function ContactoUbicacion({ id }) {
                     residenteOtroPais: checked,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormSwitch
                 label="Contribuyente EEUU"
@@ -364,6 +389,7 @@ export default function ContactoUbicacion({ id }) {
                     contribuyenteEEUU: checked,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormInput
                 label="Número de identificación (Otro País)"
@@ -374,6 +400,7 @@ export default function ContactoUbicacion({ id }) {
                     numeroIdentificacionOtroPais: e.target.value,
                   })
                 }
+                disabled={bloquearTodo}
               />
               <FormInput
                 label="Número de Identificación(EE.UU.)"
@@ -384,6 +411,7 @@ export default function ContactoUbicacion({ id }) {
                     numeroIdentificacionEEUU: e.target.value,
                   })
                 }
+                disabled={bloquearTodo}
               />
             </CardContent>
           </Card>
@@ -394,22 +422,23 @@ export default function ContactoUbicacion({ id }) {
 }
 
 // Componentes reutilizables
-function FormInput({ label, value, onChange, type = "text" }) {
+function FormInput({ label, value, onChange, type = "text", disabled }) {
   return (
     <div className="space-y-1.5">
       <Label className="text-sm font-medium text-gray-700">{label}</Label>
-      <Input placeholder="---" type={type} value={value} onChange={onChange} />
+      <Input placeholder="---" type={type} value={value} onChange={onChange} disabled={disabled} />
     </div>
   );
 }
 
-function FormSwitch({ label, checked, onChange }) {
+function FormSwitch({ label, checked, onChange, disabled }) {
   return (
     <div className="flex items-center gap-4">
       <div className="relative">
         <Switch
           checked={checked}
           onCheckedChange={onChange}
+          disabled={disabled}
           className={`
             peer
             inline-flex

@@ -43,6 +43,7 @@ export default function SolicitudesDetalle() {
         // Si usas una API con data.data[0], ajusta aquí:
         setSolicitud(data.data ? data.data[0] : data);
       } catch (err) {
+        console.error("Error al cargar la solicitud:", err);
         setSolicitud(null);
       } finally {
         setLoading(false);
@@ -51,7 +52,8 @@ export default function SolicitudesDetalle() {
     cargarSolicitud();
   }, [id]);
 
-  const bloquearEdicion = solicitud?.faseProceso === 4;
+const bloquearEdicion = solicitud?.faseProceso !== 1;
+
 
   const steps = [
     { label: "Identificación", icon: User, component: <Identificacion id={id} bloquearEdicion={bloquearEdicion} /> },

@@ -41,7 +41,7 @@ const mapGetToForm = (identificacion) => ({
   continuar: typeof identificacion.continuar === "number" ? identificacion.continuar : 1,
 });
 
-export default function Identificacion({ id, bloquearEdicion = false }) { // <--- NUEVO!
+export default function Identificacion({ id, bloquearEdicion = false }) {
   const { notify, setSolicitudHabilitada } = useUI();
   const [tiposSolicitud, setTiposSolicitud] = useState([]);
   const [tiposCliente, setTiposCliente] = useState([]);
@@ -111,7 +111,7 @@ export default function Identificacion({ id, bloquearEdicion = false }) { // <--
     setForm((prev) => ({ ...prev, [field]: value }));
 
   const ejecutarValidaciones = async () => {
-    if (loadingValidacion || bloquearCampos || bloquearEdicion) return; // <--- aquí agregas bloqueo por fase
+    if (loadingValidacion || bloquearCampos || bloquearEdicion) return;
 
     if (
       !form.idTipoSolicitud ||
@@ -169,7 +169,7 @@ export default function Identificacion({ id, bloquearEdicion = false }) { // <--
   };
 
   const handleSaveIdentificacion = async () => {
-    if (!solicitudData || bloquearEdicion) return; // <--- BLOQUEA edición total si fase 4
+    if (!solicitudData || bloquearEdicion) return;
     setLoadingSave(true);
     try {
       const payload = {
@@ -235,12 +235,18 @@ export default function Identificacion({ id, bloquearEdicion = false }) { // <--
         </div>
       </div>
 
+      {/* MENSAJE DE BLOQUEO */}
+      {bloquearEdicion && (
+        <div className="w-full flex items-center px-6 py-2 mb-4 rounded-xl bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
+          <span>No se permite editar la identificación en esta fase.</span>
+        </div>
+      )}
+
       <Separator />
 
-      <Card className="shadow-md rounded-2xl bg-white border border-gray-200 shadow-md">
+      <Card className="shadow-md rounded-2xl bg-white border border-gray-200">
         <CardContent className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Tipo de solicitud */}
             <FormSelect
               label="Tipo de solicitud"
               options={tiposSolicitud.map(t => ({
@@ -252,7 +258,6 @@ export default function Identificacion({ id, bloquearEdicion = false }) { // <--
               disabled={bloquearCampos || bloquearEdicion}
             />
 
-            {/* Tipo de cliente */}
             <FormSelect
               label="Tipo de cliente"
               options={tiposCliente.map(c => ({
@@ -264,7 +269,6 @@ export default function Identificacion({ id, bloquearEdicion = false }) { // <--
               disabled={bloquearCampos || bloquearEdicion}
             />
 
-            {/* Tipo de documento */}
             <FormSelect
               label="Tipo de documento"
               options={tiposIdentificacion.map(d => ({
@@ -302,7 +306,6 @@ export default function Identificacion({ id, bloquearEdicion = false }) { // <--
             />
           </div>
 
-          {/* botón guardar identificación */}
           <div className="flex justify-end">
             <Button
               onClick={handleSaveIdentificacion}
@@ -319,7 +322,7 @@ export default function Identificacion({ id, bloquearEdicion = false }) { // <--
         <>
           <h2 className="text-2xl font-semibold text-gray-800">Validación</h2>
           <Separator />
-          <Card className="shadow-md rounded-2xl bg-white border border-gray-200 shadow-md">
+          <Card className="shadow-md rounded-2xl bg-white border border-gray-200">
             <CardContent className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormInput

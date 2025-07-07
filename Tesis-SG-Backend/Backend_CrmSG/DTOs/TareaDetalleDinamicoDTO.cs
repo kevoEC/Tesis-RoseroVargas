@@ -17,4 +17,6 @@
     public int IdUsuarioPropietario { get; set; }
     public string? NombreUsuarioPropietario { get; set; }
     public Dictionary<string, object?> CamposTipo { get; set; } = new();
+    public int IdSolicitudInversion { get; set; }
+
 }

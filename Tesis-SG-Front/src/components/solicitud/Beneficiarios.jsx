@@ -12,6 +12,7 @@ import { getBeneficiariosPorSolicitud, crearBeneficiario, editarBeneficiario, el
 import { useAuth } from "@/hooks/useAuth";
 import { getTipoIdentificacion } from "@/service/Catalogos/TipoIdentificacionService";
 import GlassLoader from "@/components/ui/GlassLoader";
+import { getSolicitudById } from "@/service/Entidades/SolicitudService"; // <-- Importa aquí
 
 export default function Beneficiarios() {
   const { id } = useParams();
@@ -23,6 +24,7 @@ export default function Beneficiarios() {
   const [tiposIdentificacion, setTiposIdentificacion] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingGuardar, setLoadingGuardar] = useState(false);
+  const [bloquearTodo, setBloquearTodo] = useState(false); // <-- Control bloqueo
 
   const [nuevoDato, setNuevoDato] = useState({
     idSolicitudInversion: Number(id),
@@ -36,6 +38,21 @@ export default function Beneficiarios() {
     fechaCreacion: new Date().toISOString(),
     idUsuarioPropietario: user.idUsuario,
   });
+
+  // NUEVO: cargar fase de solicitud y aplicar bloqueo
+  useEffect(() => {
+    const obtenerFase = async () => {
+      try {
+        const res = await getSolicitudById(id);
+        const data = res.data[0];
+        setBloquearTodo(data.faseProceso !== 1);
+      // eslint-disable-next-line no-unused-vars
+      } catch (error) {
+        setBloquearTodo(false);
+      }
+    };
+    obtenerFase();
+  }, [id]);
 
   const obtenerDatos = async () => {
     setLoading(true);
@@ -99,6 +116,7 @@ export default function Beneficiarios() {
   };
 
   const handleEliminar = async (item) => {
+    if (bloquearTodo) return;
     if (!window.confirm(`¿Deseas eliminar a "${item.nombre}"?`)) return;
     setLoading(true);
     try {
@@ -129,14 +147,19 @@ export default function Beneficiarios() {
       {!loading && (
         <>
           <h2 className="text-xl font-semibold text-gray-800">Beneficiarios</h2>
+          {bloquearTodo && (
+            <div className="w-full flex items-center px-6 py-2 mb-4 rounded-xl bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
+              <span>No se permite editar beneficiarios en esta fase.</span>
+            </div>
+          )}
           <Card>
             <CardContent className="p-6 space-y-4">
               <TablaCustom2
                 columns={columnas}
                 data={beneficiarios}
-                mostrarEditar={true}
-                mostrarAgregarNuevo={true}
-                mostrarEliminar={true}
+                mostrarEditar={!bloquearTodo}
+                mostrarAgregarNuevo={!bloquearTodo}
+                mostrarEliminar={!bloquearTodo}
                 onAgregarNuevoClick={handleAbrirFormulario}
                 onEditarClick={handleEditar}
                 onEliminarClick={handleEliminar}
@@ -158,6 +181,7 @@ export default function Beneficiarios() {
                 placeholder="---"
                 value={nuevoDato.nombre}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, nombre: e.target.value })}
+                disabled={bloquearTodo}
               />
             </FormGroup>
             <FormGroup label="Tipo Documento">
@@ -166,6 +190,7 @@ export default function Beneficiarios() {
                 onValueChange={(value) =>
                   setNuevoDato({ ...nuevoDato, idTipoDocumento: Number(value) })
                 }
+                disabled={bloquearTodo}
               >
                 <SelectTrigger className="bg-white border border-gray-300">
                   <SelectValue placeholder="Seleccionar..." />
@@ -187,6 +212,7 @@ export default function Beneficiarios() {
                 placeholder="---"
                 value={nuevoDato.numeroDocumento}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, numeroDocumento: e.target.value })}
+                disabled={bloquearTodo}
               />
             </FormGroup>
             <FormGroup label="Correo electrónico">
@@ -195,6 +221,7 @@ export default function Beneficiarios() {
                 type="email"
                 value={nuevoDato.correoElectronico}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, correoElectronico: e.target.value })}
+                disabled={bloquearTodo}
               />
             </FormGroup>
             <FormGroup label="Teléfono">
@@ -202,6 +229,7 @@ export default function Beneficiarios() {
                 placeholder="---"
                 value={nuevoDato.telefono}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, telefono: e.target.value })}
+                disabled={bloquearTodo}
               />
             </FormGroup>
             <FormGroup label="Dirección">
@@ -209,6 +237,7 @@ export default function Beneficiarios() {
                 placeholder="---"
                 value={nuevoDato.direccion}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, direccion: e.target.value })}
+                disabled={bloquearTodo}
               />
             </FormGroup>
             <FormGroup label="Porcentaje de beneficio">
@@ -217,12 +246,13 @@ export default function Beneficiarios() {
                 placeholder="---"
                 value={nuevoDato.porcentajeBeneficio}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, porcentajeBeneficio: e.target.value })}
+                disabled={bloquearTodo}
               />
             </FormGroup>
           </div>
           <DialogFooter className="pt-4">
             <Button
-              disabled={loadingGuardar}
+              disabled={loadingGuardar || bloquearTodo}
               onClick={async () => {
                 const {
                   nombre,

@@ -34,6 +34,7 @@ export default function BancoForm({ id }) {
   });
   const [bancos, setBancos] = useState([]);
   const [tiposCuenta, setTiposCuenta] = useState([]);
+  const [bloquearTodo, setBloquearTodo] = useState(false); // NUEVO
 
   useEffect(() => {
     const cargar = async () => {
@@ -44,6 +45,10 @@ export default function BancoForm({ id }) {
         const bancosRaw = await getCatalogoBancos();
         const tiposCuentaRaw = await getCatalogoTiposCuenta();
         setSolicitudData(data);
+
+        // Bloquea todo si faseProceso !== 1
+        setBloquearTodo(data.faseProceso !== 1);
+
         setBanco({
           idBanco: data.banco.idBanco ?? "",
           bancoNombre: data.banco.bancoNombre ?? "",
@@ -92,7 +97,12 @@ export default function BancoForm({ id }) {
       {!loading && (
         <>
           <h2 className="text-xl font-semibold">Datos Bancarios</h2>
-          <Button onClick={handleGuardar} disabled={loading} className="text-white">
+          {bloquearTodo && (
+            <div className="w-full flex items-center px-6 py-2 mb-4 rounded-xl bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
+              <span>No se permite editar datos bancarios en esta fase.</span>
+            </div>
+          )}
+          <Button onClick={handleGuardar} disabled={loading || bloquearTodo} className="text-white">
             Guardar datos
           </Button>
           <Card>
@@ -102,12 +112,14 @@ export default function BancoForm({ id }) {
                 options={bancos}
                 value={banco.idBanco}
                 onChange={(value) => setBanco({ ...banco, idBanco: value })}
+                disabled={bloquearTodo}
               />
               <FormSelect
                 label="Tipo de Cuenta"
                 options={tiposCuenta}
                 value={banco.idTipoCuenta}
                 onChange={(value) => setBanco({ ...banco, idTipoCuenta: value })}
+                disabled={bloquearTodo}
               />
               <FormInput
                 label="Número de Cuenta"
@@ -115,6 +127,7 @@ export default function BancoForm({ id }) {
                 onChange={(e) =>
                   setBanco({ ...banco, numeroCuenta: e.target.value })
                 }
+                disabled={bloquearTodo}
               />
             </CardContent>
           </Card>
@@ -125,7 +138,7 @@ export default function BancoForm({ id }) {
 }
 
 // Componentes reutilizables
-function FormInput({ label, value, onChange, type = "text" }) {
+function FormInput({ label, value, onChange, type = "text", disabled }) {
   return (
     <div className="space-y-1.5">
       <Label className="text-sm font-medium text-gray-700">{label}</Label>
@@ -134,15 +147,16 @@ function FormInput({ label, value, onChange, type = "text" }) {
         type={type}
         value={value}
         onChange={onChange}
+        disabled={disabled}
       />
     </div>
   );
 }
-function FormSelect({ label, options, value, onChange }) {
+function FormSelect({ label, options, value, onChange, disabled }) {
   return (
     <div className="space-y-1.5">
       <Label className="text-sm font-medium text-gray-700">{label}</Label>
-      <Select value={String(value)} onValueChange={onChange}>
+      <Select value={String(value)} onValueChange={onChange} disabled={disabled}>
         <SelectTrigger className="bg-white border border-gray-700">
           <SelectValue placeholder="Seleccione una opción" />
         </SelectTrigger>
