@@ -3584,6 +3584,29 @@
         }
       }
     },
+    "/api/Inversion/por-cliente/{idCliente}": {
+      "get": {
+        "tags": [
+          "Inversion"
+        ],
+        "parameters": [
+          {
+            "name": "idCliente",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/JustificativoTransaccion": {
       "get": {
         "tags": [
