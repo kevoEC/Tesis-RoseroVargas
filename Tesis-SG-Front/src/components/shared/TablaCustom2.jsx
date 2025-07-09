@@ -20,17 +20,25 @@ const TablaCustom2 = ({
   mostrarAgregarNuevo = true,
   mostrarEditar = true,
   mostrarEliminar = true,
+  itemsPerPageInit, // <-- recibe prop
 }) => {
   const [tableData, setTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortColumn, setSortColumn] = useState("");
   const [sortDirection, setSortDirection] = useState("asc");
   const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageInit || 10);
   const [modalOpen, setModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState({});
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
+
+    // Si quieres que al cambiar de cliente también se resetee la paginación:
+  useEffect(() => {
+    if (itemsPerPageInit) setItemsPerPage(itemsPerPageInit);
+    setCurrentPage(0);
+  }, [data, itemsPerPageInit]);
+  // ...
 
   //console.log("🟢 Datos recibidos por la tabla:", data);
 

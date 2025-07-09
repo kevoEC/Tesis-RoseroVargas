@@ -6,13 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
 import GlassLoader from "@/components/ui/GlassLoader";
-import { getClienteById, updateCliente } from "@/service/Entidades/ClienteService";
-import { getInversionesPorClienteId } from "@/service/Entidades/InversionService";
+import { getClienteById, updateCliente, getInversionesPorCliente } from "@/service/Entidades/ClienteService";
 import { getCasosPorCliente } from "@/service/Entidades/CasosService";
 import { toast } from "sonner";
-import { FaUser, FaUserTie, FaFileContract, FaFolderOpen, FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaFileContract, FaFolderOpen, FaRegEye } from "react-icons/fa";
 
-// --- Utilidad para iniciales de avatar
+// Utilidad para iniciales de avatar
 function getInitials(cliente) {
   if (!cliente) return "";
   const n = cliente.nombres?.trim()?.[0] || "";
@@ -20,7 +19,7 @@ function getInitials(cliente) {
   return (n + a).toUpperCase();
 }
 
-// --- FormGroup reusable
+// FormGroup reusable
 function FormGroup({ label, children }) {
   return (
     <div className="space-y-1">
@@ -44,35 +43,49 @@ export default function ClienteForm() {
 
   // --- COLUMNAS TABLAS ---
   const columnasInversiones = [
-    { key: "numeroContrato", label: "Contrato" },
-    { key: "capital", label: "Capital", render: v => `$${Number(v).toLocaleString("es-EC")}` },
-    { key: "fechaInicial", label: "Inicio", render: v => v && new Date(v).toLocaleDateString("es-EC") },
-    { key: "fechaVencimiento", label: "Vencimiento", render: v => v && new Date(v).toLocaleDateString("es-EC") },
-    { key: "tasa", label: "Tasa", render: v => v ? `${Number(v).toFixed(2)}%` : "-" },
-    { key: "estado", label: "Estado", render: v => v ? "Vigente" : "Finalizada" },
     {
-      key: "acciones",
-      label: "Acciones",
+      key: "idInversion",
+      label: "",
       render: (_, row) => (
-        <Button size="sm" variant="outline" onClick={() => navigate(`/inversiones/editar/${row.idInversion}`)}>
-          Ver Detalle
-        </Button>
+        <span
+          className="flex justify-center items-center cursor-pointer"
+          title={`Id: ${row.idInversion}`}
+          onClick={() => navigate(`/inversiones/editar/${row.idInversion}`)}
+        >
+          <FaRegEye className="text-blue-600 hover:text-blue-800" size={18} />
+        </span>
       ),
     },
-  ];
-  const columnasCasos = [
-    { key: "titulo", label: "Título" },
-    { key: "estado", label: "Estado" },
-    { key: "fechaCreacion", label: "F. Creación", render: v => v && new Date(v).toLocaleDateString("es-EC") },
-    { key: "responsableNombre", label: "Responsable" },
+    { key: "nombreCompletoCliente", label: "Cliente" },
+    { key: "inversionNombre", label: "Inversión" },
     {
-      key: "acciones",
-      label: "Acciones",
+      key: "terminada",
+      label: "Estado",
+      render: v => (v === false ? "Vigente" : "Finalizada"),
+    },
+  ];
+
+  const columnasCasos = [
+    {
+      key: "idCaso",
+      label: "",
       render: (_, row) => (
-        <Button size="sm" variant="outline" onClick={() => navigate(`/casos/editar/${row.idCaso}`)}>
-          Ver Detalle
-        </Button>
+        <span
+          className="flex justify-center items-center cursor-pointer"
+          title={`Id: ${row.idCaso}`}
+          onClick={() => navigate(`/casos/editar/${row.idCaso}`)}
+        >
+          <FaRegEye className="text-green-600 hover:text-green-800" size={18} />
+        </span>
       ),
+    },
+    { key: "numeroCaso", label: "N° Caso" },
+    { key: "motivoNombre", label: "Motivo" },
+    { key: "estado", label: "Estado" },
+    {
+      key: "fechaCreacion",
+      label: "F. Creación",
+      render: v => v && new Date(v).toLocaleDateString("es-EC"),
     },
   ];
 
@@ -84,7 +97,7 @@ export default function ClienteForm() {
         const clienteData = await getClienteById(id);
         setCliente(clienteData);
 
-        const inversionesData = await getInversionesPorClienteId(id);
+        const inversionesData = await getInversionesPorCliente(id);
         setInversiones(Array.isArray(inversionesData) ? inversionesData : []);
 
         const casosData = await getCasosPorCliente(id);
@@ -130,7 +143,7 @@ export default function ClienteForm() {
   // HEADER datos
   const avatarColor = "bg-blue-100 text-blue-700";
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-8">
+    <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-8">
       {/* Header Dynamics */}
       <div className="flex flex-col md:flex-row items-center justify-between border-b pb-4 rounded-2xl px-4 mb-2 bg-white">
         <div className="flex items-center gap-4">
@@ -145,9 +158,9 @@ export default function ClienteForm() {
             <div className="text-xs text-gray-500">Cliente</div>
           </div>
         </div>
-        <div className="flex gap-8 items-center mt-2 md:mt-0">
+        <div className="flex gap-6 flex-wrap items-center mt-2 md:mt-0">
           <div className="flex flex-col items-center">
-            <span className="font-semibold">{cliente.propietarioNombreCompleto || "Kevin Rosero"}</span>
+            <span className="font-semibold">{cliente.usuarioPropietarioNombreCompleto || "Sin propietario"}</span>
             <span className="text-xs text-gray-400">Propietario</span>
           </div>
           <div className="flex flex-col items-center">
@@ -164,15 +177,15 @@ export default function ClienteForm() {
         </div>
       </div>
 
-      {/* PRIMER GRID: Detalles personales (2 col) + Tablas derecha (3 col) */}
+      {/* GRID PRINCIPAL */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
         {/* Detalle cliente */}
         <div className="lg:col-span-2">
           <Card>
             <CardContent className="p-6">
-              <div className="flex items-center gap-2 mb-14">
+              <div className="flex items-center gap-2 mb-8">
                 <h1 className="text-2xl font-bold">Detalle de Cliente</h1>
-                {!editando && (
+                {!editando && cliente.actualizacionDatos === true && (
                   <Button className="ml-auto" onClick={handleEdit} variant="outline">
                     Editar datos
                   </Button>
@@ -182,7 +195,7 @@ export default function ClienteForm() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <section>
                   <h2 className="text-lg font-semibold text-gray-800 mb-2">Datos Personales</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-14">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                     <FormGroup label="Nombres">
                       <Input disabled value={editando ? form.nombres : cliente.nombres} onChange={e => handleChange("nombres", e.target.value)} />
                     </FormGroup>
@@ -237,7 +250,14 @@ export default function ClienteForm() {
                 <FaFileContract className="text-blue-700" />
                 <h2 className="font-semibold text-base">Inversiones del Cliente</h2>
               </div>
-              <TablaCustom2 columns={columnasInversiones} data={inversiones || []} mostrarEditar={false} mostrarEliminar={false} mostrarAgregarNuevo={false} />
+              <TablaCustom2
+                columns={columnasInversiones}
+                data={inversiones || []}
+                mostrarEditar={false}
+                mostrarEliminar={false}
+                mostrarAgregarNuevo={false}
+                itemsPerPageInit={5}
+              />
             </CardContent>
           </Card>
           <Card>
@@ -246,7 +266,14 @@ export default function ClienteForm() {
                 <FaFolderOpen className="text-green-700" />
                 <h2 className="font-semibold text-base">Casos del Cliente</h2>
               </div>
-              <TablaCustom2 columns={columnasCasos} data={casos || []} mostrarEditar={false} mostrarEliminar={false} mostrarAgregarNuevo={false} />
+              <TablaCustom2
+                columns={columnasCasos}
+                data={casos || []}
+                mostrarEditar={false}
+                mostrarEliminar={false}
+                mostrarAgregarNuevo={false}
+                itemsPerPageInit={3}
+              />
             </CardContent>
           </Card>
         </div>
