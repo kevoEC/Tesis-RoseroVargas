@@ -6,6 +6,8 @@
         public int IdProyeccionIncremento { get; set; }
         public int IdCronogramaProyeccionIncremento { get; set; }
         public int IdUsuarioModificacion { get; set; }
+        public bool IncrementoGenerado { get; set; } // Nuevo campo
+
     }
 
 }

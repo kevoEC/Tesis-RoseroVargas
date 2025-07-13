@@ -19,6 +19,7 @@
         public int? IdUsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public int? IdUsuarioPropietario { get; set; }
+        public bool IncrementoGenerado { get; set; } // <-- AGREGA ESTE CAMPO
     }
 
 }

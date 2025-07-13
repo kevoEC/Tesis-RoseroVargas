@@ -7,7 +7,7 @@ import GlassLoader from "@/components/ui/GlassLoader";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
 import { getInversionById } from "@/service/Entidades/InversionService";
 import { getAdendumsPorInversion } from "@/service/Entidades/AdendumService";
-import { FaFileContract, FaUserTie, FaFolderOpen, FaArrowLeft } from "react-icons/fa";
+import { FaFileContract, FaUserTie, FaFolderOpen, FaArrowLeft, FaRegEye } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import {
   LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend
@@ -96,38 +96,36 @@ export default function DetalleInversion() {
   }, [id]);
 
   // --- Columnas Adendums
-  const columnasAdendums = [
-    {
-      key: "idAdendum",
-      label: "",
-      render: (value) => (
-        <div className="flex items-center justify-center group relative text-gray-500">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <rect x="3" y="5" width="18" height="14" rx="2" className="stroke-current" />
-            <path d="M8 2v4" className="stroke-current" />
-            <path d="M16 2v4" className="stroke-current" />
-          </svg>
-          <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 text-xs text-white bg-zinc-800 px-2 py-0.5 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 whitespace-nowrap">
-            ID: {value}
-          </span>
-        </div>
-      )
-    },
-    { key: "nombreAdendum", label: "Nombre" },
-    {
-      key: "estado",
-      label: "Estado",
-      render: (v) => {
-        const est = ADENDUM_ESTADO_MAP[v] || { label: "Desconocido", color: "bg-gray-100 text-gray-700 border-gray-300" };
-        return (
-          <span className={`px-2 py-1 text-xs font-bold rounded-full border ${est.color}`}>
-            {est.label}
-          </span>
-        );
-      }
-    },
-    { key: "fechaCreacion", label: "F. Creación", render: v => formatDate(v) }
-  ];
+const columnasAdendums = [
+  {
+    key: "idAdendum",
+    label: "",
+    render: (value, row) => (
+      <span
+        className="flex justify-center items-center cursor-pointer"
+        title="Ver detalle de Adendum"
+        onClick={() => navigate(`/adendum/vista/${row.idAdendum}`)}
+      >
+        <FaRegEye className="text-violet-600 hover:text-violet-800" size={18} />
+      </span>
+    )
+  },
+  { key: "nombreAdendum", label: "Nombre" },
+  {
+    key: "estado",
+    label: "Estado",
+    render: (v) => {
+      const est = ADENDUM_ESTADO_MAP[v] || { label: "Desconocido", color: "bg-gray-100 text-gray-700 border-gray-300" };
+      return (
+        <span className={`px-2 py-1 text-xs font-bold rounded-full border ${est.color}`}>
+          {est.label}
+        </span>
+      );
+    }
+  },
+  { key: "fechaCreacion", label: "F. Creación", render: v => formatDate(v) }
+];
+
 
   // --- Gráfica (sin renta acumulada, solo capital, rentabilidad y monto pagar)
   const chartData = periodos.map(p => ({
@@ -287,6 +285,7 @@ export default function DetalleInversion() {
                   mostrarEliminar={false}
                   mostrarAgregarNuevo={false}
                 />
+
               </CardContent>
             </Card>
           </div>

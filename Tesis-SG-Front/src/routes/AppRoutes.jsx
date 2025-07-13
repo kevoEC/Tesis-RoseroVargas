@@ -107,6 +107,8 @@ const Producto = lazy(() => import("@/pages/Catalogo/Producto/Producto"));
 const Adjunto = lazy(() => import("@/components/solicitud/Adjuntos"));
 const Pruebaflujo = lazy(() => import("@/pages/FlujoSolicitud"));
 
+const DetalleAdendum  = lazy(() => import("@/pages/Entidad/Adendum/Adendum"));
+
 // Páginas de configuraciones de producto (ajusta la ruta según tu estructura real)
 //const ConfiguracionesProducto = lazy(() => import("@/pages/Catalogo/ConfiguracionesProducto/ConfiguracionesProducto"));
 const ConfiguracionesProductoForm = lazy(() => import("@/pages/Catalogo/ConfiguracionesProducto/ConfiguracionesProductoForm"));
@@ -239,6 +241,10 @@ export const protectedRoutes = [
   },
   //Proyección Express
   { path: "proyeccion/vista", element: <Proyeccion /> },
+
+  // Adendum
+  { path: "/adendum/vista/:idAdendum", element: <DetalleAdendum /> },
+  
 ];
 
 export const fallbackRoutes = [{ path: "*", element: <NotFound /> }];
