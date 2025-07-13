@@ -29,7 +29,9 @@ namespace Backend_CrmSG.Services
             int periodosDesdeUltimoPago = 0;
 
             // NUEVO: para mostrar la rentabilidad sólo en el mes de pago
+#pragma warning disable CS0219 // La variable está asignada pero nunca se usa su valor
             decimal rentabilidadMesPago = 0;
+#pragma warning restore CS0219 // La variable está asignada pero nunca se usa su valor
 
             for (int i = 0; i < plazo; i++)
             {

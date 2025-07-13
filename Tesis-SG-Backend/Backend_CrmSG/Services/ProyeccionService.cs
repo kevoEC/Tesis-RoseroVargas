@@ -216,16 +216,18 @@ namespace Backend_CrmSG.Services
             if (inversion == null)
                 throw new Exception("No se encontró la inversión asociada a la proyección original.");
 
-            // 3. Validar si ya existe un Adendum para este periodo
+            // 3. Validar si ya existe un Adendum para este periodo Y YA TIENE GENERADO EL INCREMENTO
             var adendumExistente = await _context.Adendum
                 .FirstOrDefaultAsync(a =>
                     a.IdInversion == inversion.IdInversion &&
-                    a.PeriodoIncremento == dto.PeriodoIncremento);
+                    a.PeriodoIncremento == dto.PeriodoIncremento &&
+                    a.IncrementoGenerado == true);
 
             if (adendumExistente != null)
             {
                 throw new Exception("Ya existe un incremento (Adendum) para este periodo en la inversión seleccionada.");
             }
+
 
             // 4. Traer cronograma original y validarlo
             var cronogramaOriginal = await _context.CronogramaProyeccion

@@ -128,6 +128,7 @@ public class AdendumService : IAdendumService
             throw new Exception("Adendum no encontrado.");
 
         // Llama SP con IdMotivo = 37 (Adendum)
+#pragma warning disable CS8625 // No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL.
         var result = await _context.Database.ExecuteSqlRawAsync(
             "EXEC sp_CrearDocumentosPorMotivo @p0, @p1, @p2, @p3, @p4, @p5",
             parameters: new object[]
@@ -140,6 +141,7 @@ public class AdendumService : IAdendumService
             adendum.IdAdendum // IdAdendum NUEVO CAMPO EN SP y en tabla Documento
             }
         );
+#pragma warning restore CS8625 // No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL.
 
         if (result > 0)
         {
@@ -237,13 +239,15 @@ public class AdendumService : IAdendumService
             .Where(c => c.IdProyeccion == adendum.IdProyeccionOriginal && c.EsActivo)
             .FirstOrDefaultAsync();
 
-        List<CronogramaCuotaDto> cronogramaOriginal = null;
+        List<CronogramaCuotaDto>? cronogramaOriginal = null;
         if (cronogramaOrigEnt != null && !string.IsNullOrEmpty(cronogramaOrigEnt.PeriodosJson))
+#pragma warning disable CS8600 // Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL
             cronogramaOriginal = System.Text.Json.JsonSerializer.Deserialize<List<CronogramaCuotaDto>>(cronogramaOrigEnt.PeriodosJson);
+#pragma warning restore CS8600 // Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL
 
         // Proyección y cronograma incremento (si existe)
-        Proyeccion proyIncremento = null;
-        List<CronogramaCuotaDto> cronogramaIncremento = null;
+        Proyeccion? proyIncremento = null;
+        List<CronogramaCuotaDto>? cronogramaIncremento = null;
         if (adendum.IdProyeccionIncremento.HasValue)
         {
             proyIncremento = await _context.Proyeccion.FindAsync(adendum.IdProyeccionIncremento.Value);
@@ -295,6 +299,12 @@ public class AdendumService : IAdendumService
         adendum.IdUsuarioModificacion = dto.IdUsuarioModificacion;
         adendum.FechaModificacion = DateTime.Now;
 
+        // Marcar el incremento como generado
+        adendum.IncrementoGenerado = true;
+
+        // Cambiar el estado a 4 (Proyectado por incremento)
+        adendum.Estado = 4;
+
         _context.Adendum.Update(adendum);
         await _context.SaveChangesAsync();
 
@@ -316,7 +326,8 @@ public class AdendumService : IAdendumService
             FechaCreacion = adendum.FechaCreacion,
             IdUsuarioModificacion = adendum.IdUsuarioModificacion,
             FechaModificacion = adendum.FechaModificacion,
-            IdUsuarioPropietario = adendum.IdUsuarioPropietario
+            IdUsuarioPropietario = adendum.IdUsuarioPropietario,
+            IncrementoGenerado = adendum.IncrementoGenerado   // <-- Agrega este campo en el DTO también si lo necesitas en frontend
         };
     }
 
