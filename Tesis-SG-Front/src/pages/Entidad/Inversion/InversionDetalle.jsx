@@ -153,7 +153,7 @@ export default function DetalleInversion() {
     { label: "Renta Total", value: formatCurrency(inversion?.totalRentaPeriodo) },
     { label: "Fecha Inicial", value: <b>{formatDate(inversion?.fechaInicial)}</b> },
     { label: "Fecha Vencimiento", value: <b>{formatDate(inversion?.fechaVencimiento)}</b> },
-    { label: "Coste Operativo", value: formatCurrency(inversion?.costeOperativo) },
+    { label: "Coste Operativo", value: formatCurrency(inversion?.totalCosteOperativo) },
     { label: "Coste Notarización", value: formatCurrency(inversion?.costeNotarizacion) },
   ];
 

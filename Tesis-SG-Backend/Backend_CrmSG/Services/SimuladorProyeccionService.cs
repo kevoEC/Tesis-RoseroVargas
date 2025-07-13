@@ -25,7 +25,7 @@ namespace Backend_CrmSG.Services
             decimal rentabilidadAcumuladaParaCoste = 0;
             decimal rentaAcumuladaTotal = 0;
 
-            // Para renta periódica, controla cada cuando toca pagar/cobrar
+            // Control de pagos periódicos
             int periodosDesdeUltimoPago = 0;
 
             for (int i = 0; i < plazo; i++)
@@ -60,21 +60,41 @@ namespace Backend_CrmSG.Services
                 cuota.CostoNotarizacion = cuota.UltimaCuota ? costeNotarizacion : 0;
                 rentabilidadAcumuladaParaCoste += cuota.Rentabilidad;
 
-                // --- CUANDO TOCA PAGAR RENTA Y COBRAR COSTO OPERATIVO ---
+                // --- CONTROL DE PAGOS PERIÓDICOS ---
                 bool tocaPagar = false;
 
-                // 1. Si periodicidad=0: renta y coste solo en la última cuota
-                // 2. Si periodicidad>0: renta y coste cada "periodicidad" meses
                 if (periodicidad == 0)
                 {
+                    // Pago único al final
                     tocaPagar = cuota.UltimaCuota;
+                }
+                else if (periodicidad == 1)
+                {
+                    // Mensual, pago cada mes, no hay desfase
+                    periodosDesdeUltimoPago++;
+                    if (periodosDesdeUltimoPago == 1 || cuota.UltimaCuota)
+                    {
+                        tocaPagar = true;
+                        periodosDesdeUltimoPago = 0;
+                    }
                 }
                 else
                 {
-                    periodosDesdeUltimoPago++;
+                    // Periódica > 1 (bimestral, trimestral, semestral, etc.)
+                    if (origenEsLocal && i == 0)
+                    {
+                        // Primer mes local: NO cuentes todavía, arranca el contador en el siguiente mes
+                        // periodosDesdeUltimoPago sigue en 0
+                    }
+                    else
+                    {
+                        periodosDesdeUltimoPago++;
+                    }
+
                     if (periodosDesdeUltimoPago == periodicidad || cuota.UltimaCuota)
                     {
                         tocaPagar = true;
+                        periodosDesdeUltimoPago = 0;
                     }
                 }
 
@@ -94,7 +114,7 @@ namespace Backend_CrmSG.Services
                     }
 
                     rentabilidadAcumuladaParaCoste = 0; // Se limpia el acumulado tras el pago
-                    periodosDesdeUltimoPago = 0; // Resetea el contador de períodos
+                                                        // periodosDesdeUltimoPago ya fue puesto a 0 arriba
                 }
                 else
                 {
