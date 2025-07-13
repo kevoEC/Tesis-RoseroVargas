@@ -28,6 +28,9 @@ namespace Backend_CrmSG.Services
             // Control de pagos periódicos
             int periodosDesdeUltimoPago = 0;
 
+            // NUEVA VARIABLE: Para mostrar la rentabilidad sólo al pagar (para periodicidad > 1)
+            decimal rentabilidadAcumuladaParaMostrar = 0;
+
             for (int i = 0; i < plazo; i++)
             {
                 var cuota = new CronogramaCuotaDto
@@ -48,17 +51,19 @@ namespace Backend_CrmSG.Services
                 cuota.MontoOperacion = cuota.CapitalOperacion + cuota.AporteOperacion + cuota.AporteOperacionAdicional;
 
                 // --- CALCULO DE RENTABILIDAD ---
+                decimal rentabilidadCalculada = 0;
                 if (origenEsLocal && cuota.Periodo == 1)
                 {
-                    cuota.Rentabilidad = 0; // El primer periodo local no genera rentabilidad
+                    rentabilidadCalculada = 0; // El primer periodo local no genera rentabilidad
                 }
                 else
                 {
-                    cuota.Rentabilidad = decimal.Round(cuota.MontoOperacion * cuota.Tasa / 100, 2);
+                    rentabilidadCalculada = decimal.Round(cuota.MontoOperacion * cuota.Tasa / 100, 2);
                 }
 
                 cuota.CostoNotarizacion = cuota.UltimaCuota ? costeNotarizacion : 0;
-                rentabilidadAcumuladaParaCoste += cuota.Rentabilidad;
+                rentabilidadAcumuladaParaCoste += rentabilidadCalculada;
+                rentabilidadAcumuladaParaMostrar += rentabilidadCalculada; // Para mostrar solo en el periodo de pago
 
                 // --- CONTROL DE PAGOS PERIÓDICOS ---
                 bool tocaPagar = false;
@@ -100,26 +105,38 @@ namespace Backend_CrmSG.Services
 
                 cuota.PagaRenta = tocaPagar;
 
+                // --- RENTA Y COSTE OPERATIVO ---
                 if (tocaPagar)
                 {
                     cuota.CostoOperativo = decimal.Round(rentabilidadAcumuladaParaCoste * 0.05m, 2);
 
                     if (periodicidad == 0 && cuota.UltimaCuota)
                     {
-                        cuota.RentaPeriodo = Math.Max(cuota.Rentabilidad - cuota.CostoOperativo, 0);
+                        cuota.RentaPeriodo = Math.Max(rentabilidadCalculada - cuota.CostoOperativo, 0);
                     }
                     else
                     {
                         cuota.RentaPeriodo = Math.Max(rentabilidadAcumuladaParaCoste - cuota.CostoOperativo, 0);
                     }
 
+                    // --- RENTABILIDAD SOLO SE MUESTRA AL PAGAR SI PERIODICIDAD > 1 ---
+                    if (periodicidad > 1)
+                        cuota.Rentabilidad = rentabilidadAcumuladaParaMostrar;
+                    else
+                        cuota.Rentabilidad = rentabilidadCalculada;
+
                     rentabilidadAcumuladaParaCoste = 0; // Se limpia el acumulado tras el pago
-                                                        // periodosDesdeUltimoPago ya fue puesto a 0 arriba
+                    rentabilidadAcumuladaParaMostrar = 0; // Se limpia el acumulado para mostrar tras el pago
                 }
                 else
                 {
                     cuota.CostoOperativo = 0;
-                    cuota.RentaPeriodo = cuota.Rentabilidad;
+                    cuota.RentaPeriodo = rentabilidadCalculada;
+                    // RENTABILIDAD SE MUESTRA SOLO SI ES MENSUAL O ÚNICO, SINO SE PONE EN 0
+                    if (periodicidad > 1)
+                        cuota.Rentabilidad = 0;
+                    else
+                        cuota.Rentabilidad = rentabilidadCalculada;
                 }
 
                 rentaAcumuladaTotal += cuota.RentaPeriodo;
@@ -158,7 +175,8 @@ namespace Backend_CrmSG.Services
 
                 cronogramalist.Add(cuota);
 
-                totalRentabilidad += cuota.Rentabilidad;
+                // TOTAL RENTABILIDAD SIEMPRE SUMA LA REAL, NO LA VISUAL
+                totalRentabilidad += rentabilidadCalculada;
                 totalCosteOperativo += cuota.CostoOperativo;
                 totalAporteAdicional += cuota.AporteAdicional;
 
