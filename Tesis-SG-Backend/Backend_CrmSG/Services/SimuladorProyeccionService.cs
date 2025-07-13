@@ -25,8 +25,7 @@ namespace Backend_CrmSG.Services
             decimal rentabilidadAcumuladaParaCoste = 0;
             decimal rentaAcumuladaTotal = 0;
 
-            // Para renta periódica, controla cada cuando toca pagar/cobrar
-            int periodosDesdeUltimoPago = 0;
+            int periodosDesdeUltimoPago = 0; // Para el control de pagos periódicos
 
             for (int i = 0; i < plazo; i++)
             {
@@ -60,18 +59,22 @@ namespace Backend_CrmSG.Services
                 cuota.CostoNotarizacion = cuota.UltimaCuota ? costeNotarizacion : 0;
                 rentabilidadAcumuladaParaCoste += cuota.Rentabilidad;
 
-                // --- CUANDO TOCA PAGAR RENTA Y COBRAR COSTO OPERATIVO ---
+                // --- CONTROL DE PAGOS PERIÓDICOS ---
                 bool tocaPagar = false;
 
-                // 1. Si periodicidad=0: renta y coste solo en la última cuota
-                // 2. Si periodicidad>0: renta y coste cada "periodicidad" meses
                 if (periodicidad == 0)
                 {
+                    // Pago único al final
                     tocaPagar = cuota.UltimaCuota;
                 }
                 else
                 {
-                    periodosDesdeUltimoPago++;
+                    // REGLA CLAVE: Para local, solo empezamos a contar periodos después del primer periodo SIN rentabilidad.
+                    if (!(origenEsLocal && i == 0))
+                    {
+                        periodosDesdeUltimoPago++;
+                    }
+
                     if (periodosDesdeUltimoPago == periodicidad || cuota.UltimaCuota)
                     {
                         tocaPagar = true;
