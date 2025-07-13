@@ -24,10 +24,12 @@ namespace Backend_CrmSG.Services
 
             decimal rentabilidadAcumuladaParaCoste = 0;
             decimal rentaAcumuladaTotal = 0;
-            decimal rentaAcumuladaVisible = 0; // NUEVA: solo suma en los meses de pago para periodicidad > 1
 
             // Control de pagos periódicos
             int periodosDesdeUltimoPago = 0;
+
+            // NUEVO: para mostrar la rentabilidad sólo en el mes de pago
+            decimal rentabilidadMesPago = 0;
 
             for (int i = 0; i < plazo; i++)
             {
@@ -48,30 +50,26 @@ namespace Backend_CrmSG.Services
                 cuota.CapitalOperacion = cuota.Capital;
                 cuota.MontoOperacion = cuota.CapitalOperacion + cuota.AporteOperacion + cuota.AporteOperacionAdicional;
 
-                // --- CALCULO DE RENTABILIDAD ---
+                // --- CALCULO DE RENTABILIDAD REAL ---
+                decimal rentabilidadCalculada = 0;
                 if (origenEsLocal && cuota.Periodo == 1)
                 {
-                    cuota.Rentabilidad = 0; // El primer periodo local no genera rentabilidad
+                    rentabilidadCalculada = 0; // El primer periodo local no genera rentabilidad
                 }
                 else
                 {
-                    cuota.Rentabilidad = decimal.Round(cuota.MontoOperacion * cuota.Tasa / 100, 2);
+                    rentabilidadCalculada = decimal.Round(cuota.MontoOperacion * cuota.Tasa / 100, 2);
                 }
-
-                cuota.CostoNotarizacion = cuota.UltimaCuota ? costeNotarizacion : 0;
-                rentabilidadAcumuladaParaCoste += cuota.Rentabilidad;
+                rentabilidadAcumuladaParaCoste += rentabilidadCalculada;
 
                 // --- CONTROL DE PAGOS PERIÓDICOS ---
                 bool tocaPagar = false;
-
                 if (periodicidad == 0)
                 {
-                    // Pago único al final
                     tocaPagar = cuota.UltimaCuota;
                 }
                 else if (periodicidad == 1)
                 {
-                    // Mensual, pago cada mes, no hay desfase
                     periodosDesdeUltimoPago++;
                     if (periodosDesdeUltimoPago == 1 || cuota.UltimaCuota)
                     {
@@ -81,17 +79,14 @@ namespace Backend_CrmSG.Services
                 }
                 else
                 {
-                    // Periódica > 1 (bimestral, trimestral, semestral, etc.)
                     if (origenEsLocal && i == 0)
                     {
-                        // Primer mes local: NO cuentes todavía, arranca el contador en el siguiente mes
-                        // periodosDesdeUltimoPago sigue en 0
+                        // Primer mes local: NO cuentes todavía
                     }
                     else
                     {
                         periodosDesdeUltimoPago++;
                     }
-
                     if (periodosDesdeUltimoPago == periodicidad || cuota.UltimaCuota)
                     {
                         tocaPagar = true;
@@ -101,44 +96,51 @@ namespace Backend_CrmSG.Services
 
                 cuota.PagaRenta = tocaPagar;
 
-                if (tocaPagar)
+                // --- RENTABILIDAD Y RENTA PERIODO SEGÚN PERIODICIDAD ---
+                if (periodicidad > 1)
                 {
-                    cuota.CostoOperativo = decimal.Round(rentabilidadAcumuladaParaCoste * 0.05m, 2);
-
-                    if (periodicidad == 0 && cuota.UltimaCuota)
+                    // En meses normales (NO de pago), rentabilidad = 0
+                    // En mes de pago, la acumulada desde el último pago
+                    if (tocaPagar)
                     {
-                        cuota.RentaPeriodo = Math.Max(cuota.Rentabilidad - cuota.CostoOperativo, 0);
+                        cuota.Rentabilidad = rentabilidadAcumuladaParaCoste;
+                        cuota.CostoOperativo = decimal.Round(rentabilidadAcumuladaParaCoste * 0.05m, 2);
+                        cuota.RentaPeriodo = Math.Max(rentabilidadAcumuladaParaCoste - cuota.CostoOperativo, 0);
+
+                        rentabilidadAcumuladaParaCoste = 0; // Limpiar acumulador tras el pago
                     }
                     else
                     {
-                        cuota.RentaPeriodo = Math.Max(rentabilidadAcumuladaParaCoste - cuota.CostoOperativo, 0);
+                        cuota.Rentabilidad = 0;
+                        cuota.CostoOperativo = 0;
+                        cuota.RentaPeriodo = 0;
                     }
-
-                    rentabilidadAcumuladaParaCoste = 0; // Se limpia el acumulado tras el pago
-                                                        // periodosDesdeUltimoPago ya fue puesto a 0 arriba
                 }
                 else
                 {
-                    cuota.CostoOperativo = 0;
-                    cuota.RentaPeriodo = cuota.Rentabilidad;
-                }
-
-                // --- RENTA ACUMULADA CORRECTA SEGÚN PERIODICIDAD ---
-                if (periodicidad > 1)
-                {
-                    // Solo suma en el mes de pago
-                    if (cuota.Rentabilidad > 0)
+                    // Mensual o única, comportamiento tradicional
+                    cuota.Rentabilidad = rentabilidadCalculada;
+                    if (tocaPagar)
                     {
-                        rentaAcumuladaVisible += cuota.Rentabilidad;
+                        cuota.CostoOperativo = decimal.Round(rentabilidadAcumuladaParaCoste * 0.05m, 2);
+                        if (periodicidad == 0 && cuota.UltimaCuota)
+                            cuota.RentaPeriodo = Math.Max(cuota.Rentabilidad - cuota.CostoOperativo, 0);
+                        else
+                            cuota.RentaPeriodo = Math.Max(rentabilidadAcumuladaParaCoste - cuota.CostoOperativo, 0);
+                        rentabilidadAcumuladaParaCoste = 0;
                     }
-                    cuota.RentaAcumulada = rentaAcumuladaVisible;
-                }
-                else
-                {
-                    rentaAcumuladaTotal += cuota.RentaPeriodo;
-                    cuota.RentaAcumulada = rentaAcumuladaTotal;
+                    else
+                    {
+                        cuota.CostoOperativo = 0;
+                        cuota.RentaPeriodo = cuota.Rentabilidad;
+                    }
                 }
 
+                // --- RENTA ACUMULADA SIEMPRE MENSUAL ---
+                rentaAcumuladaTotal += cuota.RentaPeriodo;
+                cuota.RentaAcumulada = rentaAcumuladaTotal;
+
+                cuota.CostoNotarizacion = cuota.UltimaCuota ? costeNotarizacion : 0;
                 cuota.CapitalRenta = cuota.Capital + cuota.Rentabilidad;
 
                 // --- MONTO A PAGAR ---
