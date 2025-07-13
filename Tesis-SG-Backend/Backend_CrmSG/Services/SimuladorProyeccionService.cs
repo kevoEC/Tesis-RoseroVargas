@@ -25,7 +25,8 @@ namespace Backend_CrmSG.Services
             decimal rentabilidadAcumuladaParaCoste = 0;
             decimal rentaAcumuladaTotal = 0;
 
-            int periodosDesdeUltimoPago = 0; // Para el control de pagos periódicos
+            // Control de pagos periódicos
+            int periodosDesdeUltimoPago = 0;
 
             for (int i = 0; i < plazo; i++)
             {
@@ -67,10 +68,25 @@ namespace Backend_CrmSG.Services
                     // Pago único al final
                     tocaPagar = cuota.UltimaCuota;
                 }
+                else if (periodicidad == 1)
+                {
+                    // Mensual, pago cada mes, no hay desfase
+                    periodosDesdeUltimoPago++;
+                    if (periodosDesdeUltimoPago == 1 || cuota.UltimaCuota)
+                    {
+                        tocaPagar = true;
+                        periodosDesdeUltimoPago = 0;
+                    }
+                }
                 else
                 {
-                    // REGLA CLAVE: Para local, solo empezamos a contar periodos después del primer periodo SIN rentabilidad.
-                    if (!(origenEsLocal && i == 0))
+                    // Periódica > 1 (bimestral, trimestral, semestral, etc.)
+                    if (origenEsLocal && i == 0)
+                    {
+                        // Primer mes local: NO cuentes todavía, arranca el contador en el siguiente mes
+                        // periodosDesdeUltimoPago sigue en 0
+                    }
+                    else
                     {
                         periodosDesdeUltimoPago++;
                     }
@@ -78,6 +94,7 @@ namespace Backend_CrmSG.Services
                     if (periodosDesdeUltimoPago == periodicidad || cuota.UltimaCuota)
                     {
                         tocaPagar = true;
+                        periodosDesdeUltimoPago = 0;
                     }
                 }
 
@@ -97,7 +114,7 @@ namespace Backend_CrmSG.Services
                     }
 
                     rentabilidadAcumuladaParaCoste = 0; // Se limpia el acumulado tras el pago
-                    periodosDesdeUltimoPago = 0; // Resetea el contador de períodos
+                                                        // periodosDesdeUltimoPago ya fue puesto a 0 arriba
                 }
                 else
                 {
