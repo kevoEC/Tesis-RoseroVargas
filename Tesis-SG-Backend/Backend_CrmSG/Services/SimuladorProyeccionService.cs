@@ -14,8 +14,8 @@ namespace Backend_CrmSG.Services
             decimal tasa = request.Tasa;
             decimal aporteAdicional = request.AporteAdicional;
             decimal costeNotarizacion = request.CosteNotarizacion;
-            bool origenEsLocal = request.IdOrigenCapital == 1;
-            int periodicidad = request.Periodicidad;
+            bool origenEsLocal = request.IdOrigenCapital == 1; // Local o Extranjero
+            int periodicidad = request.Periodicidad; // 0=único pago final, 1=mensual, 2=bimestral, etc.
 
             decimal totalRentabilidad = 0;
             decimal totalCosteOperativo = 0;
@@ -25,7 +25,8 @@ namespace Backend_CrmSG.Services
             decimal rentabilidadAcumuladaParaCoste = 0;
             decimal rentaAcumuladaTotal = 0;
 
-            int periodosDesdeInicio = origenEsLocal ? -1 : 0;
+            // Para renta periódica, controla cada cuando toca pagar/cobrar
+            int periodosDesdeUltimoPago = 0;
 
             for (int i = 0; i < plazo; i++)
             {
@@ -46,24 +47,32 @@ namespace Backend_CrmSG.Services
                 cuota.CapitalOperacion = cuota.Capital;
                 cuota.MontoOperacion = cuota.CapitalOperacion + cuota.AporteOperacion + cuota.AporteOperacionAdicional;
 
+                // --- CALCULO DE RENTABILIDAD ---
                 if (origenEsLocal && cuota.Periodo == 1)
-                    cuota.Rentabilidad = 0;
+                {
+                    cuota.Rentabilidad = 0; // El primer periodo local no genera rentabilidad
+                }
                 else
+                {
                     cuota.Rentabilidad = decimal.Round(cuota.MontoOperacion * cuota.Tasa / 100, 2);
+                }
 
                 cuota.CostoNotarizacion = cuota.UltimaCuota ? costeNotarizacion : 0;
                 rentabilidadAcumuladaParaCoste += cuota.Rentabilidad;
 
+                // --- CUANDO TOCA PAGAR RENTA Y COBRAR COSTO OPERATIVO ---
                 bool tocaPagar = false;
+
+                // 1. Si periodicidad=0: renta y coste solo en la última cuota
+                // 2. Si periodicidad>0: renta y coste cada "periodicidad" meses
                 if (periodicidad == 0)
                 {
                     tocaPagar = cuota.UltimaCuota;
                 }
                 else
                 {
-                    int ajusteLocal = origenEsLocal ? 1 : 0;
-                    if ((periodosDesdeInicio + ajusteLocal) > 0 &&
-                        ((periodosDesdeInicio + ajusteLocal) % periodicidad == 0 || cuota.UltimaCuota))
+                    periodosDesdeUltimoPago++;
+                    if (periodosDesdeUltimoPago == periodicidad || cuota.UltimaCuota)
                     {
                         tocaPagar = true;
                     }
@@ -84,7 +93,8 @@ namespace Backend_CrmSG.Services
                         cuota.RentaPeriodo = Math.Max(rentabilidadAcumuladaParaCoste - cuota.CostoOperativo, 0);
                     }
 
-                    rentabilidadAcumuladaParaCoste = 0;
+                    rentabilidadAcumuladaParaCoste = 0; // Se limpia el acumulado tras el pago
+                    periodosDesdeUltimoPago = 0; // Resetea el contador de períodos
                 }
                 else
                 {
@@ -97,7 +107,8 @@ namespace Backend_CrmSG.Services
 
                 cuota.CapitalRenta = cuota.Capital + cuota.Rentabilidad;
 
-                if (tocaPagar)
+                // --- MONTO A PAGAR ---
+                if (cuota.PagaRenta)
                 {
                     if (cuota.UltimaCuota)
                     {
@@ -116,7 +127,11 @@ namespace Backend_CrmSG.Services
                     cuota.MontoPagar = 0;
                 }
 
-                cuota.CapitalFinal = cuota.UltimaCuota ? 0 : (periodicidad == 0 ? cuota.Capital + cuota.RentaPeriodo : cuota.Capital);
+                cuota.CapitalFinal = cuota.UltimaCuota
+                    ? 0
+                    : (periodicidad == 0
+                        ? cuota.Capital + cuota.RentaPeriodo
+                        : cuota.Capital);
 
                 if (cuota.AporteAdicional > 0 && fechaIncremento == null)
                     fechaIncremento = cuota.FechaInicial;
@@ -128,7 +143,6 @@ namespace Backend_CrmSG.Services
                 totalAporteAdicional += cuota.AporteAdicional;
 
                 capital = cuota.CapitalFinal;
-                periodosDesdeInicio++;
             }
 
             return new SimulacionResult
@@ -137,7 +151,7 @@ namespace Backend_CrmSG.Services
                 FechaIncremento = fechaIncremento,
                 TotalAporteAdicional = totalAporteAdicional,
                 TotalRentaPeriodo = cronogramalist.Sum(c => c.RentaPeriodo),
-                TotalCosteOperativo = totalCosteOperativo,
+                TotalCosteOperativo = cronogramalist.Sum(c => c.CostoOperativo),
                 TotalRentabilidad = totalRentabilidad,
                 RendimientoCapital = cronogramalist.Last().CapitalRenta,
                 ValorProyectadoLiquidar = cronogramalist.Last().MontoPagar,

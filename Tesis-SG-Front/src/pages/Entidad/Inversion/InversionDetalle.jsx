@@ -1,13 +1,27 @@
+// DetalleInversion.jsx
+
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import GlassLoader from "@/components/ui/GlassLoader";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
 import { getInversionById } from "@/service/Entidades/InversionService";
-import { getSolicitudesByClienteId } from "@/service/Entidades/SolicitudService";
-import { getAdendumsByInversionId } from "@/service/Entidades/InversionService";
-import { FaUserTie, FaFileContract, FaFolderOpen, FaArrowLeft } from "react-icons/fa";
+import { getAdendumsPorInversion } from "@/service/Entidades/AdendumService";
+import { FaFileContract, FaUserTie, FaFolderOpen, FaArrowLeft } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
+import {
+  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend
+} from "recharts";
+import AdendumForm from "@/pages/Entidad/Adendum/AdendumForm"; // <-- Asegúrate de la ruta
+import { Dialog, DialogContent } from "@/components/ui/dialog"; // o tu modal favorito
+import { toast } from "sonner";
+
+// --- Estado Adendum map
+const ADENDUM_ESTADO_MAP = {
+  1: { label: "Creado", color: "bg-yellow-100 text-yellow-700 border-yellow-300" },
+  2: { label: "Comprobante", color: "bg-blue-100 text-blue-700 border-blue-300" },
+  3: { label: "Completado", color: "bg-emerald-100 text-emerald-700 border-emerald-300" },
+};
 
 function formatCurrency(value) {
   if (value === null || value === undefined) return "-";
@@ -22,11 +36,7 @@ function formatDate(isoDate) {
     year: "numeric",
   });
 }
-
-// Extrae el nombre del producto del contrato (después del primer guión largo)
 function getProductoNombre(inversionNombre) {
-  // Ejemplo: "SG-FRF-2025-0001 - Renta Fija - $2000 (7 meses)"
-  // Extrae "Renta Fija"
   if (!inversionNombre) return "";
   const regex = /- ([^-]+) -/;
   const match = inversionNombre.match(regex);
@@ -42,90 +52,119 @@ export default function DetalleInversion() {
 
   const [loading, setLoading] = useState(true);
   const [inversion, setInversion] = useState(null);
-  const [solicitudes, setSolicitudes] = useState([]);
   const [adendums, setAdendums] = useState([]);
   const [periodos, setPeriodos] = useState([]);
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      try {
-        const data = await getInversionById(id);
-        setInversion(data);
+  // ----------- MODAL NUEVO ADENDUM -------------
+  const [modalAdendumOpen, setModalAdendumOpen] = useState(false);
 
-        // Parsear periodos
-        let arrPeriodos = [];
-        if (data?.periodosJson) {
-          try {
-            arrPeriodos = JSON.parse(data.periodosJson);
-          } catch (e) {
-            console.error("Error al parsear periodosJson:", e);
-            arrPeriodos = [];
-          }
-        }
-        setPeriodos(Array.isArray(arrPeriodos) ? arrPeriodos : []);
+  // Recarga todo (para refrescar después de crear adendum)
+  const cargarTodo = async () => {
+    setLoading(true);
+    try {
+      const data = await getInversionById(id);
+      setInversion(data);
 
-        // Tablas derechas (Solicitudes y Adendums)
-        if (data?.idCliente) {
-          const solicitudesRes = await getSolicitudesByClienteId(data.idCliente);
-          setSolicitudes(Array.isArray(solicitudesRes) ? solicitudesRes : []);
+      let arrPeriodos = [];
+      if (data?.periodosJson) {
+        try {
+          arrPeriodos = JSON.parse(data.periodosJson);
+        } catch (e) {
+          arrPeriodos = [];
         }
-        if (data?.idInversion) {
-          try {
-            const adendumsRes = await getAdendumsByInversionId(data.idInversion);
-            setAdendums(Array.isArray(adendumsRes) ? adendumsRes : []);
-          } catch {
-            setAdendums([]);
-          }
-        }
-      } catch (e) {
-        console.error("Error al cargar la inversión:", e);
-        setInversion(null);
       }
-      setLoading(false);
-    })();
+      setPeriodos(Array.isArray(arrPeriodos) ? arrPeriodos : []);
+
+      if (data?.idInversion) {
+        try {
+          const adendumsRes = await getAdendumsPorInversion(data.idInversion);
+          setAdendums(adendumsRes?.adendums || []);
+        } catch (e) {
+          setAdendums([]);
+        }
+      }
+    } catch (e) {
+      setInversion(null);
+      toast.error("No se pudo cargar la inversión.");
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    cargarTodo();
+    // eslint-disable-next-line
   }, [id]);
 
-  // Columnas
-  const columnasSolicitudes = [
-    { key: "nombreTipoSolicitud", label: "Tipo" },
-    { key: "numeroContrato", label: "Contrato" },
-    { key: "fechaCreacion", label: "F. Creación", render: v => formatDate(v) },
-    { key: "faseProceso", label: "Fase" },
-  ];
-
+  // --- Columnas Adendums
   const columnasAdendums = [
-    { key: "nombreDocumento", label: "Nombre" },
-    { key: "fechaCreacion", label: "F. Creación", render: v => formatDate(v) },
-    { key: "estado", label: "Estado" },
-    { key: "usuarioCreacionNombreCompleto", label: "Creado por" },
+    {
+      key: "idAdendum",
+      label: "",
+      render: (value) => (
+        <div className="flex items-center justify-center group relative text-gray-500">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <rect x="3" y="5" width="18" height="14" rx="2" className="stroke-current" />
+            <path d="M8 2v4" className="stroke-current" />
+            <path d="M16 2v4" className="stroke-current" />
+          </svg>
+          <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 text-xs text-white bg-zinc-800 px-2 py-0.5 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 whitespace-nowrap">
+            ID: {value}
+          </span>
+        </div>
+      )
+    },
+    { key: "nombreAdendum", label: "Nombre" },
+    {
+      key: "estado",
+      label: "Estado",
+      render: (v) => {
+        const est = ADENDUM_ESTADO_MAP[v] || { label: "Desconocido", color: "bg-gray-100 text-gray-700 border-gray-300" };
+        return (
+          <span className={`px-2 py-1 text-xs font-bold rounded-full border ${est.color}`}>
+            {est.label}
+          </span>
+        );
+      }
+    },
+    { key: "fechaCreacion", label: "F. Creación", render: v => formatDate(v) }
   ];
 
-  const columnasCronograma = [
-    { key: "Periodo", label: "Período" },
-    { key: "FechaInicial", label: "Inicio", render: v => formatDate(v) },
-    { key: "FechaVencimiento", label: "Vencimiento", render: v => formatDate(v) },
-    { key: "Tasa", label: "Tasa", render: v => v ? `${Number(v).toFixed(2)}%` : "-" },
-    { key: "AporteAdicional", label: "Aporte Adic.", render: formatCurrency },
-    { key: "CapitalOperacion", label: "Capital", render: formatCurrency },
-    { key: "Rentabilidad", label: "Rentabilidad", render: formatCurrency },
-    { key: "CapitalRenta", label: "Capital+Renta", render: formatCurrency },
-    { key: "CostoOperativo", label: "Coste Op.", render: formatCurrency },
-    { key: "RentaAcumulada", label: "Renta Acum.", render: formatCurrency },
-    { key: "CapitalFinal", label: "Capital Final", render: formatCurrency },
-    { key: "MontoPagar", label: "Monto Pagar", render: formatCurrency }
+  // --- Gráfica (sin renta acumulada, solo capital, rentabilidad y monto pagar)
+  const chartData = periodos.map(p => ({
+    Periodo: `P${p.Periodo}`,
+    Capital: p.Capital,
+    Rentabilidad: p.Rentabilidad,
+    MontoPagar: p.MontoPagar
+  }));
+
+  // --- Info principal y proyección separadas
+  const infoProducto1 = [
+    { label: "Producto", value: <b>{getProductoNombre(inversion?.inversionNombre)}</b> },
+    { label: "Plazo", value: <b>{inversion?.plazo ? `${inversion.plazo} meses` : "-"}</b> },
+    { label: "Tasa", value: <b>{inversion?.tasa ? `${Number(inversion.tasa).toFixed(2)}%` : "-"}</b> },
+    { label: "Estado", value: <b>{inversion?.terminada ? "Finalizada" : "Vigente"}</b> },
+  ];
+  const infoProducto2 = [
+    { label: "Capital", value: formatCurrency(inversion?.capital) },
+    { label: "Aporte Adicional", value: formatCurrency(inversion?.aporteAdicional) },
+    { label: "Valor a Liquidar", value: formatCurrency(inversion?.valorProyectadoLiquidar) },
+    { label: "Capital + Rendimiento", value: formatCurrency(inversion?.rendimientosMasCapital) },
+    { label: "Rentabilidad Total", value: formatCurrency(inversion?.totalRentabilidad) },
+    { label: "Renta Total", value: formatCurrency(inversion?.totalRentaPeriodo) },
+    { label: "Fecha Inicial", value: <b>{formatDate(inversion?.fechaInicial)}</b> },
+    { label: "Fecha Vencimiento", value: <b>{formatDate(inversion?.fechaVencimiento)}</b> },
+    { label: "Coste Operativo", value: formatCurrency(inversion?.costeOperativo) },
+    { label: "Coste Notarización", value: formatCurrency(inversion?.costeNotarizacion) },
   ];
 
   if (loading) return <GlassLoader visible message="Cargando inversión..." />;
   if (!inversion)
     return <div className="text-center text-gray-600">No se encontró la inversión.</div>;
 
-  // Layout: Info principal (65%) | Relacionadas (35%) -> puedes cambiar a 7/12 y 5/12 si quieres más espacio para la info principal
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-8">
-      {/* ---------- HEADER estilo Dynamics ----------- */}
+      {/* HEADER estilo Dynamics */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-4 bg-white border-b pb-4 rounded-2xl px-4">
-        {/* Botón volver */}
         <Button
           variant="outline"
           className="flex items-center gap-2 mb-2 md:mb-0"
@@ -133,9 +172,7 @@ export default function DetalleInversion() {
         >
           <FaArrowLeft />
         </Button>
-        {/* Header principal */}
         <div className="flex-1 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
-          {/* Nombre Inversión y Capital */}
           <div className="flex-1">
             <div className="flex items-center gap-3">
               <div className="rounded-full w-12 h-12 bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold">
@@ -154,7 +191,6 @@ export default function DetalleInversion() {
               </div>
             </div>
           </div>
-          {/* Usuario propietario y Cliente */}
           <div className="flex flex-row gap-8">
             <div className="flex flex-col items-center">
               <div className="text-base text-gray-800 font-semibold flex items-center gap-2">
@@ -170,85 +206,114 @@ export default function DetalleInversion() {
               <div className="text-xs text-gray-400">Cliente</div>
             </div>
           </div>
+          <div className="text-xs text-gray-500 font-semibold">
+            Creada el {formatDate(inversion.fechaCreacion)}
+          </div>
         </div>
       </div>
 
-      {/* ---------- CUERPO PRINCIPAL ----------- */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        {/* --------- Columna Izquierda: Información --------- */}
-        <div className="md:col-span-5 space-y-8">
+      {/* ---- GRID PRINCIPAL 2x2 ---- */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Columna 1 */}
+        <div className="flex flex-col gap-8 h-full">
+          {/* Info producto */}
           <Card>
             <CardContent className="p-6">
               <h2 className="text-lg font-semibold text-gray-700 mb-4">Información del producto</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* PRODUCTO recortado */}
-                <Info label="Producto" value={getProductoNombre(inversion.inversionNombre)} />
-                <Info label="Plazo" value={inversion.plazo ? `${inversion.plazo} meses` : "-"} />
-                <Info label="Tasa" value={inversion.tasa ? `${Number(inversion.tasa).toFixed(2)}%` : "-"} />
-                <Info label="Estado" value={inversion.terminada ? "Finalizada" : "Vigente"} />
-                <Info label="Capital" value={formatCurrency(inversion.capital)} />
-                <Info label="Aporte Adicional" value={formatCurrency(inversion.aporteAdicional)} />
-                <Info label="Coste Operativo" value={formatCurrency(inversion.costeOperativo)} />
-                <Info label="Coste Notarización" value={formatCurrency(inversion.costeNotarizacion)} />
-                <Info label="Fecha Inicial" value={formatDate(inversion.fechaInicial)} />
-                <Info label="Fecha Vencimiento" value={formatDate(inversion.fechaVencimiento)} />
-                <Info label="Rentabilidad Total" value={formatCurrency(inversion.totalRentabilidad)} />
-                <Info label="Renta Total" value={formatCurrency(inversion.totalRentaPeriodo)} />
-                <Info label="Valor a Liquidar" value={formatCurrency(inversion.valorProyectadoLiquidar)} />
-                <Info label="Capital + Rendimiento" value={formatCurrency(inversion.rendimientosMasCapital)} />
-                <Info label="Usuario Creación" value={inversion.usuarioCreacionNombreCompleto} />
-                <Info label="Fecha Creación" value={formatDate(inversion.fechaCreacion)} />
-                <Info label="Usuario Modificación" value={inversion.usuarioModificacionNombreCompleto ?? "-"} />
-                <Info label="Fecha Modificación" value={formatDate(inversion.fechaModificacion)} />
+              <div className="space-y-1">
+                {infoProducto1.map((item, i) => (
+                  <InfoRow key={i} label={item.label} value={item.value} />
+                ))}
               </div>
             </CardContent>
           </Card>
+          {/* -- Caja expansiva junto a tabla -- */}
+          <div className="flex flex-col h-full" style={{ minHeight: 280 }}>
+            <Card className="flex-1 h-full">
+              <CardContent className="p-6 flex flex-col h-full">
+                <h2 className="text-lg font-semibold text-gray-700 mb-4">Valores de Proyección</h2>
+                <div className="space-y-1">
+                  {infoProducto2.map((item, i) => (
+                    <InfoRow key={i} label={item.label} value={item.value} />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-        {/* --------- Columna Derecha: Relacionadas --------- */}
-        <div className="md:col-span-7 flex flex-col gap-6">
-          {/* Solicitudes de Inversión */}
+        {/* Columna 2 */}
+        <div className="flex flex-col gap-8 h-full">
+          {/* Gráfica Rentabilidad */}
           <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <FaFileContract className="text-blue-700" />
-                <h2 className="font-semibold text-base">Solicitudes de Inversión</h2>
+            <CardContent className="p-6">
+              <h2 className="text-md font-semibold text-gray-700 mb-3">
+                Rentabilidad y Capital de la Inversión (por período)
+              </h2>
+              <div className="w-full min-h-[220px]">
+                <ResponsiveContainer width="100%" height={220}>
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="Periodo" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="Capital" stroke="#6366f1" strokeWidth={2.5} />
+                    <Line type="monotone" dataKey="Rentabilidad" stroke="#10b981" strokeWidth={2.5} />
+                    <Line type="monotone" dataKey="MontoPagar" stroke="#f59e42" strokeWidth={2.5} />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
-              <TablaCustom2
-                columns={columnasSolicitudes}
-                data={solicitudes}
-                mostrarEditar={false}
-                mostrarEliminar={false}
-                mostrarAgregarNuevo={true}
-                onAgregarNuevoClick={() => navigate("/solicitudes/nuevo")}
-              />
             </CardContent>
           </Card>
-          {/* ADENDUMS */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <FaFolderOpen className="text-green-700" />
-                <h2 className="font-semibold text-base">Adendums</h2>
-              </div>
-              <TablaCustom2
-                columns={columnasAdendums}
-                data={adendums}
-                mostrarEditar={false}
-                mostrarEliminar={false}
-                mostrarAgregarNuevo={false}
-              />
-            </CardContent>
-          </Card>
+          {/* Tabla Adendums, caja expansiva */}
+          <div className="flex flex-col h-full" style={{ minHeight: 280 }}>
+            <Card className="flex-1 h-full">
+              <CardContent className="p-6 flex flex-col h-full">
+                <div className="flex items-center gap-2 mb-2">
+                  <FaFolderOpen className="text-green-700" />
+                  <h2 className="font-semibold text-base">Adendums de la Inversión</h2>
+                  <Button
+                    className="ml-auto bg-violet-600 hover:bg-violet-700 text-white px-4 py-2"
+                    size="sm"
+                    onClick={() => setModalAdendumOpen(true)}
+                  >
+                    Nuevo Adendum
+                  </Button>
+                </div>
+                <TablaCustom2
+                  columns={columnasAdendums}
+                  data={adendums}
+                  mostrarEditar={false}
+                  mostrarEliminar={false}
+                  mostrarAgregarNuevo={false}
+                />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-      {/* --------- Cronograma --------- */}
+
+      {/* ---- Cronograma ---- */}
       <Card>
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
             <FaFolderOpen /> Cronograma de la Inversión
           </h2>
           <TablaCustom2
-            columns={columnasCronograma}
+            columns={[
+              { key: "Periodo", label: "Período" },
+              { key: "FechaInicial", label: "Inicio", render: v => formatDate(v) },
+              { key: "FechaVencimiento", label: "Vencimiento", render: v => formatDate(v) },
+              { key: "Tasa", label: "Tasa", render: v => v ? `${Number(v).toFixed(2)}%` : "-" },
+              { key: "AporteAdicional", label: "Aporte Adic.", render: formatCurrency },
+              { key: "CapitalOperacion", label: "Capital", render: formatCurrency },
+              { key: "Rentabilidad", label: "Rentabilidad", render: formatCurrency },
+              { key: "CapitalRenta", label: "Capital+Renta", render: formatCurrency },
+              { key: "CostoOperativo", label: "Coste Op.", render: formatCurrency },
+              { key: "RentaAcumulada", label: "Renta Acum.", render: formatCurrency },
+              { key: "CapitalFinal", label: "Capital Final", render: formatCurrency },
+              { key: "MontoPagar", label: "Monto Pagar", render: formatCurrency }
+            ]}
             data={periodos}
             mostrarEditar={false}
             mostrarEliminar={false}
@@ -256,15 +321,30 @@ export default function DetalleInversion() {
           />
         </CardContent>
       </Card>
+
+      {/* ---- MODAL NUEVO ADENDUM ---- */}
+      <Dialog open={modalAdendumOpen} onOpenChange={setModalAdendumOpen}>
+        <DialogContent className="bg-white rounded-xl max-w-lg w-full border">
+          <AdendumForm
+            inversion={inversion}
+            cronograma={periodos}
+            onClose={() => setModalAdendumOpen(false)}
+            onSaved={() => {
+              setModalAdendumOpen(false);
+              cargarTodo(); // recarga adendums y todo lo demás
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
 
-function Info({ label, value }) {
+function InfoRow({ label, value }) {
   return (
-    <div>
-      <p className="text-xs text-gray-500">{label}</p>
-      <p className="text-base font-medium text-gray-900">{value ?? "-"}</p>
+    <div className="flex justify-between border-b last:border-b-0 pb-1 mb-1 last:mb-0 last:pb-0">
+      <span className="text-xs text-gray-600">{label}</span>
+      <span className="text-sm font-semibold text-gray-900 text-right">{value ?? "-"}</span>
     </div>
   );
 }
