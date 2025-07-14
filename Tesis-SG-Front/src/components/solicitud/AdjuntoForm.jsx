@@ -32,8 +32,13 @@ export default function AdjuntoForm({
     try {
       const res = await getAdjuntoById(documentoId);
       setLastApiResponse(res[0]); // Debug
-      // Preferir base64Contenido si existe, sino archivo
-      const contenido = res[0]?.base64Contenido || res[0]?.archivo || "";
+
+      const contenidoRaw = res[0]?.base64Contenido || res[0]?.archivo || "";
+      // Normalizar para que archivoBase64 solo contenga la cadena pura sin el prefijo data:
+      const contenido = contenidoRaw.startsWith("data:")
+        ? contenidoRaw.split(",")[1]
+        : contenidoRaw;
+
       setFileName(res[0]?.documentoNombre || "");
       if (contenido) {
         setArchivoBase64(contenido);
@@ -86,9 +91,11 @@ export default function AdjuntoForm({
 
     const reader = new FileReader();
     reader.onload = () => {
-      const base64 = reader.result.split(",")[1];
-      setNewFile(base64);
-      setTipoArchivo(detectarTipoArchivo(base64));
+      const fullBase64 = reader.result; // EJ: "data:application/pdf;base64,JVBERi0x..."
+      const base64Puro = fullBase64.split(",")[1];
+      setNewFile(base64Puro); // para enviar al backend
+      setArchivoBase64(base64Puro); // solo la parte base64 pura para preview
+      setTipoArchivo(detectarTipoArchivo(base64Puro));
     };
     reader.readAsDataURL(file);
   };
@@ -109,8 +116,7 @@ export default function AdjuntoForm({
       const res = await updateAdjunto(documentoId, payload);
       if (res.success) {
         toast.success("Archivo guardado correctamente");
-        setArchivoBase64(newFile);
-        setTipoArchivo(detectarTipoArchivo(newFile));
+        await cargarAdjunto(); // recargar para mantener todo consistente
         setNewFile(null);
         if (fileInputRef.current) fileInputRef.current.value = "";
         onClose?.();
@@ -142,7 +148,6 @@ export default function AdjuntoForm({
     }
   };
 
-  // --- UI/UX ---
   return (
     <div className="space-y-6 p-2 md:p-4">
       <div className="flex items-center gap-2 mb-2">
@@ -189,13 +194,11 @@ export default function AdjuntoForm({
         ) : (
           <div className="flex flex-col items-center gap-3 w-full py-6">
             <p className="text-gray-500 text-sm text-center">
-              {
-                lastApiResponse
-                  ? lastApiResponse.archivo || lastApiResponse.base64Contenido
-                    ? "El documento no puede ser previsualizado aquí, pero puedes intentar descargarlo."
-                    : "Aún no se ha generado o cargado ningún archivo para este documento.<br/>Si acabas de generarlo, intenta recargar."
-                  : "No hay archivo cargado."
-              }
+              {lastApiResponse
+                ? lastApiResponse.archivo || lastApiResponse.base64Contenido
+                  ? "El documento no puede ser previsualizado aquí, pero puedes intentar descargarlo."
+                  : "Aún no se ha generado o cargado ningún archivo para este documento.<br/>Si acabas de generarlo, intenta recargar."
+                : "No hay archivo cargado."}
             </p>
             <Button
               variant="ghost"
@@ -222,10 +225,6 @@ export default function AdjuntoForm({
         )}
       </div>
 
-      {/* Debug info opcional */}
-      {/* <pre className="text-xs text-gray-400 bg-gray-100 p-2 rounded">{JSON.stringify(lastApiResponse, null, 2)}</pre> */}
-
-      {/* Formulario de carga y observación solo si es editable */}
       {!readOnly && (
         <div className="space-y-4">
           <div>
@@ -242,9 +241,7 @@ export default function AdjuntoForm({
             />
           </div>
           <div>
-            <Label className="text-sm font-medium text-gray-700">
-              Observaciones
-            </Label>
+            <Label className="text-sm font-medium text-gray-700">Observaciones</Label>
             <Input
               value={observaciones}
               onChange={(e) => setObservaciones(e.target.value)}
