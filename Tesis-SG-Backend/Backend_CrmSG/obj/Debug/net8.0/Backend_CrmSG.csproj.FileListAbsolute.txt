@@ -524,12 +524,6 @@ D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\De
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\staticwebassets.build.json
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\staticwebassets.development.json
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\staticwebassets\msbuild.Backend_CrmSG.Microsoft.AspNetCore.StaticWebAssets.props
-D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\staticwebassets\msbuild.Backend_CrmSG.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\staticwebassets\msbuild.build.Backend_CrmSG.props
-D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.Backend_CrmSG.props
-D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.Backend_CrmSG.props
-D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\staticwebassets.pack.json
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\Backend_.999683F6.Up2Date
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\Backend_CrmSG.genruntimeconfig.cache
@@ -552,3 +546,8 @@ D:\Tesis KR\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Plantillas\
 D:\Tesis KR\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Plantillas\PlantillaContratoTESIS.docx
 D:\Tesis KR\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Plantillas\PlantillaAnexoProyeccionRentaPeriodica.docx
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Plantillas\PlantillaAnexoProyeccionRentaPeriodica.docx
+D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\rpswa.dswa.cache.json
+D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\rjimswa.dswa.cache.json
+D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\staticwebassets.build.json.cache

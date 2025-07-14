@@ -321,12 +321,14 @@ namespace Backend_CrmSG.Services
                     Plazo = plazoRestante,
                     FechaInicial = nuevaCuotaIncremento.FechaVencimiento,
                     Tasa = configuracion.Taza,
-                    AporteAdicional = 0, // el incremento fue en el periodo anterior
+                    AporteAdicional = 0,
                     CosteOperativo = proyeccionOriginal.CosteOperativo ?? 0,
                     CosteNotarizacion = proyeccionOriginal.CosteNotarizacion ?? 0,
                     IdOrigenCapital = proyeccionOriginal.IdOrigenCapital ?? 0,
-                    Periodicidad = producto.Periocidad
+                    Periodicidad = producto.Periocidad,
+                    EsIncremento = true
                 });
+
 
                 for (int j = 0; j < simulacion.Cronograma.Count; j++)
                 {
