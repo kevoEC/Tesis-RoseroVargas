@@ -127,35 +127,33 @@ public class AdendumService : IAdendumService
         if (adendum == null)
             throw new Exception("Adendum no encontrado.");
 
-        // Llama SP con IdMotivo = 37 (Adendum)
+        try
+        {
 #pragma warning disable CS8625 // No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL.
-        var result = await _context.Database.ExecuteSqlRawAsync(
-            "EXEC sp_CrearDocumentosPorMotivo @p0, @p1, @p2, @p3, @p4, @p5",
-            parameters: new object[]
-            {
-            37, // IdMotivo Adendum
-            null, // IdTarea
-            null, // IdSolicitudInversion
-            adendum.IdInversion,
-            null, // IdCaso
-            adendum.IdAdendum // IdAdendum NUEVO CAMPO EN SP y en tabla Documento
-            }
-        );
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC sp_CrearDocumentosPorMotivo @p0, @p1, @p2, @p3, @p4, @p5",
+                new object[]
+                {
+                37, null, null, adendum.IdInversion, null, adendum.IdAdendum
+                });
 #pragma warning restore CS8625 // No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL.
 
-        if (result > 0)
-        {
             adendum.GenerarDocumentos = true;
-            adendum.Estado = 2; // Cambia el estado aquí 👈
+            adendum.Estado = 2;
             adendum.IdUsuarioModificacion = idUsuario;
             adendum.FechaModificacion = DateTime.Now;
             _context.Adendum.Update(adendum);
             await _context.SaveChangesAsync();
+
             return true;
         }
-
-        return false;
+        catch
+        {
+            return false;
+        }
     }
+
+
 
     // 6. Continuar flujo (setea cronograma y completa el adendum)
     public async Task<bool> ContinuarFlujoAsync(int idAdendum, int idUsuario)
