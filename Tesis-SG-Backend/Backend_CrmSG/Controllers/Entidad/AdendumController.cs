@@ -103,6 +103,7 @@ namespace Backend_CrmSG.Controllers.Entidad
             }
         }
 
+
         // 6. Continuar flujo (activar proyección y cronograma)
         [HttpPost("{id}/continuar-flujo")]
         public async Task<IActionResult> ContinuarFlujo(int id, [FromQuery] int idUsuario)
