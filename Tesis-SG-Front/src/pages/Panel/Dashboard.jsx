@@ -50,7 +50,10 @@ export default function DashboardPanel() {
         setClientes(c);
         setInversiones(i);
         setPagosCasos(pc);
-      } catch (err) {}
+      } catch (err) {
+        console.error("[DashboardPanel] Error al cargar estadísticas:", err);
+      }
+      
       finally {
         setLoading(false);
       }

@@ -12,12 +12,13 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import SolicitudInversionForm from "./SolicitudInversionForm";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
+import GlassLoader from "@/components/ui/GlassLoader";
 
-// Helper para mostrar el badge visual de fase
 function FaseBadge({ fase }) {
-  // Puedes personalizar según tus fases
   const fases = {
     1: { label: "Llenado de Información", color: "bg-gray-200 text-gray-700" },
     2: { label: "Tareas", color: "bg-blue-100 text-blue-700" },
@@ -32,32 +33,69 @@ function FaseBadge({ fase }) {
 
 export default function SolicitudInversion() {
   const navigate = useNavigate();
+  const { roles, user } = useAuth();
 
   const [solicitudes, setSolicitudes] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Ref para que el toast solo se muestre una vez
+  const toastMostradoRef = useRef(false);
+
+  // Determina el título según el rol
+  const esMisSolicitudes =
+    roles.includes("Externo") || roles.includes("Asesor Comercial");
+  const tituloSolicitudes = esMisSolicitudes
+    ? "Mis Solicitudes"
+    : "Lista de Solicitudes de Inversión";
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const data = await getSolicitudes();
-        setSolicitudes(data.data);
+        let solicitudesFiltradas = data.data;
+
+        // Si es Externo o Asesor Comercial, filtra por propietario
+        if (esMisSolicitudes) {
+          solicitudesFiltradas = solicitudesFiltradas.filter(
+            (sol) => sol.idUsuarioPropietario === user.id
+          );
+        }
+
+        // Si es Externo y no tiene ninguna solicitud, muestra mensaje una sola vez
+        if (
+          roles.includes("Externo") &&
+          solicitudesFiltradas.length === 0 &&
+          !toastMostradoRef.current
+        ) {
+          toast.info(
+            "Es necesario que te crees como prospecto para poder crear una solicitud de inversión."
+          );
+          toastMostradoRef.current = true;
+        }
+
+        setSolicitudes(solicitudesFiltradas);
       } catch (error) {
         console.error("Error al cargar solicitudes:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
-  }, []);
+    // eslint-disable-next-line
+  }, [roles, user]);
 
-  // ✏️ Editar
   const handleEditar = (item) => {
     navigate(`/solicitudes/editar/${item.idSolicitudInversion}`);
   };
 
-  // ❌ Eliminar
   const handleEliminar = async (item) => {
     try {
       await deleteSolicitud(item.idSolicitudInversion);
-      setSolicitudes((prev) => prev.filter(s => s.idSolicitudInversion !== item.idSolicitudInversion));
+      setSolicitudes((prev) =>
+        prev.filter((s) => s.idSolicitudInversion !== item.idSolicitudInversion)
+      );
     } catch (err) {
       console.error("Error al eliminar solicitud:", err);
     }
@@ -91,7 +129,6 @@ export default function SolicitudInversion() {
         </div>
       ),
     },
-    // --- Nueva columna Fase ---
     {
       key: "faseProceso",
       label: "Fase",
@@ -130,10 +167,13 @@ export default function SolicitudInversion() {
   ];
 
   return (
-    <div>
-      <Card>
+    <div className="relative">
+      <GlassLoader visible={loading} message="Cargando solicitudes..." />
+      <Card className="w-full border border-muted rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.12)]">
         <CardHeader>
-          <CardTitle>Solicitudes de Inversión - Todos</CardTitle>
+          <CardTitle className="text-3xl font-bold text-gray-900 flex items-center">
+            {tituloSolicitudes}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <TablaCustom2

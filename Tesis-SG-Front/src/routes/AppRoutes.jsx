@@ -127,8 +127,6 @@ export const publicRoutes = [
 
 export const protectedRoutes = [
   // Panel de métricas
-  { path: "/panel/metricas", element: <DashboardPanel /> },
-
   {
     path: "/debug/prueba",
     element: (
@@ -244,6 +242,8 @@ export const protectedRoutes = [
 
   // Adendum
   { path: "/adendum/vista/:idAdendum", element: <DetalleAdendum /> },
+
+    { path: "/panel/metricas", element: <DashboardPanel /> },
   
 ];
 
