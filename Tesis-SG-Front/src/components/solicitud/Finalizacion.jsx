@@ -147,39 +147,50 @@ export default function FinalizacionForm({ id }) {
     }
   };
 
-  // Confirmar (genera tareas Y guarda la finalización en backend)
+  // Confirmar: primero guarda datos y luego genera tareas si aplica
   const handleConfirmar = async () => {
-    if (finalizacion.idContinuarSolicitud === 1) {
-      setIsGenerating(true);
-      setGlassMsg("Generando tareas y guardando...");
-      try {
-        await finalizarSolicitudYGenerarTareas(id);
+    if (bloquearTodo || isGenerating || loading) return;
 
-        // Marca como confirmado y guarda la finalización en la BD
-        const payload = {
-          ...solicitudData,
-          identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
-          finalizacion: { ...finalizacion, confirmar: true },
-        };
+    if (!finalizacion.numeroContrato) {
+      toast.error("Debe generar un número de contrato antes de confirmar.");
+      return;
+    }
 
-        // eslint-disable-next-line no-unused-vars
-        const res = await updateSolicitud(id, payload);
+    setIsGenerating(true);
+    setGlassMsg("Guardando datos de finalización...");
 
-        setFinalizacion((f) => ({ ...f, confirmar: true }));
-        toast.success("Tareas generadas y finalización guardada.");
-      } catch (err) {
-        toast.error("Error al generar tareas o guardar finalización: " + err.message);
-      } finally {
-        setIsGenerating(false);
-        setGlassMsg("");
+    try {
+      // Guardar primero los datos de finalización
+      const payload = {
+        ...solicitudData,
+        identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
+        finalizacion,
+      };
+      const res = await updateSolicitud(id, payload);
+      if (!res.success) {
+        throw new Error("No se pudo guardar la finalización antes de continuar");
       }
-    } else {
-      // Solo confirma en local si la acción es distinta de 1
+
+      setGlassMsg("Procesando acción...");
+
+      if (finalizacion.idContinuarSolicitud === 1) {
+        await finalizarSolicitudYGenerarTareas(id);
+        toast.success("Datos guardados y tareas generadas correctamente.");
+      } else {
+        toast.success("Datos guardados correctamente.");
+      }
+
       setFinalizacion((f) => ({ ...f, confirmar: true }));
+
+    } catch (err) {
+      toast.error("Error al confirmar finalización: " + (err.message || err));
+    } finally {
+      setIsGenerating(false);
+      setGlassMsg("");
     }
   };
 
-  // Deshabilita campos si está bloqueado
+  // Deshabilita campos si está bloqueado o ya confirmado o en carga
   const disabledCampos = bloquearTodo || !finalizacion.numeroContrato || finalizacion.confirmar || isGenerating || loading;
 
   if (loading) return <GlassLoader visible message="Cargando finalización..." />;

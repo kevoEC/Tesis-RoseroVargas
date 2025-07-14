@@ -41,6 +41,8 @@ import {
   getCatalogoProfesion,
 } from "@/service/Catalogos/DatosGeneralesService";
 
+import { FaInfoCircle } from "react-icons/fa";
+
 export default function DatosGenerales() {
   const { user } = useAuth();
   const { id } = useParams();
@@ -65,7 +67,10 @@ export default function DatosGenerales() {
     ciudadNacimiento: "",
   });
 
-  // FASE PROCESO: Bloqueo total si faseProceso === 4
+  // Estado para errores de validación
+  const [errores, setErrores] = useState({});
+
+  // FASE PROCESO: Bloqueo total si faseProceso !== 1
   const [bloquearTodo, setBloquearTodo] = useState(false);
 
   /* 🇨🇴 Carga inicial de datos generales */
@@ -77,7 +82,7 @@ export default function DatosGenerales() {
         const data = res.data[0];
         setSolicitudData(data);
 
-        // Bloquear todo si faseProceso === 4 (Oportunidad lograda)
+        // Bloquear todo si faseProceso !== 1 (Oportunidad lograda)
         setBloquearTodo(data.faseProceso !== 1);
 
         const dg = data.datosGenerales || {};
@@ -131,6 +136,27 @@ export default function DatosGenerales() {
     fechaCreacion: new Date().toISOString(),
     idUsuarioPropietario: user?.idUsuario,
   });
+
+  // Validaciones internas para referencia antes de guardar
+  const validarReferencia = () => {
+    if (!nuevoDato.nombre || nuevoDato.nombre.trim() === "") {
+      toast.error("El campo Nombre es obligatorio.");
+      return false;
+    }
+    if (!nuevoDato.direccion || nuevoDato.direccion.trim() === "") {
+      toast.error("El campo Dirección es obligatorio.");
+      return false;
+    }
+    if (!nuevoDato.telefonoCelular || nuevoDato.telefonoCelular.trim() === "") {
+      toast.error("El campo Teléfono Celular es obligatorio.");
+      return false;
+    }
+    if (!nuevoDato.idTipoReferencia) {
+      toast.error("Debes seleccionar un Tipo de Referencia.");
+      return false;
+    }
+    return true;
+  };
 
   useEffect(() => {
     const fetchRefs = async () => {
@@ -195,17 +221,53 @@ export default function DatosGenerales() {
     }
   };
 
-  // -- Botón guardar solo habilitado si hay referencias y no está bloqueado por faseProceso
-  const puedeGuardar = referencias.length > 0 && !bloquearTodo;
+  // Validación campos obligatorios del formulario datos generales
+  const validarCampos = () => {
+    const nuevosErrores = {};
+
+    if (!datosGenerales.fechaNacimiento) {
+      nuevosErrores.fechaNacimiento = "Fecha de nacimiento es obligatoria";
+    }
+    if (!datosGenerales.genero) {
+      nuevosErrores.genero = "Género es obligatorio";
+    }
+    if (!datosGenerales.estadoCivil) {
+      nuevosErrores.estadoCivil = "Estado civil es obligatorio";
+    }
+    if (!datosGenerales.nivelAcademico) {
+      nuevosErrores.nivelAcademico = "Nivel académico es obligatorio";
+    }
+    if (!datosGenerales.nacionalidad) {
+      nuevosErrores.nacionalidad = "Nacionalidad es obligatoria";
+    }
+    if (!datosGenerales.profesion) {
+      nuevosErrores.profesion = "Profesión es obligatoria";
+    }
+    if (!datosGenerales.etnia) {
+      nuevosErrores.etnia = "Etnia es obligatoria";
+    }
+
+    setErrores(nuevosErrores);
+
+    // Si no hay errores, retorna true
+    return Object.keys(nuevosErrores).length === 0;
+  };
 
   // -- Guardar datos generales
   const handleSaveGeneral = async () => {
     if (!solicitudData) return;
     if (bloquearTodo) return;
+
     if (referencias.length === 0) {
       toast.error("Debes agregar al menos una referencia antes de guardar.");
       return;
     }
+
+    if (!validarCampos()) {
+      toast.error("Por favor completa todos los campos obligatorios antes de guardar.");
+      return;
+    }
+
     setLoadingGeneral(true);
     try {
       const payload = {
@@ -234,12 +296,60 @@ export default function DatosGenerales() {
     }
   };
 
-  // Columnas para referencias
+  // Guardar referencia (crear o editar)
+  const handleGuardarReferencia = async () => {
+    if (bloquearTodo) return;
+
+    if (!validarReferencia()) return;
+
+    const datosAEnviar = {
+      ...nuevoDato,
+      fechaCreacion: new Date().toISOString(),
+    };
+
+    try {
+      if (modoEdicion) {
+        await editarReferencia(nuevoDato.idReferencia, datosAEnviar);
+        toast.success("Referencia actualizada", {
+          description: `Se actualizó ${nuevoDato.nombre}`,
+        });
+      } else {
+        await crearReferencia(datosAEnviar);
+        toast.success("Referencia creada", {
+          description: `Se agregó ${nuevoDato.nombre}`,
+        });
+      }
+      const dataActualizada = await getReferenciasPorSolicitud(id);
+      setReferencias(dataActualizada);
+      setModalAbierto(false);
+      setModoEdicion(false);
+      setNuevoDato({
+        idSolicitudInversion: Number(id),
+        idTipoReferencia: "",
+        nombre: "",
+        direccion: "",
+        telefonoCelular: "",
+        fechaCreacion: new Date().toISOString(),
+        idUsuarioPropietario: user?.idUsuario,
+      });
+    } catch (error) {
+      toast.error("No se pudo guardar la referencia.");
+    }
+  };
+
+  // Columnas para referencias con icono en lugar de ID texto
   const columnas = [
     {
       key: "idReferencia",
-      label: "ID Referencia",
-      render: (v) => <div className="text-end font-semibold">{v}</div>,
+      label: "",
+      render: (v) => (
+        <span
+          title={`ID Referencia: ${v}`}
+          className="flex justify-center cursor-default text-gray-600 hover:text-gray-900"
+        >
+          <FaInfoCircle size={18} />
+        </span>
+      ),
     },
     { key: "nombreReferencia", label: "Nombre Referencia" },
     { key: "nombreTipoReferencia", label: "Tipo Referencia" },
@@ -272,7 +382,7 @@ export default function DatosGenerales() {
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <FormGroup label="Fecha de nacimiento">
+            <FormGroup label="Fecha de nacimiento" error={errores.fechaNacimiento}>
               <Input
                 type="date"
                 value={datosGenerales.fechaNacimiento}
@@ -283,15 +393,17 @@ export default function DatosGenerales() {
                   })
                 }
                 disabled={bloquearTodo}
+                aria-invalid={!!errores.fechaNacimiento}
               />
             </FormGroup>
-            <FormGroup label="Género">
+            <FormGroup label="Género" error={errores.genero}>
               <Select
                 value={datosGenerales.genero}
                 onValueChange={(v) =>
                   setDatosGenerales({ ...datosGenerales, genero: v })
                 }
                 disabled={bloquearTodo}
+                aria-invalid={!!errores.genero}
               >
                 <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
@@ -303,13 +415,14 @@ export default function DatosGenerales() {
                 </SelectContent>
               </Select>
             </FormGroup>
-            <FormGroup label="Estado civil">
+            <FormGroup label="Estado civil" error={errores.estadoCivil}>
               <Select
                 value={datosGenerales.estadoCivil}
                 onValueChange={(v) =>
                   setDatosGenerales({ ...datosGenerales, estadoCivil: v })
                 }
                 disabled={bloquearTodo}
+                aria-invalid={!!errores.estadoCivil}
               >
                 <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
@@ -321,13 +434,14 @@ export default function DatosGenerales() {
                 </SelectContent>
               </Select>
             </FormGroup>
-            <FormGroup label="Nivel académico">
+            <FormGroup label="Nivel académico" error={errores.nivelAcademico}>
               <Select
                 value={datosGenerales.nivelAcademico}
                 onValueChange={(v) =>
                   setDatosGenerales({ ...datosGenerales, nivelAcademico: v })
                 }
                 disabled={bloquearTodo}
+                aria-invalid={!!errores.nivelAcademico}
               >
                 <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
@@ -339,13 +453,14 @@ export default function DatosGenerales() {
                 </SelectContent>
               </Select>
             </FormGroup>
-            <FormGroup label="Nacionalidad">
+            <FormGroup label="Nacionalidad" error={errores.nacionalidad}>
               <Select
                 value={datosGenerales.nacionalidad}
                 onValueChange={(v) =>
                   setDatosGenerales({ ...datosGenerales, nacionalidad: v })
                 }
                 disabled={bloquearTodo}
+                aria-invalid={!!errores.nacionalidad}
               >
                 <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
@@ -359,13 +474,14 @@ export default function DatosGenerales() {
                 </SelectContent>
               </Select>
             </FormGroup>
-            <FormGroup label="Profesión">
+            <FormGroup label="Profesión" error={errores.profesion}>
               <Select
                 value={datosGenerales.profesion}
                 onValueChange={(v) =>
                   setDatosGenerales({ ...datosGenerales, profesion: v })
                 }
                 disabled={bloquearTodo}
+                aria-invalid={!!errores.profesion}
               >
                 <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
@@ -379,13 +495,14 @@ export default function DatosGenerales() {
                 </SelectContent>
               </Select>
             </FormGroup>
-            <FormGroup label="Etnia">
+            <FormGroup label="Etnia" error={errores.etnia}>
               <Select
                 value={datosGenerales.etnia}
                 onValueChange={(v) =>
                   setDatosGenerales({ ...datosGenerales, etnia: v })
                 }
                 disabled={bloquearTodo}
+                aria-invalid={!!errores.etnia}
               >
                 <SelectTrigger className="bg-white border border-gray-700">
                   <SelectValue placeholder="Seleccionar..." />
@@ -420,6 +537,7 @@ export default function DatosGenerales() {
         </CardContent>
       </Card>
 
+      {/* Modal formulario referencia */}
       <Dialog open={modalAbierto} onOpenChange={setModalAbierto}>
         <DialogContent>
           <DialogHeader>
@@ -490,43 +608,7 @@ export default function DatosGenerales() {
           <DialogFooter className="pt-4">
             <Button
               className="text-gray-300 hover:text-white"
-              onClick={async () => {
-                const datosAEnviar = {
-                  ...nuevoDato,
-                  fechaCreacion: new Date().toISOString(),
-                };
-                try {
-                  if (modoEdicion) {
-                    await editarReferencia(
-                      nuevoDato.idReferencia,
-                      datosAEnviar
-                    );
-                    toast.success("Referencia actualizada", {
-                      description: `Se actualizó ${nuevoDato.nombre}`,
-                    });
-                  } else {
-                    await crearReferencia(datosAEnviar);
-                    toast.success("Referencia creada", {
-                      description: `Se agregó ${nuevoDato.nombre}`,
-                    });
-                  }
-                  const dataActualizada = await getReferenciasPorSolicitud(id);
-                  setReferencias(dataActualizada);
-                  setModalAbierto(false);
-                  setModoEdicion(false);
-                  setNuevoDato({
-                    idSolicitudInversion: Number(id),
-                    idTipoReferencia: "",
-                    nombre: "",
-                    direccion: "",
-                    telefonoCelular: "",
-                    fechaCreacion: new Date().toISOString(),
-                    idUsuarioPropietario: user?.idUsuario,
-                  });
-                } catch (error) {
-                  toast.error("No se pudo guardar la referencia.");
-                }
-              }}
+              onClick={handleGuardarReferencia}
               disabled={bloquearTodo}
             >
               {modoEdicion ? "Actualizar" : "Crear"}
@@ -538,11 +620,13 @@ export default function DatosGenerales() {
   );
 }
 
-// FormGroup helper
-function FormGroup({ label, children }) {
+// FormGroup helper con visualización de error
+function FormGroup({ label, children, error }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm font-medium text-gray-700">{label}</Label>
+      <Label className="text-sm font-medium text-gray-700 flex items-center gap-1">
+        {label} {error && <span className="text-red-600 text-xs italic">{error}</span>}
+      </Label>
       {children}
     </div>
   );

@@ -28,7 +28,7 @@ import GlassLoader from "@/components/ui/GlassLoader";
 export default function ContactoUbicacion({ id }) {
   const [loading, setLoading] = useState(true);
   const [solicitudData, setSolicitudData] = useState(null);
-  const [bloquearTodo, setBloquearTodo] = useState(false); // <-- NUEVO
+  const [bloquearTodo, setBloquearTodo] = useState(false);
 
   const [contactoUbicacion, setContactoUbicacion] = useState({
     correoElectronico: "",
@@ -55,6 +55,9 @@ export default function ContactoUbicacion({ id }) {
   const [catalogoCiudades, setCatalogoCiudades] = useState([]);
   const [catalogoTipoVia, setCatalogoTipoVia] = useState([]);
 
+  // Estado para errores de validación
+  const [errores, setErrores] = useState({});
+
   useEffect(() => {
     const cargar = async () => {
       setLoading(true);
@@ -63,7 +66,6 @@ export default function ContactoUbicacion({ id }) {
         const data = res.data[0];
         setSolicitudData(data);
 
-        // Bloquea todo si faseProceso !== 1
         setBloquearTodo(data.faseProceso !== 1);
 
         setContactoUbicacion({
@@ -112,8 +114,63 @@ export default function ContactoUbicacion({ id }) {
     cargar();
   }, [id]);
 
+  // Validación solo para campos obligatorios según especificación
+  const validarCampos = () => {
+    const nuevosErrores = {};
+
+    // Contacto (solo correoElectronico y telefonoCelular obligatorios)
+    if (!contactoUbicacion.correoElectronico?.trim()) {
+      nuevosErrores.correoElectronico = "Correo electrónico es obligatorio";
+    }
+    if (!contactoUbicacion.telefonoCelular?.trim()) {
+      nuevosErrores.telefonoCelular = "Teléfono celular es obligatorio";
+    }
+
+    // Ubicación - TODOS obligatorios
+    if (!contactoUbicacion.idPaisResidencia) {
+      nuevosErrores.idPaisResidencia = "País de residencia es obligatorio";
+    }
+    if (!contactoUbicacion.idProvinciaResidencia) {
+      nuevosErrores.idProvinciaResidencia = "Provincia es obligatoria";
+    }
+    if (!contactoUbicacion.idCiudadResidencia) {
+      nuevosErrores.idCiudadResidencia = "Ciudad es obligatoria";
+    }
+    if (!contactoUbicacion.idTipoVia) {
+      nuevosErrores.idTipoVia = "Tipo de vía es obligatorio";
+    }
+    if (!contactoUbicacion.callePrincipal?.trim()) {
+      nuevosErrores.callePrincipal = "Calle principal es obligatoria";
+    }
+    if (!contactoUbicacion.numeroDomicilio?.trim()) {
+      nuevosErrores.numeroDomicilio = "Número de domicilio es obligatorio";
+    }
+    if (!contactoUbicacion.calleSecundaria?.trim()) {
+      nuevosErrores.calleSecundaria = "Calle secundaria es obligatoria";
+    }
+    if (!contactoUbicacion.referenciaDomicilio?.trim()) {
+      nuevosErrores.referenciaDomicilio = "Referencia es obligatoria";
+    }
+    if (!contactoUbicacion.sectorBarrio?.trim()) {
+      nuevosErrores.sectorBarrio = "Sector o barrio es obligatorio";
+    }
+    // En la función validarCampos() agregamos:
+if (!contactoUbicacion.tiempoResidencia || contactoUbicacion.tiempoResidencia === "") {
+  nuevosErrores.tiempoResidencia = "Tiempo de residencia es obligatorio";
+}
+
+
+    setErrores(nuevosErrores);
+    return Object.keys(nuevosErrores).length === 0;
+  };
+
   const handleGuardar = async () => {
     if (!solicitudData) return;
+    if (!validarCampos()) {
+      toast.error("Por favor completa todos los campos obligatorios.");
+      return;
+    }
+
     setLoading(true);
     try {
       const payload = {
@@ -179,10 +236,12 @@ export default function ContactoUbicacion({ id }) {
           >
             Guardar datos
           </Button>
+
+          {/* Sección Contacto */}
           <Card>
             <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <FormInput
-                label="Correo electrónico"
+                label="Correo electrónico *"
                 value={contactoUbicacion.correoElectronico}
                 onChange={(e) =>
                   setContactoUbicacion({
@@ -191,6 +250,19 @@ export default function ContactoUbicacion({ id }) {
                   })
                 }
                 disabled={bloquearTodo}
+                error={errores.correoElectronico}
+              />
+              <FormInput
+                label="Teléfono celular *"
+                value={contactoUbicacion.telefonoCelular}
+                onChange={(e) =>
+                  setContactoUbicacion({
+                    ...contactoUbicacion,
+                    telefonoCelular: e.target.value,
+                  })
+                }
+                disabled={bloquearTodo}
+                error={errores.telefonoCelular}
               />
               <FormInput
                 label="Otro teléfono"
@@ -199,17 +271,6 @@ export default function ContactoUbicacion({ id }) {
                   setContactoUbicacion({
                     ...contactoUbicacion,
                     otroTelefono: e.target.value,
-                  })
-                }
-                disabled={bloquearTodo}
-              />
-              <FormInput
-                label="Teléfono celular"
-                value={contactoUbicacion.telefonoCelular}
-                onChange={(e) =>
-                  setContactoUbicacion({
-                    ...contactoUbicacion,
-                    telefonoCelular: e.target.value,
                   })
                 }
                 disabled={bloquearTodo}
@@ -225,99 +286,18 @@ export default function ContactoUbicacion({ id }) {
                 }
                 disabled={bloquearTodo}
               />
-              <FormGroup label="Tipo de vía">
-                <Select
-                  value={contactoUbicacion.idTipoVia}
-                  onValueChange={(v) =>
-                    setContactoUbicacion({ ...contactoUbicacion, idTipoVia: v })
-                  }
-                  disabled={bloquearTodo}
-                >
-                  <SelectTrigger className="border border-black">
-                    <SelectValue placeholder="---" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border border-gray-200 shadow-xl z-[9999]">
-                    {catalogoTipoVia.map((item) => (
-                      <SelectItem key={item.idTipoVia} value={item.idTipoVia}>
-                        {item.nombre}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormGroup>
+            </CardContent>
+          </Card>
 
-              <FormInput
-                label="Calle principal"
-                value={contactoUbicacion.callePrincipal}
-                onChange={(e) =>
-                  setContactoUbicacion({
-                    ...contactoUbicacion,
-                    callePrincipal: e.target.value,
-                  })
-                }
-                disabled={bloquearTodo}
-              />
-              <FormInput
-                label="Número de domicilio"
-                value={contactoUbicacion.numeroDomicilio}
-                onChange={(e) =>
-                  setContactoUbicacion({
-                    ...contactoUbicacion,
-                    numeroDomicilio: e.target.value,
-                  })
-                }
-                disabled={bloquearTodo}
-              />
-              <FormInput
-                label="Calle secundaria"
-                value={contactoUbicacion.calleSecundaria}
-                onChange={(e) =>
-                  setContactoUbicacion({
-                    ...contactoUbicacion,
-                    calleSecundaria: e.target.value,
-                  })
-                }
-                disabled={bloquearTodo}
-              />
-              <FormInput
-                label="Referencia"
-                value={contactoUbicacion.referenciaDomicilio}
-                onChange={(e) =>
-                  setContactoUbicacion({
-                    ...contactoUbicacion,
-                    referenciaDomicilio: e.target.value,
-                  })
-                }
-                disabled={bloquearTodo}
-              />
-              <FormInput
-                label="Sector / Barrio"
-                value={contactoUbicacion.sectorBarrio}
-                onChange={(e) =>
-                  setContactoUbicacion({
-                    ...contactoUbicacion,
-                    sectorBarrio: e.target.value,
-                  })
-                }
-                disabled={bloquearTodo}
-              />
-              <FormInput
-                label="Tiempo de residencia (años)"
-                type="number"
-                value={contactoUbicacion.tiempoResidencia}
-                onChange={(e) =>
-                  setContactoUbicacion({
-                    ...contactoUbicacion,
-                    tiempoResidencia: e.target.value,
-                  })
-                }
-                disabled={bloquearTodo}
-              />
-              <FormGroup label="País de residencia">
+          {/* Sección Ubicación */}
+          <Card>
+            <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <FormGroup label="País de residencia *">
                 <Select
                   value={contactoUbicacion.idPaisResidencia}
                   onValueChange={handlePaisChange}
                   disabled={bloquearTodo}
+                  aria-invalid={!!errores.idPaisResidencia}
                 >
                   <SelectTrigger className="border border-black">
                     <SelectValue placeholder="---" />
@@ -330,12 +310,16 @@ export default function ContactoUbicacion({ id }) {
                     ))}
                   </SelectContent>
                 </Select>
+                {errores.idPaisResidencia && (
+                  <p className="text-xs text-red-600 mt-1">{errores.idPaisResidencia}</p>
+                )}
               </FormGroup>
-              <FormGroup label="Provincia">
+              <FormGroup label="Provincia *">
                 <Select
                   disabled={!contactoUbicacion.idPaisResidencia || bloquearTodo}
                   value={contactoUbicacion.idProvinciaResidencia}
                   onValueChange={handleProvinciaChange}
+                  aria-invalid={!!errores.idProvinciaResidencia}
                 >
                   <SelectTrigger className="border border-black">
                     <SelectValue placeholder="---" />
@@ -348,14 +332,18 @@ export default function ContactoUbicacion({ id }) {
                     ))}
                   </SelectContent>
                 </Select>
+                {errores.idProvinciaResidencia && (
+                  <p className="text-xs text-red-600 mt-1">{errores.idProvinciaResidencia}</p>
+                )}
               </FormGroup>
-              <FormGroup label="Ciudad">
+              <FormGroup label="Ciudad *">
                 <Select
                   disabled={!contactoUbicacion.idProvinciaResidencia || bloquearTodo}
                   value={contactoUbicacion.idCiudadResidencia}
                   onValueChange={(v) =>
                     setContactoUbicacion({ ...contactoUbicacion, idCiudadResidencia: v })
                   }
+                  aria-invalid={!!errores.idCiudadResidencia}
                 >
                   <SelectTrigger className="border border-black">
                     <SelectValue placeholder="---" />
@@ -368,7 +356,114 @@ export default function ContactoUbicacion({ id }) {
                     ))}
                   </SelectContent>
                 </Select>
+                {errores.idCiudadResidencia && (
+                  <p className="text-xs text-red-600 mt-1">{errores.idCiudadResidencia}</p>
+                )}
               </FormGroup>
+              <FormGroup label="Tipo de vía *">
+                <Select
+                  value={contactoUbicacion.idTipoVia}
+                  onValueChange={(v) =>
+                    setContactoUbicacion({ ...contactoUbicacion, idTipoVia: v })
+                  }
+                  disabled={bloquearTodo}
+                  aria-invalid={!!errores.idTipoVia}
+                >
+                  <SelectTrigger className="border border-black">
+                    <SelectValue placeholder="---" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border border-gray-200 shadow-xl z-[9999]">
+                    {catalogoTipoVia.map((item) => (
+                      <SelectItem key={item.idTipoVia} value={item.idTipoVia}>
+                        {item.nombre}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errores.idTipoVia && (
+                  <p className="text-xs text-red-600 mt-1">{errores.idTipoVia}</p>
+                )}
+              </FormGroup>
+              <FormInput
+                label="Calle principal *"
+                value={contactoUbicacion.callePrincipal}
+                onChange={(e) =>
+                  setContactoUbicacion({
+                    ...contactoUbicacion,
+                    callePrincipal: e.target.value,
+                  })
+                }
+                disabled={bloquearTodo}
+                error={errores.callePrincipal}
+              />
+              <FormInput
+                label="Número de domicilio *"
+                value={contactoUbicacion.numeroDomicilio}
+                onChange={(e) =>
+                  setContactoUbicacion({
+                    ...contactoUbicacion,
+                    numeroDomicilio: e.target.value,
+                  })
+                }
+                disabled={bloquearTodo}
+                error={errores.numeroDomicilio}
+              />
+              <FormInput
+                label="Calle secundaria *"
+                value={contactoUbicacion.calleSecundaria}
+                onChange={(e) =>
+                  setContactoUbicacion({
+                    ...contactoUbicacion,
+                    calleSecundaria: e.target.value,
+                  })
+                }
+                disabled={bloquearTodo}
+                error={errores.calleSecundaria}
+              />
+              <FormInput
+                label="Referencia *"
+                value={contactoUbicacion.referenciaDomicilio}
+                onChange={(e) =>
+                  setContactoUbicacion({
+                    ...contactoUbicacion,
+                    referenciaDomicilio: e.target.value,
+                  })
+                }
+                disabled={bloquearTodo}
+                error={errores.referenciaDomicilio}
+              />
+              <FormInput
+                label="Tiempo de residencia (años) *"
+                type="number"
+                value={contactoUbicacion.tiempoResidencia}
+                onChange={(e) =>
+                  setContactoUbicacion({
+                    ...contactoUbicacion,
+                    tiempoResidencia: e.target.value,
+                  })
+                }
+                disabled={bloquearTodo}
+                error={errores.tiempoResidencia}
+              />
+
+              <FormInput
+                label="Sector / Barrio *"
+                value={contactoUbicacion.sectorBarrio}
+                onChange={(e) =>
+                  setContactoUbicacion({
+                    ...contactoUbicacion,
+                    sectorBarrio: e.target.value,
+                  })
+                }
+                disabled={bloquearTodo}
+                error={errores.sectorBarrio}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Sección Extranjero / Contribuyente EU */}
+          <Card>
+            <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormSwitch
                 label="Residente otro país"
                 checked={contactoUbicacion.residenteOtroPais}
@@ -376,10 +471,26 @@ export default function ContactoUbicacion({ id }) {
                   setContactoUbicacion({
                     ...contactoUbicacion,
                     residenteOtroPais: checked,
+                    // limpiar si deshabilita?
+                    numeroIdentificacionOtroPais: checked ? contactoUbicacion.numeroIdentificacionOtroPais : "",
                   })
                 }
                 disabled={bloquearTodo}
               />
+              {contactoUbicacion.residenteOtroPais && (
+                <FormInput
+                  label="Número de identificación (Otro País)"
+                  value={contactoUbicacion.numeroIdentificacionOtroPais}
+                  onChange={(e) =>
+                    setContactoUbicacion({
+                      ...contactoUbicacion,
+                      numeroIdentificacionOtroPais: e.target.value,
+                    })
+                  }
+                  disabled={bloquearTodo}
+                />
+              )}
+
               <FormSwitch
                 label="Contribuyente EEUU"
                 checked={contactoUbicacion.contribuyenteEEUU}
@@ -387,32 +498,24 @@ export default function ContactoUbicacion({ id }) {
                   setContactoUbicacion({
                     ...contactoUbicacion,
                     contribuyenteEEUU: checked,
+                    numeroIdentificacionEEUU: checked ? contactoUbicacion.numeroIdentificacionEEUU : "",
                   })
                 }
                 disabled={bloquearTodo}
               />
-              <FormInput
-                label="Número de identificación (Otro País)"
-                value={contactoUbicacion.numeroIdentificacionOtroPais}
-                onChange={(e) =>
-                  setContactoUbicacion({
-                    ...contactoUbicacion,
-                    numeroIdentificacionOtroPais: e.target.value,
-                  })
-                }
-                disabled={bloquearTodo}
-              />
-              <FormInput
-                label="Número de Identificación(EE.UU.)"
-                value={contactoUbicacion.numeroIdentificacionEEUU}
-                onChange={(e) =>
-                  setContactoUbicacion({
-                    ...contactoUbicacion,
-                    numeroIdentificacionEEUU: e.target.value,
-                  })
-                }
-                disabled={bloquearTodo}
-              />
+              {contactoUbicacion.contribuyenteEEUU && (
+                <FormInput
+                  label="Número de Identificación(EE.UU.)"
+                  value={contactoUbicacion.numeroIdentificacionEEUU}
+                  onChange={(e) =>
+                    setContactoUbicacion({
+                      ...contactoUbicacion,
+                      numeroIdentificacionEEUU: e.target.value,
+                    })
+                  }
+                  disabled={bloquearTodo}
+                />
+              )}
             </CardContent>
           </Card>
         </>
@@ -422,11 +525,21 @@ export default function ContactoUbicacion({ id }) {
 }
 
 // Componentes reutilizables
-function FormInput({ label, value, onChange, type = "text", disabled }) {
+function FormInput({ label, value, onChange, type = "text", disabled, error }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm font-medium text-gray-700">{label}</Label>
-      <Input placeholder="---" type={type} value={value} onChange={onChange} disabled={disabled} />
+      <Label className="text-sm font-medium text-gray-700 flex items-center gap-1">
+        {label}
+        {error && <span className="text-red-600 text-xs italic">{error}</span>}
+      </Label>
+      <Input
+        placeholder="---"
+        type={type}
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+        aria-invalid={!!error}
+      />
     </div>
   );
 }
@@ -454,7 +567,6 @@ function FormSwitch({ label, checked, onChange, disabled }) {
             ${checked ? "bg-primary" : "bg-gray-300"}
           `}
         />
-        {/* Círculo deslizante */}
         <span
           className={`
             pointer-events-none

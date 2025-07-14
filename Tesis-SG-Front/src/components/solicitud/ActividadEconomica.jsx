@@ -48,6 +48,9 @@ export default function ActividadEconomica() {
     isPEP: false,
   });
 
+  // Estado para errores de validación
+  const [errores, setErrores] = useState({});
+
   useEffect(() => {
     const cargarDatos = async () => {
       setLoading(true);
@@ -102,31 +105,75 @@ export default function ActividadEconomica() {
     cargarDatos();
   }, [id]);
 
-const handleGuardar = async () => {
-  if (!solicitudData || bloquearTodo) return;
-  setLoading(true);
-  try {
-    const payload = {
-      ...solicitudData,
-      identificacion: mapIdentificacionToUpdate(solicitudData.identificacion), // muy importante mantenerla
-      actividadEconomica: {
-        ...solicitudData.actividadEconomica, // preserva otros campos que existan
-        ...actividadEconomica,
-        esPEP: actividadEconomica.isPEP, // por si el backend espera ese nombre
-      },
-    };
+  // Validación campos obligatorios (excepto otraActividadEconomica)
+  const validarCampos = () => {
+    const nuevosErrores = {};
 
-    const res = await updateSolicitud(id, payload);
-    res.success
-      ? toast.success("Datos guardados exitosamente.")
-      : toast.error("Error al guardar los datos.");
-  } catch (error) {
-    toast.error("Error al guardar los datos: " + error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+    if (!actividadEconomica.idActividadEconomicaPrincipal) {
+      nuevosErrores.idActividadEconomicaPrincipal = "Actividad económica principal es obligatoria";
+    }
+    if (!actividadEconomica.idActividadEconomicaLugarTrabajo) {
+      nuevosErrores.idActividadEconomicaLugarTrabajo = "Actividad económica del lugar de trabajo es obligatoria";
+    }
+    if (!actividadEconomica.lugarTrabajo) {
+      nuevosErrores.lugarTrabajo = "Lugar de trabajo es obligatorio";
+    }
+    if (!actividadEconomica.cargo) {
+      nuevosErrores.cargo = "Cargo es obligatorio";
+    }
+    if (!actividadEconomica.telefonoTrabajo) {
+      nuevosErrores.telefonoTrabajo = "Teléfono del trabajo es obligatorio";
+    }
+    if (!actividadEconomica.fechaInicioActividad) {
+      nuevosErrores.fechaInicioActividad = "Fecha de inicio es obligatoria";
+    }
+    if (!actividadEconomica.antiguedad) {
+      nuevosErrores.antiguedad = "Antigüedad es obligatoria";
+    }
+    if (!actividadEconomica.correoTrabajo) {
+      nuevosErrores.correoTrabajo = "Correo electrónico del trabajo es obligatorio";
+    }
+    if (!actividadEconomica.direccionTrabajo) {
+      nuevosErrores.direccionTrabajo = "Dirección del trabajo es obligatoria";
+    }
+    if (!actividadEconomica.referenciaDireccionTrabajo) {
+      nuevosErrores.referenciaDireccionTrabajo = "Referencia de la dirección del trabajo es obligatoria";
+    }
 
+    setErrores(nuevosErrores);
+    return Object.keys(nuevosErrores).length === 0;
+  };
+
+  const handleGuardar = async () => {
+    if (!solicitudData || bloquearTodo) return;
+
+    if (!validarCampos()) {
+      toast.error("Por favor completa todos los campos obligatorios.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const payload = {
+        ...solicitudData,
+        identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
+        actividadEconomica: {
+          ...solicitudData.actividadEconomica,
+          ...actividadEconomica,
+          esPEP: actividadEconomica.isPEP,
+        },
+      };
+
+      const res = await updateSolicitud(id, payload);
+      res.success
+        ? toast.success("Datos guardados exitosamente.")
+        : toast.error("Error al guardar los datos.");
+    } catch (error) {
+      toast.error("Error al guardar los datos: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6 p-6 relative">
@@ -151,6 +198,7 @@ const handleGuardar = async () => {
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
             <FormSelect
               label="Actividad económica principal"
               options={catalogoPrincipal}
@@ -162,7 +210,9 @@ const handleGuardar = async () => {
                 }))
               }
               disabled={bloquearTodo}
+              error={errores.idActividadEconomicaPrincipal}
             />
+
             <FormSelect
               label="Actividad económica del lugar de trabajo"
               options={catalogoTrabajo}
@@ -174,18 +224,9 @@ const handleGuardar = async () => {
                 }))
               }
               disabled={bloquearTodo}
+              error={errores.idActividadEconomicaLugarTrabajo}
             />
-            <FormInput
-              label="Lugar de trabajo"
-              value={actividadEconomica.lugarTrabajo}
-              onChange={(e) =>
-                setActividadEconomica((prev) => ({
-                  ...prev,
-                  lugarTrabajo: e.target.value,
-                }))
-              }
-              disabled={bloquearTodo}
-            />
+
             <FormInput
               label="Otra actividad económica"
               value={actividadEconomica.otraActividadEconomica}
@@ -197,6 +238,20 @@ const handleGuardar = async () => {
               }
               disabled={bloquearTodo}
             />
+
+            <FormInput
+              label="Lugar de trabajo"
+              value={actividadEconomica.lugarTrabajo}
+              onChange={(e) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  lugarTrabajo: e.target.value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.lugarTrabajo}
+            />
+
             <FormInput
               label="Cargo"
               value={actividadEconomica.cargo}
@@ -207,29 +262,9 @@ const handleGuardar = async () => {
                 }))
               }
               disabled={bloquearTodo}
+              error={errores.cargo}
             />
-            <FormInput
-              label="Correo electrónico del trabajo"
-              value={actividadEconomica.correoTrabajo}
-              onChange={(e) =>
-                setActividadEconomica((prev) => ({
-                  ...prev,
-                  correoTrabajo: e.target.value,
-                }))
-              }
-              disabled={bloquearTodo}
-            />
-            <FormInput
-              label="Antigüedad (años)"
-              value={actividadEconomica.antiguedad}
-              onChange={(e) =>
-                setActividadEconomica((prev) => ({
-                  ...prev,
-                  antiguedad: e.target.value,
-                }))
-              }
-              disabled={bloquearTodo}
-            />
+
             <FormInput
               label="Teléfono del trabajo"
               value={actividadEconomica.telefonoTrabajo}
@@ -240,7 +275,9 @@ const handleGuardar = async () => {
                 }))
               }
               disabled={bloquearTodo}
+              error={errores.telefonoTrabajo}
             />
+
             <FormInput
               label="Fecha de inicio"
               type="date"
@@ -252,7 +289,35 @@ const handleGuardar = async () => {
                 }))
               }
               disabled={bloquearTodo}
+              error={errores.fechaInicioActividad}
             />
+
+            <FormInput
+              label="Antigüedad (años)"
+              value={actividadEconomica.antiguedad}
+              onChange={(e) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  antiguedad: e.target.value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.antiguedad}
+            />
+
+            <FormInput
+              label="Correo electrónico del trabajo"
+              value={actividadEconomica.correoTrabajo}
+              onChange={(e) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  correoTrabajo: e.target.value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.correoTrabajo}
+            />
+
             <FormInput
               label="Dirección del trabajo"
               value={actividadEconomica.direccionTrabajo}
@@ -263,7 +328,9 @@ const handleGuardar = async () => {
                 }))
               }
               disabled={bloquearTodo}
+              error={errores.direccionTrabajo}
             />
+
             <FormInput
               label="Referencia de la dirección del trabajo"
               value={actividadEconomica.referenciaDireccionTrabajo}
@@ -274,7 +341,9 @@ const handleGuardar = async () => {
                 }))
               }
               disabled={bloquearTodo}
+              error={errores.referenciaDireccionTrabajo}
             />
+
             <FormSwitch
               label="Es PEP"
               checked={actividadEconomica.isPEP}
@@ -293,27 +362,37 @@ const handleGuardar = async () => {
   );
 }
 
-// Helpers reutilizables
-function FormInput({ label, value, onChange, type = "text", disabled }) {
+// Helpers reutilizables con error
+function FormInput({ label, value, onChange, type = "text", disabled, error }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm font-medium text-gray-700">{label}</Label>
+      <Label className="text-sm font-medium text-gray-700 flex items-center gap-1">
+        {label} {error && <span className="text-red-600 text-xs italic">{error}</span>}
+      </Label>
       <Input
         placeholder="---"
         type={type}
         value={value}
         onChange={onChange}
         disabled={disabled}
+        aria-invalid={!!error}
       />
     </div>
   );
 }
 
-function FormSelect({ label, options, value, onChange, disabled }) {
+function FormSelect({ label, options, value, onChange, disabled, error }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm font-medium text-gray-700">{label}</Label>
-      <Select value={String(value)} onValueChange={onChange} disabled={disabled}>
+      <Label className="text-sm font-medium text-gray-700 flex items-center gap-1">
+        {label} {error && <span className="text-red-600 text-xs italic">{error}</span>}
+      </Label>
+      <Select
+        value={String(value)}
+        onValueChange={onChange}
+        disabled={disabled}
+        aria-invalid={!!error}
+      >
         <SelectTrigger className="bg-white border border-gray-700">
           <SelectValue placeholder="---" />
         </SelectTrigger>

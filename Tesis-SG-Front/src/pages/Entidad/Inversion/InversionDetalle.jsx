@@ -1,5 +1,3 @@
-// DetalleInversion.jsx
-
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,13 +5,13 @@ import GlassLoader from "@/components/ui/GlassLoader";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
 import { getInversionById } from "@/service/Entidades/InversionService";
 import { getAdendumsPorInversion } from "@/service/Entidades/AdendumService";
-import { FaFileContract, FaUserTie, FaFolderOpen, FaArrowLeft, FaRegEye } from "react-icons/fa";
+import { FaFileContract, FaUserTie, FaFolderOpen, FaArrowLeft, FaRegEye, FaLock } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import {
   LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend
 } from "recharts";
-import AdendumForm from "@/pages/Entidad/Adendum/AdendumForm"; // <-- Asegúrate de la ruta
-import { Dialog, DialogContent } from "@/components/ui/dialog"; // o tu modal favorito
+import AdendumForm from "@/pages/Entidad/Adendum/AdendumForm"; 
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
 // --- Estado Adendum map
@@ -55,10 +53,12 @@ export default function DetalleInversion() {
   const [adendums, setAdendums] = useState([]);
   const [periodos, setPeriodos] = useState([]);
 
-  // ----------- MODAL NUEVO ADENDUM -------------
+  // Modal Nuevo Adendum
   const [modalAdendumOpen, setModalAdendumOpen] = useState(false);
 
-  // Recarga todo (para refrescar después de crear adendum)
+  // Flag solo lectura si inversión está terminada
+  const soloLectura = inversion?.terminada === true;
+
   const cargarTodo = async () => {
     setLoading(true);
     try {
@@ -95,39 +95,38 @@ export default function DetalleInversion() {
     // eslint-disable-next-line
   }, [id]);
 
-  // --- Columnas Adendums
-const columnasAdendums = [
-  {
-    key: "idAdendum",
-    label: "",
-    render: (value, row) => (
-      <span
-        className="flex justify-center items-center cursor-pointer"
-        title="Ver detalle de Adendum"
-        onClick={() => navigate(`/adendum/vista/${row.idAdendum}`)}
-      >
-        <FaRegEye className="text-violet-600 hover:text-violet-800" size={18} />
-      </span>
-    )
-  },
-  { key: "nombreAdendum", label: "Nombre" },
-  {
-    key: "estado",
-    label: "Estado",
-    render: (v) => {
-      const est = ADENDUM_ESTADO_MAP[v] || { label: "Desconocido", color: "bg-gray-100 text-gray-700 border-gray-300" };
-      return (
-        <span className={`px-2 py-1 text-xs font-bold rounded-full border ${est.color}`}>
-          {est.label}
+  // Columnas Adendums
+  const columnasAdendums = [
+    {
+      key: "idAdendum",
+      label: "",
+      render: (value, row) => (
+        <span
+          className="flex justify-center items-center cursor-pointer"
+          title="Ver detalle de Adendum"
+          onClick={() => navigate(`/adendum/vista/${row.idAdendum}`)}
+        >
+          <FaRegEye className="text-violet-600 hover:text-violet-800" size={18} />
         </span>
-      );
-    }
-  },
-  { key: "fechaCreacion", label: "F. Creación", render: v => formatDate(v) }
-];
+      )
+    },
+    { key: "nombreAdendum", label: "Nombre" },
+    {
+      key: "estado",
+      label: "Estado",
+      render: (v) => {
+        const est = ADENDUM_ESTADO_MAP[v] || { label: "Desconocido", color: "bg-gray-100 text-gray-700 border-gray-300" };
+        return (
+          <span className={`px-2 py-1 text-xs font-bold rounded-full border ${est.color}`}>
+            {est.label}
+          </span>
+        );
+      }
+    },
+    { key: "fechaCreacion", label: "F. Creación", render: v => formatDate(v) }
+  ];
 
-
-  // --- Gráfica (sin renta acumulada, solo capital, rentabilidad y monto pagar)
+  // Gráfica sin renta acumulada, solo capital, rentabilidad y monto pagar
   const chartData = periodos.map(p => ({
     Periodo: `P${p.Periodo}`,
     Capital: p.Capital,
@@ -135,12 +134,12 @@ const columnasAdendums = [
     MontoPagar: p.MontoPagar
   }));
 
-  // --- Info principal y proyección separadas
+  // Info principal y proyección
   const infoProducto1 = [
     { label: "Producto", value: <b>{getProductoNombre(inversion?.inversionNombre)}</b> },
     { label: "Plazo", value: <b>{inversion?.plazo ? `${inversion.plazo} meses` : "-"}</b> },
     { label: "Tasa", value: <b>{inversion?.tasa ? `${Number(inversion.tasa).toFixed(2)}%` : "-"}</b> },
-    { label: "Estado", value: <b>{inversion?.terminada ? "Finalizada" : "Vigente"}</b> },
+    { label: "Estado", value: <b>{soloLectura ? "Finalizada" : "Vigente"}</b> },
   ];
   const infoProducto2 = [
     { label: "Capital", value: formatCurrency(inversion?.capital) },
@@ -173,8 +172,16 @@ const columnasAdendums = [
         <div className="flex-1 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div className="flex-1">
             <div className="flex items-center gap-3">
-              <div className="rounded-full w-12 h-12 bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold">
+              <div className="rounded-full w-12 h-12 bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold relative">
                 <FaFileContract />
+                {soloLectura && (
+                  <span
+                    title="Inversión finalizada: solo lectura"
+                    className="absolute -top-1 -right-1 bg-gray-800 text-white rounded-full p-1 text-xs flex items-center justify-center"
+                  >
+                    <FaLock />
+                  </span>
+                )}
               </div>
               <div>
                 <div className="text-md font-bold text-gray-800">
@@ -274,6 +281,7 @@ const columnasAdendums = [
                     className="ml-auto bg-violet-600 hover:bg-violet-700 text-white px-4 py-2"
                     size="sm"
                     onClick={() => setModalAdendumOpen(true)}
+                    disabled={soloLectura}
                   >
                     Nuevo Adendum
                   </Button>
@@ -281,11 +289,10 @@ const columnasAdendums = [
                 <TablaCustom2
                   columns={columnasAdendums}
                   data={adendums}
-                  mostrarEditar={false}
+                  mostrarEditar={!soloLectura}
                   mostrarEliminar={false}
                   mostrarAgregarNuevo={false}
                 />
-
               </CardContent>
             </Card>
           </div>
@@ -330,7 +337,7 @@ const columnasAdendums = [
             onClose={() => setModalAdendumOpen(false)}
             onSaved={() => {
               setModalAdendumOpen(false);
-              cargarTodo(); // recarga adendums y todo lo demás
+              cargarTodo();
             }}
           />
         </DialogContent>

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Calendar as CalendarIcon, Lock, Eye } from "lucide-react";
-import { getCasoById, updateCaso, getDocumentosPorCaso } from "@/service/Entidades/CasosService";
+import { getCasoById, updateCaso, getDocumentosPorCaso, ejecutarFlujoCaso } from "@/service/Entidades/CasosService";
 import { getInversiones } from "@/service/Entidades/InversionService";
 import { getCatalogoBancos, getCatalogoTiposCuenta } from "@/service/Catalogos/BancoService";
 import { toast } from "sonner";
@@ -394,28 +394,39 @@ export default function CasoDetalle() {
     }
   };
 
-  const handleConfirmarContinuarFlujo = async () => {
-    setModalAdvertencia(false);
-    setGuardando(true);
-    try {
-      const payload = {
-        descripcion: form.descripcion,
-        continuarCaso: true,
-        estado: "Cerrado",
-        idUsuarioModificacion: userId,
-        idUsuarioPropietario: userId,
-        datosEspecificos: JSON.stringify(form.datosEspecificos)
-      };
-      await updateCaso(initialData.idCaso, payload);
-      toast.success("Caso actualizado correctamente");
-      setContinuar(true);
-      reloadCaso();
-    } catch (error) {
-      toast.error(`Error al actualizar caso: ${error.message ?? error}`);
-    } finally {
-      setGuardando(false);
+const handleConfirmarContinuarFlujo = async () => {
+  setModalAdvertencia(false);
+  setGuardando(true);
+  try {
+    const payload = {
+      descripcion: form.descripcion,
+      continuarCaso: true,
+      estado: "Cerrado",
+      idUsuarioModificacion: userId,
+      idUsuarioPropietario: userId,
+      datosEspecificos: JSON.stringify(form.datosEspecificos)
+    };
+    // 1. Actualiza el Caso normalmente
+    await updateCaso(initialData.idCaso, payload);
+    toast.success("Caso actualizado correctamente");
+
+    // 2. Ejecuta el flujo (SP) para continuar
+    const resFlujo = await ejecutarFlujoCaso(initialData.idCaso);
+    if (!resFlujo.success) {
+      toast.error("Error al continuar flujo: " + (resFlujo.message || "Error desconocido"));
+    } else {
+      toast.success("Flujo continuado correctamente");
     }
-  };
+
+    setContinuar(true);
+    await reloadCaso();
+
+  } catch (error) {
+    toast.error(`Error al continuar flujo: ${error.message ?? error}`);
+  } finally {
+    setGuardando(false);
+  }
+};
 
   const getEstadoBadge = (estado) => {
     switch (estado) {
