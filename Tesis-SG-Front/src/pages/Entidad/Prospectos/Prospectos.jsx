@@ -13,29 +13,52 @@ import {
 import ProspectoForm from "./ProspectoForm";
 import { getProspectos, deleteProspecto } from "@/service/Entidades/ProspectoService";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth"; // <-- Importa el hook para acceder a usuario y roles
 
 export default function Prospectos() {
   const navigate = useNavigate();
+  const { user, roles } = useAuth(); // <-- Obtiene el usuario y roles actuales
   const [prospectos, setProspectos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Cargar prospectos
-  const cargarProspectos = async () => {
-    setLoading(true);
-    try {
-      const data = await getProspectos();
-      setProspectos(data);
-    } catch (error) {
-      toast.error("Error al cargar prospectos: " + (error.message ?? error));
-    } finally {
-      setLoading(false);
+const cargarProspectos = async () => {
+  setLoading(true);
+  try {
+    const data = await getProspectos();
+
+    let datosFiltrados = data;
+    if (
+      roles.includes("Asesor Comercial") ||
+      roles.includes("Externo")
+    ) {
+      datosFiltrados = data.filter(
+        (item) => item.idUsuarioPropietario === user.id
+      );
     }
-  };
+
+    // Si es Externo y no tiene prospectos, muestra el mensaje
+    if (roles.includes("Externo") && datosFiltrados.length === 0) {
+      toast.info(
+        "Debes agregarte como prospecto para crear una solicitud de inversión."
+      );
+    }
+
+    setProspectos(datosFiltrados);
+  } catch (error) {
+    toast.error("Error al cargar prospectos: " + (error.message ?? error));
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     cargarProspectos();
-  }, []);
+    // Si cambian los roles o el usuario, recarga (no obligatorio, pero seguro)
+    // eslint-disable-next-line
+  }, [roles, user]);
 
   // Editar
   const handleEditar = (item) => {
@@ -88,7 +111,6 @@ export default function Prospectos() {
         </span>
       ),
     },
-    // <-- Aquí agregamos el campo EsCliente (columna visual)
     {
       key: "esCliente",
       label: "¿Es Cliente?",
@@ -135,22 +157,28 @@ export default function Prospectos() {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6 overflow-x-auto">
-          <TablaCustom2
-            columns={columnas}
-            data={
-              [...prospectos].sort(
-                (a, b) =>
-                  new Date(b.fechaCreacion || b.fechaRegistro || 0) -
-                  new Date(a.fechaCreacion || a.fechaRegistro || 0)
-              )
-            }
-            mostrarEditar={true}
-            mostrarAgregarNuevo={true}
-            mostrarEliminar={true}
-            onAgregarNuevoClick={() => setIsDialogOpen(true)}
-            onEditarClick={handleEditar}
-            onEliminarClick={handleEliminar}
-          />
+        <TablaCustom2
+          columns={columnas}
+          data={
+            [...prospectos].sort(
+              (a, b) =>
+                new Date(b.fechaCreacion || b.fechaRegistro || 0) -
+                new Date(a.fechaCreacion || a.fechaRegistro || 0)
+            )
+          }
+          mostrarEditar={true}
+          mostrarAgregarNuevo={
+            // Si es Externo y ya tiene prospecto, oculta el botón
+            roles.includes("Externo") && prospectos.length >= 1
+              ? false
+              : true
+          }
+          mostrarEliminar={true}
+          onAgregarNuevoClick={() => setIsDialogOpen(true)}
+          onEditarClick={handleEditar}
+          onEliminarClick={handleEliminar}
+        />
+
         </CardContent>
       </Card>
       {/* Dialog para el formulario de creación */}
