@@ -11,7 +11,7 @@ import { Eye, EyeOff } from "lucide-react";
 import GlassLoader from "@/components/ui/GlassLoader";
 import { mapearPermisosConIconos } from "@/utils/mapPermisos";
 
-// Función mejorada para evitar "Catálogo" vacío y mostrar depuración de rutas:
+// Evita "Catálogo" vacío y encuentra la primera ruta navegable:
 function obtenerPrimeraRutaValida(permisos) {
   if (!permisos) return "/";
   for (const permiso of permisos) {
@@ -23,18 +23,13 @@ function obtenerPrimeraRutaValida(permisos) {
       continue;
     }
     if (permiso.Ruta && typeof permiso.Ruta === "string") {
-      console.log("[obtenerPrimeraRutaValida] Primer menú navegable:", permiso.Nombre, permiso.Ruta);
       return permiso.Ruta;
     }
     if (permiso.Submenus && Array.isArray(permiso.Submenus) && permiso.Submenus.length > 0) {
       const sub = permiso.Submenus.find(s => s.Ruta);
-      if (sub) {
-        console.log("[obtenerPrimeraRutaValida] Primer submenú navegable:", sub.Nombre, sub.Ruta);
-        return sub.Ruta;
-      }
+      if (sub) return sub.Ruta;
     }
   }
-  console.log("[obtenerPrimeraRutaValida] No se encontró ruta navegable, se retorna '/'");
   return "/";
 }
 
@@ -62,30 +57,26 @@ export default function Login() {
 
       setLoading(true);
 
-      console.log("[Login] Intentando login para:", email);
-
       await login(email, contraseña);
 
       // Espera a que el usuario esté guardado en localStorage
       const userData = JSON.parse(localStorage.getItem("user"));
-      console.log("[Login] userData desde localStorage:", userData);
 
       let permisos = userData?.permisos || [];
-      // Por si acaso, mapea los permisos si no tienen rutas
       if (!permisos[0]?.Ruta && !permisos[0]?.Submenus) {
         permisos = mapearPermisosConIconos(permisos);
       }
-      console.log("[Login] Permisos procesados:", permisos);
 
-      const rutaInicial = obtenerPrimeraRutaValida(permisos) || "/";
-      console.log("[Login] Ruta inicial encontrada:", rutaInicial);
+      // Redirección inteligente después de login
+      const postLoginRedirect = sessionStorage.getItem("postLoginRedirect");
+      const rutaInicial = postLoginRedirect || obtenerPrimeraRutaValida(permisos) || "/";
+      sessionStorage.removeItem("postLoginRedirect");
 
       notify.success("Bienvenido 👋");
-      navigate(rutaInicial);
+      navigate(rutaInicial, { replace: true });
 
     } catch (err) {
       notify.error("Error al iniciar sesión", err.message);
-      console.error("[Login] Error en login:", err);
     } finally {
       setLoading(false);
     }

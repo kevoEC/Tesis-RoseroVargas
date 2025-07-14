@@ -2,8 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import Spinner from "@/components/ui/loader";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import DashboardLayout from "@/layout/DashboardLayout"; // 👈 importa tu layout
+import ProtectedRoute from "@/routes/ProtectedRoute"; // ← usa el path real donde lo tengas
+import DashboardLayout from "@/layout/DashboardLayout";
 import {
   publicRoutes,
   protectedRoutes,
@@ -23,7 +23,7 @@ function App() {
             padding: "1rem 1.25rem",
             borderRadius: "0.5rem",
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-            opacity: 0.75, // completamente opaco
+            opacity: 0.75,
           },
         }}
       />
@@ -35,22 +35,33 @@ function App() {
 
             {/* Rutas públicas */}
             {publicRoutes.map((route) => (
-              <Route key={route.path} path={route.path} element={route.element} />
+              <Route
+                key={route.path}
+                path={route.path}
+                element={route.element}
+              />
             ))}
 
             {/* Rutas protegidas con layout */}
             <Route element={<ProtectedRoute />}>
               <Route element={<DashboardLayout />}>
                 {protectedRoutes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={route.element}
+                  />
                 ))}
               </Route>
             </Route>
 
-
             {/* Rutas fallback */}
             {fallbackRoutes.map((route) => (
-              <Route key={route.path} path={route.path} element={route.element} />
+              <Route
+                key={route.path}
+                path={route.path}
+                element={route.element}
+              />
             ))}
           </Routes>
         </Suspense>
