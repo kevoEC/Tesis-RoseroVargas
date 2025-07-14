@@ -100,9 +100,19 @@ namespace Backend_CrmSG.Controllers.Entidad
         {
             try
             {
+                // Intentar obtener cronograma activo primero
                 var cronogramaEntity = await _context.CronogramaProyeccion
                     .Where(c => c.IdProyeccion == id && c.EsActivo)
                     .FirstOrDefaultAsync();
+
+                // Si no hay activo, obtener cualquier cronograma (inactivo)
+                if (cronogramaEntity == null)
+                {
+                    cronogramaEntity = await _context.CronogramaProyeccion
+                        .Where(c => c.IdProyeccion == id)
+                        .OrderByDescending(c => c.IdCronogramaProyeccion) // Opcional: para tomar el más reciente
+                        .FirstOrDefaultAsync();
+                }
 
                 if (cronogramaEntity == null)
                     return NotFound(new { success = false, message = "Cronograma no encontrado." });
@@ -126,6 +136,7 @@ namespace Backend_CrmSG.Controllers.Entidad
                 });
             }
         }
+
 
 
         [HttpPut("{id}")]

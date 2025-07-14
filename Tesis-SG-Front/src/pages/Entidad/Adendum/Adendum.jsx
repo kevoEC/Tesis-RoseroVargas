@@ -141,7 +141,7 @@ export default function Adendum() {
 
   // ¿Se puede confirmar incremento? Debe tener al menos un documento con archivoBase64 != null
   const documentosConArchivo = documentos.some(doc => doc.archivoBase64 !== null);
-  const puedeConfirmarIncremento = documentosConArchivo && adendum?.estado === 4;
+  const puedeConfirmarIncremento = documentosConArchivo && adendum?.estado === 2;
 
   // Handler para generar documentos
   const handleGenerarDocumentos = async () => {
