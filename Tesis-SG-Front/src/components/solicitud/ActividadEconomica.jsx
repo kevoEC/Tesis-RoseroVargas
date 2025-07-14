@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { useParams } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
+import { mapIdentificacionToUpdate } from "@/utils/mappers";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -101,29 +102,31 @@ export default function ActividadEconomica() {
     cargarDatos();
   }, [id]);
 
-  const handleGuardar = async () => {
-    if (!solicitudData || bloquearTodo) return;
-    setLoading(true);
-    try {
-      const dataToSave = {
-        ...solicitudData,
-        actividadEconomica: {
-          ...actividadEconomica,
-          esPEP: actividadEconomica.isPEP,
-        },
-      };
-      await updateSolicitud(id, dataToSave)
-        .then(res => {
-          res.success
-            ? toast.success("Datos guardados exitosamente.")
-            : toast.error("Error al guardar los datos.");
-        });
-    } catch (error) {
-      toast.error("Error al guardar los datos: " + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+const handleGuardar = async () => {
+  if (!solicitudData || bloquearTodo) return;
+  setLoading(true);
+  try {
+    const payload = {
+      ...solicitudData,
+      identificacion: mapIdentificacionToUpdate(solicitudData.identificacion), // muy importante mantenerla
+      actividadEconomica: {
+        ...solicitudData.actividadEconomica, // preserva otros campos que existan
+        ...actividadEconomica,
+        esPEP: actividadEconomica.isPEP, // por si el backend espera ese nombre
+      },
+    };
+
+    const res = await updateSolicitud(id, payload);
+    res.success
+      ? toast.success("Datos guardados exitosamente.")
+      : toast.error("Error al guardar los datos.");
+  } catch (error) {
+    toast.error("Error al guardar los datos: " + error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="space-y-6 p-6 relative">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { mapIdentificacionToUpdate } from "@/utils/mappers";
 import {
@@ -40,6 +40,29 @@ import {
   AlertDialogCancel,
   AlertDialogAction
 } from "@/components/ui/alert-dialog";
+import { Info } from "lucide-react"; // ícono para el ID
+
+// Utilidad para formatear fecha ISO a dd/mm/yyyy
+function formatearFecha(fechaISO) {
+  if (!fechaISO) return "-";
+  // Crear un Date parseando explícitamente la parte YYYY-MM-DD
+  const partes = fechaISO.split("T")[0].split("-");
+  if (partes.length !== 3) return "-";
+  const [anio, mes, dia] = partes.map(Number);
+  if (!anio || !mes || !dia) return "-";
+  const date = new Date(anio, mes - 1, dia);
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+}
+
+// Utilidad para formatear números con separadores y decimales
+function formatearNumero(valor, decimales = 2) {
+  if (valor == null) return "-";
+  return valor.toLocaleString(undefined, { minimumFractionDigits: decimales, maximumFractionDigits: decimales });
+}
 
 export default function Proyeccion({ bloquearEdicion = false }) {
   const { id: idSolicitud } = useParams();
@@ -48,10 +71,12 @@ export default function Proyeccion({ bloquearEdicion = false }) {
   const [proyecciones, setProyecciones] = useState([]);
   const [asesores, setAsesores] = useState([]);
   const [justificativos, setJustificativos] = useState([]);
-  // eslint-disable-next-line no-unused-vars
   const [origenes, setOrigenes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [alertFaltaCampos, setAlertFaltaCampos] = useState(false);
+  const [alertConfirmarAceptacion, setAlertConfirmarAceptacion] = useState(false);
+
   const [formData, setFormData] = useState({
     idAsesorComercial: "",
     idJustificativoTransaccion: "",
@@ -61,11 +86,11 @@ export default function Proyeccion({ bloquearEdicion = false }) {
     clienteAcepta: false,
   });
 
-  const [alertFaltaCampos, setAlertFaltaCampos] = useState(false);
   const proyeccionesDisponibles = Array.isArray(proyecciones) && proyecciones.length > 0;
 
-  // NUEVO: Deshabilita campos y agregar nueva si clienteAcepta === true
+  // Deshabilitar campos si cliente aceptó o bloquearEdicion o no hay proyecciones
   const clienteYaAcepto = !!formData.clienteAcepta;
+  const deshabilitarCampos = bloquearEdicion || !proyeccionesDisponibles || clienteYaAcepto;
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -81,7 +106,7 @@ export default function Proyeccion({ bloquearEdicion = false }) {
             idProyeccionSeleccionada: data.proyeccion?.idProyeccionSeleccionada || "",
             origenFondos: data.proyeccion?.origenFondos || "",
             enviarProyeccion: false,
-            clienteAcepta: !!data.proyeccion?.clienteAcepta, // <-- AQUI!!
+            clienteAcepta: !!data.proyeccion?.clienteAcepta,
           });
         }
         const [proyRes, asesoresData, justificativosData, origenesData] = await Promise.all([
@@ -104,9 +129,12 @@ export default function Proyeccion({ bloquearEdicion = false }) {
     cargarDatos();
   }, [idSolicitud, isModalOpen]);
 
+  // Guardar datos (actualizar backend)
   const handleGuardar = async () => {
     if (!solicitudData) return;
-    const faltanCampos = !formData.idAsesorComercial ||
+
+    const faltanCampos =
+      !formData.idAsesorComercial ||
       !formData.idJustificativoTransaccion ||
       !formData.idProyeccionSeleccionada ||
       !formData.origenFondos;
@@ -127,9 +155,12 @@ export default function Proyeccion({ bloquearEdicion = false }) {
         },
       };
       const response = await updateSolicitud(idSolicitud, dataToSave);
-      response.success
-        ? toast.success("Datos guardados exitosamente.")
-        : toast.error("Error al guardar los datos.");
+      if (response.success) {
+        toast.success("Datos guardados exitosamente.");
+        // Si clienteAcepta es true, bloquear edición (ya lo hace el estado)
+      } else {
+        toast.error("Error al guardar los datos.");
+      }
     } catch (error) {
       toast.error("Error al guardar los datos." + error.message);
     } finally {
@@ -137,26 +168,106 @@ export default function Proyeccion({ bloquearEdicion = false }) {
     }
   };
 
-  const columnas = [
-    { key: "proyeccionNombre", label: "Nombre" },
-    { key: "tasa", label: "Tasa (%)" },
-    { key: "capital", label: "Capital" },
-    { key: "fechaInicial", label: "Fecha Inicial" },
-    { key: "idUsuarioCreacion", label: "Usuario Creador" },
-  ];
+  // Cuando el switch de clienteAcepta cambia a true, mostrar confirmación
+  const handleClienteAceptaChange = (checked) => {
+    if (
+      !formData.idAsesorComercial ||
+      !formData.idJustificativoTransaccion ||
+      !formData.idProyeccionSeleccionada ||
+      !formData.origenFondos
+    ) {
+      setAlertFaltaCampos(true);
+      return;
+    }
 
-  // Ahora los campos se deshabilitan SI clienteAcepta es true o bloquearEdicion o no hay proyecciones
-  const deshabilitarCampos = bloquearEdicion || !proyeccionesDisponibles || clienteYaAcepto;
+    if (checked) {
+      // Mostrar alerta de confirmación
+      setAlertConfirmarAceptacion(true);
+    } else {
+      // Si desmarca, simplemente actualizar (permite desbloquear edición)
+      setFormData({ ...formData, clienteAcepta: false });
+    }
+  };
+
+  // Confirmación del cliente que acepta
+  const confirmarAceptacion = async () => {
+    setAlertConfirmarAceptacion(false);
+
+    // Actualizamos el formData y guardamos
+    setFormData((prev) => ({ ...prev, clienteAcepta: true }));
+
+    // Hacer guardar con el clienteAcepta = true
+    try {
+      setLoading(true);
+      const dataToSave = {
+        ...solicitudData,
+        identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
+        proyeccion: {
+          ...formData,
+          clienteAcepta: true,
+          enviarProyeccion: false,
+        },
+      };
+      const response = await updateSolicitud(idSolicitud, dataToSave);
+      if (response.success) {
+        toast.success("Aceptación guardada y proyección bloqueada.");
+      } else {
+        toast.error("Error al guardar la aceptación.");
+      }
+    } catch (error) {
+      toast.error("Error al guardar la aceptación." + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Columnas mejoradas para la tabla
+  const columnas = [
+    {
+      key: "idProyeccion",
+      label: "",
+      render: (value) => (
+        <div className="flex items-center justify-center group relative text-gray-500 cursor-default">
+          <Info className="w-5 h-5" />
+          <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 text-xs text-white bg-zinc-800 px-2 py-0.5 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
+            ID: {value}
+          </span>
+        </div>
+      ),
+    },
+    { key: "proyeccionNombre", label: "Nombre" },
+    {
+      key: "tasa",
+      label: "Tasa (%)",
+      render: (value) => (value != null ? `${value.toFixed(2)}%` : "-"),
+    },
+    {
+      key: "capital",
+      label: "Capital",
+      render: (value) => formatearNumero(value),
+    },
+    {
+      key: "fechaInicial",
+      label: "Fecha Inicial",
+      render: (value) => formatearFecha(value),
+    },
+    {
+      key: "fechaVencimiento",
+      label: "Fecha Vencimiento",
+      render: (value) => formatearFecha(value),
+    },
+  ];
 
   return (
     <div className="space-y-6 px-4 sm:px-6 py-6 relative">
       <GlassLoader visible={loading} message="Cargando datos..." />
-      {/* --- Mensaje característico de bloqueo --- */}
+      {/* Mensaje bloqueo si bloquearEdicion */}
       {bloquearEdicion && (
         <div className="w-full flex items-center px-6 py-2 mb-4 rounded-xl bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
           <span>No se permite editar la proyección en esta fase.</span>
         </div>
       )}
+
       {!loading && (
         <>
           <h2 className="text-xl font-semibold text-gray-800">
@@ -175,7 +286,8 @@ export default function Proyeccion({ bloquearEdicion = false }) {
                 />
               ) : (
                 <div className="py-6 text-center text-gray-500">
-                  No se encontraron proyecciones vinculadas.<br />
+                  No se encontraron proyecciones vinculadas.
+                  <br />
                   <Button
                     className="mt-4"
                     onClick={() => setIsModalOpen(true)}
@@ -197,7 +309,8 @@ export default function Proyeccion({ bloquearEdicion = false }) {
               >
                 Guardar datos
               </Button>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
                 <FormGroup label="Asesor comercial">
                   <Select
                     value={formData.idAsesorComercial ? String(formData.idAsesorComercial) : ""}
@@ -284,18 +397,7 @@ export default function Proyeccion({ bloquearEdicion = false }) {
                         : "El Cliente No Acepta"
                     }
                     checked={formData.clienteAcepta}
-                    onChange={(checked) => {
-                      if (
-                        !formData.idAsesorComercial ||
-                        !formData.idJustificativoTransaccion ||
-                        !formData.idProyeccionSeleccionada ||
-                        !formData.origenFondos
-                      ) {
-                        setAlertFaltaCampos(true);
-                        return;
-                      }
-                      setFormData({ ...formData, clienteAcepta: checked });
-                    }}
+                    onChange={handleClienteAceptaChange}
                     disabled={deshabilitarCampos}
                   />
                 </FormGroup>
@@ -335,6 +437,38 @@ export default function Proyeccion({ bloquearEdicion = false }) {
                     type="button"
                   >
                     OK
+                  </button>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* Alert de confirmación para aceptar la proyección */}
+          <AlertDialog open={alertConfirmarAceptacion} onOpenChange={setAlertConfirmarAceptacion}>
+            <AlertDialogContent className="bg-white border border-yellow-300 rounded-xl shadow-xl p-7 max-w-md">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-yellow-700 font-semibold">Confirmar aceptación</AlertDialogTitle>
+                <div className="text-gray-700 mt-2">
+                  ¿Estás seguro de aceptar la proyección? No podrás editarla nuevamente.
+                </div>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel
+                  className="border border-gray-300 bg-white hover:bg-gray-50"
+                  onClick={() => {
+                    // Si cancela, no cambia el switch, mantenerlo en false
+                    setAlertConfirmarAceptacion(false);
+                  }}
+                >
+                  Cancelar
+                </AlertDialogCancel>
+                <AlertDialogAction asChild>
+                  <button
+                    className="bg-violet-600 text-white hover:bg-violet-700 px-4 py-2 rounded"
+                    onClick={confirmarAceptacion}
+                    type="button"
+                  >
+                    Aceptar
                   </button>
                 </AlertDialogAction>
               </AlertDialogFooter>

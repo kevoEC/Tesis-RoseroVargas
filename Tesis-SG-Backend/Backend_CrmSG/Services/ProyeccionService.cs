@@ -332,14 +332,10 @@ namespace Backend_CrmSG.Services
                 {
                     var cuotaSim = simulacion.Cronograma[j];
                     cuotaSim.Periodo = dto.PeriodoIncremento + j + 1;
-                    // Mantén las fechas originales si existen
-                    if (cronogramaList.Count > cuotaSim.Periodo - 1)
-                    {
-                        cuotaSim.FechaInicial = cronogramaList[cuotaSim.Periodo - 1].FechaInicial;
-                        cuotaSim.FechaVencimiento = cronogramaList[cuotaSim.Periodo - 1].FechaVencimiento;
-                    }
+                    // No modificar fechas para preservar cálculos correctos del simulador
                     nuevoCronograma.Add(cuotaSim);
                 }
+
             }
 
             // 9. Crear nueva proyección de incremento
