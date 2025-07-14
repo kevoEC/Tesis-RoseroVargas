@@ -54,14 +54,15 @@ namespace Backend_CrmSG.Services
 
                 // --- CALCULO DE RENTABILIDAD REAL ---
                 decimal rentabilidadCalculada = 0;
-                if (origenEsLocal && cuota.Periodo == 1)
+                if (origenEsLocal && cuota.Periodo == 1 && !request.EsIncremento)
                 {
-                    rentabilidadCalculada = 0; // El primer periodo local no genera rentabilidad
+                    rentabilidadCalculada = 0; // El primer periodo local no genera rentabilidad en inversiones normales
                 }
                 else
                 {
                     rentabilidadCalculada = decimal.Round(cuota.MontoOperacion * cuota.Tasa / 100, 2);
                 }
+
                 rentabilidadAcumuladaParaCoste += rentabilidadCalculada;
 
                 // --- CONTROL DE PAGOS PERIÓDICOS ---

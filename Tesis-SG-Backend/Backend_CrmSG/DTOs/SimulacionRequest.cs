@@ -21,7 +21,8 @@
         public int IdOrigenCapital { get; set; } // Nuevo campo requerido
         public int Periodicidad { get; set; }    // Nuevo campo (se extrae de Producto)
 
-
         public decimal MontoISD { get; set; } = 0; // Por defecto sin límite
+
+        public bool EsIncremento { get; set; } = false;  // valor por defecto false
     }
 }

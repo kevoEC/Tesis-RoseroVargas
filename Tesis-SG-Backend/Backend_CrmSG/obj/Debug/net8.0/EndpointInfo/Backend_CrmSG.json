@@ -9135,6 +9135,9 @@
           "idUsuarioModificacion": {
             "type": "integer",
             "format": "int32"
+          },
+          "incrementoGenerado": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
