@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Icons } from "@/components/icons";
 import { Eye, EyeOff } from "lucide-react";
 import GlassLoader from "@/components/ui/GlassLoader"; // Asegúrate de tener este componente
 
@@ -46,7 +45,8 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-pattern flex flex-col items-center justify-center px-4 text-[--color-fg] relative">
-      {loading && <GlassLoader />} {/* Capa superior de carga */}
+      {/* Loader encima de todo */}
+      {loading && <GlassLoader message="Verificando credenciales..." />}
 
       {/* Logo fuera del card */}
       <img
@@ -89,11 +89,13 @@ export default function Login() {
                 value={contraseña}
                 onChange={(e) => setContraseña(e.target.value)}
                 className="h-11 text-base pr-12 bg-[--color-bg] border border-[--color-border]"
+                autoComplete="current-password"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-3 flex items-center text-[--color-muted] hover:text-[--color-fg]"
+                tabIndex={-1}
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
@@ -117,6 +119,7 @@ export default function Login() {
             <Button
               className="w-full btn-primary btn-animated text-base py-3 h-12"
               onClick={handleLogin}
+              disabled={loading}
             >
               Ingresar
             </Button>
@@ -126,6 +129,7 @@ export default function Login() {
 
           <div className="text-center space-y-1">
             <button
+              type="button"
               onClick={() => navigate("/forgot-password")}
               className="text-sm text-[--color-muted] hover:underline"
             >
@@ -134,6 +138,7 @@ export default function Login() {
             <p className="text-sm text-[--color-muted]">
               ¿No tienes una cuenta?{" "}
               <button
+                type="button"
                 onClick={() => navigate("/register")}
                 className="text-[--color-primary] hover:underline font-medium"
               >

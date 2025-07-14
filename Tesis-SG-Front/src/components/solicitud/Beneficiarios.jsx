@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectValue, SelectContent, SelectTrigger, SelectItem } from "../ui/select";
 import TablaCustom2 from "../shared/TablaCustom2";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { FaInfoCircle } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { getBeneficiariosPorSolicitud, crearBeneficiario, editarBeneficiario, eliminarBeneficiario } from "@/service/Entidades/BeneficiariosService";
@@ -130,16 +131,28 @@ export default function Beneficiarios() {
     }
   };
 
-  const columnas = [
-    { key: "nombre", label: "Nombre" },
-    { key: "idTipoDocumento", label: "Tipo Documento" },
-    { key: "numeroDocumento", label: "Número Documento" },
-    { key: "correoElectronico", label: "Correo" },
-    { key: "telefono", label: "Teléfono" },
-    { key: "direccion", label: "Dirección" },
-    { key: "porcentajeBeneficio", label: "Porcentaje (%)" },
-    { key: "fechaCreacion", label: "Fecha de Creación" },
-  ];
+const columnas = [
+  {
+    key: "idBeneficiario",
+    label: "",
+    render: (v) => (
+      <span
+        title={`ID Beneficiario: ${v}`}
+        className="flex justify-center cursor-default text-gray-600 hover:text-gray-900"
+      >
+        <FaInfoCircle size={18} />
+      </span>
+    ),
+  },
+  { key: "nombre", label: "Nombre" },
+  { key: "idTipoDocumento", label: "Tipo Documento" },
+  { key: "numeroDocumento", label: "Número Documento" },
+  { key: "correoElectronico", label: "Correo" },
+  { key: "telefono", label: "Teléfono" },
+  { key: "direccion", label: "Dirección" },
+  { key: "porcentajeBeneficio", label: "Porcentaje (%)" },
+  { key: "fechaCreacion", label: "Fecha de Creación" },
+];
 
   return (
     <div className="space-y-6 p-6 relative">
