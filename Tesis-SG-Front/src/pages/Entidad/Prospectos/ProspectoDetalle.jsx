@@ -21,6 +21,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import { useAuth } from "@/hooks/useAuth"; // IMPORTANTE: Agrega este import
 
 const FASE_PROCESO_MAP = {
   1: { label: "Llenado de Información", color: "bg-yellow-100 text-yellow-700" },
@@ -32,6 +33,9 @@ const FASE_PROCESO_MAP = {
 export default function ProspectoDetalle() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const { roles } = useAuth(); // Usa el contexto para obtener el rol
+  const esExterno = roles.includes("Externo");
 
   const [prospecto, setProspecto] = useState(null);
   const [actividades, setActividades] = useState([]);
@@ -81,7 +85,7 @@ export default function ProspectoDetalle() {
   // --- Validaciones ---
   const handleAgregarSolicitud = () => {
     if (prospecto?.esCliente) return;
-    if (!puedeCrearSolicitud) {
+    if (!esExterno && !puedeCrearSolicitud) {
       setAlertFaltaActividad(true);
       return;
     }
@@ -217,13 +221,16 @@ export default function ProspectoDetalle() {
         <section className="p-0 flex flex-col gap-4 min-h-[360px] col-span-1 bg-transparent">
           <div>
             <div className="font-semibold text-gray-800 mb-2">Opciones</div>
-            <Button
-              className="bg-violet-600 hover:bg-violet-700 text-white w-full"
-              disabled={esSoloLectura}
-              onClick={handleAgregarActividad}
-            >
-              + Agregar actividad
-            </Button>
+            {/* Solo muestra el botón de actividad si NO es Externo */}
+            {!esExterno && (
+              <Button
+                className="bg-violet-600 hover:bg-violet-700 text-white w-full"
+                disabled={esSoloLectura}
+                onClick={handleAgregarActividad}
+              >
+                + Agregar actividad
+              </Button>
+            )}
             <Button
               className="bg-violet-600 hover:bg-violet-700 text-white w-full mt-4"
               disabled={esSoloLectura}
@@ -236,22 +243,26 @@ export default function ProspectoDetalle() {
 
         {/* Panel derecho: Tablas */}
         <section className="col-span-2 flex flex-col gap-8">
-          <div>
-            <div className="flex items-center gap-4 mb-2">
-              <span className="font-semibold text-lg text-gray-700">Actividades</span>
+          {/* Solo muestra la tabla de actividades si NO es Externo */}
+          {!esExterno && (
+            <div>
+              <div className="flex items-center gap-4 mb-2">
+                <span className="font-semibold text-lg text-gray-700">Actividades</span>
+              </div>
+              <TablaCustom2
+                columns={columnasActividad}
+                data={actividades}
+                mostrarEditar={!esSoloLectura}
+                mostrarAgregarNuevo={false}
+                mostrarEliminar={!esSoloLectura}
+                onEditarClick={actividad => {
+                  setActividadEditar(actividad);
+                  setModalEditarOpen(true);
+                }}
+              />
             </div>
-            <TablaCustom2
-              columns={columnasActividad}
-              data={actividades}
-              mostrarEditar={!esSoloLectura}
-              mostrarAgregarNuevo={false}
-              mostrarEliminar={!esSoloLectura}
-              onEditarClick={actividad => {
-                setActividadEditar(actividad);
-                setModalEditarOpen(true);
-              }}
-            />
-          </div>
+          )}
+          {/* Solicitudes de inversión (siempre se muestran) */}
           <div>
             <div className="flex items-center gap-4 mb-2">
               <span className="font-semibold text-lg text-gray-700">Solicitudes de Inversión</span>

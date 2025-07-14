@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
 import GlassLoader from "@/components/ui/GlassLoader";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
-import {
-  getInversiones,
-  getInversionesPorPropietario,
-} from "@/service/Entidades/InversionService";
-import { FaChartLine } from "react-icons/fa"; // Ícono para inversiones
+import { FaChartLine } from "react-icons/fa";
+import { getInversiones } from "@/service/Entidades/InversionService";
+import { useAuth } from "@/hooks/useAuth";
 
-// Mapeo de nombre de rol a ID
 const ROLES_MAP = {
   "Administrador": 1,
   "Asesor Comercial": 2,
@@ -25,36 +22,35 @@ const ROLES_MAP = {
 
 export default function Inversiones() {
   const navigate = useNavigate();
+  const { roles = [], user = {} } = useAuth();
   const [inversiones, setInversiones] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const obtenerInfoUsuario = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const nombreRol = user?.roles?.[0];
-    const idRol = ROLES_MAP[nombreRol] || null;
-    const idUsuario = user?.id;
-    return { idRol, idUsuario };
-  };
+  // Usar useRef para evitar múltiples toasts
+  const toastMostradoRef = useRef(false);
 
   const cargarInversiones = async () => {
+    setLoading(true);
     try {
-      const { idRol, idUsuario } = obtenerInfoUsuario();
-      if (!idRol) {
-        toast.error("No se pudo determinar el rol del usuario.");
-        return;
+      let data = await getInversiones();
+      // Filtrado por propietario si es externo o asesor comercial
+      if (roles.includes("Externo") || roles.includes("Asesor Comercial")) {
+        data = (data || []).filter(
+          inv => inv.idUsuarioPropietario === user.id
+        );
       }
-
-      let data = [];
-      if (idRol === 2 || idRol === 9) {
-        // Solo ve las inversiones de las que es propietario
-        data = await getInversionesPorPropietario(idUsuario);
-      } else {
-        // Puede ver todas las inversiones
-        data = await getInversiones();
+      // Toast solo una vez para externos sin inversiones
+      if (
+        roles.includes("Externo") &&
+        (!data || data.length === 0) &&
+        !toastMostradoRef.current
+      ) {
+        toast.info("Una inversión es creada cuando completes el proceso de solicitud de inversión.");
+        toastMostradoRef.current = true;
       }
       setInversiones(Array.isArray(data) ? data : []);
     } catch (error) {
-      toast.error("Error al cargar inversiones: " + error.message);
+      toast.error("Error al cargar inversiones: " + (error.message ?? error));
     } finally {
       setLoading(false);
     }
@@ -62,7 +58,9 @@ export default function Inversiones() {
 
   useEffect(() => {
     cargarInversiones();
-  }, []);
+    // No agregues toastMostradoRef ni loading ni inversiones en deps
+    // eslint-disable-next-line
+  }, [roles, user]);
 
   const handleEditar = (item) => {
     navigate(`/inversiones/editar/${item.idInversion}`);

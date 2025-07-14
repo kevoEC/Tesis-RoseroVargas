@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
 import GlassLoader from "@/components/ui/GlassLoader";
@@ -13,19 +13,54 @@ import {
 import ProspectoForm from "./ProspectoForm";
 import { getProspectos, deleteProspecto } from "@/service/Entidades/ProspectoService";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Prospectos() {
   const navigate = useNavigate();
+  const { user, roles } = useAuth();
   const [prospectos, setProspectos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Para evitar doble toast
+  const toastMostradoRef = useRef(false);
+
+  // Título dinámico según rol
+  let titulo;
+  if (roles.includes("Externo")) {
+    titulo = "Crea tu perfil de prospecto";
+  } else if (roles.includes("Asesor Comercial")) {
+    titulo = "Mis Prospectos";
+  } else {
+    titulo = "Todos los prospectos";
+  }
 
   // Cargar prospectos
   const cargarProspectos = async () => {
     setLoading(true);
     try {
       const data = await getProspectos();
-      setProspectos(data);
+
+      let datosFiltrados = data;
+      if (roles.includes("Asesor Comercial") || roles.includes("Externo")) {
+        datosFiltrados = data.filter(
+          (item) => item.idUsuarioPropietario === user.id
+        );
+      }
+
+      // Si es Externo y no tiene prospectos, muestra el mensaje una sola vez
+      if (
+        roles.includes("Externo") &&
+        datosFiltrados.length === 0 &&
+        !toastMostradoRef.current
+      ) {
+        toast.info(
+          "Debes agregarte como prospecto para crear una solicitud de inversión."
+        );
+        toastMostradoRef.current = true;
+      }
+
+      setProspectos(datosFiltrados);
     } catch (error) {
       toast.error("Error al cargar prospectos: " + (error.message ?? error));
     } finally {
@@ -35,7 +70,8 @@ export default function Prospectos() {
 
   useEffect(() => {
     cargarProspectos();
-  }, []);
+    // eslint-disable-next-line
+  }, [roles, user]);
 
   // Editar
   const handleEditar = (item) => {
@@ -88,7 +124,6 @@ export default function Prospectos() {
         </span>
       ),
     },
-    // <-- Aquí agregamos el campo EsCliente (columna visual)
     {
       key: "esCliente",
       label: "¿Es Cliente?",
@@ -131,7 +166,7 @@ export default function Prospectos() {
       <Card className="w-full border border-muted rounded-2xl shadow-[0_4px_10px_rgba(0,0,0,0.10)]">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-gray-900 flex items-center">
-            Lista de Prospectos
+            {titulo}
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6 overflow-x-auto">
@@ -145,7 +180,12 @@ export default function Prospectos() {
               )
             }
             mostrarEditar={true}
-            mostrarAgregarNuevo={true}
+            mostrarAgregarNuevo={
+              // Si es Externo y ya tiene prospecto, oculta el botón
+              roles.includes("Externo") && prospectos.length >= 1
+                ? false
+                : true
+            }
             mostrarEliminar={true}
             onAgregarNuevoClick={() => setIsDialogOpen(true)}
             onEditarClick={handleEditar}

@@ -1,13 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
 import { getTareasPorRol } from "@/service/Entidades/TareaService";
 import GlassLoader from "@/components/ui/GlassLoader";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
-// Mapeo de nombre de rol a ID
 const ROLES_MAP = {
   "Administrador": 1,
   "Asesor Comercial": 2,
@@ -20,43 +19,81 @@ const ROLES_MAP = {
   "Externo": 9
 };
 
+const ROLES_TITULO = {
+  5: "Bandeja de Emisiones",
+  3: "Bandeja de Legal",
+  6: "Bandeja Financiera",
+  7: "Bandeja Comercial",
+  4: "Bandeja de Riesgos",
+  externo: "Carga de comprobante de abono",
+  comercial: "Solicitar comprobante de abono",
+};
+
 export default function Tareas() {
   const navigate = useNavigate();
+  const { roles, user } = useAuth();
   const [tareas, setTareas] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const obtenerIdRolDesdeStorage = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const nombreRol = user?.roles?.[0];
-    return ROLES_MAP[nombreRol] || null;
-  };
+  const toastMostradoRef = useRef(false);
 
-  const cargarTareas = async () => {
-    try {
-      const idRol = obtenerIdRolDesdeStorage();
-      if (!idRol) {
-        toast.error("No se pudo determinar el rol del usuario.");
-        return;
-      }
+  // Determinar el rol principal y su id
+  const nombreRol = roles?.[0] || "";
+  const idRol = ROLES_MAP[nombreRol] || null;
 
-      const data = await getTareasPorRol(idRol);
-      const ordenadas = [...data].sort((a, b) => {
-        if (a.nombreResultado === "Pendiente" && b.nombreResultado !== "Pendiente") return -1;
-        if (a.nombreResultado !== "Pendiente" && b.nombreResultado === "Pendiente") return 1;
-        return 0;
-      });
-
-      setTareas(ordenadas);
-    } catch (error) {
-      toast.error("Error al cargar tareas: " + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Titulo dinámico para externos y comercial
+  let titulo = "Lista de Tareas";
+  if (nombreRol === "Externo") {
+    titulo = ROLES_TITULO.externo;
+  } else if (nombreRol === "Asesor Comercial") {
+    titulo = ROLES_TITULO.comercial;
+  } else if (ROLES_TITULO[idRol]) {
+    titulo = ROLES_TITULO[idRol];
+  }
 
   useEffect(() => {
+    const cargarTareas = async () => {
+      setLoading(true);
+      try {
+        if (!idRol) {
+          toast.error("No se pudo determinar el rol del usuario.");
+          return;
+        }
+        const data = await getTareasPorRol(idRol);
+
+        let filtradas = [...data];
+
+        // Si es Externo o Asesor Comercial, solo tareas donde es el creador
+        if (nombreRol === "Externo" || nombreRol === "Asesor Comercial") {
+          filtradas = filtradas.filter(
+            t => t.idUsuarioCreacion === user.id
+          );
+
+          // Toast de pendiente SOLO UNA VEZ si hay tareas pendientes
+          if (!toastMostradoRef.current && filtradas.some(t => t.nombreResultado === "Pendiente")) {
+            if (nombreRol === "Externo") {
+              toast.info("Recuerda realizar el depósito del capital para continuar con la solicitud.");
+            } else if (nombreRol === "Asesor Comercial") {
+              toast.info("Recuerda solicitar al Cliente el comprobante de abono del capital.");
+            }
+            toastMostradoRef.current = true;
+          }
+        }
+
+        // Ordenar: fechaCreacion DESC (más nuevo primero)
+        filtradas.sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
+        setTareas(filtradas);
+
+      } catch (error) {
+        toast.error("Error al cargar tareas: " + (error.message ?? error));
+      } finally {
+        setLoading(false);
+      }
+    };
+
     cargarTareas();
-  }, []);
+    // eslint-disable-next-line
+  }, [roles, user]);
 
   const handleEditar = (item) => {
     navigate(`/tareas/editar/${item.idTarea}`);
@@ -77,25 +114,59 @@ export default function Tareas() {
         </div>
       )
     },
-    { key: "idTipoTarea", label: "ID Tipo" },
+    {
+      key: "nombreTipoTarea",
+      label: "Tipo de Tarea",
+      render: (value) => (
+        <span className="px-3 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-700 border border-blue-300 shadow-sm">
+          {value}
+        </span>
+      )
+    },
     { key: "tareaNombre", label: "Nombre" },
     {
       key: "nombreResultado",
       label: "Resultado",
       render: (value) => (
         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-          value === "Pendiente" ? "bg-yellow-100 text-yellow-700" : "bg-green-100 text-green-700"
+          value === "Pendiente"
+            ? "bg-yellow-100 text-yellow-700"
+            : value === "Aprobado"
+            ? "bg-green-100 text-green-700"
+            : value === "Rechazado"
+            ? "bg-red-100 text-red-700"
+            : "bg-gray-200 text-gray-700"
         }`}>
           {value}
         </span>
       )
     },
-    { key: "fechaCreacion", label: "Creación", render: (v) => new Date(v).toLocaleDateString() },
+    {
+      key: "fechaCreacion",
+      label: "Creación",
+      render: (v) => v
+        ? new Date(v).toLocaleDateString("es-EC", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+          })
+        : ""
+    },
     {
       key: "fechaModificacion",
       label: "Modificación",
       render: (v) =>
-        v ? new Date(v).toLocaleDateString() : <span className="text-gray-400 italic">Sin modificación</span>
+        v
+          ? new Date(v).toLocaleDateString("es-EC", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit"
+            })
+          : <span className="text-gray-400 italic">Sin modificación</span>
     }
   ];
 
@@ -104,7 +175,9 @@ export default function Tareas() {
       <GlassLoader visible={loading} message="Cargando tareas..." />
       <Card className="w-full border border-muted rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.12)]">
         <CardHeader>
-          <CardTitle className="text-3xl">Lista de Tareas</CardTitle>
+          <CardTitle className="text-3xl font-bold text-gray-900 flex items-center">
+            {titulo}
+          </CardTitle>
         </CardHeader>
         <CardContent className="p-6 overflow-x-auto">
           <TablaCustom2

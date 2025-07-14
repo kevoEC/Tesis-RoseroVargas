@@ -1,5 +1,5 @@
-import { useUI } from "@/hooks/useUI";
 import { Suspense, lazy } from "react";
+import { useLocation } from "react-router-dom";
 
 // Importa todos los componentes válidos
 const modules = import.meta.glob("../../pages/**/*.{jsx,tsx}");
@@ -16,8 +16,11 @@ for (const path in modules) {
 }
 
 export default function DashboardContent() {
-  const { contentRoute } = useUI();
-  const Component = routeComponents[contentRoute];
+  // Usa la ruta REAL del navegador
+  const location = useLocation();
+  // Normaliza a minúsculas para el mapeo
+  const rutaActual = location.pathname.toLowerCase();
+  const Component = routeComponents[rutaActual];
 
   return (
     <main className="flex-1 overflow-y-auto bg-[--color-bg] p-6 text-[--color-fg] fade-in-up scrollbar-light">
@@ -29,7 +32,7 @@ export default function DashboardContent() {
         ) : (
           <div className="text-center text-red-500 text-lg font-semibold">
             ⚠️ Componente no encontrado para la ruta:{" "}
-            <code className="bg-black/10 px-2 py-1 rounded">{contentRoute}</code>
+            <code className="bg-black/10 px-2 py-1 rounded">{rutaActual}</code>
             <div className="mt-4 text-sm text-zinc-500">
               Si estás desarrollando esta vista, asegúrate de crear el archivo correspondiente en <code>/pages/</code>
             </div>

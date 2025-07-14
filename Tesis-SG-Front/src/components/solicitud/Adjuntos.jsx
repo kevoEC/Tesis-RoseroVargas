@@ -37,8 +37,22 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import AdjuntoForm from "./AdjuntoForm";
-import { Save, Eye, FileText } from "lucide-react";
+import { Save, Eye, FileText, Download } from "lucide-react";
 import GlassLoader from "@/components/ui/GlassLoader";
+
+// Plantillas con icono y descripción personalizada
+const PLANTILLAS = [
+  {
+    nombre: "Conozca a su Cliente",
+    url: "https://drive.google.com/file/d/1MJPmOmEEL8D_NiKFwv2xmI-f0kItRGjY/view?usp=sharing",
+    icon: <FileText className="w-6 h-6 mx-auto text-primary" />,
+  },
+  {
+    nombre: "Tratamiento de Datos Personales",
+    url: "https://drive.google.com/file/d/1J38gOr_pGhzNlZk7CJjBAXehhtmDGLRW/view?usp=sharing",
+    icon: <FileText className="w-6 h-6 mx-auto text-sky-700" />,
+  },
+];
 
 export default function Adjuntos({ id }) {
   const [documentos, setDocumentos] = useState([]);
@@ -236,8 +250,28 @@ export default function Adjuntos({ id }) {
 
       {/* Tabla de documentos */}
       <Card className="border border-muted shadow">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Lista de Adjuntos</CardTitle>
+          {/* Botones de plantillas */}
+          <div className="flex gap-3">
+            {PLANTILLAS.map((plantilla) => (
+              <a
+                key={plantilla.nombre}
+                href={plantilla.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center px-3 py-2 rounded-lg border border-primary/30 hover:bg-primary/10 transition"
+                title={`Descargar: ${plantilla.nombre}`}
+              >
+                {plantilla.icon}
+                <span className="text-xs font-medium text-gray-700 text-center mt-1">{plantilla.nombre}</span>
+                <span className="flex items-center gap-1 text-primary text-[11px] font-semibold mt-0.5">
+                  <Download className="w-3 h-3" />
+                  Descargar
+                </span>
+              </a>
+            ))}
+          </div>
         </CardHeader>
         <CardContent className="p-6">
           <TablaCustom2

@@ -8,7 +8,30 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff } from "lucide-react";
-import GlassLoader from "@/components/ui/GlassLoader"; // Asegúrate de tener este componente
+import GlassLoader from "@/components/ui/GlassLoader";
+import { mapearPermisosConIconos } from "@/utils/mapPermisos";
+
+// Evita "Catálogo" vacío y encuentra la primera ruta navegable:
+function obtenerPrimeraRutaValida(permisos) {
+  if (!permisos) return "/";
+  for (const permiso of permisos) {
+    // Saltar "Catálogo" si no tiene hijos
+    if (
+      (permiso.Nombre === "Catálogo" || permiso.Menu === 999) &&
+      (!permiso.Submenus || permiso.Submenus.length === 0)
+    ) {
+      continue;
+    }
+    if (permiso.Ruta && typeof permiso.Ruta === "string") {
+      return permiso.Ruta;
+    }
+    if (permiso.Submenus && Array.isArray(permiso.Submenus) && permiso.Submenus.length > 0) {
+      const sub = permiso.Submenus.find(s => s.Ruta);
+      if (sub) return sub.Ruta;
+    }
+  }
+  return "/";
+}
 
 export default function Login() {
   const { login } = useAuth();
@@ -19,7 +42,7 @@ export default function Login() {
   const [remember, setRemember] = useState(true);
   const [email, setEmail] = useState("");
   const [contraseña, setContraseña] = useState("");
-  const [loading, setLoading] = useState(false); // Estado del GlassLoader
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -32,30 +55,43 @@ export default function Login() {
         return;
       }
 
-      setLoading(true); // Mostrar loader
+      setLoading(true);
+
       await login(email, contraseña);
+
+      // Espera a que el usuario esté guardado en localStorage
+      const userData = JSON.parse(localStorage.getItem("user"));
+
+      let permisos = userData?.permisos || [];
+      if (!permisos[0]?.Ruta && !permisos[0]?.Submenus) {
+        permisos = mapearPermisosConIconos(permisos);
+      }
+
+      // Redirección inteligente después de login
+      const postLoginRedirect = sessionStorage.getItem("postLoginRedirect");
+      const rutaInicial = postLoginRedirect || obtenerPrimeraRutaValida(permisos) || "/";
+      sessionStorage.removeItem("postLoginRedirect");
+
       notify.success("Bienvenido 👋");
-      navigate("/panel/metricas");
+      navigate(rutaInicial, { replace: true });
+
     } catch (err) {
       notify.error("Error al iniciar sesión", err.message);
     } finally {
-      setLoading(false); // Ocultar loader
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-pattern flex flex-col items-center justify-center px-4 text-[--color-fg] relative">
-      {/* Loader encima de todo */}
       {loading && <GlassLoader message="Verificando credenciales..." />}
 
-      {/* Logo fuera del card */}
       <img
         src="/png/Logo SG 1 1.png"
         alt="SG Consulting Group"
         className="h-14 mb-8 z-10"
       />
 
-      {/* Card */}
       <Card className="w-full max-w-md bg-white text-[--color-fg] shadow-md rounded-xl border border-[--color-border] fade-in-up z-10">
         <CardContent className="py-8 px-10 space-y-8">
           <div className="space-y-1 text-left">
