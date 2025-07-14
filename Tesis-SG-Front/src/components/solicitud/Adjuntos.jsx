@@ -37,7 +37,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import AdjuntoForm from "./AdjuntoForm";
-import { Save, Eye } from "lucide-react";
+import { Save, Eye, FileText } from "lucide-react";
 import GlassLoader from "@/components/ui/GlassLoader";
 
 export default function Adjuntos({ id }) {
@@ -91,7 +91,7 @@ export default function Adjuntos({ id }) {
 
   useEffect(() => {
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleEditar = (item, soloVer = false) => {
@@ -155,8 +155,18 @@ export default function Adjuntos({ id }) {
             </Button>
           );
         }
-        // Si editable, sin botón o con otro botón personalizado
-        return null;
+        // Mostrar icono documento con tooltip id
+        return (
+          <div
+            className="flex items-center justify-center group relative text-gray-500 cursor-default"
+            title={`ID: ${value}`}
+          >
+            <FileText className="w-5 h-5" />
+            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 text-xs text-white bg-zinc-800 px-2 py-0.5 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50">
+              ID: {value}
+            </span>
+          </div>
+        );
       },
     },
     { key: "tipoDocumentoNombre", label: "Tipo de Documento" },
