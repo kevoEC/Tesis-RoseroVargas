@@ -28,12 +28,20 @@ public class TwilioSmsService : ISmsService
                 to: new PhoneNumber(numeroDestino)
             );
 
-            return message.ErrorCode == null;
+            if (message.ErrorCode != null)
+            {
+                // Log o lanzar excepción específica
+                throw new Exception($"Twilio error: {message.ErrorMessage} (Code: {message.ErrorCode})");
+            }
+
+            return true;
         }
-        catch
+        catch (Exception ex)
         {
-            return false;
+            // LOG: puedes usar un logger real, aquí devuelvo el mensaje solo para pruebas.
+            throw new Exception($"Error enviando SMS: {ex.Message}", ex);
         }
     }
+
 
 }
