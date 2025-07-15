@@ -34,9 +34,9 @@ jobs:
           echo '{
             "navigationFallback": {
               "rewrite": "/index.html",
-              "exclude": ["/images/*.{png,jpg,gif,ico}", "/css/*", "/js/*"]
+              "exclude": ["/images/*.{png,jpg,gif,ico,svg}", "/css/*", "/js/*", "/assets/*"]
             }
-          }' > Tesis-SG-Front/staticwebapp.config.json
+          }' > Tesis-SG-Front/dist/staticwebapp.config.json
         displayName: 'Create staticwebapp.config.json for SPA routing'
 
       - task: AzureStaticWebApp@0
