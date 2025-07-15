@@ -1,1 +1,0 @@
-import{j as s}from"./index-CG6H-kfp.js";function t(){return s.jsxs("div",{className:"p-6",children:[s.jsx("h1",{className:"text-2xl font-bold",children:"Configuración"}),s.jsx("p",{children:"Ajustes del sistema."})]})}export{t as default};
