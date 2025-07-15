@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Controllers/Catalogos/ProductoInteresController.cs
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Backend_CrmSG.Models.Catalogos;
@@ -12,12 +13,17 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<ProductoInteres> _repository;
 
+        /// <summary>
+        /// Constructor del controlador de ProductoInteres.
+        /// </summary>
         public ProductoInteresController(IRepository<ProductoInteres> repository)
         {
             _repository = repository;
         }
 
-        // GET: api/ProductoInteres
+        /// <summary>
+        /// Obtiene todos los productos de interés registrados.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductoInteres>>> Get()
         {
@@ -25,7 +31,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(productos);
         }
 
-        // GET: api/ProductoInteres/5
+        /// <summary>
+        /// Obtiene un producto de interés por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductoInteres>> Get(int id)
         {
@@ -35,7 +43,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(producto);
         }
 
-        // POST: api/ProductoInteres
+        /// <summary>
+        /// Crea un nuevo producto de interés.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<ProductoInteres>> Post([FromBody] ProductoInteres productoInteres)
         {
@@ -43,7 +53,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = productoInteres.IdProductoInteres }, productoInteres);
         }
 
-        // PUT: api/ProductoInteres/5
+        /// <summary>
+        /// Actualiza un producto de interés existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] ProductoInteres productoInteres)
         {
@@ -53,7 +65,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
-        // DELETE: api/ProductoInteres/5
+        /// <summary>
+        /// Elimina un producto de interés por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

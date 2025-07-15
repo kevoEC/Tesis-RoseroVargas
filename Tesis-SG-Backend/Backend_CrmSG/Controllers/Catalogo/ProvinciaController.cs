@@ -13,11 +13,17 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<Provincia> _repo;
 
+        /// <summary>
+        /// Constructor del controlador de Provincia.
+        /// </summary>
         public ProvinciaController(IRepository<Provincia> repo)
         {
             _repo = repo;
         }
 
+        /// <summary>
+        /// Obtiene todas las provincias registradas.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Provincia>>> Get()
         {
@@ -25,6 +31,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Obtiene una provincia por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<Provincia>> Get(int id)
         {
@@ -34,6 +43,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(item);
         }
 
+        /// <summary>
+        /// Obtiene las provincias asociadas a un país específico.
+        /// </summary>
         [HttpGet("por-pais/{idPais}")]
         public async Task<ActionResult<IEnumerable<Provincia>>> GetPorPais(int idPais)
         {
@@ -41,6 +53,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Crea una nueva provincia.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<Provincia>> Post([FromBody] Provincia item)
         {
@@ -48,6 +63,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = item.IdProvincia }, item);
         }
 
+        /// <summary>
+        /// Actualiza una provincia existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Provincia item)
         {
@@ -57,6 +75,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina una provincia por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -20,6 +20,7 @@
         "tags": [
           "Actividad"
         ],
+        "summary": "Obtiene la lista de todas las actividades.",
         "responses": {
           "200": {
             "description": "OK"
@@ -30,7 +31,9 @@
         "tags": [
           "Actividad"
         ],
+        "summary": "Crea una nueva actividad.",
         "requestBody": {
+          "description": "Datos de la actividad a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -61,10 +64,12 @@
         "tags": [
           "Actividad"
         ],
+        "summary": "Obtiene una actividad por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la actividad.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -82,10 +87,12 @@
         "tags": [
           "Actividad"
         ],
+        "summary": "Actualiza una actividad existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la actividad.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -94,6 +101,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados de la actividad.",
           "content": {
             "application/json": {
               "schema": {
@@ -122,10 +130,12 @@
         "tags": [
           "Actividad"
         ],
+        "summary": "Elimina una actividad por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la actividad.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -145,10 +155,12 @@
         "tags": [
           "Actividad"
         ],
+        "summary": "Obtiene todas las actividades asociadas a un prospecto.",
         "parameters": [
           {
             "name": "idProspecto",
             "in": "path",
+            "description": "Identificador del prospecto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -168,6 +180,7 @@
         "tags": [
           "ActividadEconomicaLugarTrabajo"
         ],
+        "summary": "Obtiene todas las actividades económicas del lugar de trabajo.",
         "responses": {
           "200": {
             "description": "OK",
@@ -204,7 +217,9 @@
         "tags": [
           "ActividadEconomicaLugarTrabajo"
         ],
+        "summary": "Crea una nueva actividad económica.",
         "requestBody": {
+          "description": "Objeto ActividadEconomicaLugarTrabajo a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -252,10 +267,12 @@
         "tags": [
           "ActividadEconomicaLugarTrabajo"
         ],
+        "summary": "Obtiene una actividad económica por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la actividad económica.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -290,10 +307,12 @@
         "tags": [
           "ActividadEconomicaLugarTrabajo"
         ],
+        "summary": "Actualiza una actividad económica existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la actividad a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -302,6 +321,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto actualizado.",
           "content": {
             "application/json": {
               "schema": {
@@ -330,10 +350,12 @@
         "tags": [
           "ActividadEconomicaLugarTrabajo"
         ],
+        "summary": "Elimina una actividad económica por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la actividad a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -353,6 +375,7 @@
         "tags": [
           "ActividadEconomicaPrincipal"
         ],
+        "summary": "Obtiene todas las actividades económicas principales.",
         "responses": {
           "200": {
             "description": "OK",
@@ -389,7 +412,9 @@
         "tags": [
           "ActividadEconomicaPrincipal"
         ],
+        "summary": "Crea una nueva actividad económica principal.",
         "requestBody": {
+          "description": "Objeto ActividadEconomicaPrincipal a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -437,10 +462,12 @@
         "tags": [
           "ActividadEconomicaPrincipal"
         ],
+        "summary": "Obtiene una actividad económica principal por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la actividad económica principal.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -475,10 +502,12 @@
         "tags": [
           "ActividadEconomicaPrincipal"
         ],
+        "summary": "Actualiza una actividad económica principal existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la actividad a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -487,6 +516,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto actualizado.",
           "content": {
             "application/json": {
               "schema": {
@@ -515,10 +545,12 @@
         "tags": [
           "ActividadEconomicaPrincipal"
         ],
+        "summary": "Elimina una actividad económica principal por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la actividad a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -538,7 +570,9 @@
         "tags": [
           "Adendum"
         ],
+        "summary": "Crea un nuevo adendum.",
         "requestBody": {
+          "description": "DTO con los datos para crear el adendum.",
           "content": {
             "application/json": {
               "schema": {
@@ -559,7 +593,10 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Adendum creado exitosamente."
+          },
+          "400": {
+            "description": "Datos inválidos o error en la creación."
           }
         }
       },
@@ -567,7 +604,9 @@
         "tags": [
           "Adendum"
         ],
+        "summary": "Actualiza un adendum existente.",
         "requestBody": {
+          "description": "DTO con los datos actualizados del adendum.",
           "content": {
             "application/json": {
               "schema": {
@@ -588,7 +627,10 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Adendum actualizado correctamente."
+          },
+          "400": {
+            "description": "Datos inválidos o error en la actualización."
           }
         }
       }
@@ -598,10 +640,12 @@
         "tags": [
           "Adendum"
         ],
+        "summary": "Obtiene el detalle de un adendum por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del adendum.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -611,7 +655,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Adendum encontrado."
+          },
+          "404": {
+            "description": "Adendum no encontrado."
           }
         }
       }
@@ -621,10 +668,12 @@
         "tags": [
           "Adendum"
         ],
+        "summary": "Obtiene la lista de adendums asociados a una inversión.",
         "parameters": [
           {
             "name": "idInversion",
             "in": "path",
+            "description": "Identificador de la inversión.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -634,7 +683,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Lista de adendums encontrada."
+          },
+          "400": {
+            "description": "Error en la consulta."
           }
         }
       }
@@ -644,10 +696,12 @@
         "tags": [
           "Adendum"
         ],
+        "summary": "Genera los documentos asociados a un adendum.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del adendum.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -657,6 +711,7 @@
           {
             "name": "idUsuario",
             "in": "query",
+            "description": "Identificador del usuario que genera los documentos.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -665,7 +720,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Documentos generados correctamente."
+          },
+          "400": {
+            "description": "Error al generar los documentos."
           }
         }
       }
@@ -675,10 +733,12 @@
         "tags": [
           "Adendum"
         ],
+        "summary": "Continúa el flujo del adendum (activar proyección y cronograma).",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del adendum.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -688,6 +748,7 @@
           {
             "name": "idUsuario",
             "in": "query",
+            "description": "Identificador del usuario que continúa el flujo.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -696,7 +757,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Flujo continuado correctamente."
+          },
+          "400": {
+            "description": "Error al continuar el flujo."
           }
         }
       }
@@ -706,10 +770,12 @@
         "tags": [
           "Adendum"
         ],
+        "summary": "Obtiene el detalle completo de un adendum.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del adendum.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -719,7 +785,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Detalle completo encontrado."
+          },
+          "404": {
+            "description": "Adendum no encontrado."
           }
         }
       }
@@ -729,7 +798,9 @@
         "tags": [
           "Adendum"
         ],
+        "summary": "Asigna el incremento a un adendum.",
         "requestBody": {
+          "description": "DTO con los datos de incremento del adendum.",
           "content": {
             "application/json": {
               "schema": {
@@ -750,7 +821,10 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Incremento asignado correctamente."
+          },
+          "400": {
+            "description": "Error al asignar el incremento."
           }
         }
       }
@@ -760,10 +834,12 @@
         "tags": [
           "Adendum"
         ],
+        "summary": "Obtiene los documentos asociados a un adendum.",
         "parameters": [
           {
             "name": "idAdendum",
             "in": "path",
+            "description": "Identificador del adendum.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -773,7 +849,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Lista de documentos encontrada."
+          },
+          "400": {
+            "description": "Error al obtener los documentos."
           }
         }
       }
@@ -783,6 +862,7 @@
         "tags": [
           "Agencia"
         ],
+        "summary": "Obtiene la lista de todas las agencias.",
         "responses": {
           "200": {
             "description": "OK",
@@ -819,7 +899,9 @@
         "tags": [
           "Agencia"
         ],
+        "summary": "Crea una nueva agencia.",
         "requestBody": {
+          "description": "Objeto agencia a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -867,10 +949,12 @@
         "tags": [
           "Agencia"
         ],
+        "summary": "Obtiene una agencia por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la agencia.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -905,10 +989,12 @@
         "tags": [
           "Agencia"
         ],
+        "summary": "Actualiza una agencia existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la agencia.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -917,6 +1003,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto agencia actualizado.",
           "content": {
             "application/json": {
               "schema": {
@@ -945,10 +1032,12 @@
         "tags": [
           "Agencia"
         ],
+        "summary": "Elimina una agencia por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la agencia a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -968,6 +1057,7 @@
         "tags": [
           "Banco"
         ],
+        "summary": "Obtiene la lista de bancos (solo IdBanco y BancoNombre).",
         "responses": {
           "200": {
             "description": "OK",
@@ -998,6 +1088,7 @@
         "tags": [
           "Banco"
         ],
+        "summary": "Crea un nuevo banco.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1046,6 +1137,7 @@
         "tags": [
           "Banco"
         ],
+        "summary": "Obtiene un banco por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -1084,6 +1176,7 @@
         "tags": [
           "Banco"
         ],
+        "summary": "Actualiza un banco existente.",
         "parameters": [
           {
             "name": "id",
@@ -1124,6 +1217,7 @@
         "tags": [
           "Banco"
         ],
+        "summary": "Elimina un banco por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -1147,6 +1241,7 @@
         "tags": [
           "Beneficiario"
         ],
+        "summary": "Obtiene la lista de todos los beneficiarios.",
         "responses": {
           "200": {
             "description": "OK"
@@ -1157,7 +1252,9 @@
         "tags": [
           "Beneficiario"
         ],
+        "summary": "Crea un nuevo beneficiario.",
         "requestBody": {
+          "description": "Datos del beneficiario a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -1188,10 +1285,12 @@
         "tags": [
           "Beneficiario"
         ],
+        "summary": "Obtiene un beneficiario por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del beneficiario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1209,10 +1308,12 @@
         "tags": [
           "Beneficiario"
         ],
+        "summary": "Actualiza un beneficiario existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del beneficiario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1221,6 +1322,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados del beneficiario.",
           "content": {
             "application/json": {
               "schema": {
@@ -1249,10 +1351,12 @@
         "tags": [
           "Beneficiario"
         ],
+        "summary": "Elimina un beneficiario por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del beneficiario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1272,10 +1376,12 @@
         "tags": [
           "Beneficiario"
         ],
+        "summary": "Obtiene todos los beneficiarios asociados a una solicitud de inversión.",
         "parameters": [
           {
             "name": "idSolicitud",
             "in": "path",
+            "description": "Identificador de la solicitud de inversión.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1295,6 +1401,7 @@
         "tags": [
           "CalendarioOperaciones"
         ],
+        "summary": "Obtiene la lista de todos los calendarios de operaciones.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1331,7 +1438,9 @@
         "tags": [
           "CalendarioOperaciones"
         ],
+        "summary": "Crea un nuevo calendario de operaciones.",
         "requestBody": {
+          "description": "Datos del calendario de operaciones a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -1379,10 +1488,12 @@
         "tags": [
           "CalendarioOperaciones"
         ],
+        "summary": "Obtiene un calendario de operaciones por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del calendario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1417,10 +1528,12 @@
         "tags": [
           "CalendarioOperaciones"
         ],
+        "summary": "Actualiza los datos de un calendario de operaciones existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del calendario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1429,6 +1542,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados del calendario.",
           "content": {
             "application/json": {
               "schema": {
@@ -1457,10 +1571,12 @@
         "tags": [
           "CalendarioOperaciones"
         ],
+        "summary": "Elimina un calendario de operaciones por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del calendario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1480,6 +1596,7 @@
         "tags": [
           "Casos"
         ],
+        "summary": "Obtiene la lista de todos los casos registrados.",
         "responses": {
           "200": {
             "description": "OK"
@@ -1490,7 +1607,9 @@
         "tags": [
           "Casos"
         ],
+        "summary": "Crea un nuevo caso.",
         "requestBody": {
+          "description": "Datos para la creación del caso.",
           "content": {
             "application/json": {
               "schema": {
@@ -1521,10 +1640,12 @@
         "tags": [
           "Casos"
         ],
+        "summary": "Obtiene el detalle de un caso por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del caso.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1542,10 +1663,12 @@
         "tags": [
           "Casos"
         ],
+        "summary": "Actualiza los datos de un caso existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del caso.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1554,6 +1677,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados del caso.",
           "content": {
             "application/json": {
               "schema": {
@@ -1584,10 +1708,12 @@
         "tags": [
           "Casos"
         ],
+        "summary": "Obtiene todos los casos asociados a un cliente específico.",
         "parameters": [
           {
             "name": "idCliente",
             "in": "path",
+            "description": "Identificador del cliente.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1607,10 +1733,12 @@
         "tags": [
           "Casos"
         ],
+        "summary": "Obtiene todos los casos asociados a una inversión específica.",
         "parameters": [
           {
             "name": "idInversion",
             "in": "path",
+            "description": "Identificador de la inversión.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1630,10 +1758,12 @@
         "tags": [
           "Casos"
         ],
+        "summary": "Obtiene todos los casos asociados a un pago específico.",
         "parameters": [
           {
             "name": "idPago",
             "in": "path",
+            "description": "Identificador del pago.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1653,10 +1783,12 @@
         "tags": [
           "Casos"
         ],
+        "summary": "Continúa el flujo del caso (cambio de estado o avance de proceso).",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del caso.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1676,7 +1808,9 @@
         "tags": [
           "Casos"
         ],
+        "summary": "Realiza un rollback de pagos asociados a un caso.",
         "requestBody": {
+          "description": "Datos para identificar el pago y usuario que realiza el rollback.",
           "content": {
             "application/json": {
               "schema": {
@@ -1707,6 +1841,7 @@
         "tags": [
           "Ciudad"
         ],
+        "summary": "Obtiene todas las ciudades.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1743,6 +1878,7 @@
         "tags": [
           "Ciudad"
         ],
+        "summary": "Crea una nueva ciudad.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1791,6 +1927,7 @@
         "tags": [
           "Ciudad"
         ],
+        "summary": "Obtiene una ciudad por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -1829,6 +1966,7 @@
         "tags": [
           "Ciudad"
         ],
+        "summary": "Actualiza una ciudad existente.",
         "parameters": [
           {
             "name": "id",
@@ -1869,6 +2007,7 @@
         "tags": [
           "Ciudad"
         ],
+        "summary": "Elimina una ciudad por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -1892,6 +2031,7 @@
         "tags": [
           "Ciudad"
         ],
+        "summary": "Obtiene todas las ciudades de una provincia específica.",
         "parameters": [
           {
             "name": "idProvincia",
@@ -1941,6 +2081,7 @@
         "tags": [
           "Cliente"
         ],
+        "summary": "Obtiene la lista de todos los clientes registrados.",
         "responses": {
           "200": {
             "description": "OK"
@@ -1953,10 +2094,12 @@
         "tags": [
           "Cliente"
         ],
+        "summary": "Obtiene los datos de un cliente por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del cliente.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1974,10 +2117,12 @@
         "tags": [
           "Cliente"
         ],
+        "summary": "Actualiza los datos de un cliente existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del cliente a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1986,6 +2131,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados del cliente.",
           "content": {
             "application/json": {
               "schema": {
@@ -2016,10 +2162,12 @@
         "tags": [
           "Cliente"
         ],
+        "summary": "Obtiene la lista de clientes asignados a un usuario propietario.",
         "parameters": [
           {
             "name": "idUsuario",
             "in": "path",
+            "description": "Identificador del usuario propietario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2039,10 +2187,12 @@
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Obtiene todas las configuraciones de un producto específico.",
         "parameters": [
           {
             "name": "idProducto",
             "in": "path",
+            "description": "ID del producto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2062,10 +2212,12 @@
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Obtiene una configuración por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la configuración.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2085,7 +2237,9 @@
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Crea una nueva configuración de producto.",
         "requestBody": {
+          "description": "Objeto de configuración a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -2116,10 +2270,12 @@
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Actualiza una configuración existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la configuración a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2128,6 +2284,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos nuevos de la configuración.",
           "content": {
             "application/json": {
               "schema": {
@@ -2156,10 +2313,12 @@
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Elimina una configuración de producto por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la configuración.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2179,6 +2338,7 @@
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Obtiene todas las configuraciones de productos (vista extendida).",
         "responses": {
           "200": {
             "description": "OK"
@@ -2191,10 +2351,12 @@
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Obtiene una configuración extendida por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la configuración (vista).",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2214,10 +2376,12 @@
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Obtiene todas las configuraciones extendidas asociadas a un producto.",
         "parameters": [
           {
             "name": "idProducto",
             "in": "path",
+            "description": "ID del producto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2237,6 +2401,7 @@
         "tags": [
           "ContinuarSolicitud"
         ],
+        "summary": "Obtiene todas las opciones de ContinuarSolicitud.",
         "responses": {
           "200": {
             "description": "OK",
@@ -2273,6 +2438,7 @@
         "tags": [
           "ContinuarSolicitud"
         ],
+        "summary": "Crea una nueva opción de ContinuarSolicitud.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -2321,6 +2487,7 @@
         "tags": [
           "ContinuarSolicitud"
         ],
+        "summary": "Obtiene una opción de ContinuarSolicitud por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -2359,6 +2526,7 @@
         "tags": [
           "ContinuarSolicitud"
         ],
+        "summary": "Actualiza una opción de ContinuarSolicitud existente.",
         "parameters": [
           {
             "name": "id",
@@ -2399,6 +2567,7 @@
         "tags": [
           "ContinuarSolicitud"
         ],
+        "summary": "Elimina una opción de ContinuarSolicitud por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -2422,7 +2591,9 @@
         "tags": [
           "Contrato"
         ],
+        "summary": "Genera automáticamente el contrato principal a partir de una solicitud de inversión.",
         "requestBody": {
+          "description": "Objeto con el identificador de la solicitud de inversión.",
           "content": {
             "application/json": {
               "schema": {
@@ -2443,7 +2614,10 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Si el contrato se generó exitosamente."
+          },
+          "500": {
+            "description": "Si ocurre un error interno durante la generación."
           }
         }
       }
@@ -2453,10 +2627,12 @@
         "tags": [
           "ContratoSecuencial"
         ],
+        "summary": "Genera y obtiene el número secuencial de contrato para una solicitud y proyección dadas.",
         "parameters": [
           {
             "name": "solicitud",
             "in": "query",
+            "description": "Identificador de la solicitud de inversión.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2465,6 +2641,7 @@
           {
             "name": "proyeccion",
             "in": "query",
+            "description": "Identificador de la proyección asociada.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2473,7 +2650,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Número de contrato generado correctamente."
+          },
+          "400": {
+            "description": "No se pudo generar el número de contrato."
           }
         }
       }
@@ -2483,6 +2663,7 @@
         "tags": [
           "DashboardCliente"
         ],
+        "summary": "Obtiene estadísticas agregadas de clientes, para su visualización en el dashboard.",
         "responses": {
           "200": {
             "description": "OK",
@@ -2512,9 +2693,11 @@
         "tags": [
           "DashboardInversion"
         ],
+        "summary": "Obtiene estadísticas agregadas de inversiones para visualización en el dashboard.",
+        "description": "Devuelve totales, agrupaciones y otros KPIs relevantes de inversiones.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Devuelve el objeto con los datos estadísticos",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2541,9 +2724,11 @@
         "tags": [
           "DashboardPagosCasos"
         ],
+        "summary": "Obtiene las estadísticas agregadas de pagos y casos para el dashboard.",
+        "description": "Devuelve un objeto con los principales indicadores (KPIs) sobre pagos y casos, agrupados y listos para visualización.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Devuelve el objeto con los datos estadísticos",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2570,9 +2755,11 @@
         "tags": [
           "DashboardProspecto"
         ],
+        "summary": "Obtiene las estadísticas y métricas principales de prospectos para el dashboard.",
+        "description": "Devuelve los principales indicadores sobre prospectos, como cantidad por estado, por origen, embudo comercial, etc.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Devuelve el objeto con las métricas principales",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2599,9 +2786,11 @@
         "tags": [
           "DashboardSolicitud"
         ],
+        "summary": "Obtiene todas las estadísticas de solicitudes para el dashboard.",
+        "description": "Este endpoint retorna los principales indicadores relacionados a solicitudes de inversión, como cantidad total, por estado, por producto, y otros datos relevantes para el dashboard.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Retorna el objeto con las estadísticas de solicitudes",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2628,9 +2817,11 @@
         "tags": [
           "DashboardTareas"
         ],
+        "summary": "Obtiene las estadísticas principales de tareas para el dashboard.",
+        "description": "Devuelve métricas como cantidad total de tareas, tareas por estado, por usuario, y otros KPIs relevantes para el dashboard.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Retorna el objeto con estadísticas de tareas.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -2657,10 +2848,12 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Lista los documentos asociados a una entidad (Solicitud, Tarea, Inversión, etc).",
         "parameters": [
           {
             "name": "tipoEntidad",
             "in": "query",
+            "description": "Tipo de la entidad (ej: \"solicitud\", \"tarea\", \"inversion\").",
             "schema": {
               "type": "string"
             }
@@ -2668,6 +2861,7 @@
           {
             "name": "idEntidad",
             "in": "query",
+            "description": "ID de la entidad asociada.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2686,7 +2880,9 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Crea un nuevo documento (sube un archivo) asociado a una entidad.",
         "requestBody": {
+          "description": "Datos y archivo codificado del documento.",
           "content": {
             "application/json": {
               "schema": {
@@ -2717,10 +2913,12 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Actualiza los datos de un documento existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del documento.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2729,6 +2927,7 @@
           }
         ],
         "requestBody": {
+          "description": "Nuevos datos del documento.",
           "content": {
             "application/json": {
               "schema": {
@@ -2757,10 +2956,12 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Elimina lógicamente (desactiva) un documento.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del documento a desactivar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2780,10 +2981,12 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Elimina todos los documentos automáticos asociados a un motivo (rollback).",
         "parameters": [
           {
             "name": "idMotivo",
             "in": "path",
+            "description": "ID del motivo.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2793,6 +2996,7 @@
           {
             "name": "idTarea",
             "in": "query",
+            "description": "ID de la tarea (opcional).",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2801,6 +3005,7 @@
           {
             "name": "idSolicitudInversion",
             "in": "query",
+            "description": "ID de la solicitud de inversión (opcional).",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2809,6 +3014,7 @@
           {
             "name": "idInversion",
             "in": "query",
+            "description": "ID de la inversión (opcional).",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2827,7 +3033,9 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Crea documentos automáticos a partir de un motivo.",
         "requestBody": {
+          "description": "Datos necesarios para la creación de documentos por motivo.",
           "content": {
             "application/json": {
               "schema": {
@@ -2858,10 +3066,12 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Actualiza solo el archivo binario de un documento (no los metadatos).",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del documento.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2870,6 +3080,7 @@
           }
         ],
         "requestBody": {
+          "description": "Nuevo archivo codificado en base64 y sus metadatos.",
           "content": {
             "application/json": {
               "schema": {
@@ -2900,10 +3111,12 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Obtiene los datos de un documento desde la vista extendida por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del documento.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2923,10 +3136,12 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Lista documentos filtrados por solicitud y motivo.",
         "parameters": [
           {
             "name": "idSolicitudInversion",
             "in": "query",
+            "description": "ID de la solicitud de inversión.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2935,6 +3150,7 @@
           {
             "name": "idMotivo",
             "in": "query",
+            "description": "ID del motivo.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2953,10 +3169,12 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Descarga el archivo físico de un documento (Word) según su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del documento a descargar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2976,6 +3194,7 @@
         "tags": [
           "EstadoCivil"
         ],
+        "summary": "Obtiene todos los estados civiles.",
         "responses": {
           "200": {
             "description": "OK",
@@ -3012,6 +3231,7 @@
         "tags": [
           "EstadoCivil"
         ],
+        "summary": "Crea un nuevo estado civil.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3060,6 +3280,7 @@
         "tags": [
           "EstadoCivil"
         ],
+        "summary": "Obtiene un estado civil por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3098,6 +3319,7 @@
         "tags": [
           "EstadoCivil"
         ],
+        "summary": "Actualiza un estado civil existente.",
         "parameters": [
           {
             "name": "id",
@@ -3138,6 +3360,7 @@
         "tags": [
           "EstadoCivil"
         ],
+        "summary": "Elimina un estado civil por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3161,6 +3384,7 @@
         "tags": [
           "Etnia"
         ],
+        "summary": "Obtiene todas las etnias.",
         "responses": {
           "200": {
             "description": "OK",
@@ -3197,6 +3421,7 @@
         "tags": [
           "Etnia"
         ],
+        "summary": "Crea una nueva etnia.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3245,6 +3470,7 @@
         "tags": [
           "Etnia"
         ],
+        "summary": "Obtiene una etnia por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3283,6 +3509,7 @@
         "tags": [
           "Etnia"
         ],
+        "summary": "Actualiza una etnia existente.",
         "parameters": [
           {
             "name": "id",
@@ -3323,6 +3550,7 @@
         "tags": [
           "Etnia"
         ],
+        "summary": "Elimina una etnia por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3346,6 +3574,7 @@
         "tags": [
           "Genero"
         ],
+        "summary": "Obtiene todos los géneros.",
         "responses": {
           "200": {
             "description": "OK",
@@ -3382,6 +3611,7 @@
         "tags": [
           "Genero"
         ],
+        "summary": "Crea un nuevo género.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3430,6 +3660,7 @@
         "tags": [
           "Genero"
         ],
+        "summary": "Obtiene un género por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3468,6 +3699,7 @@
         "tags": [
           "Genero"
         ],
+        "summary": "Actualiza un género existente.",
         "parameters": [
           {
             "name": "id",
@@ -3508,6 +3740,7 @@
         "tags": [
           "Genero"
         ],
+        "summary": "Elimina un género por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3531,6 +3764,7 @@
         "tags": [
           "Inversion"
         ],
+        "summary": "Obtiene la lista de todas las inversiones registradas.",
         "responses": {
           "200": {
             "description": "OK"
@@ -3543,10 +3777,12 @@
         "tags": [
           "Inversion"
         ],
+        "summary": "Obtiene los datos de una inversión por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la inversión.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -3566,10 +3802,12 @@
         "tags": [
           "Inversion"
         ],
+        "summary": "Obtiene la lista de inversiones asignadas a un usuario propietario.",
         "parameters": [
           {
             "name": "idUsuario",
             "in": "path",
+            "description": "Identificador del usuario propietario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -3589,10 +3827,12 @@
         "tags": [
           "Inversion"
         ],
+        "summary": "Obtiene la lista de inversiones asignadas a un cliente específico.",
         "parameters": [
           {
             "name": "idCliente",
             "in": "path",
+            "description": "Identificador del cliente.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -3612,6 +3852,7 @@
         "tags": [
           "JustificativoTransaccion"
         ],
+        "summary": "Obtiene todos los justificativos de transacción.",
         "responses": {
           "200": {
             "description": "OK",
@@ -3648,6 +3889,7 @@
         "tags": [
           "JustificativoTransaccion"
         ],
+        "summary": "Crea un nuevo justificativo de transacción.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3696,6 +3938,7 @@
         "tags": [
           "JustificativoTransaccion"
         ],
+        "summary": "Obtiene un justificativo de transacción por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3734,6 +3977,7 @@
         "tags": [
           "JustificativoTransaccion"
         ],
+        "summary": "Actualiza un justificativo de transacción existente.",
         "parameters": [
           {
             "name": "id",
@@ -3774,6 +4018,7 @@
         "tags": [
           "JustificativoTransaccion"
         ],
+        "summary": "Elimina un justificativo de transacción por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3797,6 +4042,7 @@
         "tags": [
           "Menu"
         ],
+        "summary": "Obtiene la lista de todos los menús registrados en el sistema.",
         "responses": {
           "200": {
             "description": "OK"
@@ -3807,7 +4053,9 @@
         "tags": [
           "Menu"
         ],
+        "summary": "Crea un nuevo menú de seguridad.",
         "requestBody": {
+          "description": "Objeto menú a registrar.",
           "content": {
             "application/json": {
               "schema": {
@@ -3838,10 +4086,12 @@
         "tags": [
           "Menu"
         ],
+        "summary": "Obtiene la información de un menú específico por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del menú.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -3859,10 +4109,12 @@
         "tags": [
           "Menu"
         ],
+        "summary": "Actualiza la información de un menú existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del menú a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -3871,6 +4123,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto menú con los datos actualizados.",
           "content": {
             "application/json": {
               "schema": {
@@ -3899,10 +4152,12 @@
         "tags": [
           "Menu"
         ],
+        "summary": "Elimina un menú por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del menú a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -3922,10 +4177,12 @@
         "tags": [
           "Menu"
         ],
+        "summary": "Obtiene los menús disponibles para un rol específico.",
         "parameters": [
           {
             "name": "rol",
             "in": "path",
+            "description": "Nombre del rol.",
             "required": true,
             "schema": {
               "type": "string"
@@ -3944,6 +4201,7 @@
         "tags": [
           "ModoFirma"
         ],
+        "summary": "Obtiene todos los modos de firma disponibles.",
         "responses": {
           "200": {
             "description": "OK",
@@ -3980,6 +4238,7 @@
         "tags": [
           "ModoFirma"
         ],
+        "summary": "Crea un nuevo modo de firma.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -4028,6 +4287,7 @@
         "tags": [
           "ModoFirma"
         ],
+        "summary": "Obtiene un modo de firma por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -4066,6 +4326,7 @@
         "tags": [
           "ModoFirma"
         ],
+        "summary": "Actualiza un modo de firma existente.",
         "parameters": [
           {
             "name": "id",
@@ -4106,6 +4367,7 @@
         "tags": [
           "ModoFirma"
         ],
+        "summary": "Elimina un modo de firma por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -4129,6 +4391,7 @@
         "tags": [
           "Nacionalidad"
         ],
+        "summary": "Obtiene todas las nacionalidades disponibles.",
         "responses": {
           "200": {
             "description": "OK",
@@ -4165,6 +4428,7 @@
         "tags": [
           "Nacionalidad"
         ],
+        "summary": "Crea una nueva nacionalidad.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -4213,6 +4477,7 @@
         "tags": [
           "Nacionalidad"
         ],
+        "summary": "Obtiene una nacionalidad por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -4251,6 +4516,7 @@
         "tags": [
           "Nacionalidad"
         ],
+        "summary": "Actualiza una nacionalidad existente.",
         "parameters": [
           {
             "name": "id",
@@ -4291,6 +4557,7 @@
         "tags": [
           "Nacionalidad"
         ],
+        "summary": "Elimina una nacionalidad por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -4314,6 +4581,7 @@
         "tags": [
           "OrigenCliente"
         ],
+        "summary": "Obtiene todos los orígenes de cliente.",
         "responses": {
           "200": {
             "description": "OK",
@@ -4350,6 +4618,7 @@
         "tags": [
           "OrigenCliente"
         ],
+        "summary": "Crea un nuevo origen de cliente.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -4398,6 +4667,7 @@
         "tags": [
           "OrigenCliente"
         ],
+        "summary": "Obtiene un origen de cliente por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -4436,6 +4706,7 @@
         "tags": [
           "OrigenCliente"
         ],
+        "summary": "Actualiza un origen de cliente existente.",
         "parameters": [
           {
             "name": "id",
@@ -4476,6 +4747,7 @@
         "tags": [
           "OrigenCliente"
         ],
+        "summary": "Elimina un origen de cliente por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -4499,6 +4771,7 @@
         "tags": [
           "Pagos"
         ],
+        "summary": "Obtiene la lista de todos los pagos registrados.",
         "responses": {
           "200": {
             "description": "OK"
@@ -4509,7 +4782,9 @@
         "tags": [
           "Pagos"
         ],
+        "summary": "Crea un nuevo pago.",
         "requestBody": {
+          "description": "Datos para la creación del pago.",
           "content": {
             "application/json": {
               "schema": {
@@ -4540,10 +4815,12 @@
         "tags": [
           "Pagos"
         ],
+        "summary": "Obtiene los datos de un pago por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del pago.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4561,10 +4838,12 @@
         "tags": [
           "Pagos"
         ],
+        "summary": "Actualiza los datos de un pago existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del pago.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4573,6 +4852,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados del pago.",
           "content": {
             "application/json": {
               "schema": {
@@ -4601,10 +4881,12 @@
         "tags": [
           "Pagos"
         ],
+        "summary": "Elimina un pago por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del pago.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4624,10 +4906,12 @@
         "tags": [
           "Pagos"
         ],
+        "summary": "Obtiene la lista de pagos asociados a un calendario.",
         "parameters": [
           {
             "name": "idCalendario",
             "in": "path",
+            "description": "Identificador del calendario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4647,7 +4931,9 @@
         "tags": [
           "Pagos"
         ],
+        "summary": "Genera automáticamente pagos asociados a un calendario.",
         "requestBody": {
+          "description": "Datos para la generación de pagos por calendario.",
           "content": {
             "application/json": {
               "schema": {
@@ -4678,10 +4964,12 @@
         "tags": [
           "Pagos"
         ],
+        "summary": "Realiza rollback de pagos por identificador de pago.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del pago.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4690,6 +4978,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos del usuario que realiza la modificación.",
           "content": {
             "application/json": {
               "schema": {
@@ -4720,6 +5009,7 @@
         "tags": [
           "Pais"
         ],
+        "summary": "Obtiene todos los países registrados.",
         "responses": {
           "200": {
             "description": "OK",
@@ -4756,6 +5046,7 @@
         "tags": [
           "Pais"
         ],
+        "summary": "Crea un nuevo país.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -4804,6 +5095,7 @@
         "tags": [
           "Pais"
         ],
+        "summary": "Obtiene un país por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -4842,6 +5134,7 @@
         "tags": [
           "Pais"
         ],
+        "summary": "Actualiza un país existente.",
         "parameters": [
           {
             "name": "id",
@@ -4882,6 +5175,7 @@
         "tags": [
           "Pais"
         ],
+        "summary": "Elimina un país por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -4905,6 +5199,7 @@
         "tags": [
           "Permiso"
         ],
+        "summary": "Obtiene la lista de todos los permisos registrados en el sistema.",
         "responses": {
           "200": {
             "description": "OK"
@@ -4915,7 +5210,9 @@
         "tags": [
           "Permiso"
         ],
+        "summary": "Crea un nuevo permiso de seguridad.",
         "requestBody": {
+          "description": "Objeto permiso a registrar.",
           "content": {
             "application/json": {
               "schema": {
@@ -4946,10 +5243,12 @@
         "tags": [
           "Permiso"
         ],
+        "summary": "Obtiene la información de un permiso específico por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del permiso.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4967,10 +5266,12 @@
         "tags": [
           "Permiso"
         ],
+        "summary": "Actualiza la información de un permiso existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del permiso a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4979,6 +5280,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto permiso con los datos actualizados.",
           "content": {
             "application/json": {
               "schema": {
@@ -5007,10 +5309,12 @@
         "tags": [
           "Permiso"
         ],
+        "summary": "Elimina un permiso por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del permiso a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5030,6 +5334,7 @@
         "tags": [
           "Prioridad"
         ],
+        "summary": "Obtiene todas las prioridades registradas.",
         "responses": {
           "200": {
             "description": "OK",
@@ -5066,6 +5371,7 @@
         "tags": [
           "Prioridad"
         ],
+        "summary": "Crea una nueva prioridad.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -5114,6 +5420,7 @@
         "tags": [
           "Prioridad"
         ],
+        "summary": "Obtiene una prioridad por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -5152,6 +5459,7 @@
         "tags": [
           "Prioridad"
         ],
+        "summary": "Actualiza una prioridad existente.",
         "parameters": [
           {
             "name": "id",
@@ -5192,6 +5500,7 @@
         "tags": [
           "Prioridad"
         ],
+        "summary": "Elimina una prioridad por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -5215,6 +5524,7 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Obtiene todos los productos.",
         "responses": {
           "200": {
             "description": "OK"
@@ -5225,7 +5535,9 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Crea un nuevo producto.",
         "requestBody": {
+          "description": "Datos del producto.",
           "content": {
             "application/json": {
               "schema": {
@@ -5256,10 +5568,12 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Obtiene un producto por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del producto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5277,10 +5591,12 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Actualiza un producto existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del producto a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5289,6 +5605,7 @@
           }
         ],
         "requestBody": {
+          "description": "Nuevos datos del producto.",
           "content": {
             "application/json": {
               "schema": {
@@ -5317,10 +5634,12 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Elimina un producto por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del producto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5340,10 +5659,12 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Obtiene las configuraciones asociadas a un producto específico.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del producto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5363,10 +5684,12 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Obtiene un producto junto a todas sus configuraciones.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del producto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5386,6 +5709,7 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Obtiene la lista extendida de productos (vista enriquecida).",
         "responses": {
           "200": {
             "description": "OK"
@@ -5398,10 +5722,12 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Obtiene los datos enriquecidos (vista) de un producto por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del producto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5421,6 +5747,7 @@
         "tags": [
           "ProductoInteres"
         ],
+        "summary": "Obtiene todos los productos de interés registrados.",
         "responses": {
           "200": {
             "description": "OK",
@@ -5457,6 +5784,7 @@
         "tags": [
           "ProductoInteres"
         ],
+        "summary": "Crea un nuevo producto de interés.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -5505,6 +5833,7 @@
         "tags": [
           "ProductoInteres"
         ],
+        "summary": "Obtiene un producto de interés por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -5543,6 +5872,7 @@
         "tags": [
           "ProductoInteres"
         ],
+        "summary": "Actualiza un producto de interés existente.",
         "parameters": [
           {
             "name": "id",
@@ -5583,6 +5913,7 @@
         "tags": [
           "ProductoInteres"
         ],
+        "summary": "Elimina un producto de interés por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -5606,6 +5937,7 @@
         "tags": [
           "Profesion"
         ],
+        "summary": "Obtiene todas las profesiones registradas.",
         "responses": {
           "200": {
             "description": "OK",
@@ -5642,6 +5974,7 @@
         "tags": [
           "Profesion"
         ],
+        "summary": "Crea una nueva profesión.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -5690,6 +6023,7 @@
         "tags": [
           "Profesion"
         ],
+        "summary": "Obtiene una profesión por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -5728,6 +6062,7 @@
         "tags": [
           "Profesion"
         ],
+        "summary": "Actualiza una profesión existente.",
         "parameters": [
           {
             "name": "id",
@@ -5768,6 +6103,7 @@
         "tags": [
           "Profesion"
         ],
+        "summary": "Elimina una profesión por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -5791,6 +6127,7 @@
         "tags": [
           "Prospecto"
         ],
+        "summary": "Obtiene la lista de todos los prospectos registrados.",
         "responses": {
           "200": {
             "description": "OK"
@@ -5801,7 +6138,9 @@
         "tags": [
           "Prospecto"
         ],
+        "summary": "Crea un nuevo prospecto.",
         "requestBody": {
+          "description": "Datos del prospecto a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -5832,10 +6171,12 @@
         "tags": [
           "Prospecto"
         ],
+        "summary": "Obtiene los datos de un prospecto por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del prospecto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5853,10 +6194,12 @@
         "tags": [
           "Prospecto"
         ],
+        "summary": "Actualiza los datos de un prospecto existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del prospecto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5865,6 +6208,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados del prospecto.",
           "content": {
             "application/json": {
               "schema": {
@@ -5893,10 +6237,12 @@
         "tags": [
           "Prospecto"
         ],
+        "summary": "Elimina un prospecto por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del prospecto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5916,6 +6262,7 @@
         "tags": [
           "Provincia"
         ],
+        "summary": "Obtiene todas las provincias registradas.",
         "responses": {
           "200": {
             "description": "OK",
@@ -5952,6 +6299,7 @@
         "tags": [
           "Provincia"
         ],
+        "summary": "Crea una nueva provincia.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -6000,6 +6348,7 @@
         "tags": [
           "Provincia"
         ],
+        "summary": "Obtiene una provincia por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -6038,6 +6387,7 @@
         "tags": [
           "Provincia"
         ],
+        "summary": "Actualiza una provincia existente.",
         "parameters": [
           {
             "name": "id",
@@ -6078,6 +6428,7 @@
         "tags": [
           "Provincia"
         ],
+        "summary": "Elimina una provincia por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -6101,6 +6452,7 @@
         "tags": [
           "Provincia"
         ],
+        "summary": "Obtiene las provincias asociadas a un país específico.",
         "parameters": [
           {
             "name": "idPais",
@@ -6150,7 +6502,9 @@
         "tags": [
           "Proyeccion"
         ],
+        "summary": "Crea una nueva proyección de inversión.",
         "requestBody": {
+          "description": "Datos para crear la proyección.",
           "content": {
             "application/json": {
               "schema": {
@@ -6181,10 +6535,12 @@
         "tags": [
           "Proyeccion"
         ],
+        "summary": "Obtiene el cronograma de pagos/cuotas de una proyección.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la proyección.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6204,6 +6560,7 @@
         "tags": [
           "Proyeccion"
         ],
+        "summary": "Actualiza los datos y el cronograma de una proyección existente.",
         "parameters": [
           {
             "name": "id",
@@ -6215,6 +6572,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados de la proyección.",
           "content": {
             "application/json": {
               "schema": {
@@ -6265,10 +6623,12 @@
         "tags": [
           "Proyeccion"
         ],
+        "summary": "Obtiene la lista de proyecciones asociadas a una solicitud de inversión.",
         "parameters": [
           {
             "name": "idSolicitudInversion",
             "in": "path",
+            "description": "Identificador de la solicitud de inversión.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6288,7 +6648,9 @@
         "tags": [
           "Proyeccion"
         ],
+        "summary": "Realiza un incremento de capital sobre una proyección existente.",
         "requestBody": {
+          "description": "Datos para el incremento de proyección.",
           "content": {
             "application/json": {
               "schema": {
@@ -6319,6 +6681,7 @@
         "tags": [
           "Referencia"
         ],
+        "summary": "Obtiene la lista de todas las referencias registradas.",
         "responses": {
           "200": {
             "description": "OK"
@@ -6329,7 +6692,9 @@
         "tags": [
           "Referencia"
         ],
+        "summary": "Crea una nueva referencia.",
         "requestBody": {
+          "description": "Datos de la referencia a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -6360,10 +6725,12 @@
         "tags": [
           "Referencia"
         ],
+        "summary": "Obtiene los datos de una referencia por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la referencia.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6381,10 +6748,12 @@
         "tags": [
           "Referencia"
         ],
+        "summary": "Actualiza los datos de una referencia existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la referencia.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6393,6 +6762,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados de la referencia.",
           "content": {
             "application/json": {
               "schema": {
@@ -6421,10 +6791,12 @@
         "tags": [
           "Referencia"
         ],
+        "summary": "Elimina una referencia por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la referencia.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6444,10 +6816,12 @@
         "tags": [
           "Referencia"
         ],
+        "summary": "Obtiene la lista de referencias asociadas a una solicitud de inversión específica.",
         "parameters": [
           {
             "name": "idSolicitudInversion",
             "in": "path",
+            "description": "Identificador de la solicitud de inversión.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6467,6 +6841,7 @@
         "tags": [
           "Rol"
         ],
+        "summary": "Obtiene la lista de todos los roles registrados en el sistema.",
         "responses": {
           "200": {
             "description": "OK"
@@ -6477,7 +6852,9 @@
         "tags": [
           "Rol"
         ],
+        "summary": "Crea un nuevo rol de seguridad.",
         "requestBody": {
+          "description": "Objeto rol a registrar.",
           "content": {
             "application/json": {
               "schema": {
@@ -6508,10 +6885,12 @@
         "tags": [
           "Rol"
         ],
+        "summary": "Obtiene la información de un rol específico por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del rol.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6529,10 +6908,12 @@
         "tags": [
           "Rol"
         ],
+        "summary": "Actualiza la información de un rol existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del rol a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6541,6 +6922,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto rol con los datos actualizados.",
           "content": {
             "application/json": {
               "schema": {
@@ -6569,10 +6951,12 @@
         "tags": [
           "Rol"
         ],
+        "summary": "Elimina un rol por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del rol a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6592,6 +6976,7 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Obtiene todas las solicitudes de inversión (básico, sin detalle).",
         "responses": {
           "200": {
             "description": "OK"
@@ -6604,6 +6989,7 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Obtiene todas las solicitudes de inversión con detalle completo (unión de varias tablas/vistas).",
         "responses": {
           "200": {
             "description": "OK"
@@ -6616,10 +7002,12 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Obtiene una solicitud de inversión por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id de la solicitud.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6637,10 +7025,12 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Elimina una solicitud de inversión por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id de la solicitud a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6660,7 +7050,9 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Crea una nueva solicitud de inversión a partir de un DTO estructurado.",
         "requestBody": {
+          "description": "DTO con los datos necesarios para la creación.",
           "content": {
             "application/json": {
               "schema": {
@@ -6691,10 +7083,12 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Actualiza una solicitud de inversión existente a partir de un DTO estructurado.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id de la solicitud a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6703,6 +7097,7 @@
           }
         ],
         "requestBody": {
+          "description": "DTO con los campos a actualizar.",
           "content": {
             "application/json": {
               "schema": {
@@ -6799,10 +7194,12 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Obtiene el detalle completo de una solicitud por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id de la solicitud.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6822,7 +7219,9 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Ejecuta el proceso de finalización de una solicitud de inversión, generando tareas y contrato asociado.",
         "requestBody": {
+          "description": "DTO con el Id de la solicitud a finalizar.",
           "content": {
             "application/json": {
               "schema": {
@@ -6853,6 +7252,7 @@
         "tags": [
           "Tarea"
         ],
+        "summary": "Obtiene todas las tareas existentes en el sistema.",
         "responses": {
           "200": {
             "description": "OK"
@@ -6865,10 +7265,12 @@
         "tags": [
           "Tarea"
         ],
+        "summary": "Obtiene las tareas asignadas a un rol específico.",
         "parameters": [
           {
             "name": "idRol",
             "in": "path",
+            "description": "Identificador del rol.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6888,10 +7290,12 @@
         "tags": [
           "Tarea"
         ],
+        "summary": "Obtiene las tareas asociadas a una solicitud de inversión específica.",
         "parameters": [
           {
             "name": "idSolicitud",
             "in": "path",
+            "description": "Identificador de la solicitud de inversión.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6911,10 +7315,12 @@
         "tags": [
           "Tarea"
         ],
+        "summary": "Obtiene el detalle de una tarea específica por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la tarea.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6932,10 +7338,12 @@
         "tags": [
           "Tarea"
         ],
+        "summary": "Actualiza dinámicamente una tarea existente, permitiendo modificar campos flexibles.\r\nEl usuario autenticado es tomado del token JWT.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la tarea a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6944,6 +7352,7 @@
           }
         ],
         "requestBody": {
+          "description": "DTO con los datos de actualización.",
           "content": {
             "application/json": {
               "schema": {
@@ -6974,6 +7383,7 @@
         "tags": [
           "TipoActividad"
         ],
+        "summary": "Obtiene todos los tipos de actividad registrados.",
         "responses": {
           "200": {
             "description": "OK",
@@ -7010,7 +7420,9 @@
         "tags": [
           "TipoActividad"
         ],
+        "summary": "Crea un nuevo tipo de actividad.",
         "requestBody": {
+          "description": "Objeto TipoActividad a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -7058,10 +7470,12 @@
         "tags": [
           "TipoActividad"
         ],
+        "summary": "Obtiene un tipo de actividad por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de actividad.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7096,10 +7510,12 @@
         "tags": [
           "TipoActividad"
         ],
+        "summary": "Actualiza un tipo de actividad existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de actividad a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7108,6 +7524,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoActividad con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -7136,10 +7553,12 @@
         "tags": [
           "TipoActividad"
         ],
+        "summary": "Elimina un tipo de actividad por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de actividad a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7159,6 +7578,7 @@
         "tags": [
           "TipoCliente"
         ],
+        "summary": "Obtiene todos los tipos de cliente registrados.",
         "responses": {
           "200": {
             "description": "OK"
@@ -7169,7 +7589,9 @@
         "tags": [
           "TipoCliente"
         ],
+        "summary": "Crea un nuevo tipo de cliente.",
         "requestBody": {
+          "description": "Objeto TipoCliente a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -7200,10 +7622,12 @@
         "tags": [
           "TipoCliente"
         ],
+        "summary": "Obtiene un tipo de cliente por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de cliente.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7221,10 +7645,12 @@
         "tags": [
           "TipoCliente"
         ],
+        "summary": "Actualiza un tipo de cliente existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de cliente a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7233,6 +7659,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoCliente con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -7261,10 +7688,12 @@
         "tags": [
           "TipoCliente"
         ],
+        "summary": "Elimina un tipo de cliente por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de cliente a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7284,6 +7713,7 @@
         "tags": [
           "TipoCuenta"
         ],
+        "summary": "Obtiene todos los tipos de cuenta registrados.",
         "responses": {
           "200": {
             "description": "OK",
@@ -7320,7 +7750,9 @@
         "tags": [
           "TipoCuenta"
         ],
+        "summary": "Crea un nuevo tipo de cuenta.",
         "requestBody": {
+          "description": "Objeto TipoCuenta a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -7368,10 +7800,12 @@
         "tags": [
           "TipoCuenta"
         ],
+        "summary": "Obtiene un tipo de cuenta por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de cuenta.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7406,10 +7840,12 @@
         "tags": [
           "TipoCuenta"
         ],
+        "summary": "Actualiza un tipo de cuenta existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de cuenta a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7418,6 +7854,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoCuenta con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -7446,10 +7883,12 @@
         "tags": [
           "TipoCuenta"
         ],
+        "summary": "Elimina un tipo de cuenta por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de cuenta a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7469,6 +7908,7 @@
         "tags": [
           "TipoDocumentoCatalogo"
         ],
+        "summary": "Obtiene todos los tipos de documento catalogados.",
         "responses": {
           "200": {
             "description": "OK",
@@ -7505,7 +7945,9 @@
         "tags": [
           "TipoDocumentoCatalogo"
         ],
+        "summary": "Crea un nuevo tipo de documento catalogado.",
         "requestBody": {
+          "description": "Objeto TipoDocumentoCatalogo a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -7553,10 +7995,12 @@
         "tags": [
           "TipoDocumentoCatalogo"
         ],
+        "summary": "Obtiene un tipo de documento catalogado por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de documento.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7591,10 +8035,12 @@
         "tags": [
           "TipoDocumentoCatalogo"
         ],
+        "summary": "Actualiza un tipo de documento catalogado existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de documento a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7603,6 +8049,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoDocumentoCatalogo con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -7631,10 +8078,12 @@
         "tags": [
           "TipoDocumentoCatalogo"
         ],
+        "summary": "Elimina un tipo de documento catalogado por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de documento a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7654,6 +8103,7 @@
         "tags": [
           "TipoIdentificacion"
         ],
+        "summary": "Obtiene todos los tipos de identificación.",
         "responses": {
           "200": {
             "description": "OK",
@@ -7690,7 +8140,9 @@
         "tags": [
           "TipoIdentificacion"
         ],
+        "summary": "Crea un nuevo tipo de identificación.",
         "requestBody": {
+          "description": "Objeto TipoIdentificacion a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -7738,10 +8190,12 @@
         "tags": [
           "TipoIdentificacion"
         ],
+        "summary": "Obtiene un tipo de identificación por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de identificación.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7776,10 +8230,12 @@
         "tags": [
           "TipoIdentificacion"
         ],
+        "summary": "Actualiza un tipo de identificación existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de identificación a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7788,6 +8244,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoIdentificacion con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -7816,10 +8273,12 @@
         "tags": [
           "TipoIdentificacion"
         ],
+        "summary": "Elimina un tipo de identificación por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de identificación a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7839,6 +8298,7 @@
         "tags": [
           "TipoReferencia"
         ],
+        "summary": "Obtiene todos los tipos de referencia.",
         "responses": {
           "200": {
             "description": "OK",
@@ -7875,7 +8335,9 @@
         "tags": [
           "TipoReferencia"
         ],
+        "summary": "Crea un nuevo tipo de referencia.",
         "requestBody": {
+          "description": "Objeto TipoReferencia a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -7923,10 +8385,12 @@
         "tags": [
           "TipoReferencia"
         ],
+        "summary": "Obtiene un tipo de referencia por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de referencia.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7961,10 +8425,12 @@
         "tags": [
           "TipoReferencia"
         ],
+        "summary": "Actualiza un tipo de referencia existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de referencia a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -7973,6 +8439,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoReferencia con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -8001,10 +8468,12 @@
         "tags": [
           "TipoReferencia"
         ],
+        "summary": "Elimina un tipo de referencia por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de referencia a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8024,6 +8493,7 @@
         "tags": [
           "TipoSolicitud"
         ],
+        "summary": "Obtiene todos los tipos de solicitud.",
         "responses": {
           "200": {
             "description": "OK"
@@ -8034,7 +8504,9 @@
         "tags": [
           "TipoSolicitud"
         ],
+        "summary": "Crea un nuevo tipo de solicitud.",
         "requestBody": {
+          "description": "Objeto TipoSolicitud a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -8065,10 +8537,12 @@
         "tags": [
           "TipoSolicitud"
         ],
+        "summary": "Obtiene un tipo de solicitud por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de solicitud.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8086,10 +8560,12 @@
         "tags": [
           "TipoSolicitud"
         ],
+        "summary": "Actualiza un tipo de solicitud existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de solicitud a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8098,6 +8574,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoSolicitud con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -8126,10 +8603,12 @@
         "tags": [
           "TipoSolicitud"
         ],
+        "summary": "Elimina un tipo de solicitud por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de solicitud a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8149,6 +8628,7 @@
         "tags": [
           "TipoVia"
         ],
+        "summary": "Obtiene todas las opciones de TipoVia.",
         "responses": {
           "200": {
             "description": "OK",
@@ -8185,6 +8665,7 @@
         "tags": [
           "TipoVia"
         ],
+        "summary": "Crea una nueva opción de TipoVia.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -8233,6 +8714,7 @@
         "tags": [
           "TipoVia"
         ],
+        "summary": "Obtiene una opción de TipoVia por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -8271,6 +8753,7 @@
         "tags": [
           "TipoVia"
         ],
+        "summary": "Actualiza una opción de TipoVia existente.",
         "parameters": [
           {
             "name": "id",
@@ -8311,6 +8794,7 @@
         "tags": [
           "TipoVia"
         ],
+        "summary": "Elimina una opción de TipoVia por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -8334,7 +8818,9 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Realiza el login del usuario y retorna un token JWT, datos del usuario, roles y permisos.",
         "requestBody": {
+          "description": "Objeto con email y contraseña.",
           "content": {
             "application/json": {
               "schema": {
@@ -8365,10 +8851,12 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Obtiene los roles asignados a un usuario específico.",
         "parameters": [
           {
             "name": "idUsuario",
             "in": "path",
+            "description": "Id del usuario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8388,10 +8876,12 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Obtiene los menús permitidos para un usuario según sus roles y permisos.",
         "parameters": [
           {
             "name": "idUsuario",
             "in": "path",
+            "description": "Id del usuario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8411,6 +8901,7 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Obtiene todos los usuarios registrados.",
         "responses": {
           "200": {
             "description": "OK"
@@ -8421,7 +8912,9 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Crea un nuevo usuario (registro manual/administrativo).",
         "requestBody": {
+          "description": "Objeto usuario a registrar.",
           "content": {
             "application/json": {
               "schema": {
@@ -8452,10 +8945,12 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Obtiene la información de un usuario específico.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del usuario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8473,10 +8968,12 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Actualiza los datos de un usuario existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del usuario a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8485,6 +8982,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto usuario con datos nuevos.",
           "content": {
             "application/json": {
               "schema": {
@@ -8513,10 +9011,12 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Elimina un usuario por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del usuario a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8536,7 +9036,9 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Realiza el registro parcial de un usuario y envía correo de validación.",
         "requestBody": {
+          "description": "DTO con los datos mínimos de registro.",
           "content": {
             "application/json": {
               "schema": {
@@ -8567,10 +9069,12 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Valida el correo electrónico de un usuario a través del token recibido por email.",
         "parameters": [
           {
             "name": "token",
             "in": "query",
+            "description": "Token de validación de correo.",
             "schema": {
               "type": "string"
             }
@@ -8588,7 +9092,9 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Envía un código SMS al número del usuario para validación de teléfono.",
         "requestBody": {
+          "description": "DTO con idUsuario, número y extensión internacional.",
           "content": {
             "application/json": {
               "schema": {
@@ -8619,7 +9125,9 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Valida el código SMS ingresado por el usuario para activar su teléfono.",
         "requestBody": {
+          "description": "DTO con idUsuario y código ingresado.",
           "content": {
             "application/json": {
               "schema": {
@@ -8650,6 +9158,7 @@
         "tags": [
           "UsuarioRol"
         ],
+        "summary": "Obtiene todas las relaciones usuario-rol existentes.",
         "responses": {
           "200": {
             "description": "OK"
@@ -8660,7 +9169,9 @@
         "tags": [
           "UsuarioRol"
         ],
+        "summary": "Asigna un rol a un usuario.",
         "requestBody": {
+          "description": "Objeto UsuarioRol con la relación a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -8689,7 +9200,9 @@
         "tags": [
           "UsuarioRol"
         ],
+        "summary": "Actualiza una relación usuario-rol existente.",
         "requestBody": {
+          "description": "Objeto UsuarioRol con los datos actualizados.",
           "content": {
             "application/json": {
               "schema": {
@@ -8720,10 +9233,12 @@
         "tags": [
           "UsuarioRol"
         ],
+        "summary": "Obtiene todos los roles asignados a un usuario específico.",
         "parameters": [
           {
             "name": "idUsuario",
             "in": "path",
+            "description": "Id del usuario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8743,10 +9258,12 @@
         "tags": [
           "UsuarioRol"
         ],
+        "summary": "Obtiene todos los usuarios que tienen asignado un rol específico.",
         "parameters": [
           {
             "name": "idRol",
             "in": "path",
+            "description": "Id del rol.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8766,10 +9283,12 @@
         "tags": [
           "UsuarioRol"
         ],
+        "summary": "Elimina la relación usuario-rol para un usuario y un rol específicos.",
         "parameters": [
           {
             "name": "idUsuario",
             "in": "path",
+            "description": "Id del usuario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8779,6 +9298,7 @@
           {
             "name": "idRol",
             "in": "path",
+            "description": "Id del rol.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -8798,7 +9318,9 @@
         "tags": [
           "Validacion"
         ],
+        "summary": "Realiza la validación de un usuario/persona a través del servicio Equifax.",
         "requestBody": {
+          "description": "Datos requeridos para la consulta Equifax.",
           "content": {
             "application/json": {
               "schema": {
@@ -8819,7 +9341,10 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Retorna el resultado de la validación Equifax."
+          },
+          "400": {
+            "description": "Si ocurre un error en la validación Equifax."
           }
         }
       }
@@ -8829,7 +9354,9 @@
         "tags": [
           "Validacion"
         ],
+        "summary": "Realiza la validación de un usuario/persona a través del servicio LDS.",
         "requestBody": {
+          "description": "Datos requeridos para la consulta LDS.",
           "content": {
             "application/json": {
               "schema": {
@@ -8850,7 +9377,10 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Retorna el resultado de la validación LDS."
+          },
+          "400": {
+            "description": "Si ocurre un error en la validación LDS."
           }
         }
       }
@@ -8860,10 +9390,12 @@
         "tags": [
           "VistaEntidad"
         ],
+        "summary": "Obtiene un listado filtrado de una vista dinámica según propiedad y valor.",
         "parameters": [
           {
             "name": "entidad",
             "in": "path",
+            "description": "Nombre de la vista (ej: actividad, prospecto, solicitudinversion, etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -8872,6 +9404,7 @@
           {
             "name": "por",
             "in": "query",
+            "description": "Nombre de la propiedad por la que filtrar (ej: IdProspecto, IdCliente).",
             "schema": {
               "type": "string"
             }
@@ -8879,6 +9412,7 @@
           {
             "name": "id",
             "in": "query",
+            "description": "Valor a buscar en la propiedad.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -8887,7 +9421,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Retorna el listado filtrado correctamente."
+          },
+          "400": {
+            "description": "Si la entidad no está registrada o parámetros incorrectos."
+          },
+          "500": {
+            "description": "Si hay error al resolver el repositorio."
           }
         }
       }
@@ -8897,10 +9437,12 @@
         "tags": [
           "VistaEntidad"
         ],
+        "summary": "Obtiene todos los registros de la vista especificada.",
         "parameters": [
           {
             "name": "entidad",
             "in": "path",
+            "description": "Nombre de la vista/entidad (ej: actividad, prospecto, solicitud, etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -8909,7 +9451,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Retorna la lista completa."
+          },
+          "400": {
+            "description": "Si la entidad no está registrada."
+          },
+          "500": {
+            "description": "Si no se puede resolver el repositorio."
           }
         }
       }
@@ -8919,10 +9467,12 @@
         "tags": [
           "VistaEntidad"
         ],
+        "summary": "Filtra la vista SolicitudInversionDetalle por propiedad específica y retorna una lista de DTOs.",
         "parameters": [
           {
             "name": "por",
             "in": "query",
+            "description": "Propiedad por la que filtrar (prospecto, cliente, solicitud).",
             "schema": {
               "type": "string"
             }
@@ -8930,6 +9480,7 @@
           {
             "name": "id",
             "in": "query",
+            "description": "Valor a buscar en la propiedad.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -8938,7 +9489,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Retorna la lista filtrada de DTOs."
+          },
+          "400": {
+            "description": "Si el parámetro 'por' es inválido."
+          },
+          "500": {
+            "description": "Si ocurre un error interno."
           }
         }
       }
@@ -10784,18 +11341,22 @@
         "properties": {
           "idCalendario": {
             "type": "integer",
+            "description": "Identificador del calendario.",
             "format": "int32"
           },
           "idPago": {
             "type": "integer",
+            "description": "Identificador del pago (opcional o según la lógica).",
             "format": "int32"
           },
           "idUsuario": {
             "type": "integer",
+            "description": "Identificador del usuario que realiza la acción.",
             "format": "int32"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "DTO auxiliar para la generación automática de pagos por calendario."
       },
       "Genero": {
         "type": "object",
@@ -12084,24 +12645,29 @@
         "properties": {
           "idPago": {
             "type": "integer",
+            "description": "Identificador del pago.",
             "format": "int32"
           },
           "idUsuarioModificacion": {
             "type": "integer",
+            "description": "Identificador del usuario que realiza la modificación.",
             "format": "int32"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "DTO auxiliar para rollback de pagos en casos."
       },
       "RollbackUsuarioDto": {
         "type": "object",
         "properties": {
           "idUsuarioModificacion": {
             "type": "integer",
+            "description": "Identificador del usuario que realiza la modificación.",
             "format": "int32"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "DTO auxiliar para rollback indicando el usuario que realiza la modificación."
       },
       "SolicitudCodigoTelefonoDTO": {
         "type": "object",

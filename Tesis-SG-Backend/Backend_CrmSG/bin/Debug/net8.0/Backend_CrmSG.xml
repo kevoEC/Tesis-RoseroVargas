@@ -1,0 +1,2342 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Backend_CrmSG</name>
+    </assembly>
+    <members>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ActividadEconomicaLugarTrabajoController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.ActividadEconomicaLugarTrabajo})">
+            <summary>
+            Constructor del controlador.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ActividadEconomicaLugarTrabajoController.Get">
+            <summary>
+            Obtiene todas las actividades económicas del lugar de trabajo.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ActividadEconomicaLugarTrabajoController.Get(System.Int32)">
+            <summary>
+            Obtiene una actividad económica por su ID.
+            </summary>
+            <param name="id">ID de la actividad económica.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ActividadEconomicaLugarTrabajoController.Post(Backend_CrmSG.Models.Catalogos.ActividadEconomicaLugarTrabajo)">
+            <summary>
+            Crea una nueva actividad económica.
+            </summary>
+            <param name="item">Objeto ActividadEconomicaLugarTrabajo a crear.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ActividadEconomicaLugarTrabajoController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.ActividadEconomicaLugarTrabajo)">
+            <summary>
+            Actualiza una actividad económica existente.
+            </summary>
+            <param name="id">ID de la actividad a actualizar.</param>
+            <param name="item">Objeto actualizado.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ActividadEconomicaLugarTrabajoController.Delete(System.Int32)">
+            <summary>
+            Elimina una actividad económica por su ID.
+            </summary>
+            <param name="id">ID de la actividad a eliminar.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ActividadEconomicaPrincipalController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.ActividadEconomicaPrincipal})">
+            <summary>
+            Constructor del controlador.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ActividadEconomicaPrincipalController.Get">
+            <summary>
+            Obtiene todas las actividades económicas principales.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ActividadEconomicaPrincipalController.Get(System.Int32)">
+            <summary>
+            Obtiene una actividad económica principal por su ID.
+            </summary>
+            <param name="id">ID de la actividad económica principal.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ActividadEconomicaPrincipalController.Post(Backend_CrmSG.Models.Catalogos.ActividadEconomicaPrincipal)">
+            <summary>
+            Crea una nueva actividad económica principal.
+            </summary>
+            <param name="item">Objeto ActividadEconomicaPrincipal a crear.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ActividadEconomicaPrincipalController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.ActividadEconomicaPrincipal)">
+            <summary>
+            Actualiza una actividad económica principal existente.
+            </summary>
+            <param name="id">ID de la actividad a actualizar.</param>
+            <param name="item">Objeto actualizado.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ActividadEconomicaPrincipalController.Delete(System.Int32)">
+            <summary>
+            Elimina una actividad económica principal por su ID.
+            </summary>
+            <param name="id">ID de la actividad a eliminar.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.AgenciaController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.Agencia})">
+            <summary>
+            Constructor del controlador de agencias.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.AgenciaController.Get">
+            <summary>
+            Obtiene la lista de todas las agencias.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.AgenciaController.Get(System.Int32)">
+            <summary>
+            Obtiene una agencia por su ID.
+            </summary>
+            <param name="id">ID de la agencia.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.AgenciaController.Post(Backend_CrmSG.Models.Catalogos.Agencia)">
+            <summary>
+            Crea una nueva agencia.
+            </summary>
+            <param name="agencia">Objeto agencia a crear.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.AgenciaController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.Agencia)">
+            <summary>
+            Actualiza una agencia existente.
+            </summary>
+            <param name="id">ID de la agencia.</param>
+            <param name="agencia">Objeto agencia actualizado.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.AgenciaController.Delete(System.Int32)">
+            <summary>
+            Elimina una agencia por su ID.
+            </summary>
+            <param name="id">ID de la agencia a eliminar.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.BancoController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.Banco})">
+            <summary>
+            Constructor del controlador de bancos.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.BancoController.Get">
+            <summary>
+            Obtiene la lista de bancos (solo IdBanco y BancoNombre).
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.BancoController.Get(System.Int32)">
+            <summary>
+            Obtiene un banco por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.BancoController.Post(Backend_CrmSG.Models.Catalogos.Banco)">
+            <summary>
+            Crea un nuevo banco.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.BancoController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.Banco)">
+            <summary>
+            Actualiza un banco existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.BancoController.Delete(System.Int32)">
+            <summary>
+            Elimina un banco por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.CiudadController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.Ciudad})">
+            <summary>
+            Constructor del controlador de ciudades.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.CiudadController.Get">
+            <summary>
+            Obtiene todas las ciudades.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.CiudadController.Get(System.Int32)">
+            <summary>
+            Obtiene una ciudad por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.CiudadController.GetPorProvincia(System.Int32)">
+            <summary>
+            Obtiene todas las ciudades de una provincia específica.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.CiudadController.Post(Backend_CrmSG.Models.Catalogos.Ciudad)">
+            <summary>
+            Crea una nueva ciudad.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.CiudadController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.Ciudad)">
+            <summary>
+            Actualiza una ciudad existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.CiudadController.Delete(System.Int32)">
+            <summary>
+            Elimina una ciudad por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ContinuarSolicitudController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.ContinuarSolicitud})">
+            <summary>
+            Constructor del controlador de ContinuarSolicitud.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ContinuarSolicitudController.Get">
+            <summary>
+            Obtiene todas las opciones de ContinuarSolicitud.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ContinuarSolicitudController.Get(System.Int32)">
+            <summary>
+            Obtiene una opción de ContinuarSolicitud por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ContinuarSolicitudController.Post(Backend_CrmSG.Models.Catalogos.ContinuarSolicitud)">
+            <summary>
+            Crea una nueva opción de ContinuarSolicitud.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ContinuarSolicitudController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.ContinuarSolicitud)">
+            <summary>
+            Actualiza una opción de ContinuarSolicitud existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ContinuarSolicitudController.Delete(System.Int32)">
+            <summary>
+            Elimina una opción de ContinuarSolicitud por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.EtniaController.Get">
+            <summary>
+            Obtiene todas las etnias.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.EtniaController.Get(System.Int32)">
+            <summary>
+            Obtiene una etnia por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.EtniaController.Post(Backend_CrmSG.Models.Catalogos.Etnia)">
+            <summary>
+            Crea una nueva etnia.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.EtniaController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.Etnia)">
+            <summary>
+            Actualiza una etnia existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.EtniaController.Delete(System.Int32)">
+            <summary>
+            Elimina una etnia por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.GeneroController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.Genero})">
+            <summary>
+            Constructor del controlador de Género.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.GeneroController.Get">
+            <summary>
+            Obtiene todos los géneros.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.GeneroController.Get(System.Int32)">
+            <summary>
+            Obtiene un género por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.GeneroController.Post(Backend_CrmSG.Models.Catalogos.Genero)">
+            <summary>
+            Crea un nuevo género.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.GeneroController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.Genero)">
+            <summary>
+            Actualiza un género existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.GeneroController.Delete(System.Int32)">
+            <summary>
+            Elimina un género por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.JustificativoTransaccionController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.JustificativoTransaccion})">
+            <summary>
+            Constructor del controlador de JustificativoTransaccion.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.JustificativoTransaccionController.Get">
+            <summary>
+            Obtiene todos los justificativos de transacción.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.JustificativoTransaccionController.Get(System.Int32)">
+            <summary>
+            Obtiene un justificativo de transacción por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.JustificativoTransaccionController.Post(Backend_CrmSG.Models.Catalogos.JustificativoTransaccion)">
+            <summary>
+            Crea un nuevo justificativo de transacción.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.JustificativoTransaccionController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.JustificativoTransaccion)">
+            <summary>
+            Actualiza un justificativo de transacción existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.JustificativoTransaccionController.Delete(System.Int32)">
+            <summary>
+            Elimina un justificativo de transacción por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.OrigenClienteController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.OrigenCliente})">
+            <summary>
+            Constructor del controlador de OrigenCliente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.OrigenClienteController.Get">
+            <summary>
+            Obtiene todos los orígenes de cliente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.OrigenClienteController.Get(System.Int32)">
+            <summary>
+            Obtiene un origen de cliente por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.OrigenClienteController.Post(Backend_CrmSG.Models.OrigenCliente)">
+            <summary>
+            Crea un nuevo origen de cliente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.OrigenClienteController.Put(System.Int32,Backend_CrmSG.Models.OrigenCliente)">
+            <summary>
+            Actualiza un origen de cliente existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.OrigenClienteController.Delete(System.Int32)">
+            <summary>
+            Elimina un origen de cliente por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.PaisController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.Pais})">
+            <summary>
+            Constructor del controlador de País.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.PaisController.Get">
+            <summary>
+            Obtiene todos los países registrados.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.PaisController.Get(System.Int32)">
+            <summary>
+            Obtiene un país por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.PaisController.Post(Backend_CrmSG.Models.Catalogos.Pais)">
+            <summary>
+            Crea un nuevo país.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.PaisController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.Pais)">
+            <summary>
+            Actualiza un país existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.PaisController.Delete(System.Int32)">
+            <summary>
+            Elimina un país por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.PrioridadController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.Prioridad})">
+            <summary>
+            Constructor del controlador de Prioridad.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.PrioridadController.Get">
+            <summary>
+            Obtiene todas las prioridades registradas.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.PrioridadController.Get(System.Int32)">
+            <summary>
+            Obtiene una prioridad por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.PrioridadController.Post(Backend_CrmSG.Models.Catalogos.Prioridad)">
+            <summary>
+            Crea una nueva prioridad.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.PrioridadController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.Prioridad)">
+            <summary>
+            Actualiza una prioridad existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.PrioridadController.Delete(System.Int32)">
+            <summary>
+            Elimina una prioridad por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProductoInteresController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.ProductoInteres})">
+            <summary>
+            Constructor del controlador de ProductoInteres.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProductoInteresController.Get">
+            <summary>
+            Obtiene todos los productos de interés registrados.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProductoInteresController.Get(System.Int32)">
+            <summary>
+            Obtiene un producto de interés por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProductoInteresController.Post(Backend_CrmSG.Models.Catalogos.ProductoInteres)">
+            <summary>
+            Crea un nuevo producto de interés.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProductoInteresController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.ProductoInteres)">
+            <summary>
+            Actualiza un producto de interés existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProductoInteresController.Delete(System.Int32)">
+            <summary>
+            Elimina un producto de interés por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProfesionController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.Profesion})">
+            <summary>
+            Constructor del controlador de Profesión.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProfesionController.Get">
+            <summary>
+            Obtiene todas las profesiones registradas.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProfesionController.Get(System.Int32)">
+            <summary>
+            Obtiene una profesión por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProfesionController.Post(Backend_CrmSG.Models.Catalogos.Profesion)">
+            <summary>
+            Crea una nueva profesión.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProfesionController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.Profesion)">
+            <summary>
+            Actualiza una profesión existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProfesionController.Delete(System.Int32)">
+            <summary>
+            Elimina una profesión por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProvinciaController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.Provincia})">
+            <summary>
+            Constructor del controlador de Provincia.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProvinciaController.Get">
+            <summary>
+            Obtiene todas las provincias registradas.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProvinciaController.Get(System.Int32)">
+            <summary>
+            Obtiene una provincia por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProvinciaController.GetPorPais(System.Int32)">
+            <summary>
+            Obtiene las provincias asociadas a un país específico.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProvinciaController.Post(Backend_CrmSG.Models.Catalogos.Provincia)">
+            <summary>
+            Crea una nueva provincia.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProvinciaController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.Provincia)">
+            <summary>
+            Actualiza una provincia existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.ProvinciaController.Delete(System.Int32)">
+            <summary>
+            Elimina una provincia por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoActividadController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.TipoActividad})">
+            <summary>
+            Constructor del controlador de TipoActividad.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoActividadController.Get">
+            <summary>
+            Obtiene todos los tipos de actividad registrados.
+            </summary>
+            <returns>Lista de tipos de actividad.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoActividadController.Get(System.Int32)">
+            <summary>
+            Obtiene un tipo de actividad por su ID.
+            </summary>
+            <param name="id">ID del tipo de actividad.</param>
+            <returns>Tipo de actividad encontrado o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoActividadController.Post(Backend_CrmSG.Models.Catalogos.TipoActividad)">
+            <summary>
+            Crea un nuevo tipo de actividad.
+            </summary>
+            <param name="tipoActividad">Objeto TipoActividad a crear.</param>
+            <returns>El tipo de actividad creado.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoActividadController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.TipoActividad)">
+            <summary>
+            Actualiza un tipo de actividad existente.
+            </summary>
+            <param name="id">ID del tipo de actividad a actualizar.</param>
+            <param name="tipoActividad">Objeto TipoActividad con los cambios.</param>
+            <returns>NoContent si fue exitoso, BadRequest si los IDs no coinciden.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoActividadController.Delete(System.Int32)">
+            <summary>
+            Elimina un tipo de actividad por su ID.
+            </summary>
+            <param name="id">ID del tipo de actividad a eliminar.</param>
+            <returns>NoContent si fue exitoso.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoClienteController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.TipoCliente})">
+            <summary>
+            Constructor del controlador de TipoCliente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoClienteController.Get">
+            <summary>
+            Obtiene todos los tipos de cliente registrados.
+            </summary>
+            <returns>Lista de tipos de cliente.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoClienteController.Get(System.Int32)">
+            <summary>
+            Obtiene un tipo de cliente por su ID.
+            </summary>
+            <param name="id">ID del tipo de cliente.</param>
+            <returns>Tipo de cliente encontrado o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoClienteController.Post(Backend_CrmSG.Models.Catalogos.TipoCliente)">
+            <summary>
+            Crea un nuevo tipo de cliente.
+            </summary>
+            <param name="item">Objeto TipoCliente a crear.</param>
+            <returns>El tipo de cliente creado.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoClienteController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.TipoCliente)">
+            <summary>
+            Actualiza un tipo de cliente existente.
+            </summary>
+            <param name="id">ID del tipo de cliente a actualizar.</param>
+            <param name="item">Objeto TipoCliente con los cambios.</param>
+            <returns>NoContent si fue exitoso, BadRequest si los IDs no coinciden.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoClienteController.Delete(System.Int32)">
+            <summary>
+            Elimina un tipo de cliente por su ID.
+            </summary>
+            <param name="id">ID del tipo de cliente a eliminar.</param>
+            <returns>NoContent si fue exitoso.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoCuentaController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.TipoCuenta})">
+            <summary>
+            Constructor del controlador de TipoCuenta.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoCuentaController.Get">
+            <summary>
+            Obtiene todos los tipos de cuenta registrados.
+            </summary>
+            <returns>Lista de tipos de cuenta.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoCuentaController.Get(System.Int32)">
+            <summary>
+            Obtiene un tipo de cuenta por su ID.
+            </summary>
+            <param name="id">ID del tipo de cuenta.</param>
+            <returns>Tipo de cuenta encontrado o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoCuentaController.Post(Backend_CrmSG.Models.Catalogos.TipoCuenta)">
+            <summary>
+            Crea un nuevo tipo de cuenta.
+            </summary>
+            <param name="item">Objeto TipoCuenta a crear.</param>
+            <returns>El tipo de cuenta creado.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoCuentaController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.TipoCuenta)">
+            <summary>
+            Actualiza un tipo de cuenta existente.
+            </summary>
+            <param name="id">ID del tipo de cuenta a actualizar.</param>
+            <param name="item">Objeto TipoCuenta con los cambios.</param>
+            <returns>NoContent si fue exitoso, BadRequest si los IDs no coinciden.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoCuentaController.Delete(System.Int32)">
+            <summary>
+            Elimina un tipo de cuenta por su ID.
+            </summary>
+            <param name="id">ID del tipo de cuenta a eliminar.</param>
+            <returns>NoContent si fue exitoso.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoDocumentoCatalogoController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.TipoDocumentoCatalogo})">
+            <summary>
+            Constructor del controlador de TipoDocumentoCatalogo.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoDocumentoCatalogoController.Get">
+            <summary>
+            Obtiene todos los tipos de documento catalogados.
+            </summary>
+            <returns>Lista de tipos de documento.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoDocumentoCatalogoController.Get(System.Int32)">
+            <summary>
+            Obtiene un tipo de documento catalogado por su ID.
+            </summary>
+            <param name="id">ID del tipo de documento.</param>
+            <returns>Tipo de documento encontrado o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoDocumentoCatalogoController.Post(Backend_CrmSG.Models.Catalogos.TipoDocumentoCatalogo)">
+            <summary>
+            Crea un nuevo tipo de documento catalogado.
+            </summary>
+            <param name="item">Objeto TipoDocumentoCatalogo a crear.</param>
+            <returns>El tipo de documento creado.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoDocumentoCatalogoController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.TipoDocumentoCatalogo)">
+            <summary>
+            Actualiza un tipo de documento catalogado existente.
+            </summary>
+            <param name="id">ID del tipo de documento a actualizar.</param>
+            <param name="item">Objeto TipoDocumentoCatalogo con los cambios.</param>
+            <returns>NoContent si fue exitoso, BadRequest si los IDs no coinciden.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoDocumentoCatalogoController.Delete(System.Int32)">
+            <summary>
+            Elimina un tipo de documento catalogado por su ID.
+            </summary>
+            <param name="id">ID del tipo de documento a eliminar.</param>
+            <returns>NoContent si fue exitoso.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoIdentificacionController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.TipoIdentificacion})">
+            <summary>
+            Constructor del controlador de TipoIdentificacion.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoIdentificacionController.Get">
+            <summary>
+            Obtiene todos los tipos de identificación.
+            </summary>
+            <returns>Lista de tipos de identificación.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoIdentificacionController.Get(System.Int32)">
+            <summary>
+            Obtiene un tipo de identificación por su ID.
+            </summary>
+            <param name="id">ID del tipo de identificación.</param>
+            <returns>Tipo de identificación encontrado o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoIdentificacionController.Post(Backend_CrmSG.Models.Catalogos.TipoIdentificacion)">
+            <summary>
+            Crea un nuevo tipo de identificación.
+            </summary>
+            <param name="tipoIdentificacion">Objeto TipoIdentificacion a crear.</param>
+            <returns>El tipo de identificación creado.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoIdentificacionController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.TipoIdentificacion)">
+            <summary>
+            Actualiza un tipo de identificación existente.
+            </summary>
+            <param name="id">ID del tipo de identificación a actualizar.</param>
+            <param name="tipoIdentificacion">Objeto TipoIdentificacion con los cambios.</param>
+            <returns>NoContent si fue exitoso, BadRequest si los IDs no coinciden.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoIdentificacionController.Delete(System.Int32)">
+            <summary>
+            Elimina un tipo de identificación por su ID.
+            </summary>
+            <param name="id">ID del tipo de identificación a eliminar.</param>
+            <returns>NoContent si fue exitoso.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoReferenciaController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.TipoReferencia})">
+            <summary>
+            Constructor del controlador de TipoReferencia.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoReferenciaController.Get">
+            <summary>
+            Obtiene todos los tipos de referencia.
+            </summary>
+            <returns>Lista de tipos de referencia.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoReferenciaController.Get(System.Int32)">
+            <summary>
+            Obtiene un tipo de referencia por su ID.
+            </summary>
+            <param name="id">ID del tipo de referencia.</param>
+            <returns>Tipo de referencia encontrado o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoReferenciaController.Post(Backend_CrmSG.Models.Catalogos.TipoReferencia)">
+            <summary>
+            Crea un nuevo tipo de referencia.
+            </summary>
+            <param name="item">Objeto TipoReferencia a crear.</param>
+            <returns>El tipo de referencia creado.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoReferenciaController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.TipoReferencia)">
+            <summary>
+            Actualiza un tipo de referencia existente.
+            </summary>
+            <param name="id">ID del tipo de referencia a actualizar.</param>
+            <param name="item">Objeto TipoReferencia con los cambios.</param>
+            <returns>NoContent si fue exitoso, BadRequest si los IDs no coinciden.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoReferenciaController.Delete(System.Int32)">
+            <summary>
+            Elimina un tipo de referencia por su ID.
+            </summary>
+            <param name="id">ID del tipo de referencia a eliminar.</param>
+            <returns>NoContent si fue exitoso.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoSolicitudController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.TipoSolicitud})">
+            <summary>
+            Constructor del controlador de TipoSolicitud.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoSolicitudController.Get">
+            <summary>
+            Obtiene todos los tipos de solicitud.
+            </summary>
+            <returns>Lista de tipos de solicitud.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoSolicitudController.Get(System.Int32)">
+            <summary>
+            Obtiene un tipo de solicitud por su ID.
+            </summary>
+            <param name="id">ID del tipo de solicitud.</param>
+            <returns>Tipo de solicitud encontrado o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoSolicitudController.Post(Backend_CrmSG.Models.Catalogos.TipoSolicitud)">
+            <summary>
+            Crea un nuevo tipo de solicitud.
+            </summary>
+            <param name="item">Objeto TipoSolicitud a crear.</param>
+            <returns>El tipo de solicitud creado.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoSolicitudController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.TipoSolicitud)">
+            <summary>
+            Actualiza un tipo de solicitud existente.
+            </summary>
+            <param name="id">ID del tipo de solicitud a actualizar.</param>
+            <param name="item">Objeto TipoSolicitud con los cambios.</param>
+            <returns>NoContent si fue exitoso, BadRequest si los IDs no coinciden.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoSolicitudController.Delete(System.Int32)">
+            <summary>
+            Elimina un tipo de solicitud por su ID.
+            </summary>
+            <param name="id">ID del tipo de solicitud a eliminar.</param>
+            <returns>NoContent si fue exitoso.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoViaController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.TipoVia})">
+            <summary>
+            Constructor del controlador de TipoVia.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoViaController.Get">
+            <summary>
+            Obtiene todas las opciones de TipoVia.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoViaController.Get(System.Int32)">
+            <summary>
+            Obtiene una opción de TipoVia por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoViaController.Post(Backend_CrmSG.Models.Catalogos.TipoVia)">
+            <summary>
+            Crea una nueva opción de TipoVia.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoViaController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.TipoVia)">
+            <summary>
+            Actualiza una opción de TipoVia existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogos.TipoViaController.Delete(System.Int32)">
+            <summary>
+            Elimina una opción de TipoVia por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.EstadoCivilController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.EstadoCivil})">
+            <summary>
+            Constructor del controlador de EstadoCivil.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.EstadoCivilController.Get">
+            <summary>
+            Obtiene todos los estados civiles.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.EstadoCivilController.Get(System.Int32)">
+            <summary>
+            Obtiene un estado civil por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.EstadoCivilController.Post(Backend_CrmSG.Models.Catalogos.EstadoCivil)">
+            <summary>
+            Crea un nuevo estado civil.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.EstadoCivilController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.EstadoCivil)">
+            <summary>
+            Actualiza un estado civil existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.EstadoCivilController.Delete(System.Int32)">
+            <summary>
+            Elimina un estado civil por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.ModoFirmaController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.ModoFirma})">
+            <summary>
+            Constructor del controlador de ModoFirma.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.ModoFirmaController.Get">
+            <summary>
+            Obtiene todos los modos de firma disponibles.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.ModoFirmaController.Get(System.Int32)">
+            <summary>
+            Obtiene un modo de firma por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.ModoFirmaController.Post(Backend_CrmSG.Models.Catalogos.ModoFirma)">
+            <summary>
+            Crea un nuevo modo de firma.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.ModoFirmaController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.ModoFirma)">
+            <summary>
+            Actualiza un modo de firma existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.ModoFirmaController.Delete(System.Int32)">
+            <summary>
+            Elimina un modo de firma por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.NacionalidadController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Catalogos.Nacionalidad})">
+            <summary>
+            Constructor del controlador de Nacionalidad.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.NacionalidadController.Get">
+            <summary>
+            Obtiene todas las nacionalidades disponibles.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.NacionalidadController.Get(System.Int32)">
+            <summary>
+            Obtiene una nacionalidad por su ID.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.NacionalidadController.Post(Backend_CrmSG.Models.Catalogos.Nacionalidad)">
+            <summary>
+            Crea una nueva nacionalidad.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.NacionalidadController.Put(System.Int32,Backend_CrmSG.Models.Catalogos.Nacionalidad)">
+            <summary>
+            Actualiza una nacionalidad existente.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Catalogo.NacionalidadController.Delete(System.Int32)">
+            <summary>
+            Elimina una nacionalidad por su ID.
+            </summary>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController">
+            <summary>
+            Controlador para la gestión de configuraciones de productos de inversión.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController.#ctor(Backend_CrmSG.Services.Producto.IConfiguracionProductoService)">
+            <summary>
+            Constructor.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController.GetByProducto(System.Int32)">
+            <summary>
+            Obtiene todas las configuraciones de un producto específico.
+            </summary>
+            <param name="idProducto">ID del producto.</param>
+            <returns>Lista de configuraciones asociadas al producto.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController.GetById(System.Int32)">
+            <summary>
+            Obtiene una configuración por su ID.
+            </summary>
+            <param name="id">ID de la configuración.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController.Create(Backend_CrmSG.Models.Catalogos.Producto.ConfiguracionesProducto)">
+            <summary>
+            Crea una nueva configuración de producto.
+            </summary>
+            <param name="config">Objeto de configuración a crear.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController.Update(System.Int32,Backend_CrmSG.Models.Catalogos.Producto.ConfiguracionesProducto)">
+            <summary>
+            Actualiza una configuración existente.
+            </summary>
+            <param name="id">ID de la configuración a actualizar.</param>
+            <param name="config">Datos nuevos de la configuración.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController.Delete(System.Int32)">
+            <summary>
+            Elimina una configuración de producto por su ID.
+            </summary>
+            <param name="id">ID de la configuración.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController.GetAllConfiguracionesVista">
+            <summary>
+            Obtiene todas las configuraciones de productos (vista extendida).
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController.GetConfiguracionVistaById(System.Int32)">
+            <summary>
+            Obtiene una configuración extendida por su ID.
+            </summary>
+            <param name="id">ID de la configuración (vista).</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ConfiguracionProductoController.GetConfiguracionesVistaPorProducto(System.Int32)">
+            <summary>
+            Obtiene todas las configuraciones extendidas asociadas a un producto.
+            </summary>
+            <param name="idProducto">ID del producto.</param>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Producto.ProductoController">
+            <summary>
+            Controlador para la gestión de productos de inversión y sus configuraciones.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ProductoController.#ctor(Backend_CrmSG.Services.Producto.IProductoService,Backend_CrmSG.Services.Producto.IConfiguracionProductoService)">
+            <summary>
+            Constructor.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ProductoController.GetAll">
+            <summary>
+            Obtiene todos los productos.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ProductoController.Get(System.Int32)">
+            <summary>
+            Obtiene un producto por su ID.
+            </summary>
+            <param name="id">ID del producto.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ProductoController.GetConfiguraciones(System.Int32)">
+            <summary>
+            Obtiene las configuraciones asociadas a un producto específico.
+            </summary>
+            <param name="id">ID del producto.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ProductoController.GetProductoConConfiguraciones(System.Int32)">
+            <summary>
+            Obtiene un producto junto a todas sus configuraciones.
+            </summary>
+            <param name="id">ID del producto.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ProductoController.GetAllProductosVista">
+            <summary>
+            Obtiene la lista extendida de productos (vista enriquecida).
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ProductoController.GetProductoVistaById(System.Int32)">
+            <summary>
+            Obtiene los datos enriquecidos (vista) de un producto por su ID.
+            </summary>
+            <param name="id">ID del producto.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ProductoController.Create(Backend_CrmSG.Models.Catalogos.Producto.Producto)">
+            <summary>
+            Crea un nuevo producto.
+            </summary>
+            <param name="model">Datos del producto.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ProductoController.Update(System.Int32,Backend_CrmSG.Models.Catalogos.Producto.Producto)">
+            <summary>
+            Actualiza un producto existente.
+            </summary>
+            <param name="id">ID del producto a actualizar.</param>
+            <param name="model">Nuevos datos del producto.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Producto.ProductoController.Delete(System.Int32)">
+            <summary>
+            Elimina un producto por su ID.
+            </summary>
+            <param name="id">ID del producto.</param>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Dashboard.DashboardInversionController">
+            <summary>
+            Controlador de métricas y estadísticas agregadas de inversiones para el dashboard.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Dashboard.DashboardInversionController.#ctor(DashboardInversionService)">
+            <summary>
+            Inyecta el servicio que obtiene las estadísticas de inversiones.
+            </summary>
+            <param name="service">Servicio especializado en dashboard de inversiones.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Dashboard.DashboardInversionController.GetEstadisticasInversiones">
+            <summary>
+            Obtiene estadísticas agregadas de inversiones para visualización en el dashboard.
+            </summary>
+            <remarks>
+            Devuelve totales, agrupaciones y otros KPIs relevantes de inversiones.
+            </remarks>
+            <returns>Un objeto con datos estadísticos agregados de inversiones.</returns>
+            <response code="200">Devuelve el objeto con los datos estadísticos</response>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Dashboard.DashboardPagosCasosController">
+            <summary>
+            Controlador para la obtención de métricas y estadísticas relacionadas a pagos y casos en el dashboard.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Dashboard.DashboardPagosCasosController.#ctor(DashboardPagosCasosService)">
+            <summary>
+            Constructor del controlador de dashboard de pagos y casos.
+            </summary>
+            <param name="service">Servicio que gestiona las métricas de pagos y casos.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Dashboard.DashboardPagosCasosController.GetEstadisticasPagosCasos">
+            <summary>
+            Obtiene las estadísticas agregadas de pagos y casos para el dashboard.
+            </summary>
+            <remarks>
+            Devuelve un objeto con los principales indicadores (KPIs) sobre pagos y casos, agrupados y listos para visualización.
+            </remarks>
+            <returns>Objeto con las métricas principales de pagos y casos.</returns>
+            <response code="200">Devuelve el objeto con los datos estadísticos</response>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Dashboard.DashboardProspectoController">
+            <summary>
+            Controlador para estadísticas y KPIs de prospectos en el dashboard.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Dashboard.DashboardProspectoController.#ctor(Backend_CrmSG.Services.Dashboard.Prospecto.DashboardProspectoService)">
+            <summary>
+            Constructor del controlador de dashboard de prospectos.
+            </summary>
+            <param name="service">Servicio de métricas de prospectos.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Dashboard.DashboardProspectoController.GetEstadisticasProspectos">
+            <summary>
+            Obtiene las estadísticas y métricas principales de prospectos para el dashboard.
+            </summary>
+            <remarks>
+            Devuelve los principales indicadores sobre prospectos, como cantidad por estado, por origen, embudo comercial, etc.
+            </remarks>
+            <returns>Objeto con los datos estadísticos de prospectos.</returns>
+            <response code="200">Devuelve el objeto con las métricas principales</response>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Dashboard.DashboardSolicitudController">
+            <summary>
+            Controlador para obtener estadísticas y KPIs de solicitudes de inversión en el dashboard.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Dashboard.DashboardSolicitudController.#ctor(DashboardSolicitudService)">
+            <summary>
+            Constructor del controlador de dashboard de solicitudes.
+            </summary>
+            <param name="service">Servicio de métricas de solicitudes.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Dashboard.DashboardSolicitudController.GetEstadisticasSolicitudes">
+            <summary>
+            Obtiene todas las estadísticas de solicitudes para el dashboard.
+            </summary>
+            <remarks>
+            Este endpoint retorna los principales indicadores relacionados a solicitudes de inversión, como cantidad total, por estado, por producto, y otros datos relevantes para el dashboard.
+            </remarks>
+            <returns>Objeto con las métricas y estadísticas principales de solicitudes.</returns>
+            <response code="200">Retorna el objeto con las estadísticas de solicitudes</response>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Documento.ContratoController">
+            <summary>
+            Controlador para la generación automática de contratos en base a una solicitud de inversión.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.ContratoController.#ctor(GeneradorContratoService)">
+            <summary>
+            Constructor que inyecta el servicio generador de contratos.
+            </summary>
+            <param name="service">Servicio encargado de la lógica de generación de contratos.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.ContratoController.GenerarContrato(Backend_CrmSG.DTOs.GenerarContratoRequest)">
+            <summary>
+            Genera automáticamente el contrato principal a partir de una solicitud de inversión.
+            </summary>
+            <param name="dto">Objeto con el identificador de la solicitud de inversión.</param>
+            <returns>
+            Devuelve un objeto con el resultado de la operación y un mensaje explicativo.
+            </returns>
+            <response code="200">Si el contrato se generó exitosamente.</response>
+            <response code="500">Si ocurre un error interno durante la generación.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.DocumentoController.#ctor(Backend_CrmSG.Services.Documento.IDocumentoService,Backend_CrmSG.Data.AppDbContext)">
+            <summary>
+            Constructor que inyecta los servicios necesarios para gestión de documentos.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.DocumentoController.ObtenerDocumentosPorEntidad(System.String,System.Int32)">
+            <summary>
+            Lista los documentos asociados a una entidad (Solicitud, Tarea, Inversión, etc).
+            </summary>
+            <param name="tipoEntidad">Tipo de la entidad (ej: "solicitud", "tarea", "inversion").</param>
+            <param name="idEntidad">ID de la entidad asociada.</param>
+            <returns>Listado de documentos.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.DocumentoController.CrearDocumento(Backend_CrmSG.DTOs.DocumentoCargaDto)">
+            <summary>
+            Crea un nuevo documento (sube un archivo) asociado a una entidad.
+            </summary>
+            <param name="dto">Datos y archivo codificado del documento.</param>
+            <returns>Resultado de la operación.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.DocumentoController.ActualizarDocumento(System.Int32,Backend_CrmSG.DTOs.DocumentoCargaDto)">
+            <summary>
+            Actualiza los datos de un documento existente.
+            </summary>
+            <param name="id">ID del documento.</param>
+            <param name="dto">Nuevos datos del documento.</param>
+            <returns>Resultado de la actualización.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.DocumentoController.DesactivarDocumento(System.Int32)">
+            <summary>
+            Elimina lógicamente (desactiva) un documento.
+            </summary>
+            <param name="id">ID del documento a desactivar.</param>
+            <returns>Resultado de la operación.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.DocumentoController.EliminarDocumentosPorMotivo(System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Elimina todos los documentos automáticos asociados a un motivo (rollback).
+            </summary>
+            <param name="idMotivo">ID del motivo.</param>
+            <param name="idTarea">ID de la tarea (opcional).</param>
+            <param name="idSolicitudInversion">ID de la solicitud de inversión (opcional).</param>
+            <param name="idInversion">ID de la inversión (opcional).</param>
+            <returns>Resultado de la eliminación.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.DocumentoController.CrearDocumentosPorMotivo(Backend_CrmSG.DTOs.DocumentoMotivoDto)">
+            <summary>
+            Crea documentos automáticos a partir de un motivo.
+            </summary>
+            <param name="dto">Datos necesarios para la creación de documentos por motivo.</param>
+            <returns>Resultado de la operación.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.DocumentoController.ActualizarArchivo(System.Int32,Backend_CrmSG.DTOs.DocumentoActualizarDto)">
+            <summary>
+            Actualiza solo el archivo binario de un documento (no los metadatos).
+            </summary>
+            <param name="id">ID del documento.</param>
+            <param name="dto">Nuevo archivo codificado en base64 y sus metadatos.</param>
+            <returns>Resultado de la actualización del archivo.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.DocumentoController.ObtenerDesdeVistaPorId(System.Int32)">
+            <summary>
+            Obtiene los datos de un documento desde la vista extendida por su ID.
+            </summary>
+            <param name="id">ID del documento.</param>
+            <returns>Datos extendidos del documento.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.DocumentoController.ObtenerPorSolicitudYMotivo(System.Int32,System.Int32)">
+            <summary>
+            Lista documentos filtrados por solicitud y motivo.
+            </summary>
+            <param name="idSolicitudInversion">ID de la solicitud de inversión.</param>
+            <param name="idMotivo">ID del motivo.</param>
+            <returns>Lista de documentos asociados.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Documento.DocumentoController.DescargarDocumento(System.Int32)">
+            <summary>
+            Descarga el archivo físico de un documento (Word) según su ID.
+            </summary>
+            <param name="id">ID del documento a descargar.</param>
+            <returns>Archivo Word del documento.</returns>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.ActividadController">
+            <summary>
+            Controlador para gestionar las actividades.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ActividadController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Entidades.Actividad})">
+            <summary>
+            Constructor del controlador de actividades.
+            </summary>
+            <param name="actividadRepository">Repositorio de actividades.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ActividadController.Get">
+            <summary>
+            Obtiene la lista de todas las actividades.
+            </summary>
+            <returns>Lista de actividades.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ActividadController.Get(System.Int32)">
+            <summary>
+            Obtiene una actividad por su identificador.
+            </summary>
+            <param name="id">Identificador de la actividad.</param>
+            <returns>Actividad encontrada o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ActividadController.Post(Backend_CrmSG.Models.Entidades.Actividad)">
+            <summary>
+            Crea una nueva actividad.
+            </summary>
+            <param name="actividad">Datos de la actividad a crear.</param>
+            <returns>Actividad creada.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ActividadController.Put(System.Int32,Backend_CrmSG.Models.Entidades.Actividad)">
+            <summary>
+            Actualiza una actividad existente.
+            </summary>
+            <param name="id">Identificador de la actividad.</param>
+            <param name="actividad">Datos actualizados de la actividad.</param>
+            <returns>NoContent si la actualización fue exitosa, BadRequest si el id no coincide.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ActividadController.Delete(System.Int32)">
+            <summary>
+            Elimina una actividad por su identificador.
+            </summary>
+            <param name="id">Identificador de la actividad.</param>
+            <returns>NoContent si la eliminación fue exitosa.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ActividadController.GetPorProspecto(System.Int32)">
+            <summary>
+            Obtiene todas las actividades asociadas a un prospecto.
+            </summary>
+            <param name="idProspecto">Identificador del prospecto.</param>
+            <returns>Lista de actividades del prospecto.</returns>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.AdendumController">
+            <summary>
+            Controlador para la gestión de adendums de inversión.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.AdendumController.#ctor(Backend_CrmSG.Services.Entidad.Adendum.IAdendumService,Backend_CrmSG.Data.AppDbContext)">
+            <summary>
+            Constructor del controlador Adendum.
+            </summary>
+            <param name="adendumService">Servicio de lógica de adendum.</param>
+            <param name="context">Contexto de base de datos.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.AdendumController.Crear(Backend_CrmSG.DTOs.AdendumCreateDto)">
+            <summary>
+            Crea un nuevo adendum.
+            </summary>
+            <param name="dto">DTO con los datos para crear el adendum.</param>
+            <returns>El adendum creado.</returns>
+            <response code="200">Adendum creado exitosamente.</response>
+            <response code="400">Datos inválidos o error en la creación.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.AdendumController.Actualizar(Backend_CrmSG.DTOs.AdendumUpdateDto)">
+            <summary>
+            Actualiza un adendum existente.
+            </summary>
+            <param name="dto">DTO con los datos actualizados del adendum.</param>
+            <returns>El adendum actualizado.</returns>
+            <response code="200">Adendum actualizado correctamente.</response>
+            <response code="400">Datos inválidos o error en la actualización.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.AdendumController.ObtenerPorId(System.Int32)">
+            <summary>
+            Obtiene el detalle de un adendum por su identificador.
+            </summary>
+            <param name="id">Identificador del adendum.</param>
+            <returns>Detalle del adendum.</returns>
+            <response code="200">Adendum encontrado.</response>
+            <response code="404">Adendum no encontrado.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.AdendumController.ObtenerPorInversion(System.Int32)">
+            <summary>
+            Obtiene la lista de adendums asociados a una inversión.
+            </summary>
+            <param name="idInversion">Identificador de la inversión.</param>
+            <returns>Lista de adendums de la inversión.</returns>
+            <response code="200">Lista de adendums encontrada.</response>
+            <response code="400">Error en la consulta.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.AdendumController.GenerarDocumentos(System.Int32,System.Int32)">
+            <summary>
+            Genera los documentos asociados a un adendum.
+            </summary>
+            <param name="id">Identificador del adendum.</param>
+            <param name="idUsuario">Identificador del usuario que genera los documentos.</param>
+            <returns>Resultado de la generación de documentos.</returns>
+            <response code="200">Documentos generados correctamente.</response>
+            <response code="400">Error al generar los documentos.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.AdendumController.ContinuarFlujo(System.Int32,System.Int32)">
+            <summary>
+            Continúa el flujo del adendum (activar proyección y cronograma).
+            </summary>
+            <param name="id">Identificador del adendum.</param>
+            <param name="idUsuario">Identificador del usuario que continúa el flujo.</param>
+            <returns>Resultado de la operación.</returns>
+            <response code="200">Flujo continuado correctamente.</response>
+            <response code="400">Error al continuar el flujo.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.AdendumController.ObtenerDetalleCompleto(System.Int32)">
+            <summary>
+            Obtiene el detalle completo de un adendum.
+            </summary>
+            <param name="id">Identificador del adendum.</param>
+            <returns>Detalle completo del adendum.</returns>
+            <response code="200">Detalle completo encontrado.</response>
+            <response code="404">Adendum no encontrado.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.AdendumController.SetIncremento(Backend_CrmSG.DTOs.AdendumSetIncrementoDto)">
+            <summary>
+            Asigna el incremento a un adendum.
+            </summary>
+            <param name="dto">DTO con los datos de incremento del adendum.</param>
+            <returns>Adendum actualizado con el incremento.</returns>
+            <response code="200">Incremento asignado correctamente.</response>
+            <response code="400">Error al asignar el incremento.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.AdendumController.ObtenerDocumentosPorAdendum(System.Int32)">
+            <summary>
+            Obtiene los documentos asociados a un adendum.
+            </summary>
+            <param name="idAdendum">Identificador del adendum.</param>
+            <returns>Lista de documentos del adendum.</returns>
+            <response code="200">Lista de documentos encontrada.</response>
+            <response code="400">Error al obtener los documentos.</response>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.BeneficiarioController">
+            <summary>
+            Controlador para la gestión de beneficiarios.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.BeneficiarioController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Entidades.Beneficiario})">
+            <summary>
+            Constructor del controlador de beneficiarios.
+            </summary>
+            <param name="beneficiarioRepository">Repositorio de beneficiarios.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.BeneficiarioController.Get">
+            <summary>
+            Obtiene la lista de todos los beneficiarios.
+            </summary>
+            <returns>Lista de beneficiarios.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.BeneficiarioController.Get(System.Int32)">
+            <summary>
+            Obtiene un beneficiario por su identificador.
+            </summary>
+            <param name="id">Identificador del beneficiario.</param>
+            <returns>Beneficiario encontrado o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.BeneficiarioController.Post(Backend_CrmSG.Models.Entidades.Beneficiario)">
+            <summary>
+            Crea un nuevo beneficiario.
+            </summary>
+            <param name="beneficiario">Datos del beneficiario a crear.</param>
+            <returns>Beneficiario creado.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.BeneficiarioController.Put(System.Int32,Backend_CrmSG.Models.Entidades.Beneficiario)">
+            <summary>
+            Actualiza un beneficiario existente.
+            </summary>
+            <param name="id">Identificador del beneficiario.</param>
+            <param name="beneficiario">Datos actualizados del beneficiario.</param>
+            <returns>NoContent si la actualización fue exitosa, BadRequest si el id no coincide.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.BeneficiarioController.Delete(System.Int32)">
+            <summary>
+            Elimina un beneficiario por su identificador.
+            </summary>
+            <param name="id">Identificador del beneficiario.</param>
+            <returns>NoContent si la eliminación fue exitosa.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.BeneficiarioController.GetPorSolicitud(System.Int32)">
+            <summary>
+            Obtiene todos los beneficiarios asociados a una solicitud de inversión.
+            </summary>
+            <param name="idSolicitud">Identificador de la solicitud de inversión.</param>
+            <returns>Lista de beneficiarios relacionados con la solicitud.</returns>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.CasosController">
+            <summary>
+            Controlador para la gestión de casos.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.CasosController.#ctor(Backend_CrmSG.Services.Entidad.Caso.ICasoService)">
+            <summary>
+            Constructor del controlador de casos.
+            </summary>
+            <param name="service">Servicio de lógica de casos.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.CasosController.Get">
+            <summary>
+            Obtiene la lista de todos los casos registrados.
+            </summary>
+            <returns>Lista de casos.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.CasosController.Get(System.Int32)">
+            <summary>
+            Obtiene el detalle de un caso por su identificador.
+            </summary>
+            <param name="id">Identificador del caso.</param>
+            <returns>Detalle del caso o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.CasosController.GetPorCliente(System.Int32)">
+            <summary>
+            Obtiene todos los casos asociados a un cliente específico.
+            </summary>
+            <param name="idCliente">Identificador del cliente.</param>
+            <returns>Lista de casos del cliente.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.CasosController.GetPorInversion(System.Int32)">
+            <summary>
+            Obtiene todos los casos asociados a una inversión específica.
+            </summary>
+            <param name="idInversion">Identificador de la inversión.</param>
+            <returns>Lista de casos de la inversión.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.CasosController.GetPorPago(System.Int32)">
+            <summary>
+            Obtiene todos los casos asociados a un pago específico.
+            </summary>
+            <param name="idPago">Identificador del pago.</param>
+            <returns>Lista de casos relacionados al pago.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.CasosController.Post(Backend_CrmSG.DTOs.Caso.CasoCreateDTO)">
+            <summary>
+            Crea un nuevo caso.
+            </summary>
+            <param name="dto">Datos para la creación del caso.</param>
+            <returns>Identificador del nuevo caso creado.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.CasosController.Put(System.Int32,Backend_CrmSG.DTOs.Caso.CasoUpdateDTO)">
+            <summary>
+            Actualiza los datos de un caso existente.
+            </summary>
+            <param name="id">Identificador del caso.</param>
+            <param name="dto">Datos actualizados del caso.</param>
+            <returns>NoContent si la actualización fue exitosa.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.CasosController.ContinuarCaso(System.Int32)">
+            <summary>
+            Continúa el flujo del caso (cambio de estado o avance de proceso).
+            </summary>
+            <param name="id">Identificador del caso.</param>
+            <returns>Resultado de la operación.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.CasosController.RollbackPagos(Backend_CrmSG.Controllers.Entidad.RollbackPagosDTO)">
+            <summary>
+            Realiza un rollback de pagos asociados a un caso.
+            </summary>
+            <param name="dto">Datos para identificar el pago y usuario que realiza el rollback.</param>
+            <returns>Resultado de la operación.</returns>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.RollbackPagosDTO">
+            <summary>
+            DTO auxiliar para rollback de pagos en casos.
+            </summary>
+        </member>
+        <member name="P:Backend_CrmSG.Controllers.Entidad.RollbackPagosDTO.IdPago">
+            <summary>
+            Identificador del pago.
+            </summary>
+        </member>
+        <member name="P:Backend_CrmSG.Controllers.Entidad.RollbackPagosDTO.IdUsuarioModificacion">
+            <summary>
+            Identificador del usuario que realiza la modificación.
+            </summary>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.ClienteController">
+            <summary>
+            Controlador para la gestión de clientes.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ClienteController.#ctor(Backend_CrmSG.Services.Entidad.IClienteService)">
+            <summary>
+            Constructor del controlador de clientes.
+            </summary>
+            <param name="clienteService">Servicio de lógica de clientes.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ClienteController.Get">
+            <summary>
+            Obtiene la lista de todos los clientes registrados.
+            </summary>
+            <returns>Lista de clientes.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ClienteController.Get(System.Int32)">
+            <summary>
+            Obtiene los datos de un cliente por su identificador.
+            </summary>
+            <param name="id">Identificador del cliente.</param>
+            <returns>Datos del cliente encontrado, o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ClienteController.GetPorPropietario(System.Int32)">
+            <summary>
+            Obtiene la lista de clientes asignados a un usuario propietario.
+            </summary>
+            <param name="idUsuario">Identificador del usuario propietario.</param>
+            <returns>Lista de clientes del propietario.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ClienteController.Put(System.Int32,Backend_CrmSG.DTOs.ClienteUpdateDTO)">
+            <summary>
+            Actualiza los datos de un cliente existente.
+            </summary>
+            <param name="id">Identificador del cliente a actualizar.</param>
+            <param name="dto">Datos actualizados del cliente.</param>
+            <returns>Resultado de la operación: éxito o error.</returns>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.InversionController">
+            <summary>
+            Controlador para la gestión de inversiones.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.InversionController.#ctor(Backend_CrmSG.Services.Entidad.Inversion.IInversionService)">
+            <summary>
+            Constructor del controlador de inversiones.
+            </summary>
+            <param name="service">Servicio de lógica de inversiones.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.InversionController.Get">
+            <summary>
+            Obtiene la lista de todas las inversiones registradas.
+            </summary>
+            <returns>Lista de inversiones.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.InversionController.Get(System.Int32)">
+            <summary>
+            Obtiene los datos de una inversión por su identificador.
+            </summary>
+            <param name="id">Identificador de la inversión.</param>
+            <returns>Datos de la inversión encontrada, o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.InversionController.GetPorPropietario(System.Int32)">
+            <summary>
+            Obtiene la lista de inversiones asignadas a un usuario propietario.
+            </summary>
+            <param name="idUsuario">Identificador del usuario propietario.</param>
+            <returns>Lista de inversiones del propietario.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.InversionController.GetPorCliente(System.Int32)">
+            <summary>
+            Obtiene la lista de inversiones asignadas a un cliente específico.
+            </summary>
+            <param name="idCliente">Identificador del cliente.</param>
+            <returns>Lista de inversiones del cliente.</returns>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.PagosController">
+            <summary>
+            Controlador para la gestión de pagos.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.PagosController.#ctor(IPagoService)">
+            <summary>
+            Constructor del controlador de pagos.
+            </summary>
+            <param name="service">Servicio de lógica de pagos.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.PagosController.Get">
+            <summary>
+            Obtiene la lista de todos los pagos registrados.
+            </summary>
+            <returns>Lista de pagos.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.PagosController.Get(System.Int32)">
+            <summary>
+            Obtiene los datos de un pago por su identificador.
+            </summary>
+            <param name="id">Identificador del pago.</param>
+            <returns>Datos del pago encontrado, o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.PagosController.GetPorCalendario(System.Int32)">
+            <summary>
+            Obtiene la lista de pagos asociados a un calendario.
+            </summary>
+            <param name="idCalendario">Identificador del calendario.</param>
+            <returns>Lista de pagos del calendario.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.PagosController.Post(Backend_CrmSG.DTOs.Pago.PagoCreateDTO)">
+            <summary>
+            Crea un nuevo pago.
+            </summary>
+            <param name="dto">Datos para la creación del pago.</param>
+            <returns>Identificador del nuevo pago creado.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.PagosController.Put(System.Int32,Backend_CrmSG.DTOs.Pago.PagoUpdateDTO)">
+            <summary>
+            Actualiza los datos de un pago existente.
+            </summary>
+            <param name="id">Identificador del pago.</param>
+            <param name="dto">Datos actualizados del pago.</param>
+            <returns>NoContent si la actualización fue exitosa.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.PagosController.Delete(System.Int32)">
+            <summary>
+            Elimina un pago por su identificador.
+            </summary>
+            <param name="id">Identificador del pago.</param>
+            <returns>NoContent si la eliminación fue exitosa.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.PagosController.GenerarPorCalendario(Backend_CrmSG.Controllers.Entidad.GenerarPagosCalendarioDTO)">
+            <summary>
+            Genera automáticamente pagos asociados a un calendario.
+            </summary>
+            <param name="dto">Datos para la generación de pagos por calendario.</param>
+            <returns>Resultado de la operación.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.PagosController.RollbackPagosPorIdPago(System.Int32,Backend_CrmSG.Controllers.Entidad.RollbackUsuarioDto)">
+            <summary>
+            Realiza rollback de pagos por identificador de pago.
+            </summary>
+            <param name="id">Identificador del pago.</param>
+            <param name="dto">Datos del usuario que realiza la modificación.</param>
+            <returns>Resultado de la operación.</returns>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.GenerarPagosCalendarioDTO">
+            <summary>
+            DTO auxiliar para la generación automática de pagos por calendario.
+            </summary>
+        </member>
+        <member name="P:Backend_CrmSG.Controllers.Entidad.GenerarPagosCalendarioDTO.IdCalendario">
+            <summary>
+            Identificador del calendario.
+            </summary>
+        </member>
+        <member name="P:Backend_CrmSG.Controllers.Entidad.GenerarPagosCalendarioDTO.IdPago">
+            <summary>
+            Identificador del pago (opcional o según la lógica).
+            </summary>
+        </member>
+        <member name="P:Backend_CrmSG.Controllers.Entidad.GenerarPagosCalendarioDTO.IdUsuario">
+            <summary>
+            Identificador del usuario que realiza la acción.
+            </summary>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.RollbackUsuarioDto">
+            <summary>
+            DTO auxiliar para rollback indicando el usuario que realiza la modificación.
+            </summary>
+        </member>
+        <member name="P:Backend_CrmSG.Controllers.Entidad.RollbackUsuarioDto.IdUsuarioModificacion">
+            <summary>
+            Identificador del usuario que realiza la modificación.
+            </summary>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.ProspectoController">
+            <summary>
+            Controlador para la gestión de prospectos.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ProspectoController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Entidades.Prospecto})">
+            <summary>
+            Constructor del controlador de prospectos.
+            </summary>
+            <param name="prospectoRepository">Repositorio de prospectos.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ProspectoController.Get">
+            <summary>
+            Obtiene la lista de todos los prospectos registrados.
+            </summary>
+            <returns>Lista de prospectos.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ProspectoController.Get(System.Int32)">
+            <summary>
+            Obtiene los datos de un prospecto por su identificador.
+            </summary>
+            <param name="id">Identificador del prospecto.</param>
+            <returns>Datos del prospecto encontrado, o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ProspectoController.Post(Backend_CrmSG.Models.Entidades.Prospecto)">
+            <summary>
+            Crea un nuevo prospecto.
+            </summary>
+            <param name="prospecto">Datos del prospecto a crear.</param>
+            <returns>Prospecto creado.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ProspectoController.Put(System.Int32,Backend_CrmSG.Models.Entidades.Prospecto)">
+            <summary>
+            Actualiza los datos de un prospecto existente.
+            </summary>
+            <param name="id">Identificador del prospecto.</param>
+            <param name="prospecto">Datos actualizados del prospecto.</param>
+            <returns>NoContent si la actualización fue exitosa, BadRequest si el id no coincide.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ProspectoController.Delete(System.Int32)">
+            <summary>
+            Elimina un prospecto por su identificador.
+            </summary>
+            <param name="id">Identificador del prospecto.</param>
+            <returns>NoContent si la eliminación fue exitosa.</returns>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.ProyeccionController">
+            <summary>
+            Controlador para la gestión de proyecciones de inversión y sus cronogramas.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ProyeccionController.#ctor(Backend_CrmSG.Services.ProyeccionService,Backend_CrmSG.Data.AppDbContext,Backend_CrmSG.Services.SimuladorProyeccionService)">
+            <summary>
+            Constructor del controlador de proyecciones.
+            </summary>
+            <param name="proyeccionService">Servicio de lógica de proyecciones.</param>
+            <param name="context">Contexto de base de datos.</param>
+            <param name="simulador">Servicio de simulación de proyecciones.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ProyeccionController.CrearProyeccion(Backend_CrmSG.DTOs.ProyeccionCreateDto)">
+            <summary>
+            Crea una nueva proyección de inversión.
+            </summary>
+            <param name="dto">Datos para crear la proyección.</param>
+            <returns>Proyección creada, cronograma y mensaje de éxito.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ProyeccionController.ObtenerCronograma(System.Int32)">
+            <summary>
+            Obtiene el cronograma de pagos/cuotas de una proyección.
+            </summary>
+            <param name="id">Identificador de la proyección.</param>
+            <returns>Cronograma de la proyección o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ProyeccionController.ActualizarProyeccionAsync(Backend_CrmSG.DTOs.ProyeccionUpdateDto)">
+            <summary>
+            Actualiza los datos y el cronograma de una proyección existente.
+            </summary>
+            <param name="dto">Datos actualizados de la proyección.</param>
+            <returns>Identificador de la proyección actualizada.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ProyeccionController.ObtenerProyeccionesPorSolicitud(System.Int32)">
+            <summary>
+            Obtiene la lista de proyecciones asociadas a una solicitud de inversión.
+            </summary>
+            <param name="idSolicitudInversion">Identificador de la solicitud de inversión.</param>
+            <returns>Lista de proyecciones para la solicitud dada.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ProyeccionController.IncrementarProyeccion(Backend_CrmSG.DTOs.ProyeccionIncrementoDto)">
+            <summary>
+            Realiza un incremento de capital sobre una proyección existente.
+            </summary>
+            <param name="dto">Datos para el incremento de proyección.</param>
+            <returns>Resultado del incremento, incluyendo la nueva proyección y cronograma.</returns>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.ReferenciaController">
+            <summary>
+            Controlador para la gestión de referencias asociadas a solicitudes de inversión.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ReferenciaController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Entidades.Referencia})">
+            <summary>
+            Constructor del controlador de referencias.
+            </summary>
+            <param name="referenciaRepository">Repositorio de referencias.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ReferenciaController.Get">
+            <summary>
+            Obtiene la lista de todas las referencias registradas.
+            </summary>
+            <returns>Lista de referencias.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ReferenciaController.Get(System.Int32)">
+            <summary>
+            Obtiene los datos de una referencia por su identificador.
+            </summary>
+            <param name="id">Identificador de la referencia.</param>
+            <returns>Datos de la referencia encontrada, o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ReferenciaController.Post(Backend_CrmSG.Models.Entidades.Referencia)">
+            <summary>
+            Crea una nueva referencia.
+            </summary>
+            <param name="referencia">Datos de la referencia a crear.</param>
+            <returns>Referencia creada.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ReferenciaController.Put(System.Int32,Backend_CrmSG.Models.Entidades.Referencia)">
+            <summary>
+            Actualiza los datos de una referencia existente.
+            </summary>
+            <param name="id">Identificador de la referencia.</param>
+            <param name="referencia">Datos actualizados de la referencia.</param>
+            <returns>NoContent si la actualización fue exitosa, BadRequest si el id no coincide.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ReferenciaController.Delete(System.Int32)">
+            <summary>
+            Elimina una referencia por su identificador.
+            </summary>
+            <param name="id">Identificador de la referencia.</param>
+            <returns>NoContent si la eliminación fue exitosa.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.ReferenciaController.GetPorSolicitud(System.Int32)">
+            <summary>
+            Obtiene la lista de referencias asociadas a una solicitud de inversión específica.
+            </summary>
+            <param name="idSolicitudInversion">Identificador de la solicitud de inversión.</param>
+            <returns>Lista de referencias asociadas a la solicitud.</returns>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.SolicitudInversionController">
+            <summary>
+            Controlador para la gestión de solicitudes de inversión.
+            Permite operaciones CRUD, consultas avanzadas y procesos de cierre de solicitud.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.SolicitudInversionController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Entidades.SolicitudInversion},Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Vistas.SolicitudInversionDetalle},Microsoft.Extensions.Configuration.IConfiguration,StoredProcedureService)">
+            <summary>
+            Constructor de SolicitudInversionController.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.SolicitudInversionController.GetAll">
+            <summary>
+            Obtiene todas las solicitudes de inversión (básico, sin detalle).
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.SolicitudInversionController.GetTodasConDetalle">
+            <summary>
+            Obtiene todas las solicitudes de inversión con detalle completo (unión de varias tablas/vistas).
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.SolicitudInversionController.GetById(System.Int32)">
+            <summary>
+            Obtiene una solicitud de inversión por su identificador.
+            </summary>
+            <param name="id">Id de la solicitud.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.SolicitudInversionController.CreateDesdeDTO(Backend_CrmSG.DTOs.SolicitudDTOs.SolicitudInversionCreateDTO)">
+            <summary>
+            Crea una nueva solicitud de inversión a partir de un DTO estructurado.
+            </summary>
+            <param name="dto">DTO con los datos necesarios para la creación.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.SolicitudInversionController.UpdateDesdeDTO(System.Int32,Backend_CrmSG.DTOs.SolicitudDTOs.SolicitudInversionUpdateDTO)">
+            <summary>
+            Actualiza una solicitud de inversión existente a partir de un DTO estructurado.
+            </summary>
+            <param name="id">Id de la solicitud a actualizar.</param>
+            <param name="dto">DTO con los campos a actualizar.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.SolicitudInversionController.Delete(System.Int32)">
+            <summary>
+            Elimina una solicitud de inversión por su identificador.
+            </summary>
+            <param name="id">Id de la solicitud a eliminar.</param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Backend_CrmSG.Controllers.Entidad.SolicitudInversionController.FiltrarPorId(System.String,System.Int32)" -->
+        <member name="M:Backend_CrmSG.Controllers.Entidad.SolicitudInversionController.GetDetalleById(System.Int32)">
+            <summary>
+            Obtiene el detalle completo de una solicitud por su identificador.
+            </summary>
+            <param name="id">Id de la solicitud.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.SolicitudInversionController.FinalizarSolicitud(Backend_CrmSG.DTOs.SolicitudDTOs.FinalizarSolicitudDto)">
+            <summary>
+            Ejecuta el proceso de finalización de una solicitud de inversión, generando tareas y contrato asociado.
+            </summary>
+            <param name="dto">DTO con el Id de la solicitud a finalizar.</param>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidad.TareaController">
+            <summary>
+            Controlador para la gestión de tareas dentro del sistema.
+            Permite consultar, filtrar y actualizar tareas.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.TareaController.#ctor(Backend_CrmSG.Services.Entidad.ITareaService)">
+            <summary>
+            Constructor del controlador de tareas.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.TareaController.ObtenerTodas">
+            <summary>
+            Obtiene todas las tareas existentes en el sistema.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.TareaController.ObtenerPorRol(System.Int32)">
+            <summary>
+            Obtiene las tareas asignadas a un rol específico.
+            </summary>
+            <param name="idRol">Identificador del rol.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.TareaController.ObtenerPorSolicitud(System.Int32)">
+            <summary>
+            Obtiene las tareas asociadas a una solicitud de inversión específica.
+            </summary>
+            <param name="idSolicitud">Identificador de la solicitud de inversión.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.TareaController.ObtenerDetallePorId(System.Int32)">
+            <summary>
+            Obtiene el detalle de una tarea específica por su identificador.
+            </summary>
+            <param name="id">Identificador de la tarea.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidad.TareaController.Actualizar(System.Int32,Backend_CrmSG.DTOs.TareaUpdateDinamicoDTO)">
+            <summary>
+            Actualiza dinámicamente una tarea existente, permitiendo modificar campos flexibles.
+            El usuario autenticado es tomado del token JWT.
+            </summary>
+            <param name="id">Identificador de la tarea a actualizar.</param>
+            <param name="dto">DTO con los datos de actualización.</param>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Entidades.CalendarioOperacionesController">
+            <summary>
+            Controlador para la gestión del calendario de operaciones financieras.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidades.CalendarioOperacionesController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Entidades.CalendarioOperaciones})">
+            <summary>
+            Constructor del controlador de calendario de operaciones.
+            </summary>
+            <param name="repo">Repositorio de calendario de operaciones.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidades.CalendarioOperacionesController.Get">
+            <summary>
+            Obtiene la lista de todos los calendarios de operaciones.
+            </summary>
+            <returns>Lista de calendarios de operaciones.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidades.CalendarioOperacionesController.Get(System.Int32)">
+            <summary>
+            Obtiene un calendario de operaciones por su identificador.
+            </summary>
+            <param name="id">Identificador del calendario.</param>
+            <returns>Calendario de operaciones encontrado o NotFound si no existe.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidades.CalendarioOperacionesController.Post(Backend_CrmSG.Models.Entidades.CalendarioOperaciones)">
+            <summary>
+            Crea un nuevo calendario de operaciones.
+            </summary>
+            <param name="item">Datos del calendario de operaciones a crear.</param>
+            <returns>Calendario de operaciones creado.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidades.CalendarioOperacionesController.Put(System.Int32,Backend_CrmSG.DTOs.CalendarioOperaciones.CalendarioOperacionesUpdateDTO)">
+            <summary>
+            Actualiza los datos de un calendario de operaciones existente.
+            </summary>
+            <param name="id">Identificador del calendario.</param>
+            <param name="dto">Datos actualizados del calendario.</param>
+            <returns>NoContent si la actualización fue exitosa, NotFound si no existe el calendario.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Entidades.CalendarioOperacionesController.Delete(System.Int32)">
+            <summary>
+            Elimina un calendario de operaciones por su identificador.
+            </summary>
+            <param name="id">Identificador del calendario.</param>
+            <returns>NoContent si la eliminación fue exitosa.</returns>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Seguridad.MenuController">
+            <summary>
+            Controlador para la administración de menús de seguridad.
+            Permite la gestión de menús y su consulta por rol.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.MenuController.#ctor(Backend_CrmSG.Services.Seguridad.IMenuService)">
+            <summary>
+            Constructor del controlador de menús.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.MenuController.GetAll">
+            <summary>
+            Obtiene la lista de todos los menús registrados en el sistema.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.MenuController.GetById(System.Int32)">
+            <summary>
+            Obtiene la información de un menú específico por su identificador.
+            </summary>
+            <param name="id">Id del menú.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.MenuController.Post(Backend_CrmSG.Models.Seguridad.Menu)">
+            <summary>
+            Crea un nuevo menú de seguridad.
+            </summary>
+            <param name="menu">Objeto menú a registrar.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.MenuController.Put(System.Int32,Backend_CrmSG.Models.Seguridad.Menu)">
+            <summary>
+            Actualiza la información de un menú existente.
+            </summary>
+            <param name="id">Id del menú a actualizar.</param>
+            <param name="menu">Objeto menú con los datos actualizados.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.MenuController.Delete(System.Int32)">
+            <summary>
+            Elimina un menú por su identificador.
+            </summary>
+            <param name="id">Id del menú a eliminar.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.MenuController.GetMenusByRole(System.String)">
+            <summary>
+            Obtiene los menús disponibles para un rol específico.
+            </summary>
+            <param name="rol">Nombre del rol.</param>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Seguridad.PermisoController">
+            <summary>
+            Controlador para la administración de permisos.
+            Permite operaciones CRUD sobre permisos de seguridad.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.PermisoController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Seguridad.Permiso})">
+            <summary>
+            Constructor del controlador de permisos.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.PermisoController.GetAll">
+            <summary>
+            Obtiene la lista de todos los permisos registrados en el sistema.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.PermisoController.GetById(System.Int32)">
+            <summary>
+            Obtiene la información de un permiso específico por su identificador.
+            </summary>
+            <param name="id">Id del permiso.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.PermisoController.Post(Backend_CrmSG.Models.Seguridad.Permiso)">
+            <summary>
+            Crea un nuevo permiso de seguridad.
+            </summary>
+            <param name="permiso">Objeto permiso a registrar.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.PermisoController.Put(System.Int32,Backend_CrmSG.Models.Seguridad.Permiso)">
+            <summary>
+            Actualiza la información de un permiso existente.
+            </summary>
+            <param name="id">Id del permiso a actualizar.</param>
+            <param name="permiso">Objeto permiso con los datos actualizados.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.PermisoController.Delete(System.Int32)">
+            <summary>
+            Elimina un permiso por su identificador.
+            </summary>
+            <param name="id">Id del permiso a eliminar.</param>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Seguridad.RolController">
+            <summary>
+            Controlador para la administración de roles de seguridad.
+            Permite operaciones CRUD sobre los roles del sistema.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.RolController.#ctor(Backend_CrmSG.Repositories.IRepository{Backend_CrmSG.Models.Seguridad.Rol})">
+            <summary>
+            Constructor del controlador de roles.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.RolController.GetAll">
+            <summary>
+            Obtiene la lista de todos los roles registrados en el sistema.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.RolController.GetById(System.Int32)">
+            <summary>
+            Obtiene la información de un rol específico por su identificador.
+            </summary>
+            <param name="id">Id del rol.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.RolController.Post(Backend_CrmSG.Models.Seguridad.Rol)">
+            <summary>
+            Crea un nuevo rol de seguridad.
+            </summary>
+            <param name="rol">Objeto rol a registrar.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.RolController.Put(System.Int32,Backend_CrmSG.Models.Seguridad.Rol)">
+            <summary>
+            Actualiza la información de un rol existente.
+            </summary>
+            <param name="id">Id del rol a actualizar.</param>
+            <param name="rol">Objeto rol con los datos actualizados.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.RolController.Delete(System.Int32)">
+            <summary>
+            Elimina un rol por su identificador.
+            </summary>
+            <param name="id">Id del rol a eliminar.</param>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Seguridad.UsuarioController">
+            <summary>
+            Controlador para la gestión y autenticación de usuarios.
+            Provee operaciones de login, validación, gestión de roles, menús y CRUD de usuario.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.#ctor(Backend_CrmSG.Services.Seguridad.IUsuarioService,IJwtService,StoredProcedureService,Backend_CrmSG.Services.Correo.ICorreoService,Backend_CrmSG.Services.SMS.ISmsService)">
+            <summary>
+            Constructor para inyección de dependencias.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.Login(Backend_CrmSG.DTOs.LoginRequest)">
+            <summary>
+            Realiza el login del usuario y retorna un token JWT, datos del usuario, roles y permisos.
+            </summary>
+            <param name="loginRequest">Objeto con email y contraseña.</param>
+            <returns>Token de autenticación y datos de usuario.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.GetRoles(System.Int32)">
+            <summary>
+            Obtiene los roles asignados a un usuario específico.
+            </summary>
+            <param name="idUsuario">Id del usuario.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.GetMenus(System.Int32)">
+            <summary>
+            Obtiene los menús permitidos para un usuario según sus roles y permisos.
+            </summary>
+            <param name="idUsuario">Id del usuario.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.GetAll">
+            <summary>
+            Obtiene todos los usuarios registrados.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.GetById(System.Int32)">
+            <summary>
+            Obtiene la información de un usuario específico.
+            </summary>
+            <param name="id">Id del usuario.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.Post(Usuario)">
+            <summary>
+            Crea un nuevo usuario (registro manual/administrativo).
+            </summary>
+            <param name="usuario">Objeto usuario a registrar.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.Put(System.Int32,Usuario)">
+            <summary>
+            Actualiza los datos de un usuario existente.
+            </summary>
+            <param name="id">Id del usuario a actualizar.</param>
+            <param name="usuario">Objeto usuario con datos nuevos.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.Delete(System.Int32)">
+            <summary>
+            Elimina un usuario por su identificador.
+            </summary>
+            <param name="id">Id del usuario a eliminar.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.RegistroParcial(Backend_CrmSG.DTOs.Seguridad.RegistroParcialDTO)">
+            <summary>
+            Realiza el registro parcial de un usuario y envía correo de validación.
+            </summary>
+            <param name="dto">DTO con los datos mínimos de registro.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.ValidarCorreo(System.String)">
+            <summary>
+            Valida el correo electrónico de un usuario a través del token recibido por email.
+            </summary>
+            <param name="token">Token de validación de correo.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.EnviarCodigoTelefono(Backend_CrmSG.DTOs.SolicitudCodigoTelefonoDTO)">
+            <summary>
+            Envía un código SMS al número del usuario para validación de teléfono.
+            </summary>
+            <param name="dto">DTO con idUsuario, número y extensión internacional.</param>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioController.ValidarTelefono(Backend_CrmSG.DTOs.ValidacionTelefonoDTO)">
+            <summary>
+            Valida el código SMS ingresado por el usuario para activar su teléfono.
+            </summary>
+            <param name="dto">DTO con idUsuario y código ingresado.</param>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Seguridad.UsuarioRolController">
+            <summary>
+            Controlador para la gestión de asignación de roles a usuarios.
+            Permite consultar, asignar, actualizar y eliminar relaciones usuario-rol.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioRolController.#ctor(Backend_CrmSG.Services.Seguridad.IUsuarioRolService)">
+            <summary>
+            Constructor para inyección de dependencias.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioRolController.GetAll">
+            <summary>
+            Obtiene todas las relaciones usuario-rol existentes.
+            </summary>
+            <returns>Listado de UsuarioRol.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioRolController.GetByUsuario(System.Int32)">
+            <summary>
+            Obtiene todos los roles asignados a un usuario específico.
+            </summary>
+            <param name="idUsuario">Id del usuario.</param>
+            <returns>Listado de roles asociados al usuario.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioRolController.GetByRol(System.Int32)">
+            <summary>
+            Obtiene todos los usuarios que tienen asignado un rol específico.
+            </summary>
+            <param name="idRol">Id del rol.</param>
+            <returns>Listado de usuarios asociados al rol.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioRolController.Post(Backend_CrmSG.Models.Seguridad.UsuarioRol)">
+            <summary>
+            Asigna un rol a un usuario.
+            </summary>
+            <param name="usuarioRol">Objeto UsuarioRol con la relación a crear.</param>
+            <returns>Mensaje de éxito.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioRolController.Put(Backend_CrmSG.Models.Seguridad.UsuarioRol)">
+            <summary>
+            Actualiza una relación usuario-rol existente.
+            </summary>
+            <param name="usuarioRol">Objeto UsuarioRol con los datos actualizados.</param>
+            <returns>Mensaje de éxito.</returns>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Seguridad.UsuarioRolController.Delete(System.Int32,System.Int32)">
+            <summary>
+            Elimina la relación usuario-rol para un usuario y un rol específicos.
+            </summary>
+            <param name="idUsuario">Id del usuario.</param>
+            <param name="idRol">Id del rol.</param>
+            <returns>Mensaje de éxito.</returns>
+        </member>
+        <member name="T:Backend_CrmSG.Controllers.Validacion.ValidacionController">
+            <summary>
+            Controlador para la validación de usuarios contra servicios externos como Equifax y LDS.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Validacion.ValidacionController.#ctor(Backend_CrmSG.Services.Validaciones.IValidacionService)">
+            <summary>
+            Constructor para inyección de dependencias.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Validacion.ValidacionController.ValidarEquifax(Backend_CrmSG.DTOs.EquifaxRequestDto)">
+            <summary>
+            Realiza la validación de un usuario/persona a través del servicio Equifax.
+            </summary>
+            <param name="dto">Datos requeridos para la consulta Equifax.</param>
+            <returns>
+            Objeto con el resultado de la validación. Si hay error, retorna un mensaje explicativo.
+            </returns>
+            <response code="200">Retorna el resultado de la validación Equifax.</response>
+            <response code="400">Si ocurre un error en la validación Equifax.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Validacion.ValidacionController.ValidarLds(Backend_CrmSG.DTOs.LdsRequestDto)">
+            <summary>
+            Realiza la validación de un usuario/persona a través del servicio LDS.
+            </summary>
+            <param name="dto">Datos requeridos para la consulta LDS.</param>
+            <returns>
+            Objeto con el resultado de la validación. Si hay error, retorna un mensaje explicativo.
+            </returns>
+            <response code="200">Retorna el resultado de la validación LDS.</response>
+            <response code="400">Si ocurre un error en la validación LDS.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Vistas.VistaEntidadController.#ctor(System.IServiceProvider)">
+            <summary>
+            Constructor para la inyección dinámica de repositorios de vistas.
+            </summary>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Vistas.VistaEntidadController.FiltrarVista(System.String,System.String,System.Int32)">
+            <summary>
+            Obtiene un listado filtrado de una vista dinámica según propiedad y valor.
+            </summary>
+            <param name="entidad">Nombre de la vista (ej: actividad, prospecto, solicitudinversion, etc).</param>
+            <param name="por">Nombre de la propiedad por la que filtrar (ej: IdProspecto, IdCliente).</param>
+            <param name="id">Valor a buscar en la propiedad.</param>
+            <returns>Listado filtrado de la entidad solicitada.</returns>
+            <response code="200">Retorna el listado filtrado correctamente.</response>
+            <response code="400">Si la entidad no está registrada o parámetros incorrectos.</response>
+            <response code="500">Si hay error al resolver el repositorio.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Vistas.VistaEntidadController.GetTodos(System.String)">
+            <summary>
+            Obtiene todos los registros de la vista especificada.
+            </summary>
+            <param name="entidad">Nombre de la vista/entidad (ej: actividad, prospecto, solicitud, etc).</param>
+            <returns>Listado completo de la vista especificada.</returns>
+            <response code="200">Retorna la lista completa.</response>
+            <response code="400">Si la entidad no está registrada.</response>
+            <response code="500">Si no se puede resolver el repositorio.</response>
+        </member>
+        <member name="M:Backend_CrmSG.Controllers.Vistas.VistaEntidadController.FiltrarVistaSolicitudInversionDTO(System.String,System.Int32)">
+            <summary>
+            Filtra la vista SolicitudInversionDetalle por propiedad específica y retorna una lista de DTOs.
+            </summary>
+            <param name="por">Propiedad por la que filtrar (prospecto, cliente, solicitud).</param>
+            <param name="id">Valor a buscar en la propiedad.</param>
+            <returns>Listado mapeado de la vista SolicitudInversionDetalle.</returns>
+            <response code="200">Retorna la lista filtrada de DTOs.</response>
+            <response code="400">Si el parámetro 'por' es inválido.</response>
+            <response code="500">Si ocurre un error interno.</response>
+        </member>
+        <member name="T:DashboardClienteController">
+            <summary>
+            Controlador para consultar estadísticas y métricas agregadas de clientes para el dashboard.
+            </summary>
+        </member>
+        <member name="M:DashboardClienteController.#ctor(DashboardClienteService)">
+            <summary>
+            Constructor que inyecta el servicio de dashboard de clientes.
+            </summary>
+            <param name="service">Servicio especializado en estadísticas de clientes.</param>
+        </member>
+        <member name="M:DashboardClienteController.GetEstadisticasClientes">
+            <summary>
+            Obtiene estadísticas agregadas de clientes, para su visualización en el dashboard.
+            </summary>
+            <returns>Datos estadísticos de clientes (totales, agrupaciones, etc).</returns>
+        </member>
+        <member name="T:DashboardTareasController">
+            <summary>
+            Controlador para estadísticas y métricas de tareas en el dashboard.
+            </summary>
+        </member>
+        <member name="M:DashboardTareasController.#ctor(DashboardTareasService)">
+            <summary>
+            Constructor del controlador de dashboard de tareas.
+            </summary>
+            <param name="service">Servicio de estadísticas de tareas.</param>
+        </member>
+        <member name="M:DashboardTareasController.GetEstadisticasTareas">
+            <summary>
+            Obtiene las estadísticas principales de tareas para el dashboard.
+            </summary>
+            <remarks>
+            Devuelve métricas como cantidad total de tareas, tareas por estado, por usuario, y otros KPIs relevantes para el dashboard.
+            </remarks>
+            <returns>Objeto con estadísticas generales de tareas.</returns>
+            <response code="200">Retorna el objeto con estadísticas de tareas.</response>
+        </member>
+        <member name="T:ContratoSecuencialController">
+            <summary>
+            Controlador para la generación de números de contrato secuenciales.
+            </summary>
+        </member>
+        <member name="M:ContratoSecuencialController.#ctor(ContratoSecuencialService)">
+            <summary>
+            Constructor del controlador de contratos secuenciales.
+            </summary>
+            <param name="service">Servicio de lógica para generación de contratos secuenciales.</param>
+        </member>
+        <member name="M:ContratoSecuencialController.GenerarContrato(System.Int32,System.Int32)">
+            <summary>
+            Genera y obtiene el número secuencial de contrato para una solicitud y proyección dadas.
+            </summary>
+            <param name="solicitud">Identificador de la solicitud de inversión.</param>
+            <param name="proyeccion">Identificador de la proyección asociada.</param>
+            <returns>Número de contrato generado, o error si no se pudo generar.</returns>
+            <response code="200">Número de contrato generado correctamente.</response>
+            <response code="400">No se pudo generar el número de contrato.</response>
+        </member>
+    </members>
+</doc>
