@@ -551,3 +551,5 @@ D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\De
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
 D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\staticwebassets.build.json.cache
+D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\bin\Debug\net8.0\Backend_CrmSG.xml
+D:\Universidad\Tesis\Tesis-DevOps\Tesis_KR\Tesis-SG-Backend\Backend_CrmSG\obj\Debug\net8.0\Backend_CrmSG.xml

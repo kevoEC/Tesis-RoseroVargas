@@ -13,11 +13,17 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<Pais> _repo;
 
+        /// <summary>
+        /// Constructor del controlador de País.
+        /// </summary>
         public PaisController(IRepository<Pais> repo)
         {
             _repo = repo;
         }
 
+        /// <summary>
+        /// Obtiene todos los países registrados.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Pais>>> Get()
         {
@@ -25,6 +31,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Obtiene un país por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<Pais>> Get(int id)
         {
@@ -34,6 +43,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(item);
         }
 
+        /// <summary>
+        /// Crea un nuevo país.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<Pais>> Post([FromBody] Pais item)
         {
@@ -41,6 +53,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = item.IdPais }, item);
         }
 
+        /// <summary>
+        /// Actualiza un país existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Pais item)
         {
@@ -50,6 +65,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina un país por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

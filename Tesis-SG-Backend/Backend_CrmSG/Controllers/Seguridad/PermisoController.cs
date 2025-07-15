@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_CrmSG.Controllers.Seguridad
 {
+    /// <summary>
+    /// Controlador para la administración de permisos.
+    /// Permite operaciones CRUD sobre permisos de seguridad.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -14,12 +18,17 @@ namespace Backend_CrmSG.Controllers.Seguridad
     {
         private readonly IRepository<Permiso> _permisoRepository;
 
+        /// <summary>
+        /// Constructor del controlador de permisos.
+        /// </summary>
         public PermisoController(IRepository<Permiso> permisoRepository)
         {
             _permisoRepository = permisoRepository;
         }
 
-        // GET: api/Permiso
+        /// <summary>
+        /// Obtiene la lista de todos los permisos registrados en el sistema.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -27,7 +36,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(permisos);
         }
 
-        // GET: api/Permiso/5
+        /// <summary>
+        /// Obtiene la información de un permiso específico por su identificador.
+        /// </summary>
+        /// <param name="id">Id del permiso.</param>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -37,7 +49,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(permiso);
         }
 
-        // POST: api/Permiso
+        /// <summary>
+        /// Crea un nuevo permiso de seguridad.
+        /// </summary>
+        /// <param name="permiso">Objeto permiso a registrar.</param>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Permiso permiso)
         {
@@ -45,7 +60,11 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return CreatedAtAction(nameof(GetById), new { id = permiso.IdPermiso }, permiso);
         }
 
-        // PUT: api/Permiso/5
+        /// <summary>
+        /// Actualiza la información de un permiso existente.
+        /// </summary>
+        /// <param name="id">Id del permiso a actualizar.</param>
+        /// <param name="permiso">Objeto permiso con los datos actualizados.</param>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Permiso permiso)
         {
@@ -55,7 +74,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return NoContent();
         }
 
-        // DELETE: api/Permiso/5
+        /// <summary>
+        /// Elimina un permiso por su identificador.
+        /// </summary>
+        /// <param name="id">Id del permiso a eliminar.</param>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

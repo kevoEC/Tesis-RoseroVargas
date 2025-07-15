@@ -13,11 +13,17 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<ContinuarSolicitud> _repo;
 
+        /// <summary>
+        /// Constructor del controlador de ContinuarSolicitud.
+        /// </summary>
         public ContinuarSolicitudController(IRepository<ContinuarSolicitud> repo)
         {
             _repo = repo;
         }
 
+        /// <summary>
+        /// Obtiene todas las opciones de ContinuarSolicitud.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ContinuarSolicitud>>> Get()
         {
@@ -25,6 +31,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Obtiene una opción de ContinuarSolicitud por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<ContinuarSolicitud>> Get(int id)
         {
@@ -34,6 +43,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(item);
         }
 
+        /// <summary>
+        /// Crea una nueva opción de ContinuarSolicitud.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<ContinuarSolicitud>> Post([FromBody] ContinuarSolicitud item)
         {
@@ -41,6 +53,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = item.IdContinuarSolicitud }, item);
         }
 
+        /// <summary>
+        /// Actualiza una opción de ContinuarSolicitud existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] ContinuarSolicitud item)
         {
@@ -50,6 +65,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina una opción de ContinuarSolicitud por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

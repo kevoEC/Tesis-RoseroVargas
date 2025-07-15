@@ -12,11 +12,18 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<TipoActividad> _repository;
 
+        /// <summary>
+        /// Constructor del controlador de TipoActividad.
+        /// </summary>
         public TipoActividadController(IRepository<TipoActividad> repository)
         {
             _repository = repository;
         }
 
+        /// <summary>
+        /// Obtiene todos los tipos de actividad registrados.
+        /// </summary>
+        /// <returns>Lista de tipos de actividad.</returns>
         // GET: api/TipoActividad
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TipoActividad>>> Get()
@@ -25,6 +32,11 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(tipos);
         }
 
+        /// <summary>
+        /// Obtiene un tipo de actividad por su ID.
+        /// </summary>
+        /// <param name="id">ID del tipo de actividad.</param>
+        /// <returns>Tipo de actividad encontrado o NotFound si no existe.</returns>
         // GET: api/TipoActividad/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TipoActividad>> Get(int id)
@@ -35,6 +47,11 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(tipo);
         }
 
+        /// <summary>
+        /// Crea un nuevo tipo de actividad.
+        /// </summary>
+        /// <param name="tipoActividad">Objeto TipoActividad a crear.</param>
+        /// <returns>El tipo de actividad creado.</returns>
         // POST: api/TipoActividad
         [HttpPost]
         public async Task<ActionResult<TipoActividad>> Post([FromBody] TipoActividad tipoActividad)
@@ -43,6 +60,12 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = tipoActividad.IdTipoActividad }, tipoActividad);
         }
 
+        /// <summary>
+        /// Actualiza un tipo de actividad existente.
+        /// </summary>
+        /// <param name="id">ID del tipo de actividad a actualizar.</param>
+        /// <param name="tipoActividad">Objeto TipoActividad con los cambios.</param>
+        /// <returns>NoContent si fue exitoso, BadRequest si los IDs no coinciden.</returns>
         // PUT: api/TipoActividad/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] TipoActividad tipoActividad)
@@ -53,6 +76,11 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina un tipo de actividad por su ID.
+        /// </summary>
+        /// <param name="id">ID del tipo de actividad a eliminar.</param>
+        /// <returns>NoContent si fue exitoso.</returns>
         // DELETE: api/TipoActividad/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

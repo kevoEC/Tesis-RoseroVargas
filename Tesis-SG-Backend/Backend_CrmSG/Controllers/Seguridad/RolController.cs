@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_CrmSG.Controllers.Seguridad
 {
+    /// <summary>
+    /// Controlador para la administración de roles de seguridad.
+    /// Permite operaciones CRUD sobre los roles del sistema.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -14,12 +18,17 @@ namespace Backend_CrmSG.Controllers.Seguridad
     {
         private readonly IRepository<Rol> _rolRepository;
 
+        /// <summary>
+        /// Constructor del controlador de roles.
+        /// </summary>
         public RolController(IRepository<Rol> rolRepository)
         {
             _rolRepository = rolRepository;
         }
 
-        // GET: api/Rol
+        /// <summary>
+        /// Obtiene la lista de todos los roles registrados en el sistema.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -27,7 +36,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(roles);
         }
 
-        // GET: api/Rol/5
+        /// <summary>
+        /// Obtiene la información de un rol específico por su identificador.
+        /// </summary>
+        /// <param name="id">Id del rol.</param>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -37,7 +49,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(rol);
         }
 
-        // POST: api/Rol
+        /// <summary>
+        /// Crea un nuevo rol de seguridad.
+        /// </summary>
+        /// <param name="rol">Objeto rol a registrar.</param>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Rol rol)
         {
@@ -45,7 +60,11 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return CreatedAtAction(nameof(GetById), new { id = rol.IdRol }, rol);
         }
 
-        // PUT: api/Rol/5
+        /// <summary>
+        /// Actualiza la información de un rol existente.
+        /// </summary>
+        /// <param name="id">Id del rol a actualizar.</param>
+        /// <param name="rol">Objeto rol con los datos actualizados.</param>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Rol rol)
         {
@@ -55,7 +74,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return NoContent();
         }
 
-        // DELETE: api/Rol/5
+        /// <summary>
+        /// Elimina un rol por su identificador.
+        /// </summary>
+        /// <param name="id">Id del rol a eliminar.</param>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

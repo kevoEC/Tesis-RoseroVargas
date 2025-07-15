@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend_CrmSG.Controllers.Entidad
 {
+    /// <summary>
+    /// Controlador para la gestión de tareas dentro del sistema.
+    /// Permite consultar, filtrar y actualizar tareas.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -12,12 +16,17 @@ namespace Backend_CrmSG.Controllers.Entidad
     {
         private readonly ITareaService _tareaService;
 
+        /// <summary>
+        /// Constructor del controlador de tareas.
+        /// </summary>
         public TareaController(ITareaService tareaService)
         {
             _tareaService = tareaService;
         }
 
-        // GET: api/tarea
+        /// <summary>
+        /// Obtiene todas las tareas existentes en el sistema.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> ObtenerTodas()
         {
@@ -25,7 +34,10 @@ namespace Backend_CrmSG.Controllers.Entidad
             return Ok(tareas);
         }
 
-        // GET: api/tarea/por-rol/{idRol}
+        /// <summary>
+        /// Obtiene las tareas asignadas a un rol específico.
+        /// </summary>
+        /// <param name="idRol">Identificador del rol.</param>
         [HttpGet("por-rol/{idRol}")]
         public async Task<IActionResult> ObtenerPorRol(int idRol)
         {
@@ -33,7 +45,10 @@ namespace Backend_CrmSG.Controllers.Entidad
             return Ok(tareas);
         }
 
-        // GET: api/tarea/por-solicitud/{idSolicitud}
+        /// <summary>
+        /// Obtiene las tareas asociadas a una solicitud de inversión específica.
+        /// </summary>
+        /// <param name="idSolicitud">Identificador de la solicitud de inversión.</param>
         [HttpGet("por-solicitud/{idSolicitud}")]
         public async Task<IActionResult> ObtenerPorSolicitud(int idSolicitud)
         {
@@ -41,7 +56,10 @@ namespace Backend_CrmSG.Controllers.Entidad
             return Ok(new { success = true, data = tareas });
         }
 
-        // GET: api/tarea/{id}
+        /// <summary>
+        /// Obtiene el detalle de una tarea específica por su identificador.
+        /// </summary>
+        /// <param name="id">Identificador de la tarea.</param>
         [HttpGet("{id}")]
         public async Task<IActionResult> ObtenerDetallePorId(int id)
         {
@@ -52,7 +70,12 @@ namespace Backend_CrmSG.Controllers.Entidad
             return Ok(new { success = true, data = tarea });
         }
 
-        // PUT: api/tarea/{id}
+        /// <summary>
+        /// Actualiza dinámicamente una tarea existente, permitiendo modificar campos flexibles.
+        /// El usuario autenticado es tomado del token JWT.
+        /// </summary>
+        /// <param name="id">Identificador de la tarea a actualizar.</param>
+        /// <param name="dto">DTO con los datos de actualización.</param>
         [HttpPut("{id}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] TareaUpdateDinamicoDTO dto)
         {

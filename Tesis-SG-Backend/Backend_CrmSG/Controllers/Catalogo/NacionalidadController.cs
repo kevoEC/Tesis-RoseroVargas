@@ -1,4 +1,4 @@
-﻿// Controllers/Catalogos/NacionalidadController.cs
+﻿// Controllers/Catalogo/NacionalidadController.cs
 using Microsoft.AspNetCore.Mvc;
 using Backend_CrmSG.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -13,11 +13,17 @@ namespace Backend_CrmSG.Controllers.Catalogo
     {
         private readonly IRepository<Nacionalidad> _repo;
 
+        /// <summary>
+        /// Constructor del controlador de Nacionalidad.
+        /// </summary>
         public NacionalidadController(IRepository<Nacionalidad> repo)
         {
             _repo = repo;
         }
 
+        /// <summary>
+        /// Obtiene todas las nacionalidades disponibles.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Nacionalidad>>> Get()
         {
@@ -25,6 +31,9 @@ namespace Backend_CrmSG.Controllers.Catalogo
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Obtiene una nacionalidad por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<Nacionalidad>> Get(int id)
         {
@@ -34,6 +43,9 @@ namespace Backend_CrmSG.Controllers.Catalogo
             return Ok(item);
         }
 
+        /// <summary>
+        /// Crea una nueva nacionalidad.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<Nacionalidad>> Post([FromBody] Nacionalidad item)
         {
@@ -41,6 +53,9 @@ namespace Backend_CrmSG.Controllers.Catalogo
             return CreatedAtAction(nameof(Get), new { id = item.IdNacionalidad }, item);
         }
 
+        /// <summary>
+        /// Actualiza una nacionalidad existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Nacionalidad item)
         {
@@ -50,6 +65,9 @@ namespace Backend_CrmSG.Controllers.Catalogo
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina una nacionalidad por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

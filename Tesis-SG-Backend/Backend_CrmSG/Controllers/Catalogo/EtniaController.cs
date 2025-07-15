@@ -18,6 +18,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             _repo = repo;
         }
 
+        /// <summary>
+        /// Obtiene todas las etnias.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Etnia>>> Get()
         {
@@ -25,6 +28,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Obtiene una etnia por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<Etnia>> Get(int id)
         {
@@ -34,6 +40,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(item);
         }
 
+        /// <summary>
+        /// Crea una nueva etnia.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<Etnia>> Post([FromBody] Etnia item)
         {
@@ -41,6 +50,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = item.IdEtnia }, item);
         }
 
+        /// <summary>
+        /// Actualiza una etnia existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Etnia item)
         {
@@ -50,6 +62,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina una etnia por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

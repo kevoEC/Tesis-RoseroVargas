@@ -7,6 +7,10 @@ using Backend_CrmSG.Services.Seguridad;
 
 namespace Backend_CrmSG.Controllers.Seguridad
 {
+    /// <summary>
+    /// Controlador para la gestión de asignación de roles a usuarios.
+    /// Permite consultar, asignar, actualizar y eliminar relaciones usuario-rol.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -14,12 +18,18 @@ namespace Backend_CrmSG.Controllers.Seguridad
     {
         private readonly IUsuarioRolService _usuarioRolService;
 
+        /// <summary>
+        /// Constructor para inyección de dependencias.
+        /// </summary>
         public UsuarioRolController(IUsuarioRolService usuarioRolService)
         {
             _usuarioRolService = usuarioRolService;
         }
 
-        // GET: api/UsuarioRol
+        /// <summary>
+        /// Obtiene todas las relaciones usuario-rol existentes.
+        /// </summary>
+        /// <returns>Listado de UsuarioRol.</returns>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -27,7 +37,11 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(usuarioRoles);
         }
 
-        // GET: api/UsuarioRol/usuario/5
+        /// <summary>
+        /// Obtiene todos los roles asignados a un usuario específico.
+        /// </summary>
+        /// <param name="idUsuario">Id del usuario.</param>
+        /// <returns>Listado de roles asociados al usuario.</returns>
         [HttpGet("usuario/{idUsuario}")]
         public async Task<IActionResult> GetByUsuario(int idUsuario)
         {
@@ -35,7 +49,11 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(lista);
         }
 
-        // GET: api/UsuarioRol/rol/3
+        /// <summary>
+        /// Obtiene todos los usuarios que tienen asignado un rol específico.
+        /// </summary>
+        /// <param name="idRol">Id del rol.</param>
+        /// <returns>Listado de usuarios asociados al rol.</returns>
         [HttpGet("rol/{idRol}")]
         public async Task<IActionResult> GetByRol(int idRol)
         {
@@ -43,7 +61,11 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(lista);
         }
 
-        // POST: api/UsuarioRol
+        /// <summary>
+        /// Asigna un rol a un usuario.
+        /// </summary>
+        /// <param name="usuarioRol">Objeto UsuarioRol con la relación a crear.</param>
+        /// <returns>Mensaje de éxito.</returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UsuarioRol usuarioRol)
         {
@@ -51,7 +73,11 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(new { message = "Rol asignado al usuario correctamente." });
         }
 
-        // PUT: api/UsuarioRol
+        /// <summary>
+        /// Actualiza una relación usuario-rol existente.
+        /// </summary>
+        /// <param name="usuarioRol">Objeto UsuarioRol con los datos actualizados.</param>
+        /// <returns>Mensaje de éxito.</returns>
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UsuarioRol usuarioRol)
         {
@@ -59,7 +85,12 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(new { message = "La relación usuario-rol se actualizó correctamente." });
         }
 
-        // DELETE: api/UsuarioRol/{idUsuario}/{idRol}
+        /// <summary>
+        /// Elimina la relación usuario-rol para un usuario y un rol específicos.
+        /// </summary>
+        /// <param name="idUsuario">Id del usuario.</param>
+        /// <param name="idRol">Id del rol.</param>
+        /// <returns>Mensaje de éxito.</returns>
         [HttpDelete("{idUsuario}/{idRol}")]
         public async Task<IActionResult> Delete(int idUsuario, int idRol)
         {

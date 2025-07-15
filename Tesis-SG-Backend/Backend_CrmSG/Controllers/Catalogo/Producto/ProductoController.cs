@@ -8,6 +8,9 @@ using ProductoModel = Backend_CrmSG.Models.Catalogos.Producto.Producto;
 
 namespace Backend_CrmSG.Controllers.Producto
 {
+    /// <summary>
+    /// Controlador para la gestión de productos de inversión y sus configuraciones.
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
@@ -16,12 +19,18 @@ namespace Backend_CrmSG.Controllers.Producto
         private readonly IProductoService _productoService;
         private readonly IConfiguracionProductoService _configuracionProductoService;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public ProductoController(IProductoService productoService, IConfiguracionProductoService configuracionProductoService)
         {
             _productoService = productoService;
             _configuracionProductoService = configuracionProductoService;
         }
 
+        /// <summary>
+        /// Obtiene todos los productos.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -29,16 +38,23 @@ namespace Backend_CrmSG.Controllers.Producto
             return Ok(productos);
         }
 
+        /// <summary>
+        /// Obtiene un producto por su ID.
+        /// </summary>
+        /// <param name="id">ID del producto.</param>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var producto = await _productoService.GetProductoByIdAsync(id);
             if (producto == null)
                 return NotFound();
-
             return Ok(producto);
         }
 
+        /// <summary>
+        /// Obtiene las configuraciones asociadas a un producto específico.
+        /// </summary>
+        /// <param name="id">ID del producto.</param>
         [HttpGet("{id}/configuraciones")]
         public async Task<IActionResult> GetConfiguraciones(int id)
         {
@@ -46,6 +62,10 @@ namespace Backend_CrmSG.Controllers.Producto
             return Ok(configuraciones);
         }
 
+        /// <summary>
+        /// Obtiene un producto junto a todas sus configuraciones.
+        /// </summary>
+        /// <param name="id">ID del producto.</param>
         [HttpGet("{id}/detalle")]
         public async Task<IActionResult> GetProductoConConfiguraciones(int id)
         {
@@ -66,6 +86,9 @@ namespace Backend_CrmSG.Controllers.Producto
 
         // ----------------------- NUEVOS ENDPOINTS -----------------------
 
+        /// <summary>
+        /// Obtiene la lista extendida de productos (vista enriquecida).
+        /// </summary>
         [HttpGet("vista")]
         public async Task<IActionResult> GetAllProductosVista()
         {
@@ -73,6 +96,10 @@ namespace Backend_CrmSG.Controllers.Producto
             return Ok(productosVista);
         }
 
+        /// <summary>
+        /// Obtiene los datos enriquecidos (vista) de un producto por su ID.
+        /// </summary>
+        /// <param name="id">ID del producto.</param>
         [HttpGet("vista/{id}")]
         public async Task<IActionResult> GetProductoVistaById(int id)
         {
@@ -82,6 +109,10 @@ namespace Backend_CrmSG.Controllers.Producto
             return Ok(productoVista);
         }
 
+        /// <summary>
+        /// Crea un nuevo producto.
+        /// </summary>
+        /// <param name="model">Datos del producto.</param>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ProductoModel model)
         {
@@ -89,6 +120,11 @@ namespace Backend_CrmSG.Controllers.Producto
             return CreatedAtAction(nameof(Get), new { id }, model);
         }
 
+        /// <summary>
+        /// Actualiza un producto existente.
+        /// </summary>
+        /// <param name="id">ID del producto a actualizar.</param>
+        /// <param name="model">Nuevos datos del producto.</param>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] ProductoModel model)
         {
@@ -98,6 +134,10 @@ namespace Backend_CrmSG.Controllers.Producto
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina un producto por su ID.
+        /// </summary>
+        /// <param name="id">ID del producto.</param>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -106,7 +146,5 @@ namespace Backend_CrmSG.Controllers.Producto
                 return NotFound();
             return NoContent();
         }
-
     }
-
 }

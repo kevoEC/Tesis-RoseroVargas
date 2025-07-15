@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Controllers/Catalogos/PrioridadController.cs
+using Microsoft.AspNetCore.Mvc;
 using Backend_CrmSG.Models.Catalogos;
 using Backend_CrmSG.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -12,12 +13,17 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<Prioridad> _prioridadRepository;
 
+        /// <summary>
+        /// Constructor del controlador de Prioridad.
+        /// </summary>
         public PrioridadController(IRepository<Prioridad> prioridadRepository)
         {
             _prioridadRepository = prioridadRepository;
         }
 
-        // GET: api/Prioridad
+        /// <summary>
+        /// Obtiene todas las prioridades registradas.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Prioridad>>> Get()
         {
@@ -25,7 +31,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(prioridades);
         }
 
-        // GET: api/Prioridad/5
+        /// <summary>
+        /// Obtiene una prioridad por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<Prioridad>> Get(int id)
         {
@@ -35,7 +43,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(prioridad);
         }
 
-        // POST: api/Prioridad
+        /// <summary>
+        /// Crea una nueva prioridad.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<Prioridad>> Post([FromBody] Prioridad prioridad)
         {
@@ -43,7 +53,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = prioridad.IdPrioridad }, prioridad);
         }
 
-        // PUT: api/Prioridad/5
+        /// <summary>
+        /// Actualiza una prioridad existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Prioridad prioridad)
         {
@@ -53,7 +65,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
-        // DELETE: api/Prioridad/5
+        /// <summary>
+        /// Elimina una prioridad por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

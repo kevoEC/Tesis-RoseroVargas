@@ -13,11 +13,17 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<JustificativoTransaccion> _repo;
 
+        /// <summary>
+        /// Constructor del controlador de JustificativoTransaccion.
+        /// </summary>
         public JustificativoTransaccionController(IRepository<JustificativoTransaccion> repo)
         {
             _repo = repo;
         }
 
+        /// <summary>
+        /// Obtiene todos los justificativos de transacción.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<JustificativoTransaccion>>> Get()
         {
@@ -25,6 +31,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Obtiene un justificativo de transacción por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<JustificativoTransaccion>> Get(int id)
         {
@@ -34,6 +43,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(item);
         }
 
+        /// <summary>
+        /// Crea un nuevo justificativo de transacción.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<JustificativoTransaccion>> Post([FromBody] JustificativoTransaccion item)
         {
@@ -41,6 +53,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = item.IdJustificativoTransaccion }, item);
         }
 
+        /// <summary>
+        /// Actualiza un justificativo de transacción existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] JustificativoTransaccion item)
         {
@@ -50,6 +65,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina un justificativo de transacción por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

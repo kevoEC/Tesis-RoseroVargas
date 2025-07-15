@@ -9,10 +9,12 @@ using Backend_CrmSG.DTOs.Seguridad;
 using Backend_CrmSG.Services.Correo;
 using Backend_CrmSG.Services.SMS;
 
-
-
 namespace Backend_CrmSG.Controllers.Seguridad
 {
+    /// <summary>
+    /// Controlador para la gestión y autenticación de usuarios.
+    /// Provee operaciones de login, validación, gestión de roles, menús y CRUD de usuario.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class UsuarioController : ControllerBase
@@ -22,6 +24,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
         private readonly IJwtService _jwtService;
         private readonly ICorreoService _correoService;
         private readonly ISmsService _smsService;
+
+        /// <summary>
+        /// Constructor para inyección de dependencias.
+        /// </summary>
         public UsuarioController(IUsuarioService usuarioService, IJwtService jwtService, StoredProcedureService storedProcedureService, ICorreoService correoService, ISmsService smsService)
         {
             _usuarioService = usuarioService;
@@ -31,7 +37,11 @@ namespace Backend_CrmSG.Controllers.Seguridad
             _smsService = smsService;
         }
 
-        // POST: api/Usuario/login
+        /// <summary>
+        /// Realiza el login del usuario y retorna un token JWT, datos del usuario, roles y permisos.
+        /// </summary>
+        /// <param name="loginRequest">Objeto con email y contraseña.</param>
+        /// <returns>Token de autenticación y datos de usuario.</returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
@@ -41,12 +51,12 @@ namespace Backend_CrmSG.Controllers.Seguridad
                 return Unauthorized("Credenciales inválidas o usuario inactivo.");
 
             var claims = new List<Claim>
-    {
-        new Claim("idUsuario", result.Usuario.Id.ToString()),
-        new Claim(ClaimTypes.Email, result.Usuario.Email),
-        new Claim(JwtRegisteredClaimNames.Sub, result.Usuario.Email),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-    };
+            {
+                new Claim("idUsuario", result.Usuario.Id.ToString()),
+                new Claim(ClaimTypes.Email, result.Usuario.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, result.Usuario.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
 
             foreach (var rol in result.Roles)
             {
@@ -55,17 +65,15 @@ namespace Backend_CrmSG.Controllers.Seguridad
 
             var token = _jwtService.GenerateTokenFromClaims(claims);
             var permisosAgrupados = result.Permisos
-            .GroupBy(p => new { p.Menu, p.Nombre, p.Ruta, p.Icono })
-            .Select(g => new
-            {
-                Menu = g.Key.Menu,
-                Nombre = g.Key.Nombre,
-                Ruta = g.Key.Ruta,
-                Icono = g.Key.Icono,
-                Permisos = g.Select(p => p.Permiso).ToList()
-            }).ToList();
-
-
+                .GroupBy(p => new { p.Menu, p.Nombre, p.Ruta, p.Icono })
+                .Select(g => new
+                {
+                    Menu = g.Key.Menu,
+                    Nombre = g.Key.Nombre,
+                    Ruta = g.Key.Ruta,
+                    Icono = g.Key.Icono,
+                    Permisos = g.Select(p => p.Permiso).ToList()
+                }).ToList();
 
             return Ok(new
             {
@@ -82,7 +90,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             });
         }
 
-        // GET: api/Usuario/roles/5
+        /// <summary>
+        /// Obtiene los roles asignados a un usuario específico.
+        /// </summary>
+        /// <param name="idUsuario">Id del usuario.</param>
         [HttpGet("roles/{idUsuario}")]
         public async Task<IActionResult> GetRoles(int idUsuario)
         {
@@ -90,7 +101,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(roles);
         }
 
-        // GET: api/Usuario/menus/5
+        /// <summary>
+        /// Obtiene los menús permitidos para un usuario según sus roles y permisos.
+        /// </summary>
+        /// <param name="idUsuario">Id del usuario.</param>
         [HttpGet("menus/{idUsuario}")]
         public async Task<IActionResult> GetMenus(int idUsuario)
         {
@@ -98,8 +112,9 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(menus);
         }
 
-        // CRUD Básico (Opcional)
-        // GET: api/Usuario
+        /// <summary>
+        /// Obtiene todos los usuarios registrados.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -107,7 +122,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(usuarios);
         }
 
-        // GET: api/Usuario/5
+        /// <summary>
+        /// Obtiene la información de un usuario específico.
+        /// </summary>
+        /// <param name="id">Id del usuario.</param>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -116,7 +134,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(usuario);
         }
 
-        // POST: api/Usuario
+        /// <summary>
+        /// Crea un nuevo usuario (registro manual/administrativo).
+        /// </summary>
+        /// <param name="usuario">Objeto usuario a registrar.</param>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Usuario usuario)
         {
@@ -124,7 +145,11 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return CreatedAtAction(nameof(GetById), new { id = usuario.IdUsuario }, usuario);
         }
 
-        // PUT: api/Usuario/5
+        /// <summary>
+        /// Actualiza los datos de un usuario existente.
+        /// </summary>
+        /// <param name="id">Id del usuario a actualizar.</param>
+        /// <param name="usuario">Objeto usuario con datos nuevos.</param>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Usuario usuario)
         {
@@ -135,7 +160,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return NoContent();
         }
 
-        // DELETE: api/Usuario/5
+        /// <summary>
+        /// Elimina un usuario por su identificador.
+        /// </summary>
+        /// <param name="id">Id del usuario a eliminar.</param>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -143,6 +171,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return NoContent();
         }
 
+        /// <summary>
+        /// Realiza el registro parcial de un usuario y envía correo de validación.
+        /// </summary>
+        /// <param name="dto">DTO con los datos mínimos de registro.</param>
         [HttpPost("registro-parcial")]
         public async Task<IActionResult> RegistroParcial([FromBody] RegistroParcialDTO dto)
         {
@@ -169,7 +201,7 @@ namespace Backend_CrmSG.Controllers.Seguridad
                     });
                 }
 
-                // Aquí puedes llamar al servicio de envío de correo y manejar errores
+                // Enviar correo de validación (manejo de error incluido)
                 var correoEnviado = false;
                 try
                 {
@@ -177,8 +209,7 @@ namespace Backend_CrmSG.Controllers.Seguridad
                 }
                 catch (Exception ex)
                 {
-                    // Log del error si falla el envío
-                    // Puedes usar un logger para registrar el error
+                    // Logging si falla el envío
                     Console.WriteLine($"Error al enviar correo: {ex.Message}");
                 }
 
@@ -204,6 +235,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             }
         }
 
+        /// <summary>
+        /// Valida el correo electrónico de un usuario a través del token recibido por email.
+        /// </summary>
+        /// <param name="token">Token de validación de correo.</param>
         [HttpGet("validar-correo")]
         public async Task<IActionResult> ValidarCorreo([FromQuery] string token)
         {
@@ -235,7 +270,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             });
         }
 
-
+        /// <summary>
+        /// Envía un código SMS al número del usuario para validación de teléfono.
+        /// </summary>
+        /// <param name="dto">DTO con idUsuario, número y extensión internacional.</param>
         [HttpPost("enviar-codigo-telefono")]
         public async Task<IActionResult> EnviarCodigoTelefono([FromBody] SolicitudCodigoTelefonoDTO dto)
         {
@@ -263,8 +301,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             });
         }
 
-
-
+        /// <summary>
+        /// Valida el código SMS ingresado por el usuario para activar su teléfono.
+        /// </summary>
+        /// <param name="dto">DTO con idUsuario y código ingresado.</param>
         [HttpPost("validar-telefono")]
         public async Task<IActionResult> ValidarTelefono([FromBody] ValidacionTelefonoDTO dto)
         {
@@ -282,9 +322,5 @@ namespace Backend_CrmSG.Controllers.Seguridad
                 message = resultado.Mensaje
             });
         }
-
-
-
-
     }
 }

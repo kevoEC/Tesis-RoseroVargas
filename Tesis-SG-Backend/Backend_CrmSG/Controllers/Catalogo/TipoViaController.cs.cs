@@ -13,11 +13,17 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<TipoVia> _repo;
 
+        /// <summary>
+        /// Constructor del controlador de TipoVia.
+        /// </summary>
         public TipoViaController(IRepository<TipoVia> repo)
         {
             _repo = repo;
         }
 
+        /// <summary>
+        /// Obtiene todas las opciones de TipoVia.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TipoVia>>> Get()
         {
@@ -25,6 +31,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Obtiene una opción de TipoVia por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<TipoVia>> Get(int id)
         {
@@ -34,6 +43,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(item);
         }
 
+        /// <summary>
+        /// Crea una nueva opción de TipoVia.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<TipoVia>> Post([FromBody] TipoVia item)
         {
@@ -41,6 +53,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = item.IdTipoVia }, item);
         }
 
+        /// <summary>
+        /// Actualiza una opción de TipoVia existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] TipoVia item)
         {
@@ -50,6 +65,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina una opción de TipoVia por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

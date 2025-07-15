@@ -13,11 +13,18 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<TipoDocumentoCatalogo> _repo;
 
+        /// <summary>
+        /// Constructor del controlador de TipoDocumentoCatalogo.
+        /// </summary>
         public TipoDocumentoCatalogoController(IRepository<TipoDocumentoCatalogo> repo)
         {
             _repo = repo;
         }
 
+        /// <summary>
+        /// Obtiene todos los tipos de documento catalogados.
+        /// </summary>
+        /// <returns>Lista de tipos de documento.</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TipoDocumentoCatalogo>>> Get()
         {
@@ -25,6 +32,11 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Obtiene un tipo de documento catalogado por su ID.
+        /// </summary>
+        /// <param name="id">ID del tipo de documento.</param>
+        /// <returns>Tipo de documento encontrado o NotFound si no existe.</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<TipoDocumentoCatalogo>> Get(int id)
         {
@@ -34,6 +46,11 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(item);
         }
 
+        /// <summary>
+        /// Crea un nuevo tipo de documento catalogado.
+        /// </summary>
+        /// <param name="item">Objeto TipoDocumentoCatalogo a crear.</param>
+        /// <returns>El tipo de documento creado.</returns>
         [HttpPost]
         public async Task<ActionResult<TipoDocumentoCatalogo>> Post([FromBody] TipoDocumentoCatalogo item)
         {
@@ -41,6 +58,12 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = item.IdTipoDocumento }, item);
         }
 
+        /// <summary>
+        /// Actualiza un tipo de documento catalogado existente.
+        /// </summary>
+        /// <param name="id">ID del tipo de documento a actualizar.</param>
+        /// <param name="item">Objeto TipoDocumentoCatalogo con los cambios.</param>
+        /// <returns>NoContent si fue exitoso, BadRequest si los IDs no coinciden.</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] TipoDocumentoCatalogo item)
         {
@@ -50,6 +73,11 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina un tipo de documento catalogado por su ID.
+        /// </summary>
+        /// <param name="id">ID del tipo de documento a eliminar.</param>
+        /// <returns>NoContent si fue exitoso.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend_CrmSG.Controllers.Entidad
 {
+    /// <summary>
+    /// Controlador para la gestión de clientes.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -13,12 +16,19 @@ namespace Backend_CrmSG.Controllers.Entidad
     {
         private readonly IClienteService _clienteService;
 
+        /// <summary>
+        /// Constructor del controlador de clientes.
+        /// </summary>
+        /// <param name="clienteService">Servicio de lógica de clientes.</param>
         public ClienteController(IClienteService clienteService)
         {
             _clienteService = clienteService;
         }
 
-        // GET: api/cliente
+        /// <summary>
+        /// Obtiene la lista de todos los clientes registrados.
+        /// </summary>
+        /// <returns>Lista de clientes.</returns>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -26,7 +36,11 @@ namespace Backend_CrmSG.Controllers.Entidad
             return Ok(clientes);
         }
 
-        // GET: api/cliente/{id}
+        /// <summary>
+        /// Obtiene los datos de un cliente por su identificador.
+        /// </summary>
+        /// <param name="id">Identificador del cliente.</param>
+        /// <returns>Datos del cliente encontrado, o NotFound si no existe.</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -37,7 +51,11 @@ namespace Backend_CrmSG.Controllers.Entidad
             return Ok(cliente);
         }
 
-        // GET: api/cliente/por-propietario/{idUsuario}
+        /// <summary>
+        /// Obtiene la lista de clientes asignados a un usuario propietario.
+        /// </summary>
+        /// <param name="idUsuario">Identificador del usuario propietario.</param>
+        /// <returns>Lista de clientes del propietario.</returns>
         [HttpGet("por-propietario/{idUsuario}")]
         public async Task<IActionResult> GetPorPropietario(int idUsuario)
         {
@@ -45,7 +63,12 @@ namespace Backend_CrmSG.Controllers.Entidad
             return Ok(clientes);
         }
 
-        // PUT: api/cliente/{id}
+        /// <summary>
+        /// Actualiza los datos de un cliente existente.
+        /// </summary>
+        /// <param name="id">Identificador del cliente a actualizar.</param>
+        /// <param name="dto">Datos actualizados del cliente.</param>
+        /// <returns>Resultado de la operación: éxito o error.</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] ClienteUpdateDTO dto)
         {

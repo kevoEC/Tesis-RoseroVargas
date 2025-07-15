@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Backend_CrmSG.Controllers.Seguridad
 {
+    /// <summary>
+    /// Controlador para la administración de menús de seguridad.
+    /// Permite la gestión de menús y su consulta por rol.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -14,12 +18,17 @@ namespace Backend_CrmSG.Controllers.Seguridad
     {
         private readonly IMenuService _menuService;
 
+        /// <summary>
+        /// Constructor del controlador de menús.
+        /// </summary>
         public MenuController(IMenuService menuService)
         {
             _menuService = menuService;
         }
 
-        // GET: api/Menu
+        /// <summary>
+        /// Obtiene la lista de todos los menús registrados en el sistema.
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -27,7 +36,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(menus);
         }
 
-        // GET: api/Menu/5
+        /// <summary>
+        /// Obtiene la información de un menú específico por su identificador.
+        /// </summary>
+        /// <param name="id">Id del menú.</param>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -37,7 +49,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return Ok(menu);
         }
 
-        // POST: api/Menu
+        /// <summary>
+        /// Crea un nuevo menú de seguridad.
+        /// </summary>
+        /// <param name="menu">Objeto menú a registrar.</param>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Menu menu)
         {
@@ -45,7 +60,11 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return CreatedAtAction(nameof(GetById), new { id = menu.IdMenu }, menu);
         }
 
-        // PUT: api/Menu/5
+        /// <summary>
+        /// Actualiza la información de un menú existente.
+        /// </summary>
+        /// <param name="id">Id del menú a actualizar.</param>
+        /// <param name="menu">Objeto menú con los datos actualizados.</param>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Menu menu)
         {
@@ -55,7 +74,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return NoContent();
         }
 
-        // DELETE: api/Menu/5
+        /// <summary>
+        /// Elimina un menú por su identificador.
+        /// </summary>
+        /// <param name="id">Id del menú a eliminar.</param>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -63,8 +85,10 @@ namespace Backend_CrmSG.Controllers.Seguridad
             return NoContent();
         }
 
-        // Opcional: Endpoint para obtener menús según rol
-        // GET: api/Menu/rol/Admin
+        /// <summary>
+        /// Obtiene los menús disponibles para un rol específico.
+        /// </summary>
+        /// <param name="rol">Nombre del rol.</param>
         [HttpGet("rol/{rol}")]
         public async Task<IActionResult> GetMenusByRole(string rol)
         {

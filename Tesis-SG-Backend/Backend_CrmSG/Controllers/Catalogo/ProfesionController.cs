@@ -13,11 +13,17 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<Profesion> _repo;
 
+        /// <summary>
+        /// Constructor del controlador de Profesión.
+        /// </summary>
         public ProfesionController(IRepository<Profesion> repo)
         {
             _repo = repo;
         }
 
+        /// <summary>
+        /// Obtiene todas las profesiones registradas.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Profesion>>> Get()
         {
@@ -25,6 +31,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Obtiene una profesión por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<Profesion>> Get(int id)
         {
@@ -34,6 +43,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(item);
         }
 
+        /// <summary>
+        /// Crea una nueva profesión.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<Profesion>> Post([FromBody] Profesion item)
         {
@@ -41,6 +53,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = item.IdProfesion }, item);
         }
 
+        /// <summary>
+        /// Actualiza una profesión existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Profesion item)
         {
@@ -50,6 +65,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina una profesión por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

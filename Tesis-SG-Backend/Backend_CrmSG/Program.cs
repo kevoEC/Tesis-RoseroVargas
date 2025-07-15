@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Backend_CrmSG.Data;
 using Backend_CrmSG.Repositories;
 using Backend_CrmSG.Services;
@@ -30,7 +30,7 @@ var jwtAudience = builder.Configuration["Jwt:Audience"]
     ?? throw new InvalidOperationException("Falta Jwt:Audience en appsettings.json");
 
 
-// ------------------------- Configuraci�n de Azure AD -------------------------
+// ------------------------- Configuración de Azure AD -------------------------
 var azureAd = builder.Configuration.GetSection("AzureAd");
 var azureInstance = azureAd["Instance"]
     ?? throw new InvalidOperationException("Falta AzureAd:Instance");
@@ -53,7 +53,8 @@ builder.Services.AddCors(options =>
             "http://localhost:5173",  // Vite frontend original
             "http://localhost:5174",   // Segundo frontend o entorno paralelo
             "http://localhost:5175",   // Segundo frontend o entorno paralelo
-            "http://localhost:5176"   // Segundo frontend o entorno paralelo
+            "http://localhost:5176",   // Segundo frontend o entorno paralelo
+            "https://black-grass-04c403c0f.6.azurestaticapps.net/" // Dominio de producción
         )
         .AllowAnyHeader()
         .AllowAnyMethod());
@@ -64,7 +65,7 @@ builder.Services.AddCors(options =>
 // ------------------- JWT SERVICE LOCAL ---------------------------
 builder.Services.AddScoped<IJwtService, JwtService>();
 
-// ------------- AUTENTICACI�N M�LTIPLE ----------------------------
+// ------------- AUTENTICACIÓN MÚLTIPLE ----------------------------
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "MultiAuthScheme";
@@ -77,7 +78,7 @@ builder.Services.AddAuthentication(options =>
         if (authHeader != null && authHeader.StartsWith("Bearer "))
         {
             var token = authHeader.Substring("Bearer ".Length);
-            if (token.Length > 1000) // Tokens de Microsoft suelen ser m�s largos
+            if (token.Length > 1000) // Tokens de Microsoft suelen ser más largos
                 return "AzureAdJwtScheme";
             else
                 return "LocalJwtScheme";
@@ -113,7 +114,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// ------------------ AUTORIZACI�N GENERAL --------------------------
+// ------------------ AUTORIZACIÓN GENERAL --------------------------
 builder.Services.AddAuthorization();
 
 // ------------------ DB CONTEXT ------------------------------------
@@ -133,10 +134,10 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "SG CONSULTING API",
         Version = "v1",
-        Description = "API oficial de SG Consulting Group para gesti�n de CRM, inversiones y cat�logos.",
+        Description = "API oficial de SG Consulting Group para gestión de CRM, inversiones y catálogos.",
         Contact = new Microsoft.OpenApi.Models.OpenApiContact
         {
-            Name = "Equipo de Tecnolog�a SG",
+            Name = "Equipo de Tecnología SG",
             Email = "soporte@sgconsulting.site",
             Url = new Uri("https://sgconsulting.site")
         },
@@ -146,10 +147,16 @@ builder.Services.AddSwaggerGen(c =>
             Url = new Uri("https://sgconsulting.site/licencia")
         }
     });
+
+    // 🔽 Agrega esto para que Swagger lea los comentarios XML de tus controladores
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
 });
 
 
-// ------------------ INYECCI�N DE SERVICIOS ------------------------
+
+// ------------------ INYECCIÓN DE SERVICIOS ------------------------
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<StoredProcedureService>();
@@ -169,7 +176,7 @@ builder.Services.AddScoped<IPagoService, PagoService>();
 builder.Services.AddScoped<ContratoSecuencialService>();
 builder.Services.AddScoped<IAdendumService, AdendumService>();
 
-// Cat�logos
+// Catálogos
 builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IConfiguracionProductoService, ConfiguracionProductoService>();
 

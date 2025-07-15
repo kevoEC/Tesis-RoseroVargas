@@ -2,6 +2,10 @@
 using Backend_CrmSG.Repositories;
 using Backend_CrmSG.Models.Vistas;
 
+/// <summary>
+/// Controlador para consultas dinámicas sobre vistas (modelos de solo lectura) en el sistema.
+/// Permite obtener datos filtrados o completos de diferentes entidades de tipo vista.
+/// </summary>
 namespace Backend_CrmSG.Controllers.Vistas
 {
     [Route("api/vista")]
@@ -10,15 +14,28 @@ namespace Backend_CrmSG.Controllers.Vistas
     {
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Constructor para la inyección dinámica de repositorios de vistas.
+        /// </summary>
         public VistaEntidadController(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
+        /// <summary>
+        /// Obtiene un listado filtrado de una vista dinámica según propiedad y valor.
+        /// </summary>
+        /// <param name="entidad">Nombre de la vista (ej: actividad, prospecto, solicitudinversion, etc).</param>
+        /// <param name="por">Nombre de la propiedad por la que filtrar (ej: IdProspecto, IdCliente).</param>
+        /// <param name="id">Valor a buscar en la propiedad.</param>
+        /// <returns>Listado filtrado de la entidad solicitada.</returns>
+        /// <response code="200">Retorna el listado filtrado correctamente.</response>
+        /// <response code="400">Si la entidad no está registrada o parámetros incorrectos.</response>
+        /// <response code="500">Si hay error al resolver el repositorio.</response>
         [HttpGet("{entidad}/filtrar")]
         public async Task<IActionResult> FiltrarVista([FromRoute] string entidad, [FromQuery] string por, [FromQuery] int id)
         {
-            // Mapear nombres de vistas a sus modelos
+            // Mapeo de nombres de vistas a sus modelos de detalle
             var mapa = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
             {
                 { "actividad", typeof(Models.Vistas.ActividadDetalle) },
@@ -29,9 +46,6 @@ namespace Backend_CrmSG.Controllers.Vistas
                 { "asesorcomercial", typeof(AsesorComercialDetalle) },
                 { "proyeccion", typeof(ProyeccionDetalle) },
                 { "documento", typeof(DocumentoBasicoDetalle)}
-
-                // Agrega aquí otras vistas como:
-                // { "solicitud", typeof(SolicitudInversionDetalle) }
             };
 
             if (!mapa.TryGetValue(entidad, out var tipoEntidad))
@@ -60,21 +74,28 @@ namespace Backend_CrmSG.Controllers.Vistas
             return Ok(result);
         }
 
+        /// <summary>
+        /// Obtiene todos los registros de la vista especificada.
+        /// </summary>
+        /// <param name="entidad">Nombre de la vista/entidad (ej: actividad, prospecto, solicitud, etc).</param>
+        /// <returns>Listado completo de la vista especificada.</returns>
+        /// <response code="200">Retorna la lista completa.</response>
+        /// <response code="400">Si la entidad no está registrada.</response>
+        /// <response code="500">Si no se puede resolver el repositorio.</response>
         [HttpGet("{entidad}")]
         public async Task<IActionResult> GetTodos(string entidad)
         {
             var mapa = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
-    {
-        { "actividad", typeof(ActividadDetalle) },
-        { "prospecto", typeof(ProspectoDetalle) },
-        { "solicitud", typeof(SolicitudInversionDetalle) },
-        { "referencia" , typeof(ReferenciaDetalle) },
-        { "beneficiario", typeof(BeneficiarioDetalle) },
-        { "asesorcomercial", typeof(AsesorComercialDetalle) },
-        { "proyeccion", typeof(ProyeccionDetalle) },
-        { "documento", typeof(DocumentoBasicoDetalle)}
-        // Agrega más vistas aquí si lo deseas
-    };
+            {
+                { "actividad", typeof(ActividadDetalle) },
+                { "prospecto", typeof(ProspectoDetalle) },
+                { "solicitud", typeof(SolicitudInversionDetalle) },
+                { "referencia" , typeof(ReferenciaDetalle) },
+                { "beneficiario", typeof(BeneficiarioDetalle) },
+                { "asesorcomercial", typeof(AsesorComercialDetalle) },
+                { "proyeccion", typeof(ProyeccionDetalle) },
+                { "documento", typeof(DocumentoBasicoDetalle)}
+            };
 
             if (!mapa.TryGetValue(entidad, out var tipoEntidad))
             {
@@ -84,7 +105,6 @@ namespace Backend_CrmSG.Controllers.Vistas
                     message = $"Entidad '{entidad}' no está registrada. Las disponibles son: {string.Join(", ", mapa.Keys)}"
                 });
             }
-
 
             var repoType = typeof(IRepository<>).MakeGenericType(tipoEntidad);
             dynamic? repo = _serviceProvider.GetService(repoType);
@@ -99,11 +119,19 @@ namespace Backend_CrmSG.Controllers.Vistas
                 });
             }
 
-
             IEnumerable<object> resultados = await repo.GetAllAsync();
             return Ok(resultados);
         }
 
+        /// <summary>
+        /// Filtra la vista SolicitudInversionDetalle por propiedad específica y retorna una lista de DTOs.
+        /// </summary>
+        /// <param name="por">Propiedad por la que filtrar (prospecto, cliente, solicitud).</param>
+        /// <param name="id">Valor a buscar en la propiedad.</param>
+        /// <returns>Listado mapeado de la vista SolicitudInversionDetalle.</returns>
+        /// <response code="200">Retorna la lista filtrada de DTOs.</response>
+        /// <response code="400">Si el parámetro 'por' es inválido.</response>
+        /// <response code="500">Si ocurre un error interno.</response>
         [HttpGet("solicitudinversion/filtrarDTO")]
         public async Task<IActionResult> FiltrarVistaSolicitudInversionDTO([FromQuery] string por, [FromQuery] int id)
         {
@@ -141,8 +169,5 @@ namespace Backend_CrmSG.Controllers.Vistas
 
             return Ok(new { success = true, data = mapeados });
         }
-
-
-
     }
 }
