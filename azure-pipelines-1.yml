@@ -1,43 +1,49 @@
-# FrontEnd
+name: Azure Static Web Apps CI/CD
+
 trigger:
   branches:
     include:
-      - master
-
-pr:
-  branches:
-    include:
-      - master
+      - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: ubuntu-latest
 
 variables:
   - group: azure-static-web-apps-black-grass-04c403c0f-variable-group
 
-steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '22.16.0'
-    displayName: 'Instalar Node.js'
+jobs:
+  - job: build_and_deploy
+    displayName: Build and Deploy to Azure Static Web Apps
+    steps:
+      - checkout: self
 
-  - checkout: self
-    submodules: true
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '18.x'
+        displayName: 'Install Node.js'
 
-  - script: |
-      cd Tesis-SG-Front
-      npm install
-      # Asegúrate de que vite tenga permisos de ejecución
-      chmod +x ./node_modules/.bin/vite
-      # Agrega el directorio de binarios de node_modules al PATH, por si acaso
-      export PATH=$PATH:./node_modules/.bin
-      # Ejecuta el comando de construcción usando npm run build
-      npm run build
-    displayName: 'Instalar dependencias y compilar el proyecto con Vite'
+      - script: |
+          cd Tesis-SG-Front
+          npm install
+          chmod +x ./node_modules/.bin/vite
+          export PATH=$PATH:./node_modules/.bin
+          npm run build
+        displayName: 'Install dependencies and build project with Vite'
 
-  - task: AzureStaticWebApp@0
-    displayName: 'Desplegar en Azure Static Web App'
-    inputs:
-      azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_BLACK_GRASS_04C403C0F)
-      app_location: "Tesis-SG-Front"
-      output_location: "dist"
+      - script: |
+          echo '{
+            "navigationFallback": {
+              "rewrite": "/index.html",
+              "exclude": ["/images/*.{png,jpg,gif,ico}", "/css/*", "/js/*"]
+            }
+          }' > Tesis-SG-Front/staticwebapp.config.json
+        displayName: 'Create staticwebapp.config.json for SPA routing'
+
+      - task: AzureStaticWebApp@0
+        inputs:
+          azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_BLACK_GRASS_04C403C0F)
+          app_location: 'Tesis-SG-Front'
+          app_build_command: 'npm run build'
+          output_location: 'dist'
+          deployment_environment: 'development'
+        displayName: 'Deploy to Azure Static Web Apps'
