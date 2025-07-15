@@ -53,7 +53,8 @@ builder.Services.AddCors(options =>
             "http://localhost:5173",  // Vite frontend original
             "http://localhost:5174",   // Segundo frontend o entorno paralelo
             "http://localhost:5175",   // Segundo frontend o entorno paralelo
-            "http://localhost:5176"   // Segundo frontend o entorno paralelo
+            "http://localhost:5176",   // Segundo frontend o entorno paralelo
+            "https://black-grass-04c403c0f.6.azurestaticapps.net/" // Dominio de producción
         )
         .AllowAnyHeader()
         .AllowAnyMethod());
