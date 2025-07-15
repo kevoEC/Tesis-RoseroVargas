@@ -1,0 +1,1 @@
+import{j as t}from"./index-ABbIRX4x.js";function n(){return t.jsxs("div",{className:"p-6 text-center",children:[t.jsx("h1",{className:"text-4xl font-bold text-red-500",children:"404"}),t.jsx("p",{children:"Página no encontrada."})]})}export{n as default};
