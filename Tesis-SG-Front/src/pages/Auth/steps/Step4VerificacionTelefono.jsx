@@ -29,11 +29,11 @@ import {
 } from "@/service/Registro/RegistroService";
 
 const countries = [
-  { code: "+593", label: "Ecuador" },
-  { code: "+57", label: "Colombia" },
-  { code: "+51", label: "Perú" },
-  { code: "+52", label: "México" },
-  { code: "+1", label: "EE.UU." },
+  { code: "+593", label: "Ecuador", minLength: 9, maxLength: 10 },
+  { code: "+57", label: "Colombia", minLength: 10, maxLength: 10 },
+  { code: "+51", label: "Perú", minLength: 9, maxLength: 9 },
+  { code: "+52", label: "México", minLength: 10, maxLength: 10 },
+  { code: "+1", label: "EE.UU.", minLength: 10, maxLength: 10 },
 ];
 
 export default function Step4VerificacionTelefono({ onNext }) {
@@ -44,6 +44,10 @@ export default function Step4VerificacionTelefono({ onNext }) {
   const [token, setToken] = useState("");
   const [openConfirm, setOpenConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [phoneTouched, setPhoneTouched] = useState(false); // nuevo estado
+
+  // Buscar la configuración del país seleccionado
+  const countryConfig = countries.find((c) => c.code === country);
 
   const fullPhone = `${country} ${phone}`;
 
@@ -52,6 +56,12 @@ export default function Step4VerificacionTelefono({ onNext }) {
       toast.error("ID de usuario no encontrado.");
     }
   }, []);
+
+  // Validación: solo dígitos y longitud correcta
+  const isValidPhone =
+    /^\d+$/.test(phone) &&
+    phone.length >= (countryConfig?.minLength || 8) &&
+    phone.length <= (countryConfig?.maxLength || 12);
 
   const sendToken = async () => {
     setOpenConfirm(false);
@@ -78,7 +88,7 @@ export default function Step4VerificacionTelefono({ onNext }) {
       toast.success("Código enviado por SMS 📲");
       setStep("token");
     } catch (error) {
-      toast.error("Error al contactar con el servidor.");
+      toast.error(error.message || "Error al contactar con el servidor.");
     } finally {
       setLoading(false);
     }
@@ -101,7 +111,7 @@ export default function Step4VerificacionTelefono({ onNext }) {
       toast.success("Número verificado correctamente ✅");
       onNext();
     } catch (error) {
-      toast.error("Error al validar el código.");
+      toast.error(error.message || "Error al validar el código.");
     } finally {
       setLoading(false);
     }
@@ -152,12 +162,25 @@ export default function Step4VerificacionTelefono({ onNext }) {
 
                   <Input
                     type="tel"
-                    placeholder="Ej. 0991234567"
+                    placeholder={`Ej. ${countryConfig?.code === '+593' ? '0991234567' : '9999999999'}`}
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={e => {
+                      // Solo permite números
+                      const val = e.target.value.replace(/\D/g, "");
+                      setPhone(val);
+                      setPhoneTouched(true);
+                    }}
+                    onBlur={() => setPhoneTouched(true)}
                     className="flex-1 h-11 text-base bg-[--color-bg] border border-[--color-border]"
+                    maxLength={countryConfig?.maxLength}
                   />
                 </div>
+                {/* Mensaje de error solo si ya tocó el input y está mal */}
+                {phoneTouched && phone.length > 0 && !isValidPhone && (
+                  <div className="text-red-500 text-xs pl-1 pt-1">
+                    Ingresa un número válido de {countryConfig?.minLength} a {countryConfig?.maxLength} dígitos, solo números.
+                  </div>
+                )}
               </div>
 
               <div className="pt-4">
@@ -166,7 +189,7 @@ export default function Step4VerificacionTelefono({ onNext }) {
                     <Button
                       type="button"
                       className="w-full btn-primary btn-animated text-base py-3 h-12"
-                      disabled={!phone.trim()}
+                      disabled={!isValidPhone || loading}
                     >
                       Enviar código
                     </Button>
@@ -222,7 +245,7 @@ export default function Step4VerificacionTelefono({ onNext }) {
                   type="button"
                   onClick={verifyToken}
                   className="w-full btn-primary btn-animated text-base py-3 h-12"
-                  disabled={!token.trim()}
+                  disabled={!token.trim() || loading}
                 >
                   Confirmar
                 </Button>
