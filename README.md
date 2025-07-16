@@ -64,7 +64,7 @@ src/
 ├── main.jsx          # Entry point de la app
 ├── config.js         # Configuración global
 └── index.css         # Estilos base
-
+```
 
 ## 5. Principales Módulos y Arquitectura
 
