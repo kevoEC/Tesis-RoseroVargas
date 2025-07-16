@@ -1,22 +1,20 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useUI } from "@/hooks/useUI";
-import { crearProyeccion } from "@/service/Entidades/ProyeccionService";
+import { crearProyeccion, getConfiguracionByProductoId } from "@/service/Entidades/ProyeccionService";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, } from "@/components/ui/dialog";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { FaEdit, FaTrash, FaSort, FaSortUp, FaSortDown, FaPlus, FaFileExport, FaFilePdf, FaFileCsv, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from "@/components/ui/dialog";
+import { Eye } from "lucide-react"; // icono info personalizado
 import TablaCustom2 from "@/components/shared/TablaCustom2";
-import { getConfiguracionByProductoId } from "@/service/Entidades/ProyeccionService";
+import GlassLoader from "@/components/ui/GlassLoader"; // Import GlassLoader
 
 function formatCurrency(value) {
   return `$${Number(value).toLocaleString("es-EC", { minimumFractionDigits: 2 })}`;
 }
-
 function formatDate(isoDate) {
   if (!isoDate) return "";
   const date = new Date(isoDate);
@@ -27,76 +25,150 @@ function formatDate(isoDate) {
   });
 }
 
+// Componente TooltipSimple básico con CSS
+function TooltipSimple({ content, children }) {
+  return (
+    <div className="relative group inline-block">
+      {children}
+      <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 whitespace-normal w-56 bg-black text-white text-xs rounded p-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+        {content}
+        <svg className="absolute top-full left-1/2 -translate-x-1/2 fill-black" width="16" height="8" viewBox="0 0 16 8" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 0L8 8L16 0H0Z" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 export default function ProyeccionNueva() {
   const { id } = useParams();
   const { notify, user } = useUI();
-  const navigate = useNavigate();
 
+  // Estado del formulario
   const [form, setForm] = useState({
-    tipoSolicitud: "1",
-    idProducto: "2",
-    capital: 0,
+    tipoSolicitud: "1", // fijo y no editable
+    idProducto: "1", // inicio en 1 (Renta Fija)
+    capital: "",
     plazo: "",
     fechaInicial: "",
-    aporteAdicional: null,
-    idOrigenCapital: "1",
-    idOrigenIncremento: null,
+    idOrigenCapital: "",
     idSolicitudInversion: parseInt(id),
-    costeOperativo: 0,
-    costeNotarizacion: null,
+    costeOperativo: 0, // siempre 0, no se muestra
   });
 
   const [cronograma, setCronograma] = useState([]);
   const [resumen, setResumen] = useState(null);
   const [bloqueado, setBloqueado] = useState(false);
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
-  const [accionPendiente, setAccionPendiente] = useState(null); // para disparar luego
+  const [accionPendiente, setAccionPendiente] = useState(null);
   const [tasaSeleccionada, setTasaSeleccionada] = useState(null);
   const [tasaValida, setTasaValida] = useState(false);
+  const [loading, setLoading] = useState(false); // Estado para loader
 
+  // Control de habilitación de campos según flujo
+  const capitalValido = parseFloat(form.capital) >= 1000;
+  const origenCapitalHabilitado = capitalValido;
+  const plazoHabilitado = origenCapitalHabilitado && form.idOrigenCapital !== "";
+  const fechaInicialHabilitada = plazoHabilitado && form.plazo !== "";
 
-  const handleChange = (field, value) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+  // Opciones plazo por idOrigenCapital corregidas
+  const plazosLocal = ["7", "13", "25", "37"];       // Local
+  const plazosExtranjero = ["6", "12", "24", "36"]; // Extranjero
+  const plazos = form.idOrigenCapital === "2" ? plazosExtranjero : plazosLocal;
+
+  // Mensajes para productos
+  const descripcionProducto = {
+    "1": "Renta Fija: El pago del rendimiento junto al capital se realiza al final del plazo seleccionado. Ideal para inversiones con rendimiento acumulado hasta vencimiento.",
+    "2": "Renta Periódica Mensual: El pago de la rentabilidad se realiza mensualmente, proporcionando flujo constante de ingresos.",
+    "3": "Renta Periódica Bimensual: El pago de la rentabilidad se efectúa cada dos meses, equilibrando periodicidad y acumulación.",
+    "4": "Renta Periódica Trimestral: El pago de la rentabilidad se efectúa cada tres meses, permitiendo mayor acumulación entre pagos.",
+    "5": "Renta Periódica Semestral: El pago de la rentabilidad se realiza cada seis meses, ideal para inversiones con pagos menos frecuentes."
   };
 
-  // const ejecutarGenerar = async () => {
-  //   try {
-  //     const payload = {
-  //       ...form,
-  //       idProducto: parseInt(form.idProducto),
-  //       idUsuario: user?.idUsuario ?? 0,
-  //       idOrigenCapital: parseInt(form.idOrigenCapital),
-  //       idOrigenIncremento: form.idOrigenIncremento ? parseInt(form.idOrigenIncremento) : null,
-  //       tipoSolicitud: parseInt(form.tipoSolicitud)
-  //     };
+  // Manejo de cambios en el formulario
+  const handleChange = (field, value) => {
+    // Limpiar tasa y validación cuando cambian campos relevantes
+    if (["capital", "idOrigenCapital", "plazo"].includes(field)) {
+      setTasaSeleccionada(null);
+      setTasaValida(false);
+    }
+    // Capital solo acepta números y punto
+    if (field === "capital") {
+      if (value === "" || /^\d*\.?\d*$/.test(value)) {
+        setForm(prev => ({ ...prev, [field]: value }));
+      }
+      return;
+    }
+    setForm(prev => ({ ...prev, [field]: value }));
+  };
 
-  //     console.log("Datos enviados a crearProyeccion:", payload); // 👈 Agrega esto
+  // Validar fecha inicial permitida (solo 01, 10, 20 y no fechas pasadas)
+  const validarFechaInicial = (fechaISO) => {
+    if (!fechaISO) return false;
 
-  //     const res = await crearProyeccion(payload);
+    // Extraemos año, mes y día del string ISO "yyyy-mm-dd"
+    const [yearStr, monthStr, dayStr] = fechaISO.split("-");
+    const year = parseInt(yearStr, 10);
+    const month = parseInt(monthStr, 10);
+    const day = parseInt(dayStr, 10);
 
-  //     if (res.success) {
-  //       setResumen(res.proyeccion);
-  //       setCronograma(res.cronograma);
-  //       console.log("respuesta del cronograma"+JSON.stringify(res))
-  //       notify.success("Cronograma generado correctamente.");
-  //       setBloqueado(true);
-  //     } else {
-  //       notify.error("No se pudo generar la proyección.");
-  //     }
-  //   } catch (error) {
-  //     notify.error("Error al generar proyección.");
-  //     console.error("Error al generar proyección:", error);
-  //   }
-  // };
+    // Solo permitir días 1, 10 o 20
+    if (![1, 10, 20].includes(day)) return false;
+
+    // Fecha de hoy, sin horas (UTC para evitar desfase)
+    const ahora = new Date();
+    const hoyUTC = new Date(Date.UTC(ahora.getFullYear(), ahora.getMonth(), ahora.getDate()));
+
+    // Fecha seleccionada como UTC (sin horas)
+    const fechaSeleccionada = new Date(Date.UTC(year, month - 1, day));
+
+    // Comparar fechaSeleccionada con hoyUTC
+    if (fechaSeleccionada < hoyUTC) {
+      // Fecha es pasada, inválida
+      return false;
+    }
+
+    return true;
+  };
+
+  // Validar antes de consultar tasa
+  // Validar antes de consultar tasa, en orden: origen, plazo, fecha
+  const validarConsultaTasa = () => {
+    if (!capitalValido) {
+      notify.error("El capital debe ser al menos $1000.");
+      return false;
+    }
+    if (!origenCapitalHabilitado || form.idOrigenCapital === "") {
+      notify.error("Selecciona el origen del capital.");
+      return false;
+    }
+    if (!plazoHabilitado || form.plazo === "") {
+      notify.error("Selecciona el plazo.");
+      return false;
+    }
+    if (!fechaInicialHabilitada || form.fechaInicial === "") {
+      notify.error("Selecciona una fecha inicial válida (01, 10 o 20 y no fechas pasadas).");
+      return false;
+    }
+    if (!validarFechaInicial(form.fechaInicial)) {
+      notify.error("Fecha inicial no válida. Solo 01, 10 o 20, y no fechas pasadas permitidas.");
+      return false;
+    }
+    return true;
+  };
+
 
   const consultarTasa = async () => {
+    if (!validarConsultaTasa()) return;
+
+    setLoading(true);
     try {
       const payload = {
         ...form,
         idProducto: parseInt(form.idProducto),
         idOrigenCapital: parseInt(form.idOrigenCapital),
         plazo: parseInt(form.plazo),
-        capital: parseFloat(form.capital)
+        capital: parseFloat(form.capital),
       };
 
       const configuraciones = await getConfiguracionByProductoId(payload.idProducto);
@@ -134,9 +206,10 @@ export default function ProyeccionNueva() {
       notify.error("Error al consultar la tasa.");
       setTasaValida(false);
       setTasaSeleccionada(null);
+    } finally {
+      setLoading(false);
     }
   };
-
 
   const ejecutarGenerar = async () => {
     if (!tasaValida) {
@@ -144,13 +217,13 @@ export default function ProyeccionNueva() {
       return;
     }
 
+    setLoading(true);
     try {
       const payload = {
         ...form,
         idProducto: parseInt(form.idProducto),
         idUsuario: user?.idUsuario ?? 0,
         idOrigenCapital: parseInt(form.idOrigenCapital),
-        idOrigenIncremento: form.idOrigenIncremento ? parseInt(form.idOrigenIncremento) : null,
         tipoSolicitud: parseInt(form.tipoSolicitud)
       };
 
@@ -164,43 +237,40 @@ export default function ProyeccionNueva() {
       } else {
         notify.error("No se pudo generar la proyección.");
       }
-
     } catch (error) {
       notify.error("Error al generar proyección.");
       console.error("Error al generar proyección:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-
   const handleGenerar = () => {
-    if (!form.capital || !form.plazo || !form.fechaInicial) {
-      notify.error("Todos los campos obligatorios deben estar completos.");
+    if (!capitalValido || !form.plazo || !form.fechaInicial) {
+      notify.error("Todos los campos obligatorios deben estar completos y válidos.");
       return;
     }
-
-    // Abre el diálogo
     setAccionPendiente(() => ejecutarGenerar);
     setMostrarConfirmacion(true);
   };
 
+  // Texto profesional para origen capital
+  const textoAyudaOrigenCapital = form.idOrigenCapital === "1"
+    ? "Origen Local: Se aplica un mes de gracia para el Impuesto a la Salida de Divisas (ISD)."
+    : form.idOrigenCapital === "2"
+      ? "Origen Extranjero: No aplica mes de gracia para ISD, pero se validará que el depósito provenga de una entidad financiera extranjera autorizada."
+      : "Primero selecciona un origen de capital para más información.";
 
-  const mostrarAporte = form.tipoSolicitud === "2" || form.tipoSolicitud === "3";
-  const mostrarOrigenIncremento = form.tipoSolicitud === "3";
-  const plazos = form.idOrigenCapital === "2" ? ["6", "12", "24", "36"] : ["7", "13", "25", "37"];
-  const isFija = form.idProducto === "1";
+  // Producto seleccionado para nota
+  const notaProducto = descripcionProducto[form.idProducto] || "";
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-6 relative">
+      {/* GlassLoader */}
+      <GlassLoader visible={loading} message="Procesando..." />
+
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-gray-800">Nueva Proyección</h2>
-        {/* <Button 
-        variant="outline" 
-        className="bg-white hover:bg-gray-300"
-        onClick={() => navigate(`/solicitudes/editar/${id}`)}>
-          <span className="flex items-center gap-1">
-            <FaArrowLeft /> Regresar a solicitud
-          </span>
-        </Button> */}
       </div>
 
       <Card className="border border-gray-700 shadow-sm bg-white rounded-2xl">
@@ -208,70 +278,105 @@ export default function ProyeccionNueva() {
 
           <h3 className="text-xl font-semibold text-gray-800">Datos para la proyección</h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <FormSelect label="Tipo de solicitud" value={form.tipoSolicitud}
-              onChange={(val) => handleChange("tipoSolicitud", val)}
-              options={["1"]}
-              labels={["Nueva"]}
-              // options={["1", "2", "3"]}
-              // labels={["Nueva", "Renovación", "Incremento"]}
-              disabled={bloqueado} />
+          {/* Primera fila: Tipo solicitud, Producto, Capital */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="flex flex-col justify-center">
+              <Label className="text-sm font-medium text-gray-700">Tipo de solicitud</Label>
+              <div className="mt-1 p-2 rounded bg-gray-100 border border-gray-300 text-gray-800 font-semibold">
+                Nueva
+              </div>
+            </div>
 
-            <FormSelect label="Producto" value={form.idProducto}
+            <FormSelect
+              label="Producto"
+              value={form.idProducto}
               onChange={(val) => handleChange("idProducto", val)}
               options={["1", "2", "3", "4", "5"]}
-              labels={["Renta Fija", "Renta Periódica Mensual", "Renta Periódica Bimensual", "Renta Periódica Trimestral", "Renta Periódica Semestral"]}
-              disabled={bloqueado} />
+              labels={[
+                "Renta Fija",
+                "Renta Periódica Mensual",
+                "Renta Periódica Bimensual",
+                "Renta Periódica Trimestral",
+                "Renta Periódica Semestral",
+              ]}
+              disabled={bloqueado}
+            />
 
-            <FormInput label="Capital" value={form.capital}
-              onChange={(e) => handleChange("capital", parseFloat(e.target.value))}
-              disabled={bloqueado} />
-
-            <FormSelect label="Plazo" value={form.plazo}
-              onChange={(val) => handleChange("plazo", val)}
-              options={plazos}
-              labels={plazos.map(p => `${p} meses`)}
-              disabled={bloqueado} />
-
-            <FormInput label="Fecha inicial" type="date" value={form.fechaInicial}
-              onChange={(e) => handleChange("fechaInicial", e.target.value)}
-              disabled={bloqueado} />
-
-            {mostrarAporte && (
-              <FormInput label="Aporte adicional" value={form.aporteAdicional ?? ""}
-                onChange={(e) => handleChange("aporteAdicional", parseFloat(e.target.value))}
-                disabled={bloqueado} />
-            )}
-
-            <FormSelect label="Origen del capital" value={form.idOrigenCapital}
-              onChange={(val) => handleChange("idOrigenCapital", val)}
-              options={["1", "2"]}
-              labels={["Local", "Extranjero"]}
-              disabled={bloqueado} />
-
-            {mostrarOrigenIncremento && (
-              <FormSelect label="Origen del incremento" value={form.idOrigenIncremento}
-                onChange={(val) => handleChange("idOrigenIncremento", val)}
-                options={["1", "2"]}
-                labels={["Local", "Extranjero"]}
-                disabled={bloqueado} />
-            )}
-
-            <FormInput label="Coste operativo" value={form.costeOperativo}
-              onChange={(e) => handleChange("costeOperativo", parseFloat(e.target.value))}
-              disabled={bloqueado} />
+            <FormInput
+              label="Capital"
+              value={form.capital}
+              onChange={(e) => handleChange("capital", e.target.value)}
+              disabled={bloqueado}
+              placeholder="$"
+            />
           </div>
 
+          {/* Nota producto: ocupa toda la fila */}
+          <div className="bg-blue-50 border border-blue-300 rounded p-3 text-sm text-blue-800 italic font-medium">
+            {notaProducto}
+          </div>
+
+          {/* Segunda fila: Origen capital, Plazo, Fecha inicial (solo si capital válido) */}
+          {capitalValido && (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="relative">
+                <FormSelect
+                  label={
+                    <div className="flex items-center gap-1">
+                      Origen del capital
+                      <TooltipSimple content={textoAyudaOrigenCapital}>
+                        <Eye className="w-4 h-4 text-gray-500 cursor-help" />
+                      </TooltipSimple>
+                    </div>
+                  }
+                  value={form.idOrigenCapital}
+                  onChange={(val) => handleChange("idOrigenCapital", val)}
+                  options={["1", "2"]}
+                  labels={["Local", "Extranjero"]}
+                  disabled={bloqueado}
+                />
+              </div>
+
+              <FormSelect
+                label="Plazo"
+                value={form.plazo}
+                onChange={(val) => handleChange("plazo", val)}
+                options={plazos}
+                labels={plazos.map((p) => `${p} meses`)}
+                disabled={bloqueado}
+              />
+
+              <FormInput
+                label="Fecha inicial"
+                type="date"
+                value={form.fechaInicial}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "" || validarFechaInicial(val)) {
+                    handleChange("fechaInicial", val);
+                  } else {
+                    notify.error("Fecha inválida. Solo 01, 10 o 20 de meses actuales o futuros permitidos.");
+                  }
+                }}
+                disabled={bloqueado}
+              />
+            </div>
+          )}
+
+          {/* Coste operativo oculto, solo para payload */}
+          <input type="hidden" value={0} readOnly />
+
+          {/* Mostrar tasa seleccionada si existe */}
           {tasaSeleccionada !== null && (
-            <div className="bg-blue-100 border border-blue-300 rounded-xl p-4 flex justify-center items-center">
+            <div className="bg-blue-100 border border-blue-300 rounded-xl p-4 flex justify-center items-center mt-4">
               <div>
                 <p className="text-sm text-blue-600 font-medium">Tasa asignada</p>
                 <p className="text-3xl font-bold text-blue-800">{tasaSeleccionada.toFixed(2)}%</p>
               </div>
-              {/* <div className="text-sm text-blue-500 italic">Basada en capital, origen y plazo</div> */}
             </div>
           )}
 
+          {/* Botones consultar tasa y generar cronograma */}
           <div className="flex flex-col sm:flex-row justify-end gap-4 pt-4">
             <Button
               onClick={consultarTasa}
@@ -291,115 +396,27 @@ export default function ProyeccionNueva() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Tabla de cronograma */}
       {cronograma.length > 0 && (
         <>
-          {/* <Card className="mt-6 border rounded-2xl">
-            <CardContent className="p-4">
-              <Table>
-                <TableHeader>
-                  <TableRow className="hover:bg-blue-50">
-                    <TableHead>Periodo</TableHead>
-                    <TableHead>Inicio</TableHead>
-                    <TableHead>Vencimiento</TableHead>
-                    <TableHead>Tasa</TableHead>
-                    {mostrarAporte && <TableHead>Aporte</TableHead>}
-                    <TableHead>Capital</TableHead>
-                    <TableHead>Rentabilidad</TableHead>
-                    {isFija && <TableHead>Capital + Renta</TableHead>}
-                    <TableHead>Coste Operativo</TableHead>
-                    <TableHead>Renta Acumulada</TableHead>
-                    {isFija && <TableHead>Capital Final</TableHead>}
-                    {!isFija && <TableHead>Monto Pagar</TableHead>}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {cronograma.map((item, i) => (
-                    <TableRow key={i} className="hover:bg-blue-50">
-                      <TableCell>{item.periodo}</TableCell>
-                      <TableCell>{new Date(item.fechaInicial).toLocaleDateString()}</TableCell>
-                      <TableCell>{new Date(item.fechaVencimiento).toLocaleDateString()}</TableCell>
-                      <TableCell>{item.tasa.toFixed(2)}%</TableCell>
-                      {mostrarAporte && <TableCell>{formatCurrency(item.aporteAdicional)}</TableCell>}
-                      <TableCell>{formatCurrency(item.capitalOperacion)}</TableCell>
-                      <TableCell>{formatCurrency(item.rentabilidad)}</TableCell>
-                      {isFija && <TableCell>{formatCurrency(item.capitalRenta)}</TableCell>}
-                      <TableCell>{formatCurrency(item.costoOperativo)}</TableCell>
-                      <TableCell>{formatCurrency(item.rentaAcumulada)}</TableCell>
-                      {isFija && <TableCell>{formatCurrency(item.capitalFinal)}</TableCell>}
-                      {!isFija && <TableCell>{formatCurrency(item.montoPagar)}</TableCell>}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card> */}
-
-          <Card>
+          <Card className="mt-6">
             <CardContent>
               <TablaCustom2
                 data={cronograma}
                 columns={[
-                  {
-                    key: 'periodo',
-                    label: 'Período',
-                    render: (value) => <div className="text-center">{value}</div>
-                  },
-                  {
-                    key: 'fechaInicial',
-                    label: 'F. Inicial',
-                    render: (value) => <div className="text-center">{formatDate(value)}</div>
-                  },
-                  {
-                    key: 'fechaVencimiento',
-                    label: 'F. Vencimiento',
-                    render: (value) => <div className="text-center">{formatDate(value)}</div>
-                  },
-
-                  {
-                    key: 'tasa',
-                    label: 'Tasa',
-                    render: (value) => <div className="text-center">{value.toFixed(2)}%</div>
-                  },
-                  {
-                    key: 'aporteAdicional',
-                    label: 'Aporte Adic.',
-                    render: (value) => <div className="text-right">{formatCurrency(value)}</div>
-                  },
-                  {
-                    key: 'capitalOperacion',
-                    label: 'Capital',
-                    render: (value) => <div className="text-right">{formatCurrency(value)}</div>
-                  },
-                  {
-                    key: 'rentabilidad',
-                    label: 'Rentabilidad',
-                    render: (value) => <div className="text-right">{formatCurrency(value)}</div>
-                  },
-                  {
-                    key: 'capitalRenta',
-                    label: 'Capital Renta',
-                    render: (value) => <div className="text-right">{formatCurrency(value)}</div>
-                  },
-                  {
-                    key: 'costoOperativo',
-                    label: 'Coste Op.',
-                    render: (value) => <div className="text-right">{formatCurrency(value)}</div>
-                  },
-                  {
-                    key: 'rentaAcumulada',
-                    label: 'Renta Acum.',
-                    render: (value) => <div className="text-right">{formatCurrency(value)}</div>
-                  },
-                  {
-                    key: 'capitalFinal',
-                    label: 'Capital Final',
-                    render: (value) => <div className="text-right">{formatCurrency(value)}</div>
-                  },
-                  {
-                    key: 'montoPagar',
-                    label: 'Monto a Pagar',
-                    render: (value) => <div className="text-right">{formatCurrency(value)}</div>
-                  },
+                  { key: "periodo", label: "Período", render: (v) => <div className="text-center">{v}</div> },
+                  { key: "fechaInicial", label: "F. Inicial", render: (v) => <div className="text-center">{formatDate(v)}</div> },
+                  { key: "fechaVencimiento", label: "F. Vencimiento", render: (v) => <div className="text-center">{formatDate(v)}</div> },
+                  { key: "tasa", label: "Tasa", render: (v) => <div className="text-center">{v.toFixed(2)}%</div> },
+                  { key: "aporteAdicional", label: "Aporte Adic.", render: (v) => <div className="text-right">{formatCurrency(v)}</div> },
+                  { key: "capitalOperacion", label: "Capital", render: (v) => <div className="text-right">{formatCurrency(v)}</div> },
+                  { key: "rentabilidad", label: "Rentabilidad", render: (v) => <div className="text-right">{formatCurrency(v)}</div> },
+                  { key: "capitalRenta", label: "Capital Renta", render: (v) => <div className="text-right">{formatCurrency(v)}</div> },
+                  { key: "costoOperativo", label: "Coste Op.", render: (v) => <div className="text-right">{formatCurrency(v)}</div> },
+                  { key: "rentaAcumulada", label: "Renta Acum.", render: (v) => <div className="text-right">{formatCurrency(v)}</div> },
+                  { key: "capitalFinal", label: "Capital Final", render: (v) => <div className="text-right">{formatCurrency(v)}</div> },
+                  { key: "montoPagar", label: "Monto a Pagar", render: (v) => <div className="text-right">{formatCurrency(v)}</div> },
                 ]}
                 mostrarAgregarNuevo={false}
                 mostrarEditar={false}
@@ -408,28 +425,28 @@ export default function ProyeccionNueva() {
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-6">
-            <Resumen label="Rentabilidad Total" value={resumen?.totalRentabilidad} />
-            <Resumen label="Coste Operativo Total" value={resumen?.totalCosteOperativo} />
-            <Resumen label="Valor a Liquidar" value={resumen?.valorProyectadoLiquidar} />
-            <Resumen label="Renta Total" value={resumen?.totalRentaPeriodo} />
-            <Resumen label="Capital + Rendimiento" value={resumen?.rendimientosMasCapital} />
-            {form.tipoSolicitud === "3" && resumen?.fechaIncremento && (
-              <Resumen label="Fecha Incremento" value={new Date(resumen.fechaIncremento).toLocaleDateString()} />
-            )}
-          </div>
-
-
+          {/* Totales del cronograma */}
+          {resumen && (
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-6">
+              <Resumen label="Coste Operativo Total" value={resumen.totalCosteOperativo} />
+              <Resumen label="Rentabilidad Total" value={resumen.totalRentabilidad} />
+              <Resumen label="Renta Total" value={resumen.totalRentaPeriodo} />
+              <Resumen label="Capital + Rendimiento" value={resumen.rendimientosMasCapital} />
+              <Resumen label="Valor a Liquidar" value={resumen.valorProyectadoLiquidar} />
+              {form.tipoSolicitud === "3" && resumen.fechaIncremento && (
+                <Resumen label="Fecha Incremento" value={new Date(resumen.fechaIncremento).toLocaleDateString()} />
+              )}
+            </div>
+          )}
         </>
       )}
+
       <Dialog open={mostrarConfirmacion} onOpenChange={setMostrarConfirmacion}>
         <DialogContent className="backdrop-blur-md max-w-md">
           <DialogHeader>
             <DialogTitle>¿Generar cronograma?</DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-gray-500">
-            ¿Estás seguro de que deseas generar el cronograma?
-          </p>
+          <p className="text-sm text-gray-500">¿Estás seguro de que deseas generar el cronograma?</p>
           <DialogFooter className="pt-4">
             <Button variant="outline" onClick={() => setMostrarConfirmacion(false)}>
               Cancelar
@@ -438,7 +455,7 @@ export default function ProyeccionNueva() {
               className="bg-primary text-white hover:bg-primary/70"
               onClick={() => {
                 setMostrarConfirmacion(false);
-                if (accionPendiente) accionPendiente(); // Ejecuta después de confirmar
+                if (accionPendiente) accionPendiente();
               }}
             >
               Confirmar
@@ -450,7 +467,7 @@ export default function ProyeccionNueva() {
   );
 }
 
-function FormInput({ label, value, onChange, type = "number", disabled }) {
+function FormInput({ label, value, onChange, type = "text", disabled, placeholder }) {
   return (
     <div className="space-y-1">
       <Label className="text-sm text-gray-700 font-medium">{label}</Label>
@@ -460,7 +477,7 @@ function FormInput({ label, value, onChange, type = "number", disabled }) {
         onChange={onChange}
         disabled={disabled}
         className="text-sm border-gray-700 bg-white"
-        placeholder={label}
+        placeholder={placeholder}
       />
     </div>
   );

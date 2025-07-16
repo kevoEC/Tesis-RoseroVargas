@@ -1,147 +1,127 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EntidadView from "@/components/shared/VistaEntidad";
-import {
-  getProspectos,
-  deleteProspecto,
-} from "@/service/Entidades/ProspectoService";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
+import GlassLoader from "@/components/ui/GlassLoader";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import ProspectoForm from "../Pagos/PagosForm";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { toast } from "sonner";
+import { getPagos, deletePago } from "@/service/Entidades/PagosService";
+import PagosForm from "./PagosForm";
 
 export default function PagosTable() {
   const navigate = useNavigate();
-
-  const [prospectos, setProspectos] = useState([]);
+  const [pagos, setPagos] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const cargarProspectos = async () => {
+
+  // Carga de pagos
+  const cargarPagos = async () => {
+    setLoading(true);
     try {
-      const data = await getProspectos();
-      setProspectos(data);
+      const data = await getPagos();
+      setPagos(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error("Error al cargar prospectos:", error);
+      toast.error("Error al cargar pagos: " + (error.message ?? error));
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    cargarProspectos();
+    cargarPagos();
   }, []);
 
-  /*Cargar los datos al montar el componente*/
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getProspectos(); // Ejecutar función async
-        setProspectos(data);
-      } catch (error) {
-        console.error("Error al cargar prospectos:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // 🟡 Editar
+  // Editar (redirige)
   const handleEditar = (item) => {
-    navigate(`/pagos/editar/${item.idProspecto}`);
+    navigate(`/pagos/editar/${item.idPago}`);
   };
 
-  // 🔴 Eliminar
+  // Eliminar
   const handleEliminar = async (item) => {
+    if (!window.confirm("¿Eliminar este pago?")) return;
     try {
-      await deleteProspecto(item.idProspecto);
-      // Si usas refetch dentro de VistaEntidad, lo puedes llamar aquí después
+      await deletePago(item.idPago);
+      toast.success("Pago eliminado.");
+      cargarPagos();
     } catch (err) {
-      console.error("Error al eliminar prospecto:", err);
+      toast.error("Error al eliminar pago: " + (err.message ?? err));
     }
   };
-  const handleDesactivar = async (item) => {};
 
-  const handleAbrirFormulario = () => {
-    setIsDialogOpen(true);
-  };
-  const handleCerrarDialog = () => {
-    setIsDialogOpen(false);
-  };
+  // Abrir formulario de nuevo pago
+  const handleAbrirFormulario = () => setIsDialogOpen(true);
 
+  // Columnas de la tabla de pagos
   const columnas = [
     {
-      key: "idProspecto",
-      label: "Prospecto",
+      key: "idPago",
+      label: "ID",
       render: (value) => (
-        <div className="flex items-center justify-center group relative text-gray-500">
-          <svg
-            className="w-5 h-5 md:w-6 md:h-6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M5.121 17.804A9.003 9.003 0 0112 15c2.486 0 4.735.996 6.364 2.634M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
+        <div className="flex items-center justify-center group relative text-violet-500">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+            <rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="1.8" />
+            <path d="M8 8h8M8 12h8M8 16h4" stroke="currentColor" strokeWidth="1.5" />
           </svg>
           <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 text-xs text-white bg-zinc-800 px-2 py-0.5 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 whitespace-nowrap">
             ID: {value}
           </span>
         </div>
-      ),
+      )
+    },
+    { key: "detalle", label: "Detalle" },
+    {
+      key: "cantidadPagos",
+      label: "Cantidad de Pagos",
+      render: (v) => <span>{v ?? 0}</span>,
     },
     {
-      key: "nombreCompleto",
-      label: "Nombre completo",
-      render: (_, row) => (
-        <span className="whitespace-nowrap">
-          {`${row.nombres ?? ""} ${row.apellidoPaterno ?? ""} ${
-            row.apellidoMaterno ?? ""
-          }`}
+      key: "generarPagos",
+      label: "Pagos generados",
+      render: (v) =>
+        <span className={`px-2 py-1 text-xs rounded-full font-semibold ${v ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"}`}>
+          {v ? "Sí" : "No"}
         </span>
-      ),
     },
-    { key: "tipoIdentificacion", label: "Tipo ID" },
-    { key: "telefonoCelular", label: "Núm. Celular" },
-    { key: "correoElectronico", label: "Correo" },
-    { key: "nombreOrigen", label: "Origen" },
-    { key: "productoInteres", label: "Producto de Interés" },
-    { key: "agencia", label: "Agencia" },
+    // Estado ANTES de la fecha de creación
     {
-      key: "estado",
+      key: "confirmarRegistrosPagos",
       label: "Estado",
-      render: (value) => (
-        <span
-          className={`px-2 py-1 text-xs font-semibold rounded-full ${
-            value
-              ? "bg-green-100 text-green-700"
-              : "bg-yellow-200 text-yellow-700"
-          }`}
-        >
-          {value ? "Activo" : "Inactivo"}
+      render: (v) => (
+        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${v ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-800"}`}>
+          {v ? "Completado" : "Pendiente"}
         </span>
       ),
+    },
+    {
+      key: "fechaCreacion",
+      label: "Creación",
+      render: (v) => v ? new Date(v).toLocaleString("es-EC") : ""
+    },
+    {
+      key: "fechaModificacion",
+      label: "Modificación",
+      render: (v) => v ? new Date(v).toLocaleString("es-EC") : "-"
     },
   ];
 
+  // Ordenar por fecha de creación descendente (más reciente primero)
+  const pagosOrdenados = [...pagos].sort(
+    (a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion)
+  );
+
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-full">
+    <div className="p-4 sm:p-6 md:p-8 max-w-full relative">
+      <GlassLoader visible={loading} message="Cargando pagos..." />
       <Card className="w-full border border-muted rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.12)]">
         <CardHeader>
-          <CardTitle className="text-3xl">Lista de Pagos</CardTitle>
+          <CardTitle className="text-3xl flex items-center">
+            Lista de Pagos
+          </CardTitle>
         </CardHeader>
         <CardContent className="p-6 overflow-x-auto">
           <TablaCustom2
             columns={columnas}
-            data={prospectos}
+            data={pagosOrdenados}
             mostrarEditar={true}
             mostrarAgregarNuevo={true}
             mostrarEliminar={true}
@@ -151,22 +131,18 @@ export default function PagosTable() {
           />
         </CardContent>
       </Card>
-      {/* Dialog para el formulario */}
-      <Dialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        className="min-w-3xl"
-      >
-        <DialogContent className="min-w-3xl">
+      {/* Dialog para el formulario de creación de pago */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="min-w-[420px] max-w-xl">
           <DialogHeader>
             <DialogTitle>Agregar Pago</DialogTitle>
             <DialogDescription>
-              Completa la información del nuevo prospecto
+              Completa la información del nuevo pago
             </DialogDescription>
           </DialogHeader>
-          <ProspectoForm
-            onClose={handleCerrarDialog}
-            onSaved={cargarProspectos}
+          <PagosForm
+            onClose={() => setIsDialogOpen(false)}
+            onSaved={cargarPagos}
           />
         </DialogContent>
       </Dialog>

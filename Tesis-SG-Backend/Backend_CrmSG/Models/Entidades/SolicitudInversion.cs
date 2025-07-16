@@ -19,5 +19,6 @@ namespace Backend_CrmSG.Models.Entidades
         // Nuevos campos agregados
         public int? IdProspecto { get; set; }
         public int? IdCliente { get; set; }
+        public int? FaseProceso { get; set; } // 1: Llenado, 2: Tareas, 3: Rechazada, 4: Completada
     }
 }

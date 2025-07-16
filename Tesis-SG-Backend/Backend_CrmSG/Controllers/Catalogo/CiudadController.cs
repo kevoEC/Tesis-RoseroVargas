@@ -1,5 +1,4 @@
-﻿// Controllers/Catalogos/CiudadController.cs
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Backend_CrmSG.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Backend_CrmSG.Models.Catalogos;
@@ -13,11 +12,17 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<Ciudad> _repo;
 
+        /// <summary>
+        /// Constructor del controlador de ciudades.
+        /// </summary>
         public CiudadController(IRepository<Ciudad> repo)
         {
             _repo = repo;
         }
 
+        /// <summary>
+        /// Obtiene todas las ciudades.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ciudad>>> Get()
         {
@@ -25,6 +30,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Obtiene una ciudad por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<Ciudad>> Get(int id)
         {
@@ -34,6 +42,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(item);
         }
 
+        /// <summary>
+        /// Obtiene todas las ciudades de una provincia específica.
+        /// </summary>
         [HttpGet("por-provincia/{idProvincia}")]
         public async Task<ActionResult<IEnumerable<Ciudad>>> GetPorProvincia(int idProvincia)
         {
@@ -41,6 +52,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Crea una nueva ciudad.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<Ciudad>> Post([FromBody] Ciudad item)
         {
@@ -48,6 +62,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = item.IdCiudad }, item);
         }
 
+        /// <summary>
+        /// Actualiza una ciudad existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Ciudad item)
         {
@@ -57,6 +74,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina una ciudad por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

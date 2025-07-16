@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { toast } from "sonner";
-import { FaArrowLeft } from "react-icons/fa";
 import TablaCustom2 from "@/components/shared/TablaCustom2";
+import GlassLoader from "@/components/ui/GlassLoader";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { Lock } from "lucide-react";
 import ModalActividad from "@/components/prospectos/ModalActividad";
 import SolicitudInversionForm from "@/pages/Entidad/Solicitudes/SolicitudInversionForm";
 import { getProspectoById } from "@/service/Entidades/ProspectoService";
@@ -13,61 +12,95 @@ import { getActividadesByProspectoId } from "@/service/Entidades/ActividadServic
 import { getSolicitudesByProspectoId } from "@/service/Entidades/SolicitudService";
 import { getPrioridad } from "@/service/Catalogos/PrioridadService";
 import { getTipoActividad } from "@/service/Catalogos/TipoActividadService";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
+import { useAuth } from "@/hooks/useAuth"; // IMPORTANTE: Agrega este import
+
+const FASE_PROCESO_MAP = {
+  1: { label: "Llenado de Información", color: "bg-yellow-100 text-yellow-700" },
+  2: { label: "Tareas Generadas", color: "bg-blue-100 text-blue-700" },
+  3: { label: "Solicitud Rechazada", color: "bg-red-100 text-red-700" },
+  4: { label: "Completada", color: "bg-green-100 text-green-700" },
+};
 
 export default function ProspectoDetalle() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const { roles } = useAuth(); // Usa el contexto para obtener el rol
+  const esExterno = roles.includes("Externo");
+
   const [prospecto, setProspecto] = useState(null);
   const [actividades, setActividades] = useState([]);
   const [solicitudes, setSolicitudes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [modalEditarOpen, setModalEditarOpen] = useState(false);
   const [modalNuevaSolicitud, setModalNuevaSolicitud] = useState(false);
-  const [solicitudEditar, setSolicitudEditar] = useState(null);
+
   const [actividadEditar, setActividadEditar] = useState(null);
+
   const [tiposActividad, setTiposActividad] = useState([]);
   const [prioridades, setPrioridades] = useState([]);
+  const [alertFaltaActividad, setAlertFaltaActividad] = useState(false);
 
   useEffect(() => {
-    const fetchCatalogos = async () => {
-      try {
-        const [tipos, prioridadesData] = await Promise.all([
-          getTipoActividad(),
-          getPrioridad(),
-        ]);
-        setTiposActividad(tipos);
-        setPrioridades(prioridadesData);
-      } catch (error) {
-        console.error("Error cargando catálogos:", error);
-      }
-    };
-    fetchCatalogos();
-  }, []);
-
-  useEffect(() => {
+    setLoading(true);
     cargarDatosProspecto();
+    // eslint-disable-next-line
   }, [id]);
 
   const cargarDatosProspecto = async () => {
     try {
-      const datos = await getProspectoById(id);
-      const acts = await getActividadesByProspectoId(id);
-      const sols = await getSolicitudesByProspectoId(id);
+      const [datos, acts, sols, tipos, prios] = await Promise.all([
+        getProspectoById(id),
+        getActividadesByProspectoId(id),
+        getSolicitudesByProspectoId(id),
+        getTipoActividad(),
+        getPrioridad(),
+      ]);
       setProspecto(datos);
       setActividades(acts);
       setSolicitudes(sols);
+      setTiposActividad(tipos);
+      setPrioridades(prios);
     } catch (error) {
       toast.error("Error al cargar prospecto: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleActividadCreada = async () => {
-    const acts = await getActividadesByProspectoId(id);
-    setActividades(acts);
-    setActividadEditar(null);
+  // Validación para crear solicitud (debe haber una actividad en estado true)
+  const puedeCrearSolicitud = actividades.some(a => a.estado === true);
+
+  // --- Validaciones ---
+  const handleAgregarSolicitud = () => {
+    if (prospecto?.esCliente) return;
+    if (!esExterno && !puedeCrearSolicitud) {
+      setAlertFaltaActividad(true);
+      return;
+    }
+    setModalNuevaSolicitud(true);
   };
 
+  const handleAgregarActividad = () => {
+    if (prospecto?.esCliente) return;
+    setModalOpen(true);
+  };
+
+  // SOLO LECTURA SI ES CLIENTE
+  const esSoloLectura = !!prospecto?.esCliente;
+
+  // --- COLUMNAS ---
   const columnasActividad = [
     {
       key: "idActividad",
@@ -84,15 +117,6 @@ export default function ProspectoDetalle() {
       )
     },
     { key: "nombreTipoActividad", label: "Tipo" },
-    { key: "asunto", label: "Asunto" },
-    {
-      key: "descripcion",
-      label: "Descripción",
-      render: (value) => <span className="max-w-12 truncate block">{value}</span>,
-    },
-    { key: "duracion", label: "Duración" },
-    { key: "vencimiento", label: "Vencimiento" },
-    { key: "nombrePrioridad", label: "Prioridad" },
     {
       key: "estado",
       label: "Estado",
@@ -102,6 +126,15 @@ export default function ProspectoDetalle() {
         </span>
       )
     },
+    { key: "asunto", label: "Asunto" },
+    {
+      key: "descripcion",
+      label: "Descripción",
+      render: (value) => <span className="max-w-12 truncate block">{value}</span>,
+    },
+    { key: "duracion", label: "Duración" },
+    { key: "vencimiento", label: "Vencimiento" },
+    { key: "nombrePrioridad", label: "Prioridad" },
   ];
 
   const columnasInversion = [
@@ -123,66 +156,136 @@ export default function ProspectoDetalle() {
     { key: "nombreTipoSolicitud", label: "Tipo Solicitud", render: (_, row) => row.identificacion?.nombreTipoSolicitud || "—" },
     { key: "nombreTipoCliente", label: "Tipo Cliente", render: (_, row) => row.identificacion?.nombreTipoCliente || "—" },
     { key: "nombreTipoDocumento", label: "Tipo Documento", render: (_, row) => row.identificacion?.nombreTipoDocumento || "—" },
-    { key: "nombreCompletoProspecto", label: "Nombre Prospecto" },
+    {
+      key: "faseProceso",
+      label: "Fase Proceso",
+      render: (value) => {
+        const fase = FASE_PROCESO_MAP[value] || { label: "Desconocido", color: "bg-gray-100 text-gray-500" };
+        return (
+          <span className={`px-2 py-1 text-xs font-semibold rounded-full ${fase.color}`}>
+            {fase.label}
+          </span>
+        );
+      }
+    }
   ];
 
-  if (!prospecto) {
-    return <p className="text-center text-gray-600">Cargando prospecto...</p>;
+  // Loader Dynamics
+  if (loading || !prospecto) {
+    return <GlassLoader visible message="Cargando prospecto..." />;
   }
 
+  // Estado badge
+  const estadoBadge = prospecto?.esCliente ? (
+    <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold ml-2">Cliente</span>
+  ) : (
+    <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-semibold ml-2">Prospecto</span>
+  );
+
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
-      <div>
-        <Button variant="outline" onClick={() => navigate("/prospectos/vista")}>Volver al Listado de Prospectos</Button>
+    <div className="p-6 md:p-10 max-w-7xl mx-auto relative">
+      {/* Candado Dynamics */}
+      {esSoloLectura && (
+        <div
+          className="w-full flex items-center px-6 py-2 bg-gray-50 border-b border-gray-300 shadow-sm mb-4 z-50 rounded-t-xl"
+          style={{ position: "sticky", top: 0 }}
+        >
+          <Lock className="text-gray-700 w-5 h-5 mr-2" />
+          <span className="font-semibold text-gray-700 text-sm">
+            Solo lectura: este prospecto ya es cliente. No se pueden agregar actividades ni solicitudes.
+          </span>
+        </div>
+      )}
+
+      {/* HEADER Dynamics */}
+      <div className="flex flex-wrap items-center gap-4 mb-3">
+        <Button variant="outline" onClick={() => navigate("/prospectos/vista")} className="px-5 py-2">← Volver</Button>
+        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+          {prospecto?.nombres} {prospecto?.apellidoPaterno} {prospecto?.apellidoMaterno}
+        </h1>
+        <span className="text-base text-gray-500 ml-2"><b>ID:</b> {prospecto?.idProspecto}</span>
+        {estadoBadge}
+      </div>
+      <div className="flex flex-wrap text-xs text-gray-700 mb-6 border-b pb-2 gap-8">
+        <span><b>Correo:</b> {prospecto?.correoElectronico || "-"}</span>
+        <span><b>Teléfono:</b> {prospecto?.telefonoCelular || "-"}</span>
+        <span><b>Tipo Identificación:</b> {prospecto?.tipoIdentificacion || "-"}</span>
+        <span><b>Origen:</b> {prospecto?.nombreOrigen || "-"}</span>
+        <span><b>Producto Interés:</b> {prospecto?.productoInteres || "-"}</span>
+        <span><b>Agencia:</b> {prospecto?.agencia || "-"}</span>
       </div>
 
-      <h1 className="text-2xl font-bold text-gray-800">Detalle del Prospecto</h1>
+      {/* Layout tipo Dynamics: Izquierda 1/3, Derecha 2/3 */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        {/* Panel izquierdo: Opciones */}
+        <section className="p-0 flex flex-col gap-4 min-h-[360px] col-span-1 bg-transparent">
+          <div>
+            <div className="font-semibold text-gray-800 mb-2">Opciones</div>
+            {/* Solo muestra el botón de actividad si NO es Externo */}
+            {!esExterno && (
+              <Button
+                className="bg-violet-600 hover:bg-violet-700 text-white w-full"
+                disabled={esSoloLectura}
+                onClick={handleAgregarActividad}
+              >
+                + Agregar actividad
+              </Button>
+            )}
+            <Button
+              className="bg-violet-600 hover:bg-violet-700 text-white w-full mt-4"
+              disabled={esSoloLectura}
+              onClick={handleAgregarSolicitud}
+            >
+              + Crear solicitud de inversión
+            </Button>
+          </div>
+        </section>
 
-      <Card><CardContent className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <Info label="Nombre completo" value={`${prospecto.nombres} ${prospecto.apellidoPaterno} ${prospecto.apellidoMaterno}`} />
-        <Info label="Correo" value={prospecto.correoElectronico} />
-        <Info label="Teléfono" value={prospecto.telefonoCelular} />
-        <Info label="Tipo Identificación" value={prospecto.tipoIdentificacion} />
-        <Info label="Origen del Cliente" value={prospecto.nombreOrigen} />
-        <Info label="Producto de Interés" value={prospecto.productoInteres} />
-        <Info label="Agencia" value={prospecto.agencia} />
-      </CardContent></Card>
+        {/* Panel derecho: Tablas */}
+        <section className="col-span-2 flex flex-col gap-8">
+          {/* Solo muestra la tabla de actividades si NO es Externo */}
+          {!esExterno && (
+            <div>
+              <div className="flex items-center gap-4 mb-2">
+                <span className="font-semibold text-lg text-gray-700">Actividades</span>
+              </div>
+              <TablaCustom2
+                columns={columnasActividad}
+                data={actividades}
+                mostrarEditar={!esSoloLectura}
+                mostrarAgregarNuevo={false}
+                mostrarEliminar={!esSoloLectura}
+                onEditarClick={actividad => {
+                  setActividadEditar(actividad);
+                  setModalEditarOpen(true);
+                }}
+              />
+            </div>
+          )}
+          {/* Solicitudes de inversión (siempre se muestran) */}
+          <div>
+            <div className="flex items-center gap-4 mb-2">
+              <span className="font-semibold text-lg text-gray-700">Solicitudes de Inversión</span>
+            </div>
+            <TablaCustom2
+              columns={columnasInversion}
+              data={solicitudes}
+              mostrarEditar={true}
+              mostrarAgregarNuevo={false}
+              mostrarEliminar={false}
+              onEditarClick={solicitud => navigate(`/solicitudes/editar/${solicitud.idSolicitudInversion}`)}
+            />
+          </div>
+        </section>
+      </div>
 
-      <h2 className="text-xl font-semibold text-gray-800 mt-8">Actividades</h2>
-      <Card><CardContent className="p-6">
-        <TablaCustom2
-          columns={columnasActividad}
-          data={actividades}
-          mostrarEditar={true}
-          mostrarAgregarNuevo={true}
-          mostrarEliminar={true}
-          onAgregarNuevoClick={() => setModalOpen(true)}
-          onEditarClick={(actividad) => {
-            setActividadEditar(actividad);
-            setModalEditarOpen(true);
-          }}
-        />
-      </CardContent></Card>
-
-      <h2 className="text-xl font-semibold text-gray-800 mt-8">Solicitudes de Inversión</h2>
-      <Card><CardContent className="p-6">
-        <TablaCustom2
-          columns={columnasInversion}
-          data={solicitudes}
-          mostrarEditar={true}
-          mostrarAgregarNuevo={true}
-          mostrarEliminar={false}
-          onAgregarNuevoClick={() => setModalNuevaSolicitud(true)}
-          onEditarClick={(solicitud) => navigate(`/solicitudes/editar/${solicitud.idSolicitudInversion}`)}
-        />
-      </CardContent></Card>
-
-      <Dialog open={modalNuevaSolicitud} onOpenChange={setModalNuevaSolicitud}>
-        <DialogContent className="min-w-[900px] max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Agregar Solicitud</DialogTitle>
-            <DialogDescription>Completa la información de la solicitud.</DialogDescription>
-          </DialogHeader>
+      {/* Modal para nueva solicitud */}
+      <AlertDialog open={modalNuevaSolicitud} onOpenChange={setModalNuevaSolicitud}>
+        <AlertDialogContent className="bg-white border border-gray-300 rounded-xl shadow-xl p-7 max-w-4xl w-full">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Agregar Solicitud</AlertDialogTitle>
+            <div className="text-gray-700 mb-2">Completa la información de la solicitud.</div>
+          </AlertDialogHeader>
           <SolicitudInversionForm
             idProspecto={id}
             modo="crear"
@@ -191,48 +294,62 @@ export default function ProspectoDetalle() {
               cargarDatosProspecto();
             }}
           />
-        </DialogContent>
-      </Dialog>
+        </AlertDialogContent>
+      </AlertDialog>
 
-      {modalOpen && (
-        <ModalActividad
-          open={modalOpen}
-          onClose={() => {
-            setModalOpen(false);
-            setActividadEditar(null);
-          }}
-          idProspecto={id}
-          modo="crear"
-          onActividadCreada={handleActividadCreada}
-          tiposActividad={tiposActividad}
-          prioridades={prioridades}
-        />
-      )}
+      {/* Modal para nueva actividad */}
+      <ModalActividad
+        open={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setActividadEditar(null);
+          cargarDatosProspecto();
+        }}
+        idProspecto={id}
+        modo="crear"
+        onActividadCreada={cargarDatosProspecto}
+        tiposActividad={tiposActividad}
+        prioridades={prioridades}
+      />
+      {/* Modal para editar actividad */}
+      <ModalActividad
+        open={modalEditarOpen}
+        onClose={() => {
+          setModalEditarOpen(false);
+          setActividadEditar(null);
+          cargarDatosProspecto();
+        }}
+        idProspecto={id}
+        modo="editar"
+        actividadEditar={actividadEditar}
+        onActividadCreada={cargarDatosProspecto}
+        tiposActividad={tiposActividad}
+        prioridades={prioridades}
+      />
 
-      {modalEditarOpen && (
-        <ModalActividad
-          open={modalEditarOpen}
-          onClose={() => {
-            setModalEditarOpen(false);
-            setActividadEditar(null);
-          }}
-          idProspecto={id}
-          modo="editar"
-          actividadEditar={actividadEditar}
-          onActividadCreada={handleActividadCreada}
-          tiposActividad={tiposActividad}
-          prioridades={prioridades}
-        />
-      )}
-    </div>
-  );
-}
-
-function Info({ label, value }) {
-  return (
-    <div>
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className="text-base font-medium text-gray-900">{value || "-"}</p>
+      {/* Alert: No puede crear solicitud sin actividades válidas */}
+      <AlertDialog open={alertFaltaActividad} onOpenChange={setAlertFaltaActividad}>
+        <AlertDialogContent className="bg-white border border-yellow-300 rounded-xl shadow-xl p-7 max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-yellow-700">No hay actividades finalizadas</AlertDialogTitle>
+            <div className="text-gray-700 mt-2">
+              Para crear una solicitud de inversión, primero debe registrar al menos <b>una actividad finalizada</b> (en estado "Finalizada") para este prospecto.
+            </div>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border border-gray-300 bg-white hover:bg-gray-50">Cerrar</AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <button
+                className="bg-violet-600 text-white hover:bg-violet-700 px-4 py-2 rounded"
+                onClick={() => setAlertFaltaActividad(false)}
+                type="button"
+              >
+                OK
+              </button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

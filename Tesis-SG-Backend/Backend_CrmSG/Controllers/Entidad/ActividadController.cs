@@ -4,18 +4,28 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend_CrmSG.Controllers.Entidad
 {
+    /// <summary>
+    /// Controlador para gestionar las actividades.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ActividadController : ControllerBase
     {
         private readonly IRepository<Actividad> _actividadRepository;
 
+        /// <summary>
+        /// Constructor del controlador de actividades.
+        /// </summary>
+        /// <param name="actividadRepository">Repositorio de actividades.</param>
         public ActividadController(IRepository<Actividad> actividadRepository)
         {
             _actividadRepository = actividadRepository;
         }
 
-        // GET: api/Actividad
+        /// <summary>
+        /// Obtiene la lista de todas las actividades.
+        /// </summary>
+        /// <returns>Lista de actividades.</returns>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -23,7 +33,11 @@ namespace Backend_CrmSG.Controllers.Entidad
             return Ok(result);
         }
 
-        // GET: api/Actividad/5
+        /// <summary>
+        /// Obtiene una actividad por su identificador.
+        /// </summary>
+        /// <param name="id">Identificador de la actividad.</param>
+        /// <returns>Actividad encontrada o NotFound si no existe.</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -33,7 +47,11 @@ namespace Backend_CrmSG.Controllers.Entidad
             return Ok(result);
         }
 
-        // POST: api/Actividad
+        /// <summary>
+        /// Crea una nueva actividad.
+        /// </summary>
+        /// <param name="actividad">Datos de la actividad a crear.</param>
+        /// <returns>Actividad creada.</returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Actividad actividad)
         {
@@ -41,7 +59,12 @@ namespace Backend_CrmSG.Controllers.Entidad
             return CreatedAtAction(nameof(Get), new { id = actividad.IdActividad }, actividad);
         }
 
-        // PUT: api/Actividad/5
+        /// <summary>
+        /// Actualiza una actividad existente.
+        /// </summary>
+        /// <param name="id">Identificador de la actividad.</param>
+        /// <param name="actividad">Datos actualizados de la actividad.</param>
+        /// <returns>NoContent si la actualización fue exitosa, BadRequest si el id no coincide.</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Actividad actividad)
         {
@@ -52,7 +75,11 @@ namespace Backend_CrmSG.Controllers.Entidad
             return NoContent();
         }
 
-        // DELETE: api/Actividad/5
+        /// <summary>
+        /// Elimina una actividad por su identificador.
+        /// </summary>
+        /// <param name="id">Identificador de la actividad.</param>
+        /// <returns>NoContent si la eliminación fue exitosa.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -60,12 +87,16 @@ namespace Backend_CrmSG.Controllers.Entidad
             return NoContent();
         }
 
+        /// <summary>
+        /// Obtiene todas las actividades asociadas a un prospecto.
+        /// </summary>
+        /// <param name="idProspecto">Identificador del prospecto.</param>
+        /// <returns>Lista de actividades del prospecto.</returns>
         [HttpGet("por-prospecto/{idProspecto}")]
         public async Task<IActionResult> GetPorProspecto(int idProspecto)
         {
             var actividades = await _actividadRepository.GetByPropertyAsync("IdProspecto", idProspecto);
             return Ok(actividades);
         }
-
     }
 }

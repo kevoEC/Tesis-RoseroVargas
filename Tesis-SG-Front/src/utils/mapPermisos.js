@@ -40,5 +40,8 @@ export function mapearPermisosConIconos(permisosBackend) {
     }
   }
 
-  return [catalogo, ...normales];
+  // Solo agregar Catálogo si tiene submenús realmente
+  const salida =
+    catalogo.Submenus.length > 0 ? [catalogo, ...normales] : normales;
+  return salida;
 }

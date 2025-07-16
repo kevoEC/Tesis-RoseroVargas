@@ -20,17 +20,25 @@ const TablaCustom2 = ({
   mostrarAgregarNuevo = true,
   mostrarEditar = true,
   mostrarEliminar = true,
+  itemsPerPageInit, // <-- recibe prop
 }) => {
   const [tableData, setTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortColumn, setSortColumn] = useState("");
   const [sortDirection, setSortDirection] = useState("asc");
   const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(itemsPerPageInit || 10);
   const [modalOpen, setModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState({});
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
+
+    // Si quieres que al cambiar de cliente también se resetee la paginación:
+  useEffect(() => {
+    if (itemsPerPageInit) setItemsPerPage(itemsPerPageInit);
+    setCurrentPage(0);
+  }, [data, itemsPerPageInit]);
+  // ...
 
   //console.log("🟢 Datos recibidos por la tabla:", data);
 
@@ -152,12 +160,12 @@ const TablaCustom2 = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         {/* Botón Agregar Nuevo (izquierda) */}
         {mostrarAgregarNuevo && (
-<Button
-  onClick={handleAgregarNuevo}
-  className="bg-[#4f46e5] text-white hover:bg-[#4338ca] transition-colors duration-200 flex items-center gap-2 shadow-sm"
->
-  <FaPlus className="text-white" /> Agregar Nuevo
-</Button>
+        <Button
+          onClick={handleAgregarNuevo}
+          className="bg-[#4f46e5] text-white hover:bg-[#4338ca] transition-colors duration-200 flex items-center gap-2 shadow-sm"
+        >
+          <FaPlus className="text-white" /> Nuevo
+        </Button>
 
 
 
@@ -243,26 +251,30 @@ const TablaCustom2 = ({
 <TableCell className="sticky right-0 bg-white z-10 border-l border-gray-200 px-2 py-2 min-w-[100px]">
   <div className="grid grid-cols-2 divide-x divide-gray-200">
     <div className="flex items-center justify-center px-1">
-      <Button
-        size="icon"
-        variant="ghost"
-        className="text-emerald-500 hover:bg-emerald-100"
-        onClick={() => onEditarClick && onEditarClick(row)}
-        title="Editar"
-      >
-        <FaEdit size={16} />
-      </Button>
+    <Button
+      type="button"            // <--- ¡Esto arregla el bug!
+      size="icon"
+      variant="ghost"
+      className="text-emerald-500 hover:bg-emerald-100"
+      onClick={() => onEditarClick && onEditarClick(row)}
+      title="Editar"
+    >
+      <FaEdit size={16} />
+    </Button>
+
     </div>
     <div className="flex items-center justify-center px-1">
-      <Button
-        size="icon"
-        variant="ghost"
-        className="text-red-500 hover:bg-red-100"
-        onClick={() => handleOpenDeleteDialog(row)}
-        title="Eliminar"
-      >
-        <FaTrash size={16} />
-      </Button>
+    <Button
+      type="button"            // <--- ¡Siempre explícito!
+      size="icon"
+      variant="ghost"
+      className="text-red-500 hover:bg-red-100"
+      onClick={() => handleOpenDeleteDialog(row)}
+      title="Eliminar"
+    >
+      <FaTrash size={16} />
+    </Button>
+
     </div>
   </div>
 </TableCell>

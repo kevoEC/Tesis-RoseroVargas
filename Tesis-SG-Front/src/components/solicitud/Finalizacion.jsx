@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
+import { mapIdentificacionToUpdate } from "@/utils/mappers";
 import {
   getSolicitudById,
   updateSolicitud,
+  getNumeroContratoSecuencial,
 } from "@/service/Entidades/SolicitudService";
-import { Card, CardContent } from "@/components/ui/card";
+import { getCatalogoFinalizacion } from "@/service/Catalogos/FinalService";
+import { finalizarSolicitudYGenerarTareas } from "@/service/Entidades/TareaService";
+import {
+  Card,
+  CardContent,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -16,21 +23,35 @@ import {
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { getCatalogoFinalizacion } from "@/service/Catalogos/FinalService";
+import GlassLoader from "@/components/ui/GlassLoader";
+import { Save } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 export default function FinalizacionForm({ id }) {
   const [loading, setLoading] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [solicitudData, setSolicitudData] = useState(null);
   const [opcionesAccion, setOpcionesAccion] = useState([]);
   const [finalizacion, setFinalizacion] = useState({
     numeroContrato: "",
-    idContinuarSolicitud: "", /*viene de catálogo, valor sería 1, 2 o sin seleccionar*/
-    nombreContinuarSolicitud: ""/*También viene de catálogo*/,
+    idContinuarSolicitud: "",
+    nombreContinuarSolicitud: "",
     motivoFinalizacion: "",
     observacionFinalizacion: "",
     confirmar: false,
   });
-  const [decision, setDecision] = useState("Finalizar con el registro");
+  const [alertSinContrato, setAlertSinContrato] = useState(false);
+  const [glassMsg, setGlassMsg] = useState("");
+  const [bloquearTodo, setBloquearTodo] = useState(false);
 
   useEffect(() => {
     const cargar = async () => {
@@ -38,6 +59,10 @@ export default function FinalizacionForm({ id }) {
         const res = await getSolicitudById(id);
         const data = res.data[0];
         setSolicitudData(data);
+
+        // Bloquear todo si faseProceso !== 1
+        setBloquearTodo(data.faseProceso !== 1);
+
         setFinalizacion({
           numeroContrato: data.finalizacion.numeroContrato ?? "",
           idContinuarSolicitud: data.finalizacion.idContinuarSolicitud ?? "",
@@ -47,7 +72,7 @@ export default function FinalizacionForm({ id }) {
           confirmar: data.finalizacion.confirmar ?? false,
         });
       } catch (err) {
-        toast.error("Error al cargar datos de finalización: " + err.message);
+        toast.error("Error al cargar finalización: " + err.message);
       } finally {
         setLoading(false);
       }
@@ -55,35 +80,36 @@ export default function FinalizacionForm({ id }) {
     cargar();
   }, [id]);
 
-  /*Cargo catálogo de acciones*/
   useEffect(() => {
     const cargarCatalogo = async () => {
       try {
         const res = await getCatalogoFinalizacion();
-        /*solo para verificar que sea array*/
-        const catalogo = Array.isArray(res) ? res : [];
-        setOpcionesAccion(catalogo);
-
+        setOpcionesAccion(Array.isArray(res) ? res : []);
       } catch (err) {
-        toast.error("Error al cargar catálogo de acciones: " + err.message);
+        toast.error("Error al cargar catálogo: " + err.message);
       }
     };
     cargarCatalogo();
   }, []);
+
+  // Guardar Finalización
   const handleGuardar = async () => {
+    if (!finalizacion.numeroContrato) {
+      setAlertSinContrato(true);
+      return;
+    }
     if (!solicitudData) return;
+    setLoading(true);
     try {
-      setLoading(true);
       const payload = {
-        ...solicitudData, finalizacion: {
-          ...solicitudData.finalizacion,
-          ...finalizacion,
-        },
+        ...solicitudData,
+        identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
+        finalizacion,
       };
-      console.log("payload finalización" + JSON.stringify(payload))
       const res = await updateSolicitud(id, payload);
-      if (res.success) toast.success("Finalización actualizada.");
-      else toast.error("Error al actualizar finalización.");
+      res.success
+        ? toast.success("Finalización actualizada.")
+        : toast.error("Error al actualizar.");
     } catch (err) {
       toast.error("Error al guardar: " + err.message);
     } finally {
@@ -91,202 +117,284 @@ export default function FinalizacionForm({ id }) {
     }
   };
 
-  const generarContrato = () => {
-    const provisional = `PROVISIONAL-${ Math.random() * (10 - 1 + 1)}`;
-    setFinalizacion((f) => ({
-      ...f,
-      numeroContrato: provisional,
-    }));
+  // Generar número de contrato real
+  const handleGenerarContrato = async () => {
+    if (!solicitudData?.idSolicitudInversion || !solicitudData?.proyeccion?.idProyeccionSeleccionada) {
+      toast.error("No se puede generar número de contrato. Verifica que exista una proyección seleccionada.");
+      return;
+    }
+    setGlassMsg("Generando número de contrato...");
+    setIsGenerating(true);
+    try {
+      const result = await getNumeroContratoSecuencial(
+        solicitudData.idSolicitudInversion,
+        solicitudData.proyeccion.idProyeccionSeleccionada
+      );
+      if (result && result.numeroContrato) {
+        setFinalizacion((f) => ({
+          ...f,
+          numeroContrato: result.numeroContrato,
+        }));
+        toast.success("Número de contrato generado.");
+      } else {
+        toast.error("No se pudo generar el número de contrato.");
+      }
+    } catch (err) {
+      toast.error(err.message || "Error al generar número de contrato.");
+    } finally {
+      setIsGenerating(false);
+      setGlassMsg("");
+    }
   };
 
-  if (loading) return <p>Cargando datos de finalización...</p>;
+  // Confirmar: primero guarda datos y luego genera tareas si aplica
+  const handleConfirmar = async () => {
+    if (bloquearTodo || isGenerating || loading) return;
+
+    if (!finalizacion.numeroContrato) {
+      toast.error("Debe generar un número de contrato antes de confirmar.");
+      return;
+    }
+
+    setIsGenerating(true);
+    setGlassMsg("Guardando datos de finalización...");
+
+    try {
+      // Guardar primero los datos de finalización
+      const payload = {
+        ...solicitudData,
+        identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
+        finalizacion,
+      };
+      const res = await updateSolicitud(id, payload);
+      if (!res.success) {
+        throw new Error("No se pudo guardar la finalización antes de continuar");
+      }
+
+      setGlassMsg("Procesando acción...");
+
+      if (finalizacion.idContinuarSolicitud === 1) {
+        await finalizarSolicitudYGenerarTareas(id);
+        toast.success("Datos guardados y tareas generadas correctamente.");
+      } else {
+        toast.success("Datos guardados correctamente.");
+      }
+
+      setFinalizacion((f) => ({ ...f, confirmar: true }));
+
+    } catch (err) {
+      toast.error("Error al confirmar finalización: " + (err.message || err));
+    } finally {
+      setIsGenerating(false);
+      setGlassMsg("");
+    }
+  };
+
+  // Deshabilita campos si está bloqueado o ya confirmado o en carga
+  const disabledCampos = bloquearTodo || !finalizacion.numeroContrato || finalizacion.confirmar || isGenerating || loading;
+
+  if (loading) return <GlassLoader visible message="Cargando finalización..." />;
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-6 relative">
+      <GlassLoader visible={isGenerating} message={glassMsg} />
+
+      {/* Mensaje bonito si está bloqueado */}
+      {bloquearTodo && (
+        <div className="w-full flex items-center px-6 py-2 mb-4 rounded-xl bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
+          <span>No se permite editar la finalización en esta fase.</span>
+        </div>
+      )}
+
+      {/* Diálogo de alerta si falta número de contrato */}
+      <AlertDialog open={alertSinContrato} onOpenChange={setAlertSinContrato}>
+        <AlertDialogContent className="bg-white border border-gray-200 rounded-xl shadow-xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-violet-700 font-semibold">
+              Debes generar el número de contrato primero
+            </AlertDialogTitle>
+            <div className="text-gray-700 mt-2">
+              Antes de continuar, debes generar el número de contrato.
+            </div>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border border-gray-300 bg-white hover:bg-gray-50">
+              Cerrar
+            </AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <div className="flex justify-end">
+        <Button
+          onClick={handleGuardar}
+          className="bg-primary text-white hover:bg-primary/80 flex items-center gap-2"
+          disabled={bloquearTodo || loading || isGenerating}
+        >
+          <Save className="w-4 h-4" /> Guardar
+        </Button>
+      </div>
+
       <h2 className="text-xl font-semibold">Finalización</h2>
-
-      <Button onClick={handleGuardar} disabled={loading} className="text-white">
-        Guardar datos
-      </Button>
-
 
       <Card>
         <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-            <div className="flex items-end gap-2">
-  
-              <div className="flex flex-col space-y-1">
-                <Label className="text-sm font-medium text-gray-700">
-                  Número de contrato
-                </Label>
-                <Input
-                  placeholder="---"
-                  type="text"
-                  value={finalizacion.numeroContrato}
-                  onChange={(e) =>
-                    setFinalizacion({
-                      ...finalizacion,
-                      numeroContrato: e.target.value,
-                    })
-                  }
-                  className="h-10"
-                />
-              </div>
+          {/* Número de contrato */}
+          <div className="flex items-end gap-2">
+            <FormInput
+              label="Número de contrato"
+              value={finalizacion.numeroContrato}
+              onChange={() => {}}
+              disabled={true}
+            />
+            <Button
+              onClick={handleGenerarContrato}
+              className="h-10"
+              variant="muted"
+              disabled={
+                bloquearTodo ||
+                !!finalizacion.numeroContrato.trim() ||
+                finalizacion.confirmar ||
+                isGenerating
+              }
+            >
+              Generar número de contrato
+            </Button>
+          </div>
 
-              <Button
-                onClick={generarContrato}
-                className="h-10"
-                variant="muted"
-              >
-                Generar contrato
-              </Button>
-            </div>
+          {/* Acción */}
+          <FormGroup label="Acción">
+            <Select
+              disabled={disabledCampos}
+              value={String(finalizacion.idContinuarSolicitud)}
+              onValueChange={(value) => {
+                const id = parseInt(value, 10);
+                const seleccion = opcionesAccion.find(o => o.idContinuarSolicitud === id);
+                setFinalizacion({
+                  ...finalizacion,
+                  idContinuarSolicitud: id,
+                  nombreContinuarSolicitud: seleccion?.nombre ?? "",
+                });
+              }}
+            >
+              <SelectTrigger className="text-sm border border-black">
+                <SelectValue placeholder="Seleccione una acción" />
+              </SelectTrigger>
+              <SelectContent className="bg-white">
+                {opcionesAccion.map((opt) => (
+                  <SelectItem key={opt.idContinuarSolicitud} value={String(opt.idContinuarSolicitud)}>
+                    {opt.nombre}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FormGroup>
 
-            {/* Dropdown unificado para acción */}
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">
-                Acción
-              </Label>
-              <Select
-                value={String(finalizacion.idContinuarSolicitud)}
-                onValueChange={(value) => {
-                  const id = parseInt(value, 10);
-                  const seleccion = opcionesAccion.find(
-                    (o) => o.idContinuarSolicitud === id
-                  );
-                  setFinalizacion({
-                    ...finalizacion,
-                    idContinuarSolicitud: id,
-                    nombreContinuarSolicitud: seleccion?.nombre ?? "",
-                  });
-                }}
-              >
-                <SelectTrigger className="text-sm border border-black">
-                  <SelectValue placeholder="Seleccione una acción" />
-                </SelectTrigger>
-                <SelectContent className="bg-white">
-                  {opcionesAccion.length > 0 ? (
-                    opcionesAccion.map((opt) => (
-                      <SelectItem
-                        key={opt.idContinuarSolicitud}
-                        value={String(opt.idContinuarSolicitud)}
-                      >
-                        {opt.nombre}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <SelectItem disabled value="no-options">
-                      No hay opciones disponibles
-                    </SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-
-
-            {/* Renderizado condicional según la selección */}
-            {finalizacion.idContinuarSolicitud === 1 && (
-              <>
-                <FormInput
-                  label="Motivo de finalización"
-                  value={finalizacion.motivoFinalizacion}
-                  onChange={(e) =>
-                    setFinalizacion({
-                      ...finalizacion,
-                      motivoFinalizacion: e.target.value,
-                    })
-                  }
-                />
-                <FormInput
-                  label="Observación de finalización"
-                  value={finalizacion.observacionFinalizacion}
-                  onChange={(e) =>
-                    setFinalizacion({
-                      ...finalizacion,
-                      observacionFinalizacion: e.target.value,
-                    })
-                  }
-                />
-                <FormSwitch
-                  label="Confirmar"
-                  checked={finalizacion.confirmar}
-                  onChange={(checked) =>
-                    setFinalizacion({ ...finalizacion, confirmar: checked })
-                  }
-                />
-              </>
-            )}
-
-            {finalizacion.idContinuarSolicitud === 2 && (
-              <FormSwitch
-                label="Confirmar"
-                checked={finalizacion.confirmar}
-                onChange={(checked) =>
-                  setFinalizacion({ ...finalizacion, confirmar: checked })
-                }
+          {/* Motivo y observación si opción = 2 */}
+          {finalizacion.idContinuarSolicitud === 2 && (
+            <>
+              <FormInput
+                label="Motivo de finalización"
+                value={finalizacion.motivoFinalizacion}
+                onChange={(e) => setFinalizacion({ ...finalizacion, motivoFinalizacion: e.target.value })}
+                disabled={disabledCampos}
               />
-            )}
-            {/* Si idContinuarSolicitud es "" o cualquier otro, no se renderiza ninguno */}
-          </CardContent>
+              <FormInput
+                label="Observación de finalización"
+                value={finalizacion.observacionFinalizacion}
+                onChange={(e) => setFinalizacion({ ...finalizacion, observacionFinalizacion: e.target.value })}
+                disabled={disabledCampos}
+              />
+            </>
+          )}
+
+          {/* Confirmar */}
+          {(finalizacion.idContinuarSolicitud === 1 || finalizacion.idContinuarSolicitud === 2) && (
+            <ConfirmSwitch
+              label="Confirmar"
+              checked={finalizacion.confirmar}
+              idContinuar={finalizacion.idContinuarSolicitud}
+              onConfirm={handleConfirmar}
+              className="border border-gray-300 p-4 rounded-md"
+              disabled={disabledCampos}
+            />
+          )}
+        </CardContent>
       </Card>
     </div>
   );
 }
 
-// Reutilizables
+// COMPONENTES AUXILIARES
 
-function FormInput({ label, value, onChange, type = "text" }) {
+function FormInput({ label, value, onChange, type = "text", disabled }) {
   return (
     <div className="space-y-1.5">
       <Label className="text-sm font-medium text-gray-700">{label}</Label>
-      <Input placeholder="---" type={type} value={value} onChange={onChange} />
+      <Input placeholder="---" type={type} value={value} onChange={onChange} disabled={disabled} />
     </div>
   );
 }
 
+function ConfirmSwitch({ label, checked, onConfirm, idContinuar, disabled }) {
+  const [open, setOpen] = useState(false);
 
-function FormSwitch({ label, checked, onChange }) {
-  return (
-    <div className="flex items-center gap-4">
-      <div className="relative">
+  const handleConfirm = () => {
+    setOpen(false);
+    if (!disabled) onConfirm();
+  };
+
+  if (checked) {
+    return (
+      <div className="flex items-center gap-4">
         <Switch
-          checked={checked}
-          onCheckedChange={onChange}
-          className={`
-            peer
-            inline-flex
-            h-6 w-11 shrink-0
-            cursor-pointer
-            items-center
-            rounded-full
-            border
-            border-gray-700
-            transition-colors
-            duration-200
-            ease-in-out
-            ${checked ? "bg-primary" : "bg-gray-300"}
-          `}
+          checked
+          disabled
+          className="bg-violet-600 border-violet-700 opacity-90 !cursor-not-allowed"
+          style={{ opacity: 1 }}
         />
-        {/* Círculo deslizante */}
-        <span
-          className={`
-            pointer-events-none
-            absolute
-            left-0.5 top-0.5
-            h-5 w-5
-            transform
-            rounded-full
-            bg-white
-            shadow
-            transition-transform
-            duration-200
-            ease-in-out
-            ${checked ? "translate-x-5" : "translate-x-0"}
-          `}
-        />
+        <Label className="text-sm font-medium text-gray-700">{label}</Label>
       </div>
-      <Label className="text-sm font-medium text-gray-700">{label}</Label>
-    </div>
+    );
+  }
+
+  // Cuando está deshabilitado pero no checked
+  if (disabled) {
+    return (
+      <div className="flex items-center gap-4">
+        <Switch
+          checked={false}
+          disabled
+          className="bg-black border-black-400 opacity-80 !cursor-not-allowed"
+          style={{ opacity: 1 }}
+        />
+        <Label className="text-sm font-medium text-gray-700">{label}</Label>
+      </div>
+    );
+  }
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <div className="flex items-center gap-4 cursor-pointer">
+          <Switch checked={false} onCheckedChange={() => setOpen(true)} />
+          <Label className="text-sm font-medium text-gray-700">{label}</Label>
+        </div>
+      </AlertDialogTrigger>
+      <AlertDialogContent className="bg-white text-black border border-gray-300">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-violet-700 font-semibold">
+            ¿Estás seguro de terminar la solicitud?
+          </AlertDialogTitle>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={handleConfirm}>
+            Sí, {idContinuar === 1 ? "crear tareas" : "finalizar"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 

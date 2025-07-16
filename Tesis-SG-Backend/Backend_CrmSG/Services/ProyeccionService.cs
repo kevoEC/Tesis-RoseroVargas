@@ -1,5 +1,6 @@
 ﻿using Backend_CrmSG.Data;
 using Backend_CrmSG.DTOs;
+using Backend_CrmSG.DTOs.Backend_CrmSG.DTOs;
 using Backend_CrmSG.Models.Entidades;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -198,6 +199,227 @@ namespace Backend_CrmSG.Services
             await _context.SaveChangesAsync();
 
             return nuevaProyeccion.IdProyeccion;
+        }
+
+
+        public async Task<ProyeccionIncrementoResultDto> IncrementarProyeccionAsync(ProyeccionIncrementoDto dto)
+        {
+            // 1. Buscar la proyección original
+            var proyeccionOriginal = await _context.Proyeccion
+                .FirstOrDefaultAsync(p => p.IdProyeccion == dto.IdProyeccionOriginal);
+            if (proyeccionOriginal == null)
+                throw new Exception("Proyección original no encontrada.");
+
+            // 2. Buscar la inversión asociada a la proyección original
+            var inversion = await _context.Inversion
+                .FirstOrDefaultAsync(i => i.IdProyeccion == dto.IdProyeccionOriginal);
+            if (inversion == null)
+                throw new Exception("No se encontró la inversión asociada a la proyección original.");
+
+            // 3. Validar si ya existe un Adendum para este periodo Y YA TIENE GENERADO EL INCREMENTO
+            var adendumExistente = await _context.Adendum
+                .FirstOrDefaultAsync(a =>
+                    a.IdInversion == inversion.IdInversion &&
+                    a.PeriodoIncremento == dto.PeriodoIncremento &&
+                    a.IncrementoGenerado == true);
+
+            if (adendumExistente != null)
+            {
+                throw new Exception("Ya existe un incremento (Adendum) para este periodo en la inversión seleccionada.");
+            }
+
+
+            // 4. Traer cronograma original y validarlo
+            var cronogramaOriginal = await _context.CronogramaProyeccion
+                .Where(c => c.IdProyeccion == dto.IdProyeccionOriginal && c.EsActivo)
+                .FirstOrDefaultAsync();
+            if (cronogramaOriginal == null)
+                throw new Exception("No se encontró cronograma activo para la proyección original.");
+
+            // 5. Deserializar el cronograma
+            var cronogramaList = JsonSerializer.Deserialize<List<CronogramaCuotaDto>>(cronogramaOriginal.PeriodosJson);
+            if (cronogramaList == null || cronogramaList.Count == 0)
+                throw new Exception("El cronograma original está vacío.");
+
+            // 6. Validar periodo seleccionado
+            if (dto.PeriodoIncremento < 1 || dto.PeriodoIncremento > proyeccionOriginal.Plazo)
+                throw new Exception("Periodo de incremento fuera de rango.");
+
+            // 7. Buscar configuración válida por el nuevo monto (mismo producto, mismo plazo)
+            // Capital base: el capital final del periodo anterior al incremento (o el primero si es periodo 1)
+            decimal capitalBase = (dto.PeriodoIncremento == 1)
+                ? cronogramaList[0].Capital
+                : cronogramaList[dto.PeriodoIncremento - 2].CapitalFinal;
+
+            decimal nuevoCapital = capitalBase + dto.MontoIncremento;
+            short plazoRestante = (short)(proyeccionOriginal.Plazo - dto.PeriodoIncremento);
+
+            var configuracion = await _context.ConfiguracionesProducto
+                .Where(c =>
+                    c.IdProducto == proyeccionOriginal.IdProducto &&
+                    c.Plazo == proyeccionOriginal.Plazo &&
+                    c.IdOrigen == proyeccionOriginal.IdOrigenCapital &&
+                    nuevoCapital >= c.MontoMinimo &&
+                    nuevoCapital <= c.MontoMaximo)
+                .FirstOrDefaultAsync();
+
+            if (configuracion == null)
+                throw new Exception("No hay configuración válida para el nuevo monto y plazo.");
+
+            // 8. Construir nuevo cronograma
+            var nuevoCronograma = new List<CronogramaCuotaDto>();
+
+            // --- (a) Copiar periodos previos al incremento SIN CAMBIOS
+            for (int i = 0; i < dto.PeriodoIncremento - 1; i++)
+            {
+                nuevoCronograma.Add(cronogramaList[i]);
+            }
+
+            // --- (b) Periodo de incremento (modificado solo en capital final y aporte adicional)
+            var cuotaIncremento = cronogramaList[dto.PeriodoIncremento - 1];
+
+            var nuevaCuotaIncremento = new CronogramaCuotaDto
+            {
+                Periodo = cuotaIncremento.Periodo,
+                FechaInicial = cuotaIncremento.FechaInicial,
+                FechaVencimiento = cuotaIncremento.FechaVencimiento,
+                Capital = cuotaIncremento.Capital,
+                CapitalOperacion = cuotaIncremento.CapitalOperacion,
+                AporteMensual = cuotaIncremento.AporteMensual,
+                AporteAdicional = dto.MontoIncremento,
+                AporteOperacion = cuotaIncremento.AporteOperacion,
+                AporteOperacionAdicional = dto.MontoIncremento,
+                MontoOperacion = cuotaIncremento.MontoOperacion + dto.MontoIncremento,
+                Tasa = cuotaIncremento.Tasa,
+                Rentabilidad = cuotaIncremento.Rentabilidad,  // ¡NO SE MODIFICA!
+                RentaPeriodo = cuotaIncremento.RentaPeriodo,
+                RentaAcumulada = cuotaIncremento.RentaAcumulada,
+                RentaAcumuladaNoPagada = cuotaIncremento.RentaAcumuladaNoPagada,
+                RentaPendientePagar = cuotaIncremento.RentaPendientePagar,
+                CostoOperativo = cuotaIncremento.CostoOperativo,
+                CostoNotarizacion = cuotaIncremento.CostoNotarizacion,
+                CapitalRenta = cuotaIncremento.CapitalRenta,
+                CapitalFinal = cuotaIncremento.CapitalFinal + dto.MontoIncremento, // aquí sí!
+                MontoPagar = cuotaIncremento.MontoPagar,
+                PagaRenta = cuotaIncremento.PagaRenta,
+                UltimaCuota = false // solo será última si no hay periodos restantes
+            };
+
+            nuevoCronograma.Add(nuevaCuotaIncremento);
+
+            // --- (c) Simular los periodos siguientes usando el simulador
+            if (plazoRestante > 0)
+            {
+                // OJO: Fecha inicial del siguiente periodo = FechaVencimiento de cuotaIncremento
+                var producto = await _context.Producto.FindAsync(proyeccionOriginal.IdProducto);
+                if (producto == null)
+                    throw new Exception("Producto no encontrado.");
+
+                var simulacion = _simulador.ObtenerSimulacion(new SimulacionRequest
+                {
+                    Capital = nuevaCuotaIncremento.CapitalFinal,
+                    Plazo = plazoRestante,
+                    FechaInicial = nuevaCuotaIncremento.FechaVencimiento,
+                    Tasa = configuracion.Taza,
+                    AporteAdicional = 0,
+                    CosteOperativo = proyeccionOriginal.CosteOperativo ?? 0,
+                    CosteNotarizacion = proyeccionOriginal.CosteNotarizacion ?? 0,
+                    IdOrigenCapital = proyeccionOriginal.IdOrigenCapital ?? 0,
+                    Periodicidad = producto.Periocidad,
+                    EsIncremento = true
+                });
+
+
+                for (int j = 0; j < simulacion.Cronograma.Count; j++)
+                {
+                    var cuotaSim = simulacion.Cronograma[j];
+                    cuotaSim.Periodo = dto.PeriodoIncremento + j + 1;
+                    // No modificar fechas para preservar cálculos correctos del simulador
+                    nuevoCronograma.Add(cuotaSim);
+                }
+
+            }
+
+            // 9. Crear nueva proyección de incremento
+            var nuevaProyeccion = new Proyeccion
+            {
+                IdProducto = proyeccionOriginal.IdProducto,
+                Capital = nuevaCuotaIncremento.CapitalFinal,
+                AporteAdicional = dto.MontoIncremento,
+                Plazo = proyeccionOriginal.Plazo,
+                FechaInicial = proyeccionOriginal.FechaInicial,
+                Tasa = configuracion.Taza,
+                CosteOperativo = proyeccionOriginal.CosteOperativo,
+                CosteNotarizacion = proyeccionOriginal.CosteNotarizacion,
+                IdConfiguracionesProducto = configuracion.IdConfiguraciones,
+                IdOrigenCapital = proyeccionOriginal.IdOrigenCapital,
+                IdOrigenIncremento = proyeccionOriginal.IdOrigenIncremento,
+                IdSolicitudInversion = proyeccionOriginal.IdSolicitudInversion,
+                IdUsuarioCreacion = dto.IdUsuario,
+                FechaCreacion = DateTime.Now,
+                ProyeccionNombre = $"{proyeccionOriginal.ProyeccionNombre} (Incremento)"
+            };
+            _context.Proyeccion.Add(nuevaProyeccion);
+            await _context.SaveChangesAsync();
+
+            // 10. Guardar el nuevo cronograma como nuevo registro
+            var cronogramaNuevo = new CronogramaProyeccion
+            {
+                IdProyeccion = nuevaProyeccion.IdProyeccion,
+                PeriodosJson = JsonSerializer.Serialize(nuevoCronograma),
+                FechaCreacion = DateTime.Now,
+                EsActivo = true,
+                Version = cronogramaOriginal.Version + 1,
+                ReferenciaOriginal = cronogramaOriginal.IdCronogramaProyeccion
+            };
+            _context.CronogramaProyeccion.Add(cronogramaNuevo);
+
+            // 11. Actualizar totales de la nueva proyección
+            // (Puedes recalcular los totales si lo necesitas, aquí ejemplo)
+            nuevaProyeccion.TotalRentabilidad = nuevoCronograma.Sum(x => x.Rentabilidad);
+            nuevaProyeccion.TotalCosteOperativo = nuevoCronograma.Sum(x => x.CostoOperativo);
+            nuevaProyeccion.TotalRentaPeriodo = nuevoCronograma.Sum(x => x.RentaPeriodo);
+            nuevaProyeccion.RendimientosMasCapital = nuevoCronograma.Last().CapitalRenta;
+            nuevaProyeccion.ValorProyectadoLiquidar = nuevoCronograma.Last().MontoPagar;
+            nuevaProyeccion.TotalAporteAdicional = nuevoCronograma.Sum(x => x.AporteAdicional);
+            nuevaProyeccion.FechaIncremento = nuevaCuotaIncremento.FechaInicial;
+            nuevaProyeccion.FechaVencimiento = nuevoCronograma.Last().FechaVencimiento;
+
+            _context.Proyeccion.Update(nuevaProyeccion);
+
+            // 12. Guardar en base de datos
+            await _context.SaveChangesAsync();
+
+            // 13. Mapear resultado para frontend
+            var result = new ProyeccionIncrementoResultDto
+            {
+                IdProyeccionNueva = nuevaProyeccion.IdProyeccion,
+                IdCronogramaProyeccionNueva = cronogramaNuevo.IdCronogramaProyeccion,
+                Proyeccion = new ProyeccionDetalleDto
+                {
+                    IdProyeccion = nuevaProyeccion.IdProyeccion,
+                    ProyeccionNombre = nuevaProyeccion.ProyeccionNombre,
+                    IdProducto = nuevaProyeccion.IdProducto,
+                    Capital = nuevaProyeccion.Capital,
+                    AporteAdicional = nuevaProyeccion.AporteAdicional,
+                    Plazo = nuevaProyeccion.Plazo,
+                    FechaInicial = nuevaProyeccion.FechaInicial,
+                    FechaVencimiento = nuevaProyeccion.FechaVencimiento,
+                    Tasa = nuevaProyeccion.Tasa,
+                    CosteOperativo = nuevaProyeccion.CosteOperativo,
+                    CosteNotarizacion = nuevaProyeccion.CosteNotarizacion,
+                    TotalRentabilidad = nuevaProyeccion.TotalRentabilidad,
+                    TotalCosteOperativo = nuevaProyeccion.TotalCosteOperativo,
+                    TotalRentaPeriodo = nuevaProyeccion.TotalRentaPeriodo,
+                    RendimientosMasCapital = nuevaProyeccion.RendimientosMasCapital,
+                    ValorProyectadoLiquidar = nuevaProyeccion.ValorProyectadoLiquidar,
+                    TotalAporteAdicional = nuevaProyeccion.TotalAporteAdicional,
+                    FechaIncremento = nuevaProyeccion.FechaIncremento
+                },
+                Cronograma = nuevoCronograma
+            };
+
+            return result;
         }
 
     }

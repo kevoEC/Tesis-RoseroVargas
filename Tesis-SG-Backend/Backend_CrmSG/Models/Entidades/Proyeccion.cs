@@ -17,7 +17,7 @@ namespace Backend_CrmSG.Models.Entidades
 
         public DateTime FechaInicial { get; set; }
         public DateTime? FechaVencimiento { get; set; }
-
+            
         public decimal Tasa { get; set; }
         public decimal Capital { get; set; }
         public decimal? AporteAdicional { get; set; }

@@ -8,21 +8,18 @@ export const AuthProvider = ({ children }) => {
   const [authData, setAuthData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // ✅ Cargar usuario del localStorage al iniciar
   useEffect(() => {
     const saved = localStorage.getItem("user");
     if (saved) {
       const parsed = JSON.parse(saved);
       const permisos = Array.isArray(parsed.permisos) ? parsed.permisos : [];
-
       const dataConIconos = {
         ...parsed,
         permisos: mapearPermisosConIconos(permisos),
       };
-
       setAuthData(dataConIconos);
     }
-    setIsLoading(false);
+    setIsLoading(false); // <- Esto siempre debe ejecutarse!
   }, []);
 
   const isAuthenticated = !!authData?.token;

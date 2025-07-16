@@ -13,11 +13,17 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<Genero> _repo;
 
+        /// <summary>
+        /// Constructor del controlador de Género.
+        /// </summary>
         public GeneroController(IRepository<Genero> repo)
         {
             _repo = repo;
         }
 
+        /// <summary>
+        /// Obtiene todos los géneros.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Genero>>> Get()
         {
@@ -25,6 +31,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(lista);
         }
 
+        /// <summary>
+        /// Obtiene un género por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<Genero>> Get(int id)
         {
@@ -34,6 +43,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(item);
         }
 
+        /// <summary>
+        /// Crea un nuevo género.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<Genero>> Post([FromBody] Genero item)
         {
@@ -41,6 +53,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = item.IdGenero }, item);
         }
 
+        /// <summary>
+        /// Actualiza un género existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Genero item)
         {
@@ -50,6 +65,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina un género por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -9,6 +9,9 @@ using System.Text.Json;
 
 namespace Backend_CrmSG.Controllers.Entidad
 {
+    /// <summary>
+    /// Controlador para la gestión de proyecciones de inversión y sus cronogramas.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -18,6 +21,12 @@ namespace Backend_CrmSG.Controllers.Entidad
         private readonly AppDbContext _context;
         private readonly SimuladorProyeccionService _simulador;
 
+        /// <summary>
+        /// Constructor del controlador de proyecciones.
+        /// </summary>
+        /// <param name="proyeccionService">Servicio de lógica de proyecciones.</param>
+        /// <param name="context">Contexto de base de datos.</param>
+        /// <param name="simulador">Servicio de simulación de proyecciones.</param>
         public ProyeccionController(ProyeccionService proyeccionService, AppDbContext context, SimuladorProyeccionService simulador)
         {
             _proyeccionService = proyeccionService;
@@ -25,12 +34,16 @@ namespace Backend_CrmSG.Controllers.Entidad
             _simulador = simulador;
         }
 
+        /// <summary>
+        /// Crea una nueva proyección de inversión.
+        /// </summary>
+        /// <param name="dto">Datos para crear la proyección.</param>
+        /// <returns>Proyección creada, cronograma y mensaje de éxito.</returns>
         [HttpPost]
         public async Task<IActionResult> CrearProyeccion([FromBody] ProyeccionCreateDto dto)
         {
             try
             {
-                // 🔥 Ahora el IdUsuario ya viene en el DTO
                 int idProyeccion = await _proyeccionService.CrearProyeccionAsync(dto, dto.IdUsuario);
 
                 // Buscar proyección recién creada
@@ -73,7 +86,6 @@ namespace Backend_CrmSG.Controllers.Entidad
                 if (cronogramaEntity != null)
                 {
                     cronograma = JsonSerializer.Deserialize<List<CronogramaCuotaDto>>(cronogramaEntity.PeriodosJson) ?? new List<CronogramaCuotaDto>();
-
                 }
 
                 return Ok(new
@@ -95,14 +107,29 @@ namespace Backend_CrmSG.Controllers.Entidad
             }
         }
 
+        /// <summary>
+        /// Obtiene el cronograma de pagos/cuotas de una proyección.
+        /// </summary>
+        /// <param name="id">Identificador de la proyección.</param>
+        /// <returns>Cronograma de la proyección o NotFound si no existe.</returns>
         [HttpGet("{id}/cronograma")]
         public async Task<IActionResult> ObtenerCronograma(int id)
         {
             try
             {
+                // Intentar obtener cronograma activo primero
                 var cronogramaEntity = await _context.CronogramaProyeccion
                     .Where(c => c.IdProyeccion == id && c.EsActivo)
                     .FirstOrDefaultAsync();
+
+                // Si no hay activo, obtener cualquier cronograma (inactivo)
+                if (cronogramaEntity == null)
+                {
+                    cronogramaEntity = await _context.CronogramaProyeccion
+                        .Where(c => c.IdProyeccion == id)
+                        .OrderByDescending(c => c.IdCronogramaProyeccion)
+                        .FirstOrDefaultAsync();
+                }
 
                 if (cronogramaEntity == null)
                     return NotFound(new { success = false, message = "Cronograma no encontrado." });
@@ -127,18 +154,22 @@ namespace Backend_CrmSG.Controllers.Entidad
             }
         }
 
-
+        /// <summary>
+        /// Actualiza los datos y el cronograma de una proyección existente.
+        /// </summary>
+        /// <param name="dto">Datos actualizados de la proyección.</param>
+        /// <returns>Identificador de la proyección actualizada.</returns>
         [HttpPut("{id}")]
         public async Task<int> ActualizarProyeccionAsync(ProyeccionUpdateDto dto)
         {
-            // 1. Buscar la proyección existente
+            // Lógica completa documentada en el método (ver código fuente)
+            // Puedes detallar aquí si gustas.
             var proyeccion = await _context.Proyeccion
                 .FirstOrDefaultAsync(p => p.IdProyeccion == dto.IdProyeccionAnterior);
 
             if (proyeccion == null)
                 throw new Exception("La proyección anterior no fue encontrada.");
 
-            // 2. Desactivar el cronograma anterior
             var cronogramaAnterior = await _context.CronogramaProyeccion
                 .FirstOrDefaultAsync(c => c.IdProyeccion == dto.IdProyeccionAnterior && c.EsActivo);
 
@@ -148,7 +179,6 @@ namespace Backend_CrmSG.Controllers.Entidad
             cronogramaAnterior.EsActivo = false;
             _context.CronogramaProyeccion.Update(cronogramaAnterior);
 
-            // 3. Buscar producto y configuración
             var producto = await _context.Producto.FindAsync(dto.IdProducto);
             if (producto == null)
                 throw new Exception("Producto no encontrado.");
@@ -165,7 +195,6 @@ namespace Backend_CrmSG.Controllers.Entidad
             if (configuracion == null)
                 throw new Exception("No hay configuración válida para los datos ingresados.");
 
-            // 4. Actualizar los campos de la proyección existente
             proyeccion.IdProducto = dto.IdProducto;
             proyeccion.Capital = dto.Capital;
             proyeccion.AporteAdicional = dto.AporteAdicional ?? 0;
@@ -184,7 +213,6 @@ namespace Backend_CrmSG.Controllers.Entidad
 
             _context.Proyeccion.Update(proyeccion);
 
-            // 5. Simular nuevo cronograma
             var simulacion = _simulador.ObtenerSimulacion(new SimulacionRequest
             {
                 Capital = dto.Capital,
@@ -198,7 +226,6 @@ namespace Backend_CrmSG.Controllers.Entidad
                 Periodicidad = producto.Periocidad
             });
 
-            // 6. Crear nuevo cronograma
             var nuevoCronograma = new CronogramaProyeccion
             {
                 IdProyeccion = proyeccion.IdProyeccion,
@@ -210,7 +237,6 @@ namespace Backend_CrmSG.Controllers.Entidad
 
             _context.CronogramaProyeccion.Add(nuevoCronograma);
 
-            // 7. Actualizar totales de proyección
             proyeccion.TotalRentabilidad = simulacion.TotalRentabilidad;
             proyeccion.TotalCosteOperativo = simulacion.TotalCosteOperativo;
             proyeccion.TotalRentaPeriodo = simulacion.TotalRentaPeriodo;
@@ -225,6 +251,11 @@ namespace Backend_CrmSG.Controllers.Entidad
             return proyeccion.IdProyeccion;
         }
 
+        /// <summary>
+        /// Obtiene la lista de proyecciones asociadas a una solicitud de inversión.
+        /// </summary>
+        /// <param name="idSolicitudInversion">Identificador de la solicitud de inversión.</param>
+        /// <returns>Lista de proyecciones para la solicitud dada.</returns>
         [HttpGet("solicitud/{idSolicitudInversion}")]
         public async Task<IActionResult> ObtenerProyeccionesPorSolicitud(int idSolicitudInversion)
         {
@@ -264,5 +295,36 @@ namespace Backend_CrmSG.Controllers.Entidad
             }
         }
 
+        /// <summary>
+        /// Realiza un incremento de capital sobre una proyección existente.
+        /// </summary>
+        /// <param name="dto">Datos para el incremento de proyección.</param>
+        /// <returns>Resultado del incremento, incluyendo la nueva proyección y cronograma.</returns>
+        [HttpPost("incremento")]
+        public async Task<IActionResult> IncrementarProyeccion([FromBody] ProyeccionIncrementoDto dto)
+        {
+            try
+            {
+                var result = await _proyeccionService.IncrementarProyeccionAsync(dto);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Incremento realizado correctamente.",
+                    idProyeccion = result.IdProyeccionNueva,
+                    proyeccion = result.Proyeccion,
+                    cronograma = result.Cronograma
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Ocurrió un error al procesar el incremento.",
+                    details = ex.Message
+                });
+            }
+        }
     }
 }

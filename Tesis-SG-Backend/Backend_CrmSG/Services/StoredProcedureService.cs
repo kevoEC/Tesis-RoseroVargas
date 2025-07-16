@@ -1,5 +1,7 @@
-﻿using Backend_CrmSG.DTOs;
+﻿using Backend_CrmSG.Data;
+using Backend_CrmSG.DTOs;
 using Backend_CrmSG.DTOs.Backend_CrmSG.DTOs.Seguridad;
+using Backend_CrmSG.DTOs.Caso;
 using Backend_CrmSG.DTOs.Seguridad;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -12,12 +14,18 @@ public class StoredProcedureService
 {
     private readonly string _connectionString;
     public string ConnectionString => _connectionString;
+    private readonly AppDbContext _context;
+    private readonly GeneradorContratoService _generadorContratoService;
+    private readonly GeneradorAnexoService _generadorAnexoService;
 
 
-    public StoredProcedureService(IConfiguration configuration)
+    public StoredProcedureService(IConfiguration configuration, AppDbContext context, GeneradorContratoService generadorContratoService, GeneradorAnexoService generadorAnexoService)
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("La cadena de conexión 'DefaultConnection' no está configurada.");
+        _context = context;
+        _generadorContratoService = generadorContratoService;
+        _generadorAnexoService = generadorAnexoService;
     }
 
     public async Task<LoginResultDto> EjecutarLoginSP(string email, string password)
@@ -120,5 +128,128 @@ public class StoredProcedureService
 
         return null;
     }
+
+
+    public async Task<(bool tareasGeneradas, bool contratoGenerado, int cantidadBeneficiarios)> EjecutarCrearTareasYContrato(int idSolicitud)
+    {
+        // 1. Ejecutar el SP que crea tareas y documentos
+        using (var connection = new SqlConnection(_connectionString))
+        using (var command = new SqlCommand("sp_CrearTareasPorSolicitudInversion", connection))
+        {
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@IdSolicitudInversion", idSolicitud);
+
+            await connection.OpenAsync();
+            await command.ExecuteNonQueryAsync();
+        }
+
+        // 2. Buscar la tarea de tipo 1 recién creada
+        var tarea = await _context.Tarea
+            .Where(t => t.IdSolicitudInversion == idSolicitud && t.IdTipoTarea == 1)
+            .OrderByDescending(t => t.FechaCreacion)
+            .FirstOrDefaultAsync();
+
+        if (tarea != null)
+        {
+            // 3. Generar contrato principal (IdTipoDocumento = 22)
+            var contratoGenerado = await _generadorContratoService.GenerarContratoDesdeSolicitudAsync(idSolicitud);
+
+            // 4. Generar Anexo (IdTipoDocumento = 11)
+            var anexoGenerado = await _generadorAnexoService.GenerarAnexoDesdeSolicitudAsync(idSolicitud);
+
+            // 5. Consultar cantidad de beneficiarios
+            var cantidadBeneficiarios = await _context.BeneficiariosDetalle
+                .CountAsync(b => b.IdSolicitudInversion == idSolicitud);
+
+            return (true, contratoGenerado && anexoGenerado, cantidadBeneficiarios);
+        }
+
+        return (true, false, 0);
+    }
+
+    public async Task<string> EjecutarSpCrearClienteEInversionPorSolicitud(int idSolicitudInversion)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand("sp_CrearClienteEInversionPorSolicitud", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@IdSolicitudInversion", idSolicitudInversion);
+
+        await connection.OpenAsync();
+        using var reader = await command.ExecuteReaderAsync();
+        if (await reader.ReadAsync())
+        {
+            return reader["Mensaje"]?.ToString() ?? "Sin mensaje";
+        }
+        return "Sin mensaje";
+    }
+
+    public async Task<int> EjecutarSpCrearCaso(CasoCreateDTO dto)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand("sp_CrearCaso", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@IdCliente", dto.IdCliente);
+        command.Parameters.AddWithValue("@IdMotivo", dto.IdMotivo);
+        command.Parameters.AddWithValue("@Descripcion", dto.Descripcion ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@IdInversion", (object?)dto.IdInversion ?? DBNull.Value);
+        command.Parameters.AddWithValue("@IdPago", (object?)dto.IdPago ?? DBNull.Value);
+        command.Parameters.AddWithValue("@DatosEspecificos", dto.DatosEspecificos ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("@ContinuarCaso", dto.ContinuarCaso ? 1 : 0);
+        command.Parameters.AddWithValue("@Estado", dto.Estado ?? "Iniciado");
+        command.Parameters.AddWithValue("@IdUsuarioCreacion", dto.IdUsuarioCreacion);
+        command.Parameters.AddWithValue("@IdUsuarioPropietario", dto.IdUsuarioPropietario);
+
+        await connection.OpenAsync();
+        var result = await command.ExecuteScalarAsync();
+        return Convert.ToInt32(result); // IdCaso generado
+    }
+
+    public async Task EjecutarSpContinuarFlujoCaso(int idCaso)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand("sp_ContinuarFlujoCaso", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@IdCaso", idCaso);
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+    }
+
+    public async Task EjecutarRollbackPagosPorIdPago(int idPago, int idUsuarioModificacion)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand("sp_RollbackPagosPorIdPago", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@IdPago", idPago);
+        command.Parameters.AddWithValue("@IdUsuarioModificacion", idUsuarioModificacion);
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+    }
+
+    public async Task GenerarPagosPorCalendarioAsync(int idCalendario, int idPago, int idUsuario)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand("sp_GenerarPagosPorCalendario", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        command.Parameters.AddWithValue("@IdCalendario", idCalendario);
+        command.Parameters.AddWithValue("@IdPago", idPago); // <--- ESTE ES EL CAMBIO CLAVE
+        command.Parameters.AddWithValue("@IdUsuarioCreacion", idUsuario);
+        // Puedes omitir el IdUsuarioPropietario si el SP lo tiene default (o envíalo si lo tienes en tu DTO)
+
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+    }
+
+
+
 
 }

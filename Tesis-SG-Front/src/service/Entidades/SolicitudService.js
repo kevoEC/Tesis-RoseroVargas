@@ -135,3 +135,33 @@ export const validarLDS = async ({
 
   return handleResponse(res);
 };
+
+export const getSolicitudesByClienteId = async (idCliente) => {
+  const token = JSON.parse(localStorage.getItem("user"))?.token;
+  const res = await fetch(
+    `${API_BASE_URL}/vista/solicitudinversion/filtrarDTO?por=cliente&id=${idCliente}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  if (!res.ok) throw new Error("Error al obtener solicitudes por cliente");
+  return await res.json();
+};
+
+// 🔢 GET: Generar/Obtener número de contrato secuencial
+export const getNumeroContratoSecuencial = async (
+  idSolicitudInversion,
+  idProyeccion
+) => {
+  const res = await fetch(
+    `${API_BASE_URL}/contratosecuencial/generar?solicitud=${idSolicitudInversion}&proyeccion=${idProyeccion}`,
+    {
+      method: "GET",
+      headers: getAuthHeaders(),
+    }
+  );
+  return handleResponse(res);
+};

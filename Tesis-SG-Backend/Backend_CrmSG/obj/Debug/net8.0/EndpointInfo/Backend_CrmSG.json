@@ -20,6 +20,7 @@
         "tags": [
           "Actividad"
         ],
+        "summary": "Obtiene la lista de todas las actividades.",
         "responses": {
           "200": {
             "description": "OK"
@@ -30,7 +31,9 @@
         "tags": [
           "Actividad"
         ],
+        "summary": "Crea una nueva actividad.",
         "requestBody": {
+          "description": "Datos de la actividad a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -61,10 +64,12 @@
         "tags": [
           "Actividad"
         ],
+        "summary": "Obtiene una actividad por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la actividad.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -82,10 +87,12 @@
         "tags": [
           "Actividad"
         ],
+        "summary": "Actualiza una actividad existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la actividad.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -94,6 +101,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados de la actividad.",
           "content": {
             "application/json": {
               "schema": {
@@ -122,10 +130,12 @@
         "tags": [
           "Actividad"
         ],
+        "summary": "Elimina una actividad por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la actividad.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -145,10 +155,12 @@
         "tags": [
           "Actividad"
         ],
+        "summary": "Obtiene todas las actividades asociadas a un prospecto.",
         "parameters": [
           {
             "name": "idProspecto",
             "in": "path",
+            "description": "Identificador del prospecto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -168,6 +180,7 @@
         "tags": [
           "ActividadEconomicaLugarTrabajo"
         ],
+        "summary": "Obtiene todas las actividades económicas del lugar de trabajo.",
         "responses": {
           "200": {
             "description": "OK",
@@ -204,7 +217,9 @@
         "tags": [
           "ActividadEconomicaLugarTrabajo"
         ],
+        "summary": "Crea una nueva actividad económica.",
         "requestBody": {
+          "description": "Objeto ActividadEconomicaLugarTrabajo a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -252,10 +267,12 @@
         "tags": [
           "ActividadEconomicaLugarTrabajo"
         ],
+        "summary": "Obtiene una actividad económica por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la actividad económica.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -290,10 +307,12 @@
         "tags": [
           "ActividadEconomicaLugarTrabajo"
         ],
+        "summary": "Actualiza una actividad económica existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la actividad a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -302,6 +321,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto actualizado.",
           "content": {
             "application/json": {
               "schema": {
@@ -330,10 +350,12 @@
         "tags": [
           "ActividadEconomicaLugarTrabajo"
         ],
+        "summary": "Elimina una actividad económica por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la actividad a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -353,6 +375,7 @@
         "tags": [
           "ActividadEconomicaPrincipal"
         ],
+        "summary": "Obtiene todas las actividades económicas principales.",
         "responses": {
           "200": {
             "description": "OK",
@@ -389,7 +412,9 @@
         "tags": [
           "ActividadEconomicaPrincipal"
         ],
+        "summary": "Crea una nueva actividad económica principal.",
         "requestBody": {
+          "description": "Objeto ActividadEconomicaPrincipal a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -437,10 +462,12 @@
         "tags": [
           "ActividadEconomicaPrincipal"
         ],
+        "summary": "Obtiene una actividad económica principal por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la actividad económica principal.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -475,10 +502,12 @@
         "tags": [
           "ActividadEconomicaPrincipal"
         ],
+        "summary": "Actualiza una actividad económica principal existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la actividad a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -487,6 +516,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto actualizado.",
           "content": {
             "application/json": {
               "schema": {
@@ -515,10 +545,12 @@
         "tags": [
           "ActividadEconomicaPrincipal"
         ],
+        "summary": "Elimina una actividad económica principal por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la actividad a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -533,11 +565,304 @@
         }
       }
     },
+    "/api/Adendum": {
+      "post": {
+        "tags": [
+          "Adendum"
+        ],
+        "summary": "Crea un nuevo adendum.",
+        "requestBody": {
+          "description": "DTO con los datos para crear el adendum.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumCreateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumCreateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Adendum creado exitosamente."
+          },
+          "400": {
+            "description": "Datos inválidos o error en la creación."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Adendum"
+        ],
+        "summary": "Actualiza un adendum existente.",
+        "requestBody": {
+          "description": "DTO con los datos actualizados del adendum.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumUpdateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumUpdateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumUpdateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Adendum actualizado correctamente."
+          },
+          "400": {
+            "description": "Datos inválidos o error en la actualización."
+          }
+        }
+      }
+    },
+    "/api/Adendum/{id}": {
+      "get": {
+        "tags": [
+          "Adendum"
+        ],
+        "summary": "Obtiene el detalle de un adendum por su identificador.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del adendum.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Adendum encontrado."
+          },
+          "404": {
+            "description": "Adendum no encontrado."
+          }
+        }
+      }
+    },
+    "/api/Adendum/por-inversion/{idInversion}": {
+      "get": {
+        "tags": [
+          "Adendum"
+        ],
+        "summary": "Obtiene la lista de adendums asociados a una inversión.",
+        "parameters": [
+          {
+            "name": "idInversion",
+            "in": "path",
+            "description": "Identificador de la inversión.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de adendums encontrada."
+          },
+          "400": {
+            "description": "Error en la consulta."
+          }
+        }
+      }
+    },
+    "/api/Adendum/{id}/generar-documentos": {
+      "post": {
+        "tags": [
+          "Adendum"
+        ],
+        "summary": "Genera los documentos asociados a un adendum.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del adendum.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "idUsuario",
+            "in": "query",
+            "description": "Identificador del usuario que genera los documentos.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Documentos generados correctamente."
+          },
+          "400": {
+            "description": "Error al generar los documentos."
+          }
+        }
+      }
+    },
+    "/api/Adendum/{id}/continuar-flujo": {
+      "post": {
+        "tags": [
+          "Adendum"
+        ],
+        "summary": "Continúa el flujo del adendum (activar proyección y cronograma).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del adendum.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "idUsuario",
+            "in": "query",
+            "description": "Identificador del usuario que continúa el flujo.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Flujo continuado correctamente."
+          },
+          "400": {
+            "description": "Error al continuar el flujo."
+          }
+        }
+      }
+    },
+    "/api/Adendum/{id}/detalle-completo": {
+      "get": {
+        "tags": [
+          "Adendum"
+        ],
+        "summary": "Obtiene el detalle completo de un adendum.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del adendum.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalle completo encontrado."
+          },
+          "404": {
+            "description": "Adendum no encontrado."
+          }
+        }
+      }
+    },
+    "/api/Adendum/set-incremento": {
+      "put": {
+        "tags": [
+          "Adendum"
+        ],
+        "summary": "Asigna el incremento a un adendum.",
+        "requestBody": {
+          "description": "DTO con los datos de incremento del adendum.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumSetIncrementoDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumSetIncrementoDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdendumSetIncrementoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Incremento asignado correctamente."
+          },
+          "400": {
+            "description": "Error al asignar el incremento."
+          }
+        }
+      }
+    },
+    "/api/Adendum/por-adendum/{idAdendum}": {
+      "get": {
+        "tags": [
+          "Adendum"
+        ],
+        "summary": "Obtiene los documentos asociados a un adendum.",
+        "parameters": [
+          {
+            "name": "idAdendum",
+            "in": "path",
+            "description": "Identificador del adendum.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de documentos encontrada."
+          },
+          "400": {
+            "description": "Error al obtener los documentos."
+          }
+        }
+      }
+    },
     "/api/Agencia": {
       "get": {
         "tags": [
           "Agencia"
         ],
+        "summary": "Obtiene la lista de todas las agencias.",
         "responses": {
           "200": {
             "description": "OK",
@@ -574,7 +899,9 @@
         "tags": [
           "Agencia"
         ],
+        "summary": "Crea una nueva agencia.",
         "requestBody": {
+          "description": "Objeto agencia a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -622,10 +949,12 @@
         "tags": [
           "Agencia"
         ],
+        "summary": "Obtiene una agencia por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la agencia.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -660,10 +989,12 @@
         "tags": [
           "Agencia"
         ],
+        "summary": "Actualiza una agencia existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la agencia.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -672,6 +1003,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto agencia actualizado.",
           "content": {
             "application/json": {
               "schema": {
@@ -700,10 +1032,12 @@
         "tags": [
           "Agencia"
         ],
+        "summary": "Elimina una agencia por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la agencia a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -723,6 +1057,7 @@
         "tags": [
           "Banco"
         ],
+        "summary": "Obtiene la lista de bancos (solo IdBanco y BancoNombre).",
         "responses": {
           "200": {
             "description": "OK",
@@ -753,6 +1088,7 @@
         "tags": [
           "Banco"
         ],
+        "summary": "Crea un nuevo banco.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -801,6 +1137,7 @@
         "tags": [
           "Banco"
         ],
+        "summary": "Obtiene un banco por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -839,6 +1176,7 @@
         "tags": [
           "Banco"
         ],
+        "summary": "Actualiza un banco existente.",
         "parameters": [
           {
             "name": "id",
@@ -879,6 +1217,7 @@
         "tags": [
           "Banco"
         ],
+        "summary": "Elimina un banco por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -902,6 +1241,7 @@
         "tags": [
           "Beneficiario"
         ],
+        "summary": "Obtiene la lista de todos los beneficiarios.",
         "responses": {
           "200": {
             "description": "OK"
@@ -912,7 +1252,9 @@
         "tags": [
           "Beneficiario"
         ],
+        "summary": "Crea un nuevo beneficiario.",
         "requestBody": {
+          "description": "Datos del beneficiario a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -943,10 +1285,12 @@
         "tags": [
           "Beneficiario"
         ],
+        "summary": "Obtiene un beneficiario por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del beneficiario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -964,10 +1308,12 @@
         "tags": [
           "Beneficiario"
         ],
+        "summary": "Actualiza un beneficiario existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del beneficiario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -976,6 +1322,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados del beneficiario.",
           "content": {
             "application/json": {
               "schema": {
@@ -1004,10 +1351,12 @@
         "tags": [
           "Beneficiario"
         ],
+        "summary": "Elimina un beneficiario por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del beneficiario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1027,10 +1376,12 @@
         "tags": [
           "Beneficiario"
         ],
+        "summary": "Obtiene todos los beneficiarios asociados a una solicitud de inversión.",
         "parameters": [
           {
             "name": "idSolicitud",
             "in": "path",
+            "description": "Identificador de la solicitud de inversión.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1045,11 +1396,452 @@
         }
       }
     },
+    "/api/CalendarioOperaciones": {
+      "get": {
+        "tags": [
+          "CalendarioOperaciones"
+        ],
+        "summary": "Obtiene la lista de todos los calendarios de operaciones.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CalendarioOperaciones"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CalendarioOperaciones"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CalendarioOperaciones"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "CalendarioOperaciones"
+        ],
+        "summary": "Crea un nuevo calendario de operaciones.",
+        "requestBody": {
+          "description": "Datos del calendario de operaciones a crear.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarioOperaciones"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarioOperaciones"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarioOperaciones"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarioOperaciones"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarioOperaciones"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarioOperaciones"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CalendarioOperaciones/{id}": {
+      "get": {
+        "tags": [
+          "CalendarioOperaciones"
+        ],
+        "summary": "Obtiene un calendario de operaciones por su identificador.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del calendario.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarioOperaciones"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarioOperaciones"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarioOperaciones"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "CalendarioOperaciones"
+        ],
+        "summary": "Actualiza los datos de un calendario de operaciones existente.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del calendario.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Datos actualizados del calendario.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarioOperacionesUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarioOperacionesUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarioOperacionesUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "CalendarioOperaciones"
+        ],
+        "summary": "Elimina un calendario de operaciones por su identificador.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del calendario.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos": {
+      "get": {
+        "tags": [
+          "Casos"
+        ],
+        "summary": "Obtiene la lista de todos los casos registrados.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Casos"
+        ],
+        "summary": "Crea un nuevo caso.",
+        "requestBody": {
+          "description": "Datos para la creación del caso.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CasoCreateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CasoCreateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CasoCreateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos/{id}": {
+      "get": {
+        "tags": [
+          "Casos"
+        ],
+        "summary": "Obtiene el detalle de un caso por su identificador.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del caso.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Casos"
+        ],
+        "summary": "Actualiza los datos de un caso existente.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del caso.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Datos actualizados del caso.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CasoUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CasoUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CasoUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos/por-cliente/{idCliente}": {
+      "get": {
+        "tags": [
+          "Casos"
+        ],
+        "summary": "Obtiene todos los casos asociados a un cliente específico.",
+        "parameters": [
+          {
+            "name": "idCliente",
+            "in": "path",
+            "description": "Identificador del cliente.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos/por-inversion/{idInversion}": {
+      "get": {
+        "tags": [
+          "Casos"
+        ],
+        "summary": "Obtiene todos los casos asociados a una inversión específica.",
+        "parameters": [
+          {
+            "name": "idInversion",
+            "in": "path",
+            "description": "Identificador de la inversión.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos/por-pago/{idPago}": {
+      "get": {
+        "tags": [
+          "Casos"
+        ],
+        "summary": "Obtiene todos los casos asociados a un pago específico.",
+        "parameters": [
+          {
+            "name": "idPago",
+            "in": "path",
+            "description": "Identificador del pago.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos/{id}/continuar": {
+      "post": {
+        "tags": [
+          "Casos"
+        ],
+        "summary": "Continúa el flujo del caso (cambio de estado o avance de proceso).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del caso.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Casos/rollback-pagos": {
+      "post": {
+        "tags": [
+          "Casos"
+        ],
+        "summary": "Realiza un rollback de pagos asociados a un caso.",
+        "requestBody": {
+          "description": "Datos para identificar el pago y usuario que realiza el rollback.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RollbackPagosDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RollbackPagosDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RollbackPagosDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Ciudad": {
       "get": {
         "tags": [
           "Ciudad"
         ],
+        "summary": "Obtiene todas las ciudades.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1086,6 +1878,7 @@
         "tags": [
           "Ciudad"
         ],
+        "summary": "Crea una nueva ciudad.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1134,6 +1927,7 @@
         "tags": [
           "Ciudad"
         ],
+        "summary": "Obtiene una ciudad por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -1172,6 +1966,7 @@
         "tags": [
           "Ciudad"
         ],
+        "summary": "Actualiza una ciudad existente.",
         "parameters": [
           {
             "name": "id",
@@ -1212,6 +2007,7 @@
         "tags": [
           "Ciudad"
         ],
+        "summary": "Elimina una ciudad por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -1235,6 +2031,7 @@
         "tags": [
           "Ciudad"
         ],
+        "summary": "Obtiene todas las ciudades de una provincia específica.",
         "parameters": [
           {
             "name": "idProvincia",
@@ -1279,15 +2076,123 @@
         }
       }
     },
+    "/api/Cliente": {
+      "get": {
+        "tags": [
+          "Cliente"
+        ],
+        "summary": "Obtiene la lista de todos los clientes registrados.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Cliente/{id}": {
+      "get": {
+        "tags": [
+          "Cliente"
+        ],
+        "summary": "Obtiene los datos de un cliente por su identificador.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del cliente.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Cliente"
+        ],
+        "summary": "Actualiza los datos de un cliente existente.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del cliente a actualizar.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Datos actualizados del cliente.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClienteUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClienteUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClienteUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Cliente/por-propietario/{idUsuario}": {
+      "get": {
+        "tags": [
+          "Cliente"
+        ],
+        "summary": "Obtiene la lista de clientes asignados a un usuario propietario.",
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "description": "Identificador del usuario propietario.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/ConfiguracionProducto/{idProducto}": {
       "get": {
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Obtiene todas las configuraciones de un producto específico.",
         "parameters": [
           {
             "name": "idProducto",
             "in": "path",
+            "description": "ID del producto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1307,10 +2212,12 @@
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Obtiene una configuración por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la configuración.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1330,7 +2237,9 @@
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Crea una nueva configuración de producto.",
         "requestBody": {
+          "description": "Objeto de configuración a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -1361,10 +2270,12 @@
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Actualiza una configuración existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la configuración a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1373,6 +2284,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos nuevos de la configuración.",
           "content": {
             "application/json": {
               "schema": {
@@ -1401,10 +2313,75 @@
         "tags": [
           "ConfiguracionProducto"
         ],
+        "summary": "Elimina una configuración de producto por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID de la configuración.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ConfiguracionProducto/vista": {
+      "get": {
+        "tags": [
+          "ConfiguracionProducto"
+        ],
+        "summary": "Obtiene todas las configuraciones de productos (vista extendida).",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ConfiguracionProducto/vista/{id}": {
+      "get": {
+        "tags": [
+          "ConfiguracionProducto"
+        ],
+        "summary": "Obtiene una configuración extendida por su ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID de la configuración (vista).",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ConfiguracionProducto/vista/por-producto/{idProducto}": {
+      "get": {
+        "tags": [
+          "ConfiguracionProducto"
+        ],
+        "summary": "Obtiene todas las configuraciones extendidas asociadas a un producto.",
+        "parameters": [
+          {
+            "name": "idProducto",
+            "in": "path",
+            "description": "ID del producto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1424,6 +2401,7 @@
         "tags": [
           "ContinuarSolicitud"
         ],
+        "summary": "Obtiene todas las opciones de ContinuarSolicitud.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1460,6 +2438,7 @@
         "tags": [
           "ContinuarSolicitud"
         ],
+        "summary": "Crea una nueva opción de ContinuarSolicitud.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1508,6 +2487,7 @@
         "tags": [
           "ContinuarSolicitud"
         ],
+        "summary": "Obtiene una opción de ContinuarSolicitud por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -1546,6 +2526,7 @@
         "tags": [
           "ContinuarSolicitud"
         ],
+        "summary": "Actualiza una opción de ContinuarSolicitud existente.",
         "parameters": [
           {
             "name": "id",
@@ -1586,6 +2567,7 @@
         "tags": [
           "ContinuarSolicitud"
         ],
+        "summary": "Elimina una opción de ContinuarSolicitud por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -1604,15 +2586,274 @@
         }
       }
     },
+    "/api/Contrato/generar-por-solicitud": {
+      "post": {
+        "tags": [
+          "Contrato"
+        ],
+        "summary": "Genera automáticamente el contrato principal a partir de una solicitud de inversión.",
+        "requestBody": {
+          "description": "Objeto con el identificador de la solicitud de inversión.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerarContratoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerarContratoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerarContratoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Si el contrato se generó exitosamente."
+          },
+          "500": {
+            "description": "Si ocurre un error interno durante la generación."
+          }
+        }
+      }
+    },
+    "/api/ContratoSecuencial/generar": {
+      "get": {
+        "tags": [
+          "ContratoSecuencial"
+        ],
+        "summary": "Genera y obtiene el número secuencial de contrato para una solicitud y proyección dadas.",
+        "parameters": [
+          {
+            "name": "solicitud",
+            "in": "query",
+            "description": "Identificador de la solicitud de inversión.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "proyeccion",
+            "in": "query",
+            "description": "Identificador de la proyección asociada.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Número de contrato generado correctamente."
+          },
+          "400": {
+            "description": "No se pudo generar el número de contrato."
+          }
+        }
+      }
+    },
+    "/api/dashboard/clientes/estadisticas": {
+      "get": {
+        "tags": [
+          "DashboardCliente"
+        ],
+        "summary": "Obtiene estadísticas agregadas de clientes, para su visualización en el dashboard.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasClienteDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasClienteDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasClienteDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/inversiones/estadisticas": {
+      "get": {
+        "tags": [
+          "DashboardInversion"
+        ],
+        "summary": "Obtiene estadísticas agregadas de inversiones para visualización en el dashboard.",
+        "description": "Devuelve totales, agrupaciones y otros KPIs relevantes de inversiones.",
+        "responses": {
+          "200": {
+            "description": "Devuelve el objeto con los datos estadísticos",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasInversionDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasInversionDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasInversionDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/pagos-casos/estadisticas": {
+      "get": {
+        "tags": [
+          "DashboardPagosCasos"
+        ],
+        "summary": "Obtiene las estadísticas agregadas de pagos y casos para el dashboard.",
+        "description": "Devuelve un objeto con los principales indicadores (KPIs) sobre pagos y casos, agrupados y listos para visualización.",
+        "responses": {
+          "200": {
+            "description": "Devuelve el objeto con los datos estadísticos",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasPagosCasosDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasPagosCasosDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasPagosCasosDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/prospectos/estadisticas": {
+      "get": {
+        "tags": [
+          "DashboardProspecto"
+        ],
+        "summary": "Obtiene las estadísticas y métricas principales de prospectos para el dashboard.",
+        "description": "Devuelve los principales indicadores sobre prospectos, como cantidad por estado, por origen, embudo comercial, etc.",
+        "responses": {
+          "200": {
+            "description": "Devuelve el objeto con las métricas principales",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasProspectosDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasProspectosDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasProspectosDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/solicitudes/estadisticas": {
+      "get": {
+        "tags": [
+          "DashboardSolicitud"
+        ],
+        "summary": "Obtiene todas las estadísticas de solicitudes para el dashboard.",
+        "description": "Este endpoint retorna los principales indicadores relacionados a solicitudes de inversión, como cantidad total, por estado, por producto, y otros datos relevantes para el dashboard.",
+        "responses": {
+          "200": {
+            "description": "Retorna el objeto con las estadísticas de solicitudes",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasSolicitudDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasSolicitudDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasSolicitudDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/tareas/estadisticas": {
+      "get": {
+        "tags": [
+          "DashboardTareas"
+        ],
+        "summary": "Obtiene las estadísticas principales de tareas para el dashboard.",
+        "description": "Devuelve métricas como cantidad total de tareas, tareas por estado, por usuario, y otros KPIs relevantes para el dashboard.",
+        "responses": {
+          "200": {
+            "description": "Retorna el objeto con estadísticas de tareas.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasTareasDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasTareasDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstadisticasTareasDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Documento/entidad": {
       "get": {
         "tags": [
           "Documento"
         ],
+        "summary": "Lista los documentos asociados a una entidad (Solicitud, Tarea, Inversión, etc).",
         "parameters": [
           {
             "name": "tipoEntidad",
             "in": "query",
+            "description": "Tipo de la entidad (ej: \"solicitud\", \"tarea\", \"inversion\").",
             "schema": {
               "type": "string"
             }
@@ -1620,6 +2861,7 @@
           {
             "name": "idEntidad",
             "in": "query",
+            "description": "ID de la entidad asociada.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1638,7 +2880,9 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Crea un nuevo documento (sube un archivo) asociado a una entidad.",
         "requestBody": {
+          "description": "Datos y archivo codificado del documento.",
           "content": {
             "application/json": {
               "schema": {
@@ -1669,10 +2913,12 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Actualiza los datos de un documento existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del documento.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1681,6 +2927,7 @@
           }
         ],
         "requestBody": {
+          "description": "Nuevos datos del documento.",
           "content": {
             "application/json": {
               "schema": {
@@ -1709,10 +2956,12 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Elimina lógicamente (desactiva) un documento.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del documento a desactivar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1732,10 +2981,12 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Elimina todos los documentos automáticos asociados a un motivo (rollback).",
         "parameters": [
           {
             "name": "idMotivo",
             "in": "path",
+            "description": "ID del motivo.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1745,6 +2996,7 @@
           {
             "name": "idTarea",
             "in": "query",
+            "description": "ID de la tarea (opcional).",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1753,6 +3005,7 @@
           {
             "name": "idSolicitudInversion",
             "in": "query",
+            "description": "ID de la solicitud de inversión (opcional).",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1761,6 +3014,7 @@
           {
             "name": "idInversion",
             "in": "query",
+            "description": "ID de la inversión (opcional).",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1779,7 +3033,9 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Crea documentos automáticos a partir de un motivo.",
         "requestBody": {
+          "description": "Datos necesarios para la creación de documentos por motivo.",
           "content": {
             "application/json": {
               "schema": {
@@ -1810,10 +3066,12 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Actualiza solo el archivo binario de un documento (no los metadatos).",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del documento.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1822,6 +3080,7 @@
           }
         ],
         "requestBody": {
+          "description": "Nuevo archivo codificado en base64 y sus metadatos.",
           "content": {
             "application/json": {
               "schema": {
@@ -1852,10 +3111,70 @@
         "tags": [
           "Documento"
         ],
+        "summary": "Obtiene los datos de un documento desde la vista extendida por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del documento.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Documento/por-solicitud-y-motivo": {
+      "get": {
+        "tags": [
+          "Documento"
+        ],
+        "summary": "Lista documentos filtrados por solicitud y motivo.",
+        "parameters": [
+          {
+            "name": "idSolicitudInversion",
+            "in": "query",
+            "description": "ID de la solicitud de inversión.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "idMotivo",
+            "in": "query",
+            "description": "ID del motivo.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Documento/descargar/{id}": {
+      "get": {
+        "tags": [
+          "Documento"
+        ],
+        "summary": "Descarga el archivo físico de un documento (Word) según su ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID del documento a descargar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1875,6 +3194,7 @@
         "tags": [
           "EstadoCivil"
         ],
+        "summary": "Obtiene todos los estados civiles.",
         "responses": {
           "200": {
             "description": "OK",
@@ -1911,6 +3231,7 @@
         "tags": [
           "EstadoCivil"
         ],
+        "summary": "Crea un nuevo estado civil.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1959,6 +3280,7 @@
         "tags": [
           "EstadoCivil"
         ],
+        "summary": "Obtiene un estado civil por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -1997,6 +3319,7 @@
         "tags": [
           "EstadoCivil"
         ],
+        "summary": "Actualiza un estado civil existente.",
         "parameters": [
           {
             "name": "id",
@@ -2037,6 +3360,7 @@
         "tags": [
           "EstadoCivil"
         ],
+        "summary": "Elimina un estado civil por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -2060,6 +3384,7 @@
         "tags": [
           "Etnia"
         ],
+        "summary": "Obtiene todas las etnias.",
         "responses": {
           "200": {
             "description": "OK",
@@ -2096,6 +3421,7 @@
         "tags": [
           "Etnia"
         ],
+        "summary": "Crea una nueva etnia.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -2144,6 +3470,7 @@
         "tags": [
           "Etnia"
         ],
+        "summary": "Obtiene una etnia por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -2182,6 +3509,7 @@
         "tags": [
           "Etnia"
         ],
+        "summary": "Actualiza una etnia existente.",
         "parameters": [
           {
             "name": "id",
@@ -2222,6 +3550,7 @@
         "tags": [
           "Etnia"
         ],
+        "summary": "Elimina una etnia por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -2245,6 +3574,7 @@
         "tags": [
           "Genero"
         ],
+        "summary": "Obtiene todos los géneros.",
         "responses": {
           "200": {
             "description": "OK",
@@ -2281,6 +3611,7 @@
         "tags": [
           "Genero"
         ],
+        "summary": "Crea un nuevo género.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -2329,6 +3660,7 @@
         "tags": [
           "Genero"
         ],
+        "summary": "Obtiene un género por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -2367,6 +3699,7 @@
         "tags": [
           "Genero"
         ],
+        "summary": "Actualiza un género existente.",
         "parameters": [
           {
             "name": "id",
@@ -2407,10 +3740,99 @@
         "tags": [
           "Genero"
         ],
+        "summary": "Elimina un género por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Inversion": {
+      "get": {
+        "tags": [
+          "Inversion"
+        ],
+        "summary": "Obtiene la lista de todas las inversiones registradas.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Inversion/{id}": {
+      "get": {
+        "tags": [
+          "Inversion"
+        ],
+        "summary": "Obtiene los datos de una inversión por su identificador.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador de la inversión.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Inversion/por-propietario/{idUsuario}": {
+      "get": {
+        "tags": [
+          "Inversion"
+        ],
+        "summary": "Obtiene la lista de inversiones asignadas a un usuario propietario.",
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "description": "Identificador del usuario propietario.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Inversion/por-cliente/{idCliente}": {
+      "get": {
+        "tags": [
+          "Inversion"
+        ],
+        "summary": "Obtiene la lista de inversiones asignadas a un cliente específico.",
+        "parameters": [
+          {
+            "name": "idCliente",
+            "in": "path",
+            "description": "Identificador del cliente.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2430,6 +3852,7 @@
         "tags": [
           "JustificativoTransaccion"
         ],
+        "summary": "Obtiene todos los justificativos de transacción.",
         "responses": {
           "200": {
             "description": "OK",
@@ -2466,6 +3889,7 @@
         "tags": [
           "JustificativoTransaccion"
         ],
+        "summary": "Crea un nuevo justificativo de transacción.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -2514,6 +3938,7 @@
         "tags": [
           "JustificativoTransaccion"
         ],
+        "summary": "Obtiene un justificativo de transacción por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -2552,6 +3977,7 @@
         "tags": [
           "JustificativoTransaccion"
         ],
+        "summary": "Actualiza un justificativo de transacción existente.",
         "parameters": [
           {
             "name": "id",
@@ -2592,6 +4018,7 @@
         "tags": [
           "JustificativoTransaccion"
         ],
+        "summary": "Elimina un justificativo de transacción por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -2615,6 +4042,7 @@
         "tags": [
           "Menu"
         ],
+        "summary": "Obtiene la lista de todos los menús registrados en el sistema.",
         "responses": {
           "200": {
             "description": "OK"
@@ -2625,7 +4053,9 @@
         "tags": [
           "Menu"
         ],
+        "summary": "Crea un nuevo menú de seguridad.",
         "requestBody": {
+          "description": "Objeto menú a registrar.",
           "content": {
             "application/json": {
               "schema": {
@@ -2656,10 +4086,12 @@
         "tags": [
           "Menu"
         ],
+        "summary": "Obtiene la información de un menú específico por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del menú.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2677,10 +4109,12 @@
         "tags": [
           "Menu"
         ],
+        "summary": "Actualiza la información de un menú existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del menú a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2689,6 +4123,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto menú con los datos actualizados.",
           "content": {
             "application/json": {
               "schema": {
@@ -2717,10 +4152,12 @@
         "tags": [
           "Menu"
         ],
+        "summary": "Elimina un menú por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del menú a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2740,13 +4177,205 @@
         "tags": [
           "Menu"
         ],
+        "summary": "Obtiene los menús disponibles para un rol específico.",
         "parameters": [
           {
             "name": "rol",
             "in": "path",
+            "description": "Nombre del rol.",
             "required": true,
             "schema": {
               "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ModoFirma": {
+      "get": {
+        "tags": [
+          "ModoFirma"
+        ],
+        "summary": "Obtiene todos los modos de firma disponibles.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModoFirma"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModoFirma"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModoFirma"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ModoFirma"
+        ],
+        "summary": "Crea un nuevo modo de firma.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModoFirma"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModoFirma"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModoFirma"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModoFirma"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModoFirma"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModoFirma"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ModoFirma/{id}": {
+      "get": {
+        "tags": [
+          "ModoFirma"
+        ],
+        "summary": "Obtiene un modo de firma por su ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModoFirma"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModoFirma"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModoFirma"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ModoFirma"
+        ],
+        "summary": "Actualiza un modo de firma existente.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModoFirma"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModoFirma"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModoFirma"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ModoFirma"
+        ],
+        "summary": "Elimina un modo de firma por su ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -2762,6 +4391,7 @@
         "tags": [
           "Nacionalidad"
         ],
+        "summary": "Obtiene todas las nacionalidades disponibles.",
         "responses": {
           "200": {
             "description": "OK",
@@ -2798,6 +4428,7 @@
         "tags": [
           "Nacionalidad"
         ],
+        "summary": "Crea una nueva nacionalidad.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -2846,6 +4477,7 @@
         "tags": [
           "Nacionalidad"
         ],
+        "summary": "Obtiene una nacionalidad por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -2884,6 +4516,7 @@
         "tags": [
           "Nacionalidad"
         ],
+        "summary": "Actualiza una nacionalidad existente.",
         "parameters": [
           {
             "name": "id",
@@ -2924,6 +4557,7 @@
         "tags": [
           "Nacionalidad"
         ],
+        "summary": "Elimina una nacionalidad por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -2947,6 +4581,7 @@
         "tags": [
           "OrigenCliente"
         ],
+        "summary": "Obtiene todos los orígenes de cliente.",
         "responses": {
           "200": {
             "description": "OK",
@@ -2983,6 +4618,7 @@
         "tags": [
           "OrigenCliente"
         ],
+        "summary": "Crea un nuevo origen de cliente.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3031,6 +4667,7 @@
         "tags": [
           "OrigenCliente"
         ],
+        "summary": "Obtiene un origen de cliente por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3069,6 +4706,7 @@
         "tags": [
           "OrigenCliente"
         ],
+        "summary": "Actualiza un origen de cliente existente.",
         "parameters": [
           {
             "name": "id",
@@ -3109,6 +4747,7 @@
         "tags": [
           "OrigenCliente"
         ],
+        "summary": "Elimina un origen de cliente por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3127,11 +4766,250 @@
         }
       }
     },
+    "/api/Pagos": {
+      "get": {
+        "tags": [
+          "Pagos"
+        ],
+        "summary": "Obtiene la lista de todos los pagos registrados.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Pagos"
+        ],
+        "summary": "Crea un nuevo pago.",
+        "requestBody": {
+          "description": "Datos para la creación del pago.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoCreateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoCreateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoCreateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Pagos/{id}": {
+      "get": {
+        "tags": [
+          "Pagos"
+        ],
+        "summary": "Obtiene los datos de un pago por su identificador.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del pago.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Pagos"
+        ],
+        "summary": "Actualiza los datos de un pago existente.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del pago.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Datos actualizados del pago.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoUpdateDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoUpdateDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagoUpdateDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Pagos"
+        ],
+        "summary": "Elimina un pago por su identificador.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del pago.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Pagos/por-calendario/{idCalendario}": {
+      "get": {
+        "tags": [
+          "Pagos"
+        ],
+        "summary": "Obtiene la lista de pagos asociados a un calendario.",
+        "parameters": [
+          {
+            "name": "idCalendario",
+            "in": "path",
+            "description": "Identificador del calendario.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Pagos/generar-por-calendario": {
+      "post": {
+        "tags": [
+          "Pagos"
+        ],
+        "summary": "Genera automáticamente pagos asociados a un calendario.",
+        "requestBody": {
+          "description": "Datos para la generación de pagos por calendario.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerarPagosCalendarioDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerarPagosCalendarioDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerarPagosCalendarioDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Pagos/{id}/rollback": {
+      "post": {
+        "tags": [
+          "Pagos"
+        ],
+        "summary": "Realiza rollback de pagos por identificador de pago.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador del pago.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Datos del usuario que realiza la modificación.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RollbackUsuarioDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RollbackUsuarioDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RollbackUsuarioDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Pais": {
       "get": {
         "tags": [
           "Pais"
         ],
+        "summary": "Obtiene todos los países registrados.",
         "responses": {
           "200": {
             "description": "OK",
@@ -3168,6 +5046,7 @@
         "tags": [
           "Pais"
         ],
+        "summary": "Crea un nuevo país.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3216,6 +5095,7 @@
         "tags": [
           "Pais"
         ],
+        "summary": "Obtiene un país por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3254,6 +5134,7 @@
         "tags": [
           "Pais"
         ],
+        "summary": "Actualiza un país existente.",
         "parameters": [
           {
             "name": "id",
@@ -3294,6 +5175,7 @@
         "tags": [
           "Pais"
         ],
+        "summary": "Elimina un país por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3317,6 +5199,7 @@
         "tags": [
           "Permiso"
         ],
+        "summary": "Obtiene la lista de todos los permisos registrados en el sistema.",
         "responses": {
           "200": {
             "description": "OK"
@@ -3327,7 +5210,9 @@
         "tags": [
           "Permiso"
         ],
+        "summary": "Crea un nuevo permiso de seguridad.",
         "requestBody": {
+          "description": "Objeto permiso a registrar.",
           "content": {
             "application/json": {
               "schema": {
@@ -3358,10 +5243,12 @@
         "tags": [
           "Permiso"
         ],
+        "summary": "Obtiene la información de un permiso específico por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del permiso.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -3379,10 +5266,12 @@
         "tags": [
           "Permiso"
         ],
+        "summary": "Actualiza la información de un permiso existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del permiso a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -3391,6 +5280,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto permiso con los datos actualizados.",
           "content": {
             "application/json": {
               "schema": {
@@ -3419,10 +5309,12 @@
         "tags": [
           "Permiso"
         ],
+        "summary": "Elimina un permiso por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del permiso a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -3442,6 +5334,7 @@
         "tags": [
           "Prioridad"
         ],
+        "summary": "Obtiene todas las prioridades registradas.",
         "responses": {
           "200": {
             "description": "OK",
@@ -3478,6 +5371,7 @@
         "tags": [
           "Prioridad"
         ],
+        "summary": "Crea una nueva prioridad.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3526,6 +5420,7 @@
         "tags": [
           "Prioridad"
         ],
+        "summary": "Obtiene una prioridad por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3564,6 +5459,7 @@
         "tags": [
           "Prioridad"
         ],
+        "summary": "Actualiza una prioridad existente.",
         "parameters": [
           {
             "name": "id",
@@ -3604,6 +5500,7 @@
         "tags": [
           "Prioridad"
         ],
+        "summary": "Elimina una prioridad por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3627,6 +5524,38 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Obtiene todos los productos.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Producto"
+        ],
+        "summary": "Crea un nuevo producto.",
+        "requestBody": {
+          "description": "Datos del producto.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Producto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Producto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Producto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -3639,10 +5568,78 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Obtiene un producto por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del producto.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Producto"
+        ],
+        "summary": "Actualiza un producto existente.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID del producto a actualizar.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Nuevos datos del producto.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Producto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Producto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Producto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Producto"
+        ],
+        "summary": "Elimina un producto por su ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID del producto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -3662,10 +5659,12 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Obtiene las configuraciones asociadas a un producto específico.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del producto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -3685,10 +5684,50 @@
         "tags": [
           "Producto"
         ],
+        "summary": "Obtiene un producto junto a todas sus configuraciones.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del producto.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Producto/vista": {
+      "get": {
+        "tags": [
+          "Producto"
+        ],
+        "summary": "Obtiene la lista extendida de productos (vista enriquecida).",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Producto/vista/{id}": {
+      "get": {
+        "tags": [
+          "Producto"
+        ],
+        "summary": "Obtiene los datos enriquecidos (vista) de un producto por su ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID del producto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -3708,6 +5747,7 @@
         "tags": [
           "ProductoInteres"
         ],
+        "summary": "Obtiene todos los productos de interés registrados.",
         "responses": {
           "200": {
             "description": "OK",
@@ -3744,6 +5784,7 @@
         "tags": [
           "ProductoInteres"
         ],
+        "summary": "Crea un nuevo producto de interés.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3792,6 +5833,7 @@
         "tags": [
           "ProductoInteres"
         ],
+        "summary": "Obtiene un producto de interés por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3830,6 +5872,7 @@
         "tags": [
           "ProductoInteres"
         ],
+        "summary": "Actualiza un producto de interés existente.",
         "parameters": [
           {
             "name": "id",
@@ -3870,6 +5913,7 @@
         "tags": [
           "ProductoInteres"
         ],
+        "summary": "Elimina un producto de interés por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -3893,6 +5937,7 @@
         "tags": [
           "Profesion"
         ],
+        "summary": "Obtiene todas las profesiones registradas.",
         "responses": {
           "200": {
             "description": "OK",
@@ -3929,6 +5974,7 @@
         "tags": [
           "Profesion"
         ],
+        "summary": "Crea una nueva profesión.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -3977,6 +6023,7 @@
         "tags": [
           "Profesion"
         ],
+        "summary": "Obtiene una profesión por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -4015,6 +6062,7 @@
         "tags": [
           "Profesion"
         ],
+        "summary": "Actualiza una profesión existente.",
         "parameters": [
           {
             "name": "id",
@@ -4055,6 +6103,7 @@
         "tags": [
           "Profesion"
         ],
+        "summary": "Elimina una profesión por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -4078,6 +6127,7 @@
         "tags": [
           "Prospecto"
         ],
+        "summary": "Obtiene la lista de todos los prospectos registrados.",
         "responses": {
           "200": {
             "description": "OK"
@@ -4088,7 +6138,9 @@
         "tags": [
           "Prospecto"
         ],
+        "summary": "Crea un nuevo prospecto.",
         "requestBody": {
+          "description": "Datos del prospecto a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -4119,10 +6171,12 @@
         "tags": [
           "Prospecto"
         ],
+        "summary": "Obtiene los datos de un prospecto por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del prospecto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4140,10 +6194,12 @@
         "tags": [
           "Prospecto"
         ],
+        "summary": "Actualiza los datos de un prospecto existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del prospecto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4152,6 +6208,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados del prospecto.",
           "content": {
             "application/json": {
               "schema": {
@@ -4180,10 +6237,12 @@
         "tags": [
           "Prospecto"
         ],
+        "summary": "Elimina un prospecto por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador del prospecto.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4203,6 +6262,7 @@
         "tags": [
           "Provincia"
         ],
+        "summary": "Obtiene todas las provincias registradas.",
         "responses": {
           "200": {
             "description": "OK",
@@ -4239,6 +6299,7 @@
         "tags": [
           "Provincia"
         ],
+        "summary": "Crea una nueva provincia.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -4287,6 +6348,7 @@
         "tags": [
           "Provincia"
         ],
+        "summary": "Obtiene una provincia por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -4325,6 +6387,7 @@
         "tags": [
           "Provincia"
         ],
+        "summary": "Actualiza una provincia existente.",
         "parameters": [
           {
             "name": "id",
@@ -4365,6 +6428,7 @@
         "tags": [
           "Provincia"
         ],
+        "summary": "Elimina una provincia por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -4388,6 +6452,7 @@
         "tags": [
           "Provincia"
         ],
+        "summary": "Obtiene las provincias asociadas a un país específico.",
         "parameters": [
           {
             "name": "idPais",
@@ -4437,7 +6502,9 @@
         "tags": [
           "Proyeccion"
         ],
+        "summary": "Crea una nueva proyección de inversión.",
         "requestBody": {
+          "description": "Datos para crear la proyección.",
           "content": {
             "application/json": {
               "schema": {
@@ -4468,10 +6535,12 @@
         "tags": [
           "Proyeccion"
         ],
+        "summary": "Obtiene el cronograma de pagos/cuotas de una proyección.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la proyección.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4491,6 +6560,7 @@
         "tags": [
           "Proyeccion"
         ],
+        "summary": "Actualiza los datos y el cronograma de una proyección existente.",
         "parameters": [
           {
             "name": "id",
@@ -4502,6 +6572,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados de la proyección.",
           "content": {
             "application/json": {
               "schema": {
@@ -4552,10 +6623,12 @@
         "tags": [
           "Proyeccion"
         ],
+        "summary": "Obtiene la lista de proyecciones asociadas a una solicitud de inversión.",
         "parameters": [
           {
             "name": "idSolicitudInversion",
             "in": "path",
+            "description": "Identificador de la solicitud de inversión.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4570,11 +6643,45 @@
         }
       }
     },
+    "/api/Proyeccion/incremento": {
+      "post": {
+        "tags": [
+          "Proyeccion"
+        ],
+        "summary": "Realiza un incremento de capital sobre una proyección existente.",
+        "requestBody": {
+          "description": "Datos para el incremento de proyección.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProyeccionIncrementoDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProyeccionIncrementoDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProyeccionIncrementoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Referencia": {
       "get": {
         "tags": [
           "Referencia"
         ],
+        "summary": "Obtiene la lista de todas las referencias registradas.",
         "responses": {
           "200": {
             "description": "OK"
@@ -4585,7 +6692,9 @@
         "tags": [
           "Referencia"
         ],
+        "summary": "Crea una nueva referencia.",
         "requestBody": {
+          "description": "Datos de la referencia a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -4616,10 +6725,12 @@
         "tags": [
           "Referencia"
         ],
+        "summary": "Obtiene los datos de una referencia por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la referencia.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4637,10 +6748,12 @@
         "tags": [
           "Referencia"
         ],
+        "summary": "Actualiza los datos de una referencia existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la referencia.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4649,6 +6762,7 @@
           }
         ],
         "requestBody": {
+          "description": "Datos actualizados de la referencia.",
           "content": {
             "application/json": {
               "schema": {
@@ -4677,10 +6791,12 @@
         "tags": [
           "Referencia"
         ],
+        "summary": "Elimina una referencia por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Identificador de la referencia.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4700,10 +6816,12 @@
         "tags": [
           "Referencia"
         ],
+        "summary": "Obtiene la lista de referencias asociadas a una solicitud de inversión específica.",
         "parameters": [
           {
             "name": "idSolicitudInversion",
             "in": "path",
+            "description": "Identificador de la solicitud de inversión.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4723,6 +6841,7 @@
         "tags": [
           "Rol"
         ],
+        "summary": "Obtiene la lista de todos los roles registrados en el sistema.",
         "responses": {
           "200": {
             "description": "OK"
@@ -4733,7 +6852,9 @@
         "tags": [
           "Rol"
         ],
+        "summary": "Crea un nuevo rol de seguridad.",
         "requestBody": {
+          "description": "Objeto rol a registrar.",
           "content": {
             "application/json": {
               "schema": {
@@ -4764,10 +6885,12 @@
         "tags": [
           "Rol"
         ],
+        "summary": "Obtiene la información de un rol específico por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del rol.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4785,10 +6908,12 @@
         "tags": [
           "Rol"
         ],
+        "summary": "Actualiza la información de un rol existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del rol a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4797,6 +6922,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto rol con los datos actualizados.",
           "content": {
             "application/json": {
               "schema": {
@@ -4825,10 +6951,12 @@
         "tags": [
           "Rol"
         ],
+        "summary": "Elimina un rol por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del rol a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4848,6 +6976,7 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Obtiene todas las solicitudes de inversión (básico, sin detalle).",
         "responses": {
           "200": {
             "description": "OK"
@@ -4860,6 +6989,7 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Obtiene todas las solicitudes de inversión con detalle completo (unión de varias tablas/vistas).",
         "responses": {
           "200": {
             "description": "OK"
@@ -4872,10 +7002,12 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Obtiene una solicitud de inversión por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id de la solicitud.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4893,10 +7025,12 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Elimina una solicitud de inversión por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id de la solicitud a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4916,7 +7050,9 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Crea una nueva solicitud de inversión a partir de un DTO estructurado.",
         "requestBody": {
+          "description": "DTO con los datos necesarios para la creación.",
           "content": {
             "application/json": {
               "schema": {
@@ -4947,10 +7083,12 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Actualiza una solicitud de inversión existente a partir de un DTO estructurado.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id de la solicitud a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4959,6 +7097,7 @@
           }
         ],
         "requestBody": {
+          "description": "DTO con los campos a actualizar.",
           "content": {
             "application/json": {
               "schema": {
@@ -5055,10 +7194,12 @@
         "tags": [
           "SolicitudInversion"
         ],
+        "summary": "Obtiene el detalle completo de una solicitud por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id de la solicitud.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5073,11 +7214,176 @@
         }
       }
     },
+    "/api/SolicitudInversion/finalizar": {
+      "post": {
+        "tags": [
+          "SolicitudInversion"
+        ],
+        "summary": "Ejecuta el proceso de finalización de una solicitud de inversión, generando tareas y contrato asociado.",
+        "requestBody": {
+          "description": "DTO con el Id de la solicitud a finalizar.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalizarSolicitudDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalizarSolicitudDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalizarSolicitudDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Tarea": {
+      "get": {
+        "tags": [
+          "Tarea"
+        ],
+        "summary": "Obtiene todas las tareas existentes en el sistema.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Tarea/por-rol/{idRol}": {
+      "get": {
+        "tags": [
+          "Tarea"
+        ],
+        "summary": "Obtiene las tareas asignadas a un rol específico.",
+        "parameters": [
+          {
+            "name": "idRol",
+            "in": "path",
+            "description": "Identificador del rol.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Tarea/por-solicitud/{idSolicitud}": {
+      "get": {
+        "tags": [
+          "Tarea"
+        ],
+        "summary": "Obtiene las tareas asociadas a una solicitud de inversión específica.",
+        "parameters": [
+          {
+            "name": "idSolicitud",
+            "in": "path",
+            "description": "Identificador de la solicitud de inversión.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Tarea/{id}": {
+      "get": {
+        "tags": [
+          "Tarea"
+        ],
+        "summary": "Obtiene el detalle de una tarea específica por su identificador.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador de la tarea.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Tarea"
+        ],
+        "summary": "Actualiza dinámicamente una tarea existente, permitiendo modificar campos flexibles.\r\nEl usuario autenticado es tomado del token JWT.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identificador de la tarea a actualizar.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "DTO con los datos de actualización.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TareaUpdateDinamicoDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TareaUpdateDinamicoDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TareaUpdateDinamicoDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/TipoActividad": {
       "get": {
         "tags": [
           "TipoActividad"
         ],
+        "summary": "Obtiene todos los tipos de actividad registrados.",
         "responses": {
           "200": {
             "description": "OK",
@@ -5114,7 +7420,9 @@
         "tags": [
           "TipoActividad"
         ],
+        "summary": "Crea un nuevo tipo de actividad.",
         "requestBody": {
+          "description": "Objeto TipoActividad a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -5162,10 +7470,12 @@
         "tags": [
           "TipoActividad"
         ],
+        "summary": "Obtiene un tipo de actividad por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de actividad.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5200,10 +7510,12 @@
         "tags": [
           "TipoActividad"
         ],
+        "summary": "Actualiza un tipo de actividad existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de actividad a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5212,6 +7524,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoActividad con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -5240,10 +7553,12 @@
         "tags": [
           "TipoActividad"
         ],
+        "summary": "Elimina un tipo de actividad por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de actividad a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5263,6 +7578,7 @@
         "tags": [
           "TipoCliente"
         ],
+        "summary": "Obtiene todos los tipos de cliente registrados.",
         "responses": {
           "200": {
             "description": "OK"
@@ -5273,7 +7589,9 @@
         "tags": [
           "TipoCliente"
         ],
+        "summary": "Crea un nuevo tipo de cliente.",
         "requestBody": {
+          "description": "Objeto TipoCliente a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -5304,10 +7622,12 @@
         "tags": [
           "TipoCliente"
         ],
+        "summary": "Obtiene un tipo de cliente por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de cliente.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5325,10 +7645,12 @@
         "tags": [
           "TipoCliente"
         ],
+        "summary": "Actualiza un tipo de cliente existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de cliente a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5337,6 +7659,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoCliente con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -5365,10 +7688,12 @@
         "tags": [
           "TipoCliente"
         ],
+        "summary": "Elimina un tipo de cliente por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de cliente a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5388,6 +7713,7 @@
         "tags": [
           "TipoCuenta"
         ],
+        "summary": "Obtiene todos los tipos de cuenta registrados.",
         "responses": {
           "200": {
             "description": "OK",
@@ -5424,7 +7750,9 @@
         "tags": [
           "TipoCuenta"
         ],
+        "summary": "Crea un nuevo tipo de cuenta.",
         "requestBody": {
+          "description": "Objeto TipoCuenta a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -5472,10 +7800,12 @@
         "tags": [
           "TipoCuenta"
         ],
+        "summary": "Obtiene un tipo de cuenta por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de cuenta.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5510,10 +7840,12 @@
         "tags": [
           "TipoCuenta"
         ],
+        "summary": "Actualiza un tipo de cuenta existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de cuenta a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5522,6 +7854,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoCuenta con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -5550,10 +7883,12 @@
         "tags": [
           "TipoCuenta"
         ],
+        "summary": "Elimina un tipo de cuenta por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de cuenta a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5573,6 +7908,7 @@
         "tags": [
           "TipoDocumentoCatalogo"
         ],
+        "summary": "Obtiene todos los tipos de documento catalogados.",
         "responses": {
           "200": {
             "description": "OK",
@@ -5609,7 +7945,9 @@
         "tags": [
           "TipoDocumentoCatalogo"
         ],
+        "summary": "Crea un nuevo tipo de documento catalogado.",
         "requestBody": {
+          "description": "Objeto TipoDocumentoCatalogo a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -5657,10 +7995,12 @@
         "tags": [
           "TipoDocumentoCatalogo"
         ],
+        "summary": "Obtiene un tipo de documento catalogado por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de documento.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5695,10 +8035,12 @@
         "tags": [
           "TipoDocumentoCatalogo"
         ],
+        "summary": "Actualiza un tipo de documento catalogado existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de documento a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5707,6 +8049,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoDocumentoCatalogo con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -5735,10 +8078,12 @@
         "tags": [
           "TipoDocumentoCatalogo"
         ],
+        "summary": "Elimina un tipo de documento catalogado por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de documento a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5758,6 +8103,7 @@
         "tags": [
           "TipoIdentificacion"
         ],
+        "summary": "Obtiene todos los tipos de identificación.",
         "responses": {
           "200": {
             "description": "OK",
@@ -5794,7 +8140,9 @@
         "tags": [
           "TipoIdentificacion"
         ],
+        "summary": "Crea un nuevo tipo de identificación.",
         "requestBody": {
+          "description": "Objeto TipoIdentificacion a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -5842,10 +8190,12 @@
         "tags": [
           "TipoIdentificacion"
         ],
+        "summary": "Obtiene un tipo de identificación por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de identificación.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5880,10 +8230,12 @@
         "tags": [
           "TipoIdentificacion"
         ],
+        "summary": "Actualiza un tipo de identificación existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de identificación a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5892,6 +8244,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoIdentificacion con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -5920,10 +8273,12 @@
         "tags": [
           "TipoIdentificacion"
         ],
+        "summary": "Elimina un tipo de identificación por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de identificación a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -5943,6 +8298,7 @@
         "tags": [
           "TipoReferencia"
         ],
+        "summary": "Obtiene todos los tipos de referencia.",
         "responses": {
           "200": {
             "description": "OK",
@@ -5979,7 +8335,9 @@
         "tags": [
           "TipoReferencia"
         ],
+        "summary": "Crea un nuevo tipo de referencia.",
         "requestBody": {
+          "description": "Objeto TipoReferencia a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -6027,10 +8385,12 @@
         "tags": [
           "TipoReferencia"
         ],
+        "summary": "Obtiene un tipo de referencia por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de referencia.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6065,10 +8425,12 @@
         "tags": [
           "TipoReferencia"
         ],
+        "summary": "Actualiza un tipo de referencia existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de referencia a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6077,6 +8439,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoReferencia con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -6105,10 +8468,12 @@
         "tags": [
           "TipoReferencia"
         ],
+        "summary": "Elimina un tipo de referencia por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de referencia a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6128,6 +8493,7 @@
         "tags": [
           "TipoSolicitud"
         ],
+        "summary": "Obtiene todos los tipos de solicitud.",
         "responses": {
           "200": {
             "description": "OK"
@@ -6138,7 +8504,9 @@
         "tags": [
           "TipoSolicitud"
         ],
+        "summary": "Crea un nuevo tipo de solicitud.",
         "requestBody": {
+          "description": "Objeto TipoSolicitud a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -6169,10 +8537,12 @@
         "tags": [
           "TipoSolicitud"
         ],
+        "summary": "Obtiene un tipo de solicitud por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de solicitud.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6190,10 +8560,12 @@
         "tags": [
           "TipoSolicitud"
         ],
+        "summary": "Actualiza un tipo de solicitud existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de solicitud a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6202,6 +8574,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto TipoSolicitud con los cambios.",
           "content": {
             "application/json": {
               "schema": {
@@ -6230,10 +8603,12 @@
         "tags": [
           "TipoSolicitud"
         ],
+        "summary": "Elimina un tipo de solicitud por su ID.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "ID del tipo de solicitud a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6253,6 +8628,7 @@
         "tags": [
           "TipoVia"
         ],
+        "summary": "Obtiene todas las opciones de TipoVia.",
         "responses": {
           "200": {
             "description": "OK",
@@ -6289,6 +8665,7 @@
         "tags": [
           "TipoVia"
         ],
+        "summary": "Crea una nueva opción de TipoVia.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -6337,6 +8714,7 @@
         "tags": [
           "TipoVia"
         ],
+        "summary": "Obtiene una opción de TipoVia por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -6375,6 +8753,7 @@
         "tags": [
           "TipoVia"
         ],
+        "summary": "Actualiza una opción de TipoVia existente.",
         "parameters": [
           {
             "name": "id",
@@ -6415,6 +8794,7 @@
         "tags": [
           "TipoVia"
         ],
+        "summary": "Elimina una opción de TipoVia por su ID.",
         "parameters": [
           {
             "name": "id",
@@ -6438,7 +8818,9 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Realiza el login del usuario y retorna un token JWT, datos del usuario, roles y permisos.",
         "requestBody": {
+          "description": "Objeto con email y contraseña.",
           "content": {
             "application/json": {
               "schema": {
@@ -6469,10 +8851,12 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Obtiene los roles asignados a un usuario específico.",
         "parameters": [
           {
             "name": "idUsuario",
             "in": "path",
+            "description": "Id del usuario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6492,10 +8876,12 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Obtiene los menús permitidos para un usuario según sus roles y permisos.",
         "parameters": [
           {
             "name": "idUsuario",
             "in": "path",
+            "description": "Id del usuario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6515,6 +8901,7 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Obtiene todos los usuarios registrados.",
         "responses": {
           "200": {
             "description": "OK"
@@ -6525,7 +8912,9 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Crea un nuevo usuario (registro manual/administrativo).",
         "requestBody": {
+          "description": "Objeto usuario a registrar.",
           "content": {
             "application/json": {
               "schema": {
@@ -6556,10 +8945,12 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Obtiene la información de un usuario específico.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del usuario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6577,10 +8968,12 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Actualiza los datos de un usuario existente.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del usuario a actualizar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6589,6 +8982,7 @@
           }
         ],
         "requestBody": {
+          "description": "Objeto usuario con datos nuevos.",
           "content": {
             "application/json": {
               "schema": {
@@ -6617,10 +9011,12 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Elimina un usuario por su identificador.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "Id del usuario a eliminar.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6640,7 +9036,9 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Realiza el registro parcial de un usuario y envía correo de validación.",
         "requestBody": {
+          "description": "DTO con los datos mínimos de registro.",
           "content": {
             "application/json": {
               "schema": {
@@ -6671,10 +9069,12 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Valida el correo electrónico de un usuario a través del token recibido por email.",
         "parameters": [
           {
             "name": "token",
             "in": "query",
+            "description": "Token de validación de correo.",
             "schema": {
               "type": "string"
             }
@@ -6692,7 +9092,9 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Envía un código SMS al número del usuario para validación de teléfono.",
         "requestBody": {
+          "description": "DTO con idUsuario, número y extensión internacional.",
           "content": {
             "application/json": {
               "schema": {
@@ -6723,7 +9125,9 @@
         "tags": [
           "Usuario"
         ],
+        "summary": "Valida el código SMS ingresado por el usuario para activar su teléfono.",
         "requestBody": {
+          "description": "DTO con idUsuario y código ingresado.",
           "content": {
             "application/json": {
               "schema": {
@@ -6754,6 +9158,7 @@
         "tags": [
           "UsuarioRol"
         ],
+        "summary": "Obtiene todas las relaciones usuario-rol existentes.",
         "responses": {
           "200": {
             "description": "OK"
@@ -6764,7 +9169,9 @@
         "tags": [
           "UsuarioRol"
         ],
+        "summary": "Asigna un rol a un usuario.",
         "requestBody": {
+          "description": "Objeto UsuarioRol con la relación a crear.",
           "content": {
             "application/json": {
               "schema": {
@@ -6793,7 +9200,9 @@
         "tags": [
           "UsuarioRol"
         ],
+        "summary": "Actualiza una relación usuario-rol existente.",
         "requestBody": {
+          "description": "Objeto UsuarioRol con los datos actualizados.",
           "content": {
             "application/json": {
               "schema": {
@@ -6824,10 +9233,12 @@
         "tags": [
           "UsuarioRol"
         ],
+        "summary": "Obtiene todos los roles asignados a un usuario específico.",
         "parameters": [
           {
             "name": "idUsuario",
             "in": "path",
+            "description": "Id del usuario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6847,10 +9258,12 @@
         "tags": [
           "UsuarioRol"
         ],
+        "summary": "Obtiene todos los usuarios que tienen asignado un rol específico.",
         "parameters": [
           {
             "name": "idRol",
             "in": "path",
+            "description": "Id del rol.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6870,10 +9283,12 @@
         "tags": [
           "UsuarioRol"
         ],
+        "summary": "Elimina la relación usuario-rol para un usuario y un rol específicos.",
         "parameters": [
           {
             "name": "idUsuario",
             "in": "path",
+            "description": "Id del usuario.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6883,6 +9298,7 @@
           {
             "name": "idRol",
             "in": "path",
+            "description": "Id del rol.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -6902,7 +9318,9 @@
         "tags": [
           "Validacion"
         ],
+        "summary": "Realiza la validación de un usuario/persona a través del servicio Equifax.",
         "requestBody": {
+          "description": "Datos requeridos para la consulta Equifax.",
           "content": {
             "application/json": {
               "schema": {
@@ -6923,7 +9341,10 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Retorna el resultado de la validación Equifax."
+          },
+          "400": {
+            "description": "Si ocurre un error en la validación Equifax."
           }
         }
       }
@@ -6933,7 +9354,9 @@
         "tags": [
           "Validacion"
         ],
+        "summary": "Realiza la validación de un usuario/persona a través del servicio LDS.",
         "requestBody": {
+          "description": "Datos requeridos para la consulta LDS.",
           "content": {
             "application/json": {
               "schema": {
@@ -6954,7 +9377,10 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Retorna el resultado de la validación LDS."
+          },
+          "400": {
+            "description": "Si ocurre un error en la validación LDS."
           }
         }
       }
@@ -6964,10 +9390,12 @@
         "tags": [
           "VistaEntidad"
         ],
+        "summary": "Obtiene un listado filtrado de una vista dinámica según propiedad y valor.",
         "parameters": [
           {
             "name": "entidad",
             "in": "path",
+            "description": "Nombre de la vista (ej: actividad, prospecto, solicitudinversion, etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -6976,6 +9404,7 @@
           {
             "name": "por",
             "in": "query",
+            "description": "Nombre de la propiedad por la que filtrar (ej: IdProspecto, IdCliente).",
             "schema": {
               "type": "string"
             }
@@ -6983,6 +9412,7 @@
           {
             "name": "id",
             "in": "query",
+            "description": "Valor a buscar en la propiedad.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -6991,7 +9421,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Retorna el listado filtrado correctamente."
+          },
+          "400": {
+            "description": "Si la entidad no está registrada o parámetros incorrectos."
+          },
+          "500": {
+            "description": "Si hay error al resolver el repositorio."
           }
         }
       }
@@ -7001,10 +9437,12 @@
         "tags": [
           "VistaEntidad"
         ],
+        "summary": "Obtiene todos los registros de la vista especificada.",
         "parameters": [
           {
             "name": "entidad",
             "in": "path",
+            "description": "Nombre de la vista/entidad (ej: actividad, prospecto, solicitud, etc).",
             "required": true,
             "schema": {
               "type": "string"
@@ -7013,7 +9451,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Retorna la lista completa."
+          },
+          "400": {
+            "description": "Si la entidad no está registrada."
+          },
+          "500": {
+            "description": "Si no se puede resolver el repositorio."
           }
         }
       }
@@ -7023,10 +9467,12 @@
         "tags": [
           "VistaEntidad"
         ],
+        "summary": "Filtra la vista SolicitudInversionDetalle por propiedad específica y retorna una lista de DTOs.",
         "parameters": [
           {
             "name": "por",
             "in": "query",
+            "description": "Propiedad por la que filtrar (prospecto, cliente, solicitud).",
             "schema": {
               "type": "string"
             }
@@ -7034,6 +9480,7 @@
           {
             "name": "id",
             "in": "query",
+            "description": "Valor a buscar en la propiedad.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -7042,7 +9489,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Retorna la lista filtrada de DTOs."
+          },
+          "400": {
+            "description": "Si el parámetro 'por' es inválido."
+          },
+          "500": {
+            "description": "Si ocurre un error interno."
           }
         }
       }
@@ -7187,6 +9640,88 @@
           },
           "esPEP": {
             "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AdendumCreateDto": {
+        "type": "object",
+        "properties": {
+          "idInversion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idProyeccionOriginal": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "periodoIncremento": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "montoIncremento": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "idUsuarioCreacion": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AdendumSetIncrementoDto": {
+        "type": "object",
+        "properties": {
+          "idAdendum": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idProyeccionIncremento": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idCronogramaProyeccionIncremento": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "incrementoGenerado": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AdendumUpdateDto": {
+        "type": "object",
+        "properties": {
+          "idAdendum": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "estado": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "generarDocumentos": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "continuarFlujo": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },
@@ -7357,6 +9892,224 @@
         },
         "additionalProperties": false
       },
+      "CalendarioOperaciones": {
+        "type": "object",
+        "properties": {
+          "idCalendario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCorte": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "calendarioInversiones": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaGenerarPagos": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaEnvioEECC": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "estadoProcesoPagos": {
+            "type": "boolean"
+          },
+          "estadoProcesoEnvioEECC": {
+            "type": "boolean"
+          },
+          "estadoCalendario": {
+            "type": "boolean"
+          },
+          "fechaCreacion": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaModificacion": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "idUsuarioCreacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idUsuarioPropietario": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CalendarioOperacionesUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCorte": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "calendarioInversiones": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaGenerarPagos": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaEnvioEECC": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "estadoProcesoPagos": {
+            "type": "boolean"
+          },
+          "estadoProcesoEnvioEECC": {
+            "type": "boolean"
+          },
+          "estadoCalendario": {
+            "type": "boolean"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CasoCreateDTO": {
+        "type": "object",
+        "properties": {
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idMotivo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descripcion": {
+            "type": "string",
+            "nullable": true
+          },
+          "idInversion": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idPago": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "datosEspecificos": {
+            "type": "string",
+            "nullable": true
+          },
+          "continuarCaso": {
+            "type": "boolean"
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "idUsuarioCreacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioPropietario": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CasoUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "descripcion": {
+            "type": "string",
+            "nullable": true
+          },
+          "continuarCaso": {
+            "type": "boolean"
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioPropietario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "datosEspecificos": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CasosPorMotivoDTO": {
+        "type": "object",
+        "properties": {
+          "motivoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalCasos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CasosPorUsuarioDTO": {
+        "type": "object",
+        "properties": {
+          "nombreUsuarioCreacion": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalCasos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CasosTerminacionDTO": {
+        "type": "object",
+        "properties": {
+          "motivoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalCasos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "Ciudad": {
         "type": "object",
         "properties": {
@@ -7377,6 +10130,373 @@
             "nullable": true
           },
           "idProvincia": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClienteActividadEconomica": {
+        "type": "object",
+        "properties": {
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idActividadPrincipal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idActividadLugarTrabajo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lugarTrabajo": {
+            "type": "string",
+            "nullable": true
+          },
+          "correoTrabajo": {
+            "type": "string",
+            "nullable": true
+          },
+          "otraActividad": {
+            "type": "string",
+            "nullable": true
+          },
+          "cargo": {
+            "type": "string",
+            "nullable": true
+          },
+          "antiguedad": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "telefonoTrabajo": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaInicioActividad": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "direccionTrabajo": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenciaDireccionTrabajo": {
+            "type": "string",
+            "nullable": true
+          },
+          "esPEP": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClienteContacto": {
+        "type": "object",
+        "properties": {
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "correoElectronico": {
+            "type": "string",
+            "nullable": true
+          },
+          "telefonoCelular": {
+            "type": "string",
+            "nullable": true
+          },
+          "otroTelefono": {
+            "type": "string",
+            "nullable": true
+          },
+          "telefonoFijo": {
+            "type": "string",
+            "nullable": true
+          },
+          "idTipoVia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "callePrincipal": {
+            "type": "string",
+            "nullable": true
+          },
+          "numeroDomicilio": {
+            "type": "string",
+            "nullable": true
+          },
+          "calleSecundaria": {
+            "type": "string",
+            "nullable": true
+          },
+          "referenciaDomicilio": {
+            "type": "string",
+            "nullable": true
+          },
+          "sectorBarrio": {
+            "type": "string",
+            "nullable": true
+          },
+          "tiempoResidencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idPaisResidencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idProvinciaResidencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idCiudadResidencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "residenteOtroPais": {
+            "type": "boolean"
+          },
+          "contribuyenteEEUU": {
+            "type": "boolean"
+          },
+          "numeroIdentificacionOtroPais": {
+            "type": "string",
+            "nullable": true
+          },
+          "numeroIdentificacionEEUU": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClienteCuentaBancaria": {
+        "type": "object",
+        "properties": {
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idBanco": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idTipoCuenta": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numeroCuenta": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClienteEconomico": {
+        "type": "object",
+        "properties": {
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalIngresosMensuales": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "totalEgresosMensuales": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "totalActivos": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "totalPasivos": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "activosMuebles": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "activosInmuebles": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "activosTitulosValor": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ingresosFijos": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "ingresosVariables": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "origenIngresoVariable": {
+            "type": "string",
+            "nullable": true
+          },
+          "patrimonioNeto": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClienteUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "idCliente": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idGenero": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idEstadoCivil": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idNacionalidad": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idNivelAcademico": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contacto": {
+            "$ref": "#/components/schemas/ClienteContacto"
+          },
+          "actividadEconomica": {
+            "$ref": "#/components/schemas/ClienteActividadEconomica"
+          },
+          "cuentaBancaria": {
+            "$ref": "#/components/schemas/ClienteCuentaBancaria"
+          },
+          "datosEconomicos": {
+            "$ref": "#/components/schemas/ClienteEconomico"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorEdadDTO": {
+        "type": "object",
+        "properties": {
+          "rangoEdad": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorGeneroDTO": {
+        "type": "object",
+        "properties": {
+          "genero": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorIdentificacionDTO": {
+        "type": "object",
+        "properties": {
+          "tipoIdentificacion": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorMesDTO": {
+        "type": "object",
+        "properties": {
+          "año": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalClientes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorNacionalidadDTO": {
+        "type": "object",
+        "properties": {
+          "nacionalidad": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalClientes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorPaisDTO": {
+        "type": "object",
+        "properties": {
+          "pais": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalClientes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientesPorTipoDTO": {
+        "type": "object",
+        "properties": {
+          "tipoCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
             "type": "integer",
             "format": "int32"
           }
@@ -7737,6 +10857,410 @@
         },
         "additionalProperties": false
       },
+      "EstadisticasClienteDTO": {
+        "type": "object",
+        "properties": {
+          "totalClientes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "porMes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorMesDTO"
+            },
+            "nullable": true
+          },
+          "porGenero": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorGeneroDTO"
+            },
+            "nullable": true
+          },
+          "porTipoCliente": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorTipoDTO"
+            },
+            "nullable": true
+          },
+          "porTipoIdentificacion": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorIdentificacionDTO"
+            },
+            "nullable": true
+          },
+          "totalPEP": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalResidentesExterior": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "porEdad": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorEdadDTO"
+            },
+            "nullable": true
+          },
+          "totalCtasExterior": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalContribuyentesEEUU": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "porPais": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorPaisDTO"
+            },
+            "nullable": true
+          },
+          "porNacionalidad": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientesPorNacionalidadDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EstadisticasInversionDTO": {
+        "type": "object",
+        "properties": {
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCapitalInvertido": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalRentabilidad": {
+            "type": "number",
+            "format": "double"
+          },
+          "porProducto": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InversionesPorProductoDTO"
+            },
+            "nullable": true
+          },
+          "porMes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InversionesPorMesDTO"
+            },
+            "nullable": true
+          },
+          "porTipoCliente": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InversionesPorTipoClienteDTO"
+            },
+            "nullable": true
+          },
+          "porEstado": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InversionesPorEstadoDTO"
+            },
+            "nullable": true
+          },
+          "rendimientoPromedio": {
+            "type": "number",
+            "format": "double"
+          },
+          "porPlazo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InversionesPorPlazoDTO"
+            },
+            "nullable": true
+          },
+          "rankingClientes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RankingClienteInversionDTO"
+            },
+            "nullable": true
+          },
+          "porPais": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InversionesPorPaisDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EstadisticasPagosCasosDTO": {
+        "type": "object",
+        "properties": {
+          "pagosPorCalendario": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PagosPorCalendarioDTO"
+            },
+            "nullable": true
+          },
+          "pagosConfirmadosDescartados": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PagosConfirmadosDescartadosDTO"
+            },
+            "nullable": true
+          },
+          "casosPorMotivo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CasosPorMotivoDTO"
+            },
+            "nullable": true
+          },
+          "pagosPorMotivo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PagosPorMotivoDTO"
+            },
+            "nullable": true
+          },
+          "estadoCasosPago": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EstadoCasosPagoDTO"
+            },
+            "nullable": true
+          },
+          "pagosUltimoCalendario": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PagosUltimoCalendarioDTO"
+            },
+            "nullable": true
+          },
+          "casosTerminacion": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CasosTerminacionDTO"
+            },
+            "nullable": true
+          },
+          "montoPagadoPorCalendario": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MontoPagadoPorCalendarioDTO"
+            },
+            "nullable": true
+          },
+          "pagosPendientesPorCliente": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PagosPendientesClienteDTO"
+            },
+            "nullable": true
+          },
+          "casosPorUsuario": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CasosPorUsuarioDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EstadisticasProspectosDTO": {
+        "type": "object",
+        "properties": {
+          "activos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inactivos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "convertidos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "noConvertidos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "porcentajeConversion": {
+            "type": "number",
+            "format": "double"
+          },
+          "porProductoInteres": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProspectosPorProductoDTO"
+            },
+            "nullable": true
+          },
+          "porOrigen": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProspectosPorOrigenDTO"
+            },
+            "nullable": true
+          },
+          "porMes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProspectosPorMesDTO"
+            },
+            "nullable": true
+          },
+          "prospectosConSolicitud": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prospectosSinSolicitud": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EstadisticasSolicitudDTO": {
+        "type": "object",
+        "properties": {
+          "porEstado": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolicitudesPorEstadoDTO"
+            },
+            "nullable": true
+          },
+          "totalCompletadas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "porcentajeConversion": {
+            "type": "number",
+            "format": "double"
+          },
+          "estadoPorProspecto": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolicitudProspectoEstadoDTO"
+            },
+            "nullable": true
+          },
+          "porMes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolicitudesPorMesDTO"
+            },
+            "nullable": true
+          },
+          "solicitudesConProyeccion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "solicitudesConProyeccionDetalle": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolicitudProyeccionDetalleDTO"
+            },
+            "nullable": true
+          },
+          "kpiFinanciero": {
+            "$ref": "#/components/schemas/KPIFinancieroSolicitudesDTO"
+          },
+          "proyeccionesPorProducto": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SolicitudProyeccionPorProductoDTO"
+            },
+            "nullable": true
+          },
+          "solicitudesConProyeccionTotal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "solicitudesSinProyeccionTotal": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EstadisticasTareasDTO": {
+        "type": "object",
+        "properties": {
+          "conteoPorSolicitudEstado": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TareasPorSolicitudEstadoDTO"
+            },
+            "nullable": true
+          },
+          "matrizGlobalPorTipoEstado": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TareasPorTipoEstadoGlobalDTO"
+            },
+            "nullable": true
+          },
+          "pendientesPorSolicitud": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TareasPendientesPorSolicitudDTO"
+            },
+            "nullable": true
+          },
+          "contratosFirmados": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reporteCumplimiento": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReporteCumplimientoSolicitudDTO"
+            },
+            "nullable": true
+          },
+          "pendientesPorTipoGlobal": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TareasPendientesGlobalDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EstadoCasosPagoDTO": {
+        "type": "object",
+        "properties": {
+          "motivoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalCasos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "EstadoCivil": {
         "type": "object",
         "properties": {
@@ -7791,6 +11315,48 @@
           }
         },
         "additionalProperties": false
+      },
+      "FinalizarSolicitudDto": {
+        "type": "object",
+        "properties": {
+          "idSolicitudInversion": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GenerarContratoRequest": {
+        "type": "object",
+        "properties": {
+          "idSolicitudInversion": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GenerarPagosCalendarioDTO": {
+        "type": "object",
+        "properties": {
+          "idCalendario": {
+            "type": "integer",
+            "description": "Identificador del calendario.",
+            "format": "int32"
+          },
+          "idPago": {
+            "type": "integer",
+            "description": "Identificador del pago (opcional o según la lógica).",
+            "format": "int32"
+          },
+          "idUsuario": {
+            "type": "integer",
+            "description": "Identificador del usuario que realiza la acción.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO auxiliar para la generación automática de pagos por calendario."
       },
       "Genero": {
         "type": "object",
@@ -7922,6 +11488,123 @@
         },
         "additionalProperties": false
       },
+      "InversionesPorEstadoDTO": {
+        "type": "object",
+        "properties": {
+          "estadoInversion": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalInvertido": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InversionesPorMesDTO": {
+        "type": "object",
+        "properties": {
+          "año": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalInvertido": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InversionesPorPaisDTO": {
+        "type": "object",
+        "properties": {
+          "pais": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalInvertido": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InversionesPorPlazoDTO": {
+        "type": "object",
+        "properties": {
+          "plazo": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalInvertido": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InversionesPorProductoDTO": {
+        "type": "object",
+        "properties": {
+          "idProducto": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalInvertido": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InversionesPorTipoClienteDTO": {
+        "type": "object",
+        "properties": {
+          "tipoCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalInvertido": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "JustificativoTransaccion": {
         "type": "object",
         "properties": {
@@ -7932,6 +11615,28 @@
           "nombre": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "KPIFinancieroSolicitudesDTO": {
+        "type": "object",
+        "properties": {
+          "capitalTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "tasaPromedio": {
+            "type": "number",
+            "format": "double"
+          },
+          "plazoPromedio": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalProyecciones": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -8013,6 +11718,56 @@
         },
         "additionalProperties": false
       },
+      "ModoFirma": {
+        "type": "object",
+        "properties": {
+          "idModoFirma": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreModoFirma": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCreacion": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "idUsuarioCreacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fechaModificacion": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MontoPagadoPorCalendarioDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCalendario": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCorte": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "montoTotalPagado": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "Nacionalidad": {
         "type": "object",
         "properties": {
@@ -8039,6 +11794,170 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagoCreateDTO": {
+        "type": "object",
+        "properties": {
+          "idCalendario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cantidadPagos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descartarPagos": {
+            "type": "boolean"
+          },
+          "generarPagos": {
+            "type": "boolean"
+          },
+          "detalle": {
+            "type": "string",
+            "nullable": true
+          },
+          "confirmarRegistrosPagos": {
+            "type": "boolean"
+          },
+          "idUsuarioCreacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioPropietario": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagoUpdateDTO": {
+        "type": "object",
+        "properties": {
+          "cantidadPagos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descartarPagos": {
+            "type": "boolean"
+          },
+          "generarPagos": {
+            "type": "boolean"
+          },
+          "detalle": {
+            "type": "string",
+            "nullable": true
+          },
+          "confirmarRegistrosPagos": {
+            "type": "boolean"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUsuarioPropietario": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagosConfirmadosDescartadosDTO": {
+        "type": "object",
+        "properties": {
+          "idCalendario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreCalendario": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCorte": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pagosConfirmados": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pagosDescartados": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagosPendientesClienteDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "pagosPendientes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "montoPendiente": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagosPorCalendarioDTO": {
+        "type": "object",
+        "properties": {
+          "idCalendario": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreCalendario": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaCorte": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalPagos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagosPorMotivoDTO": {
+        "type": "object",
+        "properties": {
+          "motivoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalPagos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "montoTotal": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagosUltimoCalendarioDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCalendario": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalPagos": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -8087,6 +12006,80 @@
           },
           "categoria": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Producto": {
+        "type": "object",
+        "properties": {
+          "idProducto": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productoNombre": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "nombreComercial": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "productoCodigo": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "iniciales": {
+            "maxLength": 8,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "descripcion": {
+            "type": "string",
+            "nullable": true
+          },
+          "idFormaPago": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "periocidad": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "montoMinimoIncremento": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "penalidad": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "idUsuarioCreacion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fechaCreacion": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "fechaModificacion": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },
@@ -8212,6 +12205,58 @@
         },
         "additionalProperties": false
       },
+      "ProspectosPorMesDTO": {
+        "type": "object",
+        "properties": {
+          "año": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalProspectos": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProspectosPorOrigenDTO": {
+        "required": [
+          "nombreOrigen"
+        ],
+        "type": "object",
+        "properties": {
+          "nombreOrigen": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProspectosPorProductoDTO": {
+        "required": [
+          "productoInteres"
+        ],
+        "type": "object",
+        "properties": {
+          "productoInteres": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "Provincia": {
         "type": "object",
         "properties": {
@@ -8289,6 +12334,28 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProyeccionIncrementoDto": {
+        "type": "object",
+        "properties": {
+          "idProyeccionOriginal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "periodoIncremento": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "montoIncremento": {
+            "type": "number",
+            "format": "double"
+          },
+          "idUsuario": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -8381,6 +12448,24 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RankingClienteInversionDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCompleto": {
+            "type": "string",
+            "nullable": true
+          },
+          "montoInvertido": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalInversiones": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -8492,6 +12577,35 @@
         },
         "additionalProperties": false
       },
+      "ReporteCumplimientoSolicitudDTO": {
+        "type": "object",
+        "properties": {
+          "idSolicitudInversion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "docAprobada": {
+            "type": "boolean"
+          },
+          "legalAprobada": {
+            "type": "boolean"
+          },
+          "contratoFirmado": {
+            "type": "boolean"
+          },
+          "comprobanteCargado": {
+            "type": "boolean"
+          },
+          "conciliacionOK": {
+            "type": "boolean"
+          },
+          "tareasPendientes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "Rol": {
         "type": "object",
         "properties": {
@@ -8525,6 +12639,35 @@
           }
         },
         "additionalProperties": false
+      },
+      "RollbackPagosDTO": {
+        "type": "object",
+        "properties": {
+          "idPago": {
+            "type": "integer",
+            "description": "Identificador del pago.",
+            "format": "int32"
+          },
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "description": "Identificador del usuario que realiza la modificación.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO auxiliar para rollback de pagos en casos."
+      },
+      "RollbackUsuarioDto": {
+        "type": "object",
+        "properties": {
+          "idUsuarioModificacion": {
+            "type": "integer",
+            "description": "Identificador del usuario que realiza la modificación.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "DTO auxiliar para rollback indicando el usuario que realiza la modificación."
       },
       "SolicitudCodigoTelefonoDTO": {
         "type": "object",
@@ -8612,6 +12755,229 @@
           },
           "adjuntos": {
             "$ref": "#/components/schemas/AdjuntosUpdateDTO"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SolicitudProspectoEstadoDTO": {
+        "type": "object",
+        "properties": {
+          "idProspecto": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombres": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellidoPaterno": {
+            "type": "string",
+            "nullable": true
+          },
+          "ultimoEstadoSolicitud": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SolicitudProyeccionDetalleDTO": {
+        "type": "object",
+        "properties": {
+          "idSolicitudInversion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idProyeccion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "proyeccionNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "plazo": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "tasa": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "capital": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "faseProceso": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SolicitudProyeccionPorProductoDTO": {
+        "type": "object",
+        "properties": {
+          "idProducto": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productoNombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalProyecciones": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "capitalTotal": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SolicitudesPorEstadoDTO": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalSolicitudes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SolicitudesPorMesDTO": {
+        "type": "object",
+        "properties": {
+          "año": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalSolicitudes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TareaUpdateDinamicoDTO": {
+        "type": "object",
+        "properties": {
+          "idResultado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "observacion": {
+            "type": "string",
+            "nullable": true
+          },
+          "camposTipo": {
+            "type": "object",
+            "additionalProperties": {
+              "nullable": true
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TareasPendientesGlobalDTO": {
+        "type": "object",
+        "properties": {
+          "idTipoTarea": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreTipoTarea": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalPendientes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TareasPendientesPorSolicitudDTO": {
+        "type": "object",
+        "properties": {
+          "idSolicitudInversion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tareasPendientes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TareasPorSolicitudEstadoDTO": {
+        "type": "object",
+        "properties": {
+          "idSolicitudInversion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idTipoTarea": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreTipoTarea": {
+            "type": "string",
+            "nullable": true
+          },
+          "idResultado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreResultado": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TareasPorTipoEstadoGlobalDTO": {
+        "type": "object",
+        "properties": {
+          "idTipoTarea": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreTipoTarea": {
+            "type": "string",
+            "nullable": true
+          },
+          "idResultado": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreResultado": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

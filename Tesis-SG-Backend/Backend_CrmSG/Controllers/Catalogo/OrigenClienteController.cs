@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Controllers/Catalogos/OrigenClienteController.cs
+using Microsoft.AspNetCore.Mvc;
 using Backend_CrmSG.Repositories;
 using Backend_CrmSG.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,12 +13,17 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<OrigenCliente> _origenClienteRepository;
 
+        /// <summary>
+        /// Constructor del controlador de OrigenCliente.
+        /// </summary>
         public OrigenClienteController(IRepository<OrigenCliente> origenClienteRepository)
         {
             _origenClienteRepository = origenClienteRepository;
         }
 
-        // GET: api/OrigenCliente
+        /// <summary>
+        /// Obtiene todos los orígenes de cliente.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrigenCliente>>> Get()
         {
@@ -25,7 +31,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(origenes);
         }
 
-        // GET: api/OrigenCliente/5
+        /// <summary>
+        /// Obtiene un origen de cliente por su ID.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<OrigenCliente>> Get(int id)
         {
@@ -35,7 +43,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(origenCliente);
         }
 
-        // POST: api/OrigenCliente
+        /// <summary>
+        /// Crea un nuevo origen de cliente.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<OrigenCliente>> Post([FromBody] OrigenCliente origenCliente)
         {
@@ -43,7 +53,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = origenCliente.IdOrigenCliente }, origenCliente);
         }
 
-        // PUT: api/OrigenCliente/5
+        /// <summary>
+        /// Actualiza un origen de cliente existente.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] OrigenCliente origenCliente)
         {
@@ -53,7 +65,9 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
-        // DELETE: api/OrigenCliente/5
+        /// <summary>
+        /// Elimina un origen de cliente por su ID.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

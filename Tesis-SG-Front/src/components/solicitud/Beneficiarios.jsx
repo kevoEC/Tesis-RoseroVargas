@@ -1,22 +1,21 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Select, SelectValue, SelectContent, SelectTrigger, SelectItem } from "../ui/select";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Plus } from "lucide-react";
 import TablaCustom2 from "../shared/TablaCustom2";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { FaInfoCircle } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { getBeneficiariosPorSolicitud, crearBeneficiario, editarBeneficiario, eliminarBeneficiario, } from "@/service/Entidades/BeneficiariosService";
+import { getBeneficiariosPorSolicitud, crearBeneficiario, editarBeneficiario, eliminarBeneficiario } from "@/service/Entidades/BeneficiariosService";
 import { useAuth } from "@/hooks/useAuth";
 import { getTipoIdentificacion } from "@/service/Catalogos/TipoIdentificacionService";
+import GlassLoader from "@/components/ui/GlassLoader";
+import { getSolicitudById } from "@/service/Entidades/SolicitudService"; // <-- Importa aquí
 
 export default function Beneficiarios() {
-
   const { id } = useParams();
   const { user } = useAuth();
 
@@ -24,6 +23,9 @@ export default function Beneficiarios() {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [tiposIdentificacion, setTiposIdentificacion] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingGuardar, setLoadingGuardar] = useState(false);
+  const [bloquearTodo, setBloquearTodo] = useState(false); // <-- Control bloqueo
 
   const [nuevoDato, setNuevoDato] = useState({
     idSolicitudInversion: Number(id),
@@ -38,13 +40,30 @@ export default function Beneficiarios() {
     idUsuarioPropietario: user.idUsuario,
   });
 
+  // NUEVO: cargar fase de solicitud y aplicar bloqueo
+  useEffect(() => {
+    const obtenerFase = async () => {
+      try {
+        const res = await getSolicitudById(id);
+        const data = res.data[0];
+        setBloquearTodo(data.faseProceso !== 1);
+      // eslint-disable-next-line no-unused-vars
+      } catch (error) {
+        setBloquearTodo(false);
+      }
+    };
+    obtenerFase();
+  }, [id]);
 
   const obtenerDatos = async () => {
+    setLoading(true);
     try {
       const data = await getBeneficiariosPorSolicitud(id);
       setBeneficiarios(data);
     } catch (error) {
-      console.error("Error al cargar beneficiarios:", error);
+      toast.error("Error al cargar beneficiarios" + (error.message || ""));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,12 +73,12 @@ export default function Beneficiarios() {
         const data = await getTipoIdentificacion();
         setTiposIdentificacion(data);
       } catch (error) {
-        console.error("Error al cargar tipos de identificación:", error);
+        toast.error("Error al cargar tipos de identificación" + (error.message || ""));
       }
     };
-
     fetchTiposIdentificacion();
     obtenerDatos();
+    // eslint-disable-next-line
   }, []);
 
   const handleAbrirFormulario = () => {
@@ -94,57 +113,74 @@ export default function Beneficiarios() {
       fechaCreacion: item.fechaCreacion,
       idUsuarioPropietario: user.idUsuario,
     });
-
     setModalAbierto(true);
   };
 
   const handleEliminar = async (item) => {
+    if (bloquearTodo) return;
     if (!window.confirm(`¿Deseas eliminar a "${item.nombre}"?`)) return;
-
+    setLoading(true);
     try {
       await eliminarBeneficiario(item.idBeneficiario);
       toast.success("Beneficiario eliminado");
       obtenerDatos();
     } catch (error) {
-      console.error("Error al eliminar:", error);
-      toast.error("Error al eliminar beneficiario");
+      toast.error("Error al eliminar beneficiario" + (error.message || ""));
+    } finally {
+      setLoading(false);
     }
   };
 
-  const columnas = [
-    { key: "nombre", label: "Nombre" },
-    { key: "idTipoDocumento", label: "Tipo Documento" },
-    { key: "numeroDocumento", label: "Número Documento" },
-    { key: "correoElectronico", label: "Correo" },
-    { key: "telefono", label: "Teléfono" },
-    { key: "direccion", label: "Dirección" },
-    { key: "porcentajeBeneficio", label: "Porcentaje (%)" },
-    { key: "fechaCreacion", label: "Fecha de Creación" },
-  ];
-
+const columnas = [
+  {
+    key: "idBeneficiario",
+    label: "",
+    render: (v) => (
+      <span
+        title={`ID Beneficiario: ${v}`}
+        className="flex justify-center cursor-default text-gray-600 hover:text-gray-900"
+      >
+        <FaInfoCircle size={18} />
+      </span>
+    ),
+  },
+  { key: "nombre", label: "Nombre" },
+  { key: "idTipoDocumento", label: "Tipo Documento" },
+  { key: "numeroDocumento", label: "Número Documento" },
+  { key: "correoElectronico", label: "Correo" },
+  { key: "telefono", label: "Teléfono" },
+  { key: "direccion", label: "Dirección" },
+  { key: "porcentajeBeneficio", label: "Porcentaje (%)" },
+  { key: "fechaCreacion", label: "Fecha de Creación" },
+];
 
   return (
-    <div className="space-y-6 p-6">
-      <h2 className="text-xl font-semibold text-gray-800">Beneficiarios</h2>
-
-     
-
-      <Card>
-        <CardContent className="p-6 space-y-4">
-          <div>
-            <TablaCustom2
-              columns={columnas}
-              data={beneficiarios}
-              mostrarEditar={true}
-              mostrarAgregarNuevo={true}
-              mostrarEliminar={true}
-              onAgregarNuevoClick={handleAbrirFormulario}
-              onEditarClick={handleEditar}
-              onEliminarClick={handleEliminar}
-            />
-          </div>
-        </CardContent>
-      </Card>
+    <div className="space-y-6 p-6 relative">
+      <GlassLoader visible={loading || loadingGuardar} message={loadingGuardar ? "Guardando..." : "Cargando beneficiarios..."} />
+      {!loading && (
+        <>
+          <h2 className="text-xl font-semibold text-gray-800">Beneficiarios</h2>
+          {bloquearTodo && (
+            <div className="w-full flex items-center px-6 py-2 mb-4 rounded-xl bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
+              <span>No se permite editar beneficiarios en esta fase.</span>
+            </div>
+          )}
+          <Card>
+            <CardContent className="p-6 space-y-4">
+              <TablaCustom2
+                columns={columnas}
+                data={beneficiarios}
+                mostrarEditar={!bloquearTodo}
+                mostrarAgregarNuevo={!bloquearTodo}
+                mostrarEliminar={!bloquearTodo}
+                onAgregarNuevoClick={handleAbrirFormulario}
+                onEditarClick={handleEditar}
+                onEliminarClick={handleEliminar}
+              />
+            </CardContent>
+          </Card>
+        </>
+      )}
 
       {/* Modal */}
       <Dialog open={modalAbierto} onOpenChange={setModalAbierto}>
@@ -152,21 +188,22 @@ export default function Beneficiarios() {
           <DialogHeader>
             <DialogTitle>{modoEdicion ? "Editar beneficiario" : "Agregar beneficiario"}</DialogTitle>
           </DialogHeader>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormGroup label="Nombre">
               <Input
+                placeholder="---"
                 value={nuevoDato.nombre}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, nombre: e.target.value })}
+                disabled={bloquearTodo}
               />
             </FormGroup>
-
             <FormGroup label="Tipo Documento">
               <Select
-                value={nuevoDato.idTipoDocumento?.toString()}
+                value={nuevoDato.idTipoDocumento?.toString() || ""}
                 onValueChange={(value) =>
                   setNuevoDato({ ...nuevoDato, idTipoDocumento: Number(value) })
                 }
+                disabled={bloquearTodo}
               >
                 <SelectTrigger className="bg-white border border-gray-300">
                   <SelectValue placeholder="Seleccionar..." />
@@ -183,49 +220,52 @@ export default function Beneficiarios() {
                 </SelectContent>
               </Select>
             </FormGroup>
-
-
             <FormGroup label="Número Documento">
               <Input
+                placeholder="---"
                 value={nuevoDato.numeroDocumento}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, numeroDocumento: e.target.value })}
+                disabled={bloquearTodo}
               />
             </FormGroup>
-
             <FormGroup label="Correo electrónico">
               <Input
+                placeholder="---"
                 type="email"
                 value={nuevoDato.correoElectronico}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, correoElectronico: e.target.value })}
+                disabled={bloquearTodo}
               />
             </FormGroup>
-
             <FormGroup label="Teléfono">
               <Input
+                placeholder="---"
                 value={nuevoDato.telefono}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, telefono: e.target.value })}
+                disabled={bloquearTodo}
               />
             </FormGroup>
-
             <FormGroup label="Dirección">
               <Input
+                placeholder="---"
                 value={nuevoDato.direccion}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, direccion: e.target.value })}
+                disabled={bloquearTodo}
               />
             </FormGroup>
-
             <FormGroup label="Porcentaje de beneficio">
               <Input
                 type="number"
+                placeholder="---"
                 value={nuevoDato.porcentajeBeneficio}
                 onChange={(e) => setNuevoDato({ ...nuevoDato, porcentajeBeneficio: e.target.value })}
+                disabled={bloquearTodo}
               />
             </FormGroup>
           </div>
-
-
           <DialogFooter className="pt-4">
             <Button
+              disabled={loadingGuardar || bloquearTodo}
               onClick={async () => {
                 const {
                   nombre,
@@ -250,7 +290,7 @@ export default function Beneficiarios() {
                   return;
                 }
 
-
+                setLoadingGuardar(true);
                 try {
                   if (modoEdicion) {
                     await editarBeneficiario(nuevoDato.idBeneficiario, nuevoDato);
@@ -259,20 +299,25 @@ export default function Beneficiarios() {
                     await crearBeneficiario(nuevoDato);
                     toast.success("Beneficiario creado");
                   }
-
                   obtenerDatos();
                   setModalAbierto(false);
                   setModoEdicion(false);
                   setNuevoDato({
                     idSolicitudInversion: Number(id),
                     nombre: "",
+                    idTipoDocumento: "",
+                    numeroDocumento: "",
+                    correoElectronico: "",
                     telefono: "",
-                    porcentaje: "",
+                    direccion: "",
+                    porcentajeBeneficio: "",
+                    fechaCreacion: new Date().toISOString(),
                     idUsuarioPropietario: user.idUsuario,
                   });
                 } catch (error) {
-                  console.error("Error al guardar beneficiario:", error);
-                  toast.error("No se pudo guardar el beneficiario");
+                  toast.error("No se pudo guardar el beneficiario" + (error.message || ""));
+                } finally {
+                  setLoadingGuardar(false);
                 }
               }}
             >

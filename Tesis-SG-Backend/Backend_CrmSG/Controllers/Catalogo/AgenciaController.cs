@@ -14,12 +14,17 @@ namespace Backend_CrmSG.Controllers.Catalogos
     {
         private readonly IRepository<Agencia> _agenciaRepository;
 
+        /// <summary>
+        /// Constructor del controlador de agencias.
+        /// </summary>
         public AgenciaController(IRepository<Agencia> agenciaRepository)
         {
             _agenciaRepository = agenciaRepository;
         }
 
-        // GET: api/Agencia
+        /// <summary>
+        /// Obtiene la lista de todas las agencias.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Agencia>>> Get()
         {
@@ -27,7 +32,10 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(agencias);
         }
 
-        // GET: api/Agencia/5
+        /// <summary>
+        /// Obtiene una agencia por su ID.
+        /// </summary>
+        /// <param name="id">ID de la agencia.</param>
         [HttpGet("{id}")]
         public async Task<ActionResult<Agencia>> Get(int id)
         {
@@ -37,7 +45,10 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return Ok(agencia);
         }
 
-        // POST: api/Agencia
+        /// <summary>
+        /// Crea una nueva agencia.
+        /// </summary>
+        /// <param name="agencia">Objeto agencia a crear.</param>
         [HttpPost]
         public async Task<ActionResult<Agencia>> Post([FromBody] Agencia agencia)
         {
@@ -45,7 +56,11 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return CreatedAtAction(nameof(Get), new { id = agencia.IdAgencia }, agencia);
         }
 
-        // PUT: api/Agencia/5
+        /// <summary>
+        /// Actualiza una agencia existente.
+        /// </summary>
+        /// <param name="id">ID de la agencia.</param>
+        /// <param name="agencia">Objeto agencia actualizado.</param>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Agencia agencia)
         {
@@ -55,7 +70,10 @@ namespace Backend_CrmSG.Controllers.Catalogos
             return NoContent();
         }
 
-        // DELETE: api/Agencia/5
+        /// <summary>
+        /// Elimina una agencia por su ID.
+        /// </summary>
+        /// <param name="id">ID de la agencia a eliminar.</param>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

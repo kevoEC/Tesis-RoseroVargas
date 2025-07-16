@@ -14,26 +14,29 @@ const Politica = lazy(() => import("@/pages/Legal/PoliticaPrivacidad"));
 const DashboardPanel = lazy(() => import("@/pages/Panel/Dashboard"));
 
 const Prospectos = lazy(() => import("@/pages/Entidad/Prospectos/Prospectos"));
-const Inversiones = lazy(() =>
-  import("@/pages/Entidad/Inversiones/Inversiones")
+const InversionForm = lazy(() =>
+  import("@/pages/Entidad/Inversion/InversionDetalle")
 );
-const InversionesTable = lazy(() =>
-  import("@/pages/Entidad/Inversiones/InversionesTable")
+const Inversion = lazy(() =>
+  import("@/pages/Entidad/Inversion/Inversiones")
 );
-const ClientesTable = lazy(() =>
-  import("@/pages/Entidad/Clientes/ClientesTable")
-);
+const ClienteForm = lazy(() => import("@/pages/Entidad/Clientes/ClienteForm"));
 const Clientes = lazy(() => import("@/pages/Entidad/Clientes/Clientes"));
 const Calendario = lazy(() => import("@/pages/Entidad/Calendario/Calendario"));
 const CalendarioTable = lazy(() =>
   import("@/pages/Entidad/Calendario/CalendarioTable")
 );
+const CalendarioForm = lazy(() =>
+  import("@/pages/Entidad/Calendario/CalendariosForm")
+);
+
 const Pagos = lazy(() => import("@/pages/Entidad/Pagos/Pagos"));
 const PagosTable = lazy(() => import("@/pages/Entidad/Pagos/PagosTable"));
 const Casos = lazy(() => import("@/pages/Entidad/Casos/Casos"));
 const CasosTable = lazy(() => import("@/pages/Entidad/Casos/CasosTable"));
 const Tareas = lazy(() => import("@/pages/Entidad/Tareas/TareasDetalle"));
 const TareasTable = lazy(() => import("@/pages/Entidad/Tareas/Tareas"));
+const TareaDetalleEditable = lazy(() => import("@/pages/Entidad/Tareas/TareasDetalle"));
 const ProspectoForm = lazy(() =>
   import("@/pages/Entidad/Prospectos/ProspectoForm")
 );
@@ -97,8 +100,19 @@ const Proyeccion = lazy(() =>
   import("@/pages/Entidad/Proyecciones/ProyeccionNueva")
 );
 
+const ProductoTable = lazy(() => import("@/pages/Catalogo/Producto/ProductoTable"));
+const ProductoForm = lazy(() => import("@/pages/Catalogo/Producto/ProductoForm"));
+const Producto = lazy(() => import("@/pages/Catalogo/Producto/Producto"));
+
 const Adjunto = lazy(() => import("@/components/solicitud/Adjuntos"));
 const Pruebaflujo = lazy(() => import("@/pages/FlujoSolicitud"));
+
+const DetalleAdendum  = lazy(() => import("@/pages/Entidad/Adendum/Adendum"));
+
+// Páginas de configuraciones de producto (ajusta la ruta según tu estructura real)
+//const ConfiguracionesProducto = lazy(() => import("@/pages/Catalogo/ConfiguracionesProducto/ConfiguracionesProducto"));
+const ConfiguracionesProductoForm = lazy(() => import("@/pages/Catalogo/ConfiguracionesProducto/ConfiguracionesProductoForm"));
+
 
 export const publicRoutes = [
   { path: "/login", element: <LoginRedirect /> },
@@ -113,8 +127,6 @@ export const publicRoutes = [
 
 export const protectedRoutes = [
   // Panel de métricas
-  { path: "/panel/metricas", element: <DashboardPanel /> },
-
   {
     path: "/debug/prueba",
     element: (
@@ -136,14 +148,14 @@ export const protectedRoutes = [
   { path: "/solicitudes/editar/:id/proyeccion/nueva", element: <Proyeccion /> },
 
   // Inversiones
-  { path: "/inversiones/vista", element: <InversionesTable /> },
-  { path: "/inversiones/editar/:id", element: <Inversiones /> },
+  { path: "/inversiones/vista", element: <Inversion /> },
+  { path: "/inversiones/editar/:id", element: <InversionForm/> },
   // Clientes
-  { path: "/clientes/vista", element: <ClientesTable /> },
-  { path: "/clientes/editar/:id", element: <Clientes /> },
+  { path: "/clientes/vista", element: <Clientes /> },
+  { path: "/clientes/editar/:id", element: <ClienteForm /> },
   // Tareas
   { path: "/tareas/vista", element: <TareasTable /> },
-  { path: "/tareas/editar/:id", element: <Tareas /> },
+  { path: "/tareas/editar/:id", element: <TareaDetalleEditable /> },
   // Casos
   { path: "/casos/vista", element: <CasosTable /> },
   { path: "/casos/editar/:id", element: <Casos /> },
@@ -162,6 +174,11 @@ export const protectedRoutes = [
   { path: "/catalogo/agencia/nuevo", element: <AgenciaForm /> },
   { path: "/catalogo/agencia/editar/:id", element: <AgenciaForm /> },
 
+  // Catálogo de Productos de Inversión
+  { path: "/catalogo/producto/vista", element: <ProductoTable /> },
+  { path: "/catalogo/producto/nuevo", element: <ProductoForm /> },
+  { path: "/catalogo/producto/editar/:id", element: <Producto /> },
+
   // Catálogo de origenes potenciales
   { path: "/catalogo/origenpotencial/vista", element: <OrigenCliente /> },
   { path: "/catalogo/origenpotencial/nuevo", element: <OrigenClienteForm /> },
@@ -177,6 +194,11 @@ export const protectedRoutes = [
     path: "/catalogo/productointeres/editar/:id",
     element: <TipoProductoForm />,
   },
+
+  {
+  path: "/catalogo/configuracionesproducto/nuevo",
+  element: <ConfiguracionesProductoForm />
+},
 
   // Otros catálogos generales
   { path: "/catalogo/prioridad/vista", element: <Prioridad /> },
@@ -217,6 +239,12 @@ export const protectedRoutes = [
   },
   //Proyección Express
   { path: "proyeccion/vista", element: <Proyeccion /> },
+
+  // Adendum
+  { path: "/adendum/vista/:idAdendum", element: <DetalleAdendum /> },
+
+    { path: "/panel/metricas", element: <DashboardPanel /> },
+  
 ];
 
 export const fallbackRoutes = [{ path: "*", element: <NotFound /> }];

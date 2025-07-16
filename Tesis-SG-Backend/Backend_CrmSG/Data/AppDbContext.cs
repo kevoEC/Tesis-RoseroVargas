@@ -7,6 +7,7 @@ using Backend_CrmSG.Models.Entidades;
 using Backend_CrmSG.Models.Vistas;
 using Backend_CrmSG.Models.Documentos;
 using Backend_CrmSG.DTOs;
+using Backend_CrmSG.Models.Entidades.Cliente;
 
 namespace Backend_CrmSG.Data
 {
@@ -40,10 +41,25 @@ namespace Backend_CrmSG.Data
         public DbSet<TipoCuenta> TipoCuenta { get; set; }
         public DbSet<TipoReferencia> TipoReferencia { get; set; }
         public DbSet<ContinuarSolicitud> ContinuarSolicitud { get; set; }
+        public DbSet<Tarea> Tarea { get; set; }
+        public DbSet<ModoFirma> ModoFirma { get; set; } // ← esta línea
 
         // DbSets de tus tablas de entidades principales
         public DbSet<Prospecto> Prospecto { get; set; }
         public DbSet<Actividad> Actividad { get; set; }
+
+        public DbSet<Cliente> Cliente { get; set; }
+        public DbSet<ClienteContacto> ClienteContacto { get; set; }
+        public DbSet<ClienteActividadEconomica> ClienteActividadEconomica { get; set; }
+        public DbSet<ClienteCuentaBancaria> ClienteCuentaBancaria { get; set; }
+        public DbSet<ClienteEconomico> ClienteEconomico { get; set; } // Si usas esta tabla
+        public DbSet<CalendarioOperaciones> CalendarioOperaciones { get; set; }
+        public DbSet<Caso> Caso { get; set; }
+        public DbSet<Pago> Pago { get; set; }
+        public DbSet<ContratoSecuencial> ContratoSecuencial { get; set; } // ← esta línea
+        public DbSet<Adendum> Adendum { get; set; } // ← esta línea
+        public DbSet<Inversion> Inversion { get; set; }
+
         // DbSets de tus tablas de seguridad
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Rol> Rol { get; set; }
@@ -74,12 +90,19 @@ namespace Backend_CrmSG.Data
         public DbSet<AsesorComercialDetalle> AsesoresComercialesDetalle { get; set; }
         public DbSet<ProyeccionDetalle> ProyeccionDetalle { get; set; } // ← esta línea
         public DbSet<DocumentoDetalle> DocumentosAdjuntos { get; set; } // ← esta línea
-
         public DbSet<DocumentoBasicoDetalle> DocumentosBasicos { get; set; } // ← esta línea
+        public DbSet<TareaDetalleExtendida> TareasDetalle { get; set; }
+        public DbSet<ClienteDetalle> ClienteDetalle { get; set; }
+        public DbSet<InversionDetalle> InversionDetalle { get; set; }
+        public DbSet<CasoDetalleExtendida> CasosDetalleExtendida { get; set; }
+        public DbSet<ProductoView> ProductosVista { get; set; }
+        public DbSet<ConfiguracionProductoView> ConfiguracionesProductoVista { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             // Configuración de clave compuesta para UsuarioRol
             modelBuilder.Entity<UsuarioRol>()
                 .HasKey(ur => new { ur.IdUsuario, ur.IdRol });
@@ -119,12 +142,37 @@ namespace Backend_CrmSG.Data
 
             modelBuilder.Entity<DocumentoDetalle>()
             .HasNoKey()
-            .ToView("vw_DocumentosAdjuntos");
+            .ToView("v_DocumentosPorEntidad");
 
             modelBuilder.Entity<DocumentoBasicoDetalle>()
                 .HasNoKey()
                 .ToView("vw_DocumentosBasicos");
-           
+
+            modelBuilder.Entity<TareaDetalle>()
+            .HasNoKey()
+            .ToView("vw_TareaDetalle");
+
+            modelBuilder.Entity<TareaDetalleExtendida>()
+            .HasNoKey()
+            .ToView("vw_TareaDetalleExtendida");
+
+            modelBuilder.Entity<ClienteDetalle>()
+            .HasNoKey()
+            .ToView("vw_ClienteDetalleCompleto");
+
+            modelBuilder.Entity<InversionDetalle>()
+            .HasNoKey()
+            .ToView("vw_InversionDetalleCompleto");
+
+            modelBuilder.Entity<CasoDetalleExtendida>()
+            .HasNoKey()
+            .ToView("vw_CasoDetalleExtendida");
+
+            modelBuilder.Entity<ProductoView>().HasNoKey().ToView("vw_Producto");
+
+            modelBuilder.Entity<ConfiguracionProductoView>().HasNoKey().ToView("vw_ConfiguracionesProducto");
+
+
             modelBuilder.Entity<TransaccionesValidacion>()
             .HasOne(t => t.TipoTransaccion)
             .WithMany(tt => tt.Transacciones)
@@ -136,6 +184,7 @@ namespace Backend_CrmSG.Data
                 .WithMany()
                 .HasForeignKey(t => t.IdUsuario)
                 .OnDelete(DeleteBehavior.Restrict);
+
 
 
 

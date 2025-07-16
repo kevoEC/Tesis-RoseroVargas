@@ -1,4 +1,19 @@
 import { useEffect, useState } from "react";
+import { Switch } from "@/components/ui/switch";
+import { useParams } from "react-router-dom";
+import { Card, CardContent } from "@/components/ui/card";
+import { mapIdentificacionToUpdate } from "@/utils/mappers";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import GlassLoader from "@/components/ui/GlassLoader";
 import {
   getSolicitudById,
   updateSolicitud,
@@ -7,26 +22,16 @@ import {
   getActividadEconomicaPrincipal,
   getActividadEconomicaTrabajo,
 } from "@/service/Catalogos/ActividadEconomicaService";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
-export default function ActividadEconomica({ id }) {
+export default function ActividadEconomica() {
+  const { id } = useParams();
+
   const [loading, setLoading] = useState(true);
-  const [solicitudData, setSolicitudData] = useState(null); // Aquí almacenamos toda la solicitud
+  const [solicitudData, setSolicitudData] = useState(null);
   const [catalogoPrincipal, setCatalogoPrincipal] = useState([]);
   const [catalogoTrabajo, setCatalogoTrabajo] = useState([]);
+  const [bloquearTodo, setBloquearTodo] = useState(false);
 
   const [actividadEconomica, setActividadEconomica] = useState({
     idActividadEconomicaPrincipal: "",
@@ -43,58 +48,53 @@ export default function ActividadEconomica({ id }) {
     isPEP: false,
   });
 
+  // Estado para errores de validación
+  const [errores, setErrores] = useState({});
+
   useEffect(() => {
     const cargarDatos = async () => {
       setLoading(true);
-
       try {
-        // 🔹 Obtener la solicitud
         const response = await getSolicitudById(id);
         const data = response.data[0];
         setSolicitudData(data);
 
-        // 🔹 Inicializar los valores del formulario
+        // Bloquea si no está en fase 1
+        setBloquearTodo(data.faseProceso !== 1);
+
         setActividadEconomica({
-          idActividadEconomicaPrincipal: data.actividadEconomica.idActividadEconomicaPrincipal || "",
-          idActividadEconomicaLugarTrabajo: data.actividadEconomica.idActividadEconomicaLugarTrabajo || "",
-          lugarTrabajo: data.actividadEconomica.lugarTrabajo || "",
-          correoTrabajo: data.actividadEconomica.correoTrabajo || "",
-          otraActividadEconomica:
-            data.actividadEconomica.otraActividadEconomica || "",
-          cargo: data.actividadEconomica.cargo || "",
-          antiguedad: data.actividadEconomica.antiguedad || "",
-          telefonoTrabajo: data.actividadEconomica.telefonoTrabajo || "",
-          fechaInicioActividad: data.actividadEconomica.fechaInicioActividad
+          idActividadEconomicaPrincipal: data.actividadEconomica?.idActividadEconomicaPrincipal || "",
+          idActividadEconomicaLugarTrabajo: data.actividadEconomica?.idActividadEconomicaLugarTrabajo || "",
+          lugarTrabajo: data.actividadEconomica?.lugarTrabajo || "",
+          correoTrabajo: data.actividadEconomica?.correoTrabajo || "",
+          otraActividadEconomica: data.actividadEconomica?.otraActividadEconomica || "",
+          cargo: data.actividadEconomica?.cargo || "",
+          antiguedad: data.actividadEconomica?.antiguedad || "",
+          telefonoTrabajo: data.actividadEconomica?.telefonoTrabajo || "",
+          fechaInicioActividad: data.actividadEconomica?.fechaInicioActividad
             ? data.actividadEconomica.fechaInicioActividad.split("T")[0]
             : "",
-
-          direccionTrabajo: data.actividadEconomica.direccionTrabajo || "",
-          referenciaDireccionTrabajo:
-            data.actividadEconomica.referenciaDireccionTrabajo || "",
-          isPEP: data.actividadEconomica.esPEP || false,
+          direccionTrabajo: data.actividadEconomica?.direccionTrabajo || "",
+          referenciaDireccionTrabajo: data.actividadEconomica?.referenciaDireccionTrabajo || "",
+          isPEP: data.actividadEconomica?.esPEP || false,
         });
 
-        // 🔹 Obtener catálogos
         const [principalRaw, trabajoRaw] = await Promise.all([
           getActividadEconomicaPrincipal(),
           getActividadEconomicaTrabajo(),
         ]);
-
-        // 🔁 Mapeamos los catálogos a formato común { id, nombre }
-        const principal = principalRaw.map((item) => ({
-          id: String(item.idActividadEconomicaPrincipal),
-          nombre: item.nombre,
-        }));
-
-        const trabajo = trabajoRaw.map((item) => ({
-          id: String(item.idActividadEconomicaLugarTrabajo),
-          nombre: item.nombre,
-        }));
-
-        setCatalogoPrincipal(principal);
-        setCatalogoTrabajo(trabajo);
-
-
+        setCatalogoPrincipal(
+          principalRaw.map((item) => ({
+            id: String(item.idActividadEconomicaPrincipal),
+            nombre: item.nombre,
+          }))
+        );
+        setCatalogoTrabajo(
+          trabajoRaw.map((item) => ({
+            id: String(item.idActividadEconomicaLugarTrabajo),
+            nombre: item.nombre,
+          }))
+        );
       } catch (error) {
         toast.error("Error al cargar datos: " + error.message);
       } finally {
@@ -105,27 +105,69 @@ export default function ActividadEconomica({ id }) {
     cargarDatos();
   }, [id]);
 
+  // Validación campos obligatorios (excepto otraActividadEconomica)
+  const validarCampos = () => {
+    const nuevosErrores = {};
 
-  // Función para manejar el guardado de los datos
+    if (!actividadEconomica.idActividadEconomicaPrincipal) {
+      nuevosErrores.idActividadEconomicaPrincipal = "Actividad económica principal es obligatoria";
+    }
+    if (!actividadEconomica.idActividadEconomicaLugarTrabajo) {
+      nuevosErrores.idActividadEconomicaLugarTrabajo = "Actividad económica del lugar de trabajo es obligatoria";
+    }
+    if (!actividadEconomica.lugarTrabajo) {
+      nuevosErrores.lugarTrabajo = "Lugar de trabajo es obligatorio";
+    }
+    if (!actividadEconomica.cargo) {
+      nuevosErrores.cargo = "Cargo es obligatorio";
+    }
+    if (!actividadEconomica.telefonoTrabajo) {
+      nuevosErrores.telefonoTrabajo = "Teléfono del trabajo es obligatorio";
+    }
+    if (!actividadEconomica.fechaInicioActividad) {
+      nuevosErrores.fechaInicioActividad = "Fecha de inicio es obligatoria";
+    }
+    if (!actividadEconomica.antiguedad) {
+      nuevosErrores.antiguedad = "Antigüedad es obligatoria";
+    }
+    if (!actividadEconomica.correoTrabajo) {
+      nuevosErrores.correoTrabajo = "Correo electrónico del trabajo es obligatorio";
+    }
+    if (!actividadEconomica.direccionTrabajo) {
+      nuevosErrores.direccionTrabajo = "Dirección del trabajo es obligatoria";
+    }
+    if (!actividadEconomica.referenciaDireccionTrabajo) {
+      nuevosErrores.referenciaDireccionTrabajo = "Referencia de la dirección del trabajo es obligatoria";
+    }
+
+    setErrores(nuevosErrores);
+    return Object.keys(nuevosErrores).length === 0;
+  };
+
   const handleGuardar = async () => {
-    if (!solicitudData) return;
+    if (!solicitudData || bloquearTodo) return;
 
+    if (!validarCampos()) {
+      toast.error("Por favor completa todos los campos obligatorios.");
+      return;
+    }
+
+    setLoading(true);
     try {
-      // Creamos un objeto con todos los datos de la solicitud y actualizamos solo la parte de actividadEconomica
-      const dataToSave = {
-        ...solicitudData, // Copia todo el JSON original
-        actividadEconomica, // Solo se actualizará esta parte
+      const payload = {
+        ...solicitudData,
+        identificacion: mapIdentificacionToUpdate(solicitudData.identificacion),
+        actividadEconomica: {
+          ...solicitudData.actividadEconomica,
+          ...actividadEconomica,
+          esPEP: actividadEconomica.isPEP,
+        },
       };
-      console.log(dataToSave);
 
-      setLoading(true);
-      const response = await updateSolicitud(id, dataToSave);
-
-      if (response.success) {
-        toast.success("Datos guardados exitosamente.");
-      } else {
-        toast.error("Error al guardar los datos.");
-      }
+      const res = await updateSolicitud(id, payload);
+      res.success
+        ? toast.success("Datos guardados exitosamente.")
+        : toast.error("Error al guardar los datos.");
     } catch (error) {
       toast.error("Error al guardar los datos: " + error.message);
     } finally {
@@ -134,178 +176,225 @@ export default function ActividadEconomica({ id }) {
   };
 
   return (
-    <div className="space-y-6 p-6">
-      {/* Mostrar spinner o mensaje de carga */}
-      {loading ? (
-        <p>Cargando datos...</p> // Aquí podrías poner un spinner si prefieres
-      ) : (
-        <>
-          {/* 🔹 Actividad Económica */}
-          <h2 className="text-xl font-semibold text-gray-800">
-            Actividad económica
-          </h2>
-          {/* Botón para guardar datos */}
-          <Button
-            onClick={handleGuardar}
-            disabled={loading}
-            className="text-white"
-          >
-            Guardar datos
-          </Button>
-          <Card>
-            <CardContent className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <FormSelect
-                  label="Actividad económica principal"
-                  options={catalogoPrincipal}
-                  value={actividadEconomica.idActividadEconomicaPrincipal}
-                  onChange={(value) =>
-                    setActividadEconomica({
-                      ...actividadEconomica,
-                      idActividadEconomicaPrincipal: value,
-                    })
-                  }
-                />
+    <div className="space-y-6 p-6 relative">
+      <GlassLoader visible={loading} message="Cargando datos..." />
 
-                <FormSelect
-                  label="Actividad económica del lugar de trabajo"
-                  options={catalogoTrabajo}
-                  value={actividadEconomica.idActividadEconomicaLugarTrabajo}
-                  onChange={(value) =>
-                    setActividadEconomica({
-                      ...actividadEconomica,
-                      idActividadEconomicaLugarTrabajo: value,
-                    })
-                  }
-                />
-
-                <FormInput
-                  label="Lugar de trabajo"
-                  value={actividadEconomica.lugarTrabajo}
-                  onChange={(e) =>
-                    setActividadEconomica({
-                      ...actividadEconomica,
-                      lugarTrabajo: e.target.value,
-                    })
-                  }
-                />
-                <FormInput
-                  label="Otra actividad económica"
-                  value={actividadEconomica.otraActividadEconomica}
-                  onChange={(e) =>
-                    setActividadEconomica({
-                      ...actividadEconomica,
-                      otraActividadEconomica: e.target.value,
-                    })
-                  }
-                />
-                <FormInput
-                  label="Cargo"
-                  value={actividadEconomica.cargo}
-                  onChange={(e) =>
-                    setActividadEconomica({
-                      ...actividadEconomica,
-                      cargo: e.target.value,
-                    })
-                  }
-                />
-                <FormInput
-                  label="Correo electrónico del trabajo"
-                  value={actividadEconomica.correoTrabajo}
-                  onChange={(e) =>
-                    setActividadEconomica({
-                      ...actividadEconomica,
-                      correoTrabajo: e.target.value,
-                    })
-                  }
-                />
-                <FormInput
-                  label="Antigüedad (años)"
-                  value={actividadEconomica.antiguedad}
-                  onChange={(e) =>
-                    setActividadEconomica({
-                      ...actividadEconomica,
-                      antiguedad: e.target.value,
-                    })
-                  }
-                />
-                <FormInput
-                  label="Teléfono del trabajo"
-                  value={actividadEconomica.telefonoTrabajo}
-                  onChange={(e) =>
-                    setActividadEconomica({
-                      ...actividadEconomica,
-                      telefonoTrabajo: e.target.value,
-                    })
-                  }
-                />
-                <FormInput
-                  label="Fecha de inicio"
-                  type="date"
-                  value={actividadEconomica.fechaInicioActividad}
-                  onChange={(e) =>
-                    setActividadEconomica({
-                      ...actividadEconomica,
-                      fechaInicioActividad: e.target.value,
-                    })
-                  }
-                />
-                <FormInput
-                  label="Dirección del trabajo"
-                  value={actividadEconomica.direccionTrabajo}
-                  onChange={(e) =>
-                    setActividadEconomica({
-                      ...actividadEconomica,
-                      direccionTrabajo: e.target.value,
-                    })
-                  }
-                />
-                <FormInput
-                  label="Referencia de la dirección del trabajo"
-                  value={actividadEconomica.referenciaDireccionTrabajo}
-                  onChange={(e) =>
-                    setActividadEconomica({
-                      ...actividadEconomica,
-                      referenciaDireccionTrabajo: e.target.value,
-                    })
-                  }
-                />
-                <FormSwitch
-                  label="Es PEP"
-                  checked={actividadEconomica.isPEP}
-                  onChange={(checked) =>
-                    setActividadEconomica({
-                      ...actividadEconomica,
-                      isPEP: checked,
-                    })
-                  }
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </>
+      <h2 className="text-xl font-semibold text-gray-800">Actividad económica</h2>
+      {bloquearTodo && (
+        <div className="w-full flex items-center px-6 py-2 mb-4 rounded-xl bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
+          <span>No se permite editar actividad económica en esta fase.</span>
+        </div>
       )}
+
+      <Card>
+        <CardContent className="p-6 space-y-6">
+          <div className="flex justify-end">
+            <Button
+              onClick={handleGuardar}
+              disabled={bloquearTodo || loading}
+              className="text-white bg-primary hover:bg-primary/80"
+            >
+              Guardar datos
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <FormSelect
+              label="Actividad económica principal"
+              options={catalogoPrincipal}
+              value={actividadEconomica.idActividadEconomicaPrincipal}
+              onChange={(value) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  idActividadEconomicaPrincipal: value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.idActividadEconomicaPrincipal}
+            />
+
+            <FormSelect
+              label="Actividad económica del lugar de trabajo"
+              options={catalogoTrabajo}
+              value={actividadEconomica.idActividadEconomicaLugarTrabajo}
+              onChange={(value) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  idActividadEconomicaLugarTrabajo: value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.idActividadEconomicaLugarTrabajo}
+            />
+
+            <FormInput
+              label="Otra actividad económica"
+              value={actividadEconomica.otraActividadEconomica}
+              onChange={(e) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  otraActividadEconomica: e.target.value,
+                }))
+              }
+              disabled={bloquearTodo}
+            />
+
+            <FormInput
+              label="Lugar de trabajo"
+              value={actividadEconomica.lugarTrabajo}
+              onChange={(e) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  lugarTrabajo: e.target.value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.lugarTrabajo}
+            />
+
+            <FormInput
+              label="Cargo"
+              value={actividadEconomica.cargo}
+              onChange={(e) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  cargo: e.target.value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.cargo}
+            />
+
+            <FormInput
+              label="Teléfono del trabajo"
+              value={actividadEconomica.telefonoTrabajo}
+              onChange={(e) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  telefonoTrabajo: e.target.value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.telefonoTrabajo}
+            />
+
+            <FormInput
+              label="Fecha de inicio"
+              type="date"
+              value={actividadEconomica.fechaInicioActividad}
+              onChange={(e) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  fechaInicioActividad: e.target.value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.fechaInicioActividad}
+            />
+
+            <FormInput
+              label="Antigüedad (años)"
+              value={actividadEconomica.antiguedad}
+              onChange={(e) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  antiguedad: e.target.value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.antiguedad}
+            />
+
+            <FormInput
+              label="Correo electrónico del trabajo"
+              value={actividadEconomica.correoTrabajo}
+              onChange={(e) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  correoTrabajo: e.target.value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.correoTrabajo}
+            />
+
+            <FormInput
+              label="Dirección del trabajo"
+              value={actividadEconomica.direccionTrabajo}
+              onChange={(e) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  direccionTrabajo: e.target.value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.direccionTrabajo}
+            />
+
+            <FormInput
+              label="Referencia de la dirección del trabajo"
+              value={actividadEconomica.referenciaDireccionTrabajo}
+              onChange={(e) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  referenciaDireccionTrabajo: e.target.value,
+                }))
+              }
+              disabled={bloquearTodo}
+              error={errores.referenciaDireccionTrabajo}
+            />
+
+            <FormSwitch
+              label="Es PEP"
+              checked={actividadEconomica.isPEP}
+              onChange={(checked) =>
+                setActividadEconomica((prev) => ({
+                  ...prev,
+                  isPEP: checked,
+                }))
+              }
+              disabled={bloquearTodo}
+            />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
 
-// 🔁 Reutilizables
-
-function FormInput({ label, value, onChange, type = "text" }) {
+// Helpers reutilizables con error
+function FormInput({ label, value, onChange, type = "text", disabled, error }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm font-medium text-gray-700">{label}</Label>
-      <Input placeholder="---" type={type} value={value} onChange={onChange} />
+      <Label className="text-sm font-medium text-gray-700 flex items-center gap-1">
+        {label} {error && <span className="text-red-600 text-xs italic">{error}</span>}
+      </Label>
+      <Input
+        placeholder="---"
+        type={type}
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+        aria-invalid={!!error}
+      />
     </div>
   );
 }
-function FormSelect({ label, options, value, onChange }) {
+
+function FormSelect({ label, options, value, onChange, disabled, error }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm font-medium text-gray-700">{label}</Label>
-      <Select value={String(value)} onValueChange={onChange}>
+      <Label className="text-sm font-medium text-gray-700 flex items-center gap-1">
+        {label} {error && <span className="text-red-600 text-xs italic">{error}</span>}
+      </Label>
+      <Select
+        value={String(value)}
+        onValueChange={onChange}
+        disabled={disabled}
+        aria-invalid={!!error}
+      >
         <SelectTrigger className="bg-white border border-gray-700">
-          <SelectValue placeholder="Seleccione una opción" />
+          <SelectValue placeholder="---" />
         </SelectTrigger>
         <SelectContent className="bg-white">
           {options.map((item) => (
@@ -319,14 +408,14 @@ function FormSelect({ label, options, value, onChange }) {
   );
 }
 
-
-function FormSwitch({ label, checked, onChange }) {
+function FormSwitch({ label, checked, onChange, disabled }) {
   return (
     <div className="flex items-center gap-4">
       <div className="relative">
         <Switch
           checked={checked}
           onCheckedChange={onChange}
+          disabled={disabled}
           className={`
             peer
             inline-flex
@@ -342,7 +431,6 @@ function FormSwitch({ label, checked, onChange }) {
             ${checked ? "bg-primary" : "bg-gray-300"}
           `}
         />
-        {/* Círculo deslizante */}
         <span
           className={`
             pointer-events-none
