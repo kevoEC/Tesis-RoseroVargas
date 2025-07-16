@@ -1,8 +1,4 @@
-Proyecto exportado desde DevOps donde se realizo todo el proceso de CI/CD
-
-<img width="1890" height="793" alt="image" src="https://github.com/user-attachments/assets/a546d5b8-6fe0-4220-a24c-807e61c8bf39" />
- 
-# Proyecto Frontend React 19
+# Proyecto DESARROLLO DE UN SISTEMA WEB PARA EL CONTROL DE INVERSIONES Y CLIENTES PARA SG CONSULTING GROUP
 
 ## 1. Introducción
 
@@ -33,8 +29,9 @@ npm run preview
 # Ejecuta linter
 npm run lint
 ```
-## Estructura del Proyecto
+## 4. Estructura del Proyecto
 
+```plaintext
 src/
 ├── assets/           # Recursos gráficos, imágenes, SVG
 ├── components/       # Componentes UI y funcionales (reutilizables)
@@ -67,6 +64,7 @@ src/
 ├── main.jsx          # Entry point de la app
 ├── config.js         # Configuración global
 └── index.css         # Estilos base
+
 
 ## 5. Principales Módulos y Arquitectura
 
@@ -160,3 +158,8 @@ Organizados por dominio para facilitar mantenimiento:
 
 - **Desarrollado por**: Kevin Rosero, Martin Vargas  
 - **Licencia**: SG CONSULTING GROUP – All rights reserved
+
+
+Proyecto exportado desde DevOps donde se realizo todo el proceso de CI/CD
+
+<img width="1890" height="793" alt="image" src="https://github.com/user-attachments/assets/a546d5b8-6fe0-4220-a24c-807e61c8bf39" />
